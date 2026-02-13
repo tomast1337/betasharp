@@ -8,12 +8,12 @@ namespace betareborn.Blocks
         {
         }
 
-        public override int getDroppedItemCount(java.util.Random random)
+        public override int GetDroppedItemCount(java.util.Random random)
         {
             return 0;
         }
 
-        public override int getRenderLayer()
+        public override int GetRenderLayer()
         {
             return 0;
         }

@@ -64,9 +64,9 @@ namespace betareborn.Items
                     Block block = Block.BLOCKS[field_320_a];
                     if (world.setBlock(x, y, z, field_320_a))
                     {
-                        Block.BLOCKS[field_320_a].onPlaced(world, x, y, z, meta);
-                        Block.BLOCKS[field_320_a].onPlaced(world, x, y, z, entityPlayer);
-                        world.playSound((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), block.soundGroup.func_1145_d(), (block.soundGroup.getVolume() + 1.0F) / 2.0F, block.soundGroup.getPitch() * 0.8F);
+                        Block.BLOCKS[field_320_a].OnPlaced(world, x, y, z, meta);
+                        Block.BLOCKS[field_320_a].OnPlaced(world, x, y, z, entityPlayer);
+                        world.playSound((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), block.SoundGroup.func_1145_d(), (block.SoundGroup.getVolume() + 1.0F) / 2.0F, block.SoundGroup.getPitch() * 0.8F);
                         --itemStack.count;
                     }
                 }

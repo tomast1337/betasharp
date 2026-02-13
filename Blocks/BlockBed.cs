@@ -16,7 +16,7 @@ namespace betareborn.Blocks
             setDefaultShape();
         }
 
-        public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
+        public override bool OnUse(World world, int x, int y, int z, EntityPlayer player)
         {
             if (world.isRemote)
             {
@@ -106,7 +106,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
             if (side == 0)
             {
@@ -122,22 +122,22 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return 14;
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override void updateBoundingBox(BlockView blockView, int x, int y, int z)
+        public override void UpdateBoundingBox(BlockView blockView, int x, int y, int z)
         {
             setDefaultShape();
         }
@@ -158,13 +158,13 @@ namespace betareborn.Blocks
                 world.setBlock(x, y, z, 0);
                 if (!world.isRemote)
                 {
-                    dropStacks(world, x, y, z, blockMeta);
+                    DropStacks(world, x, y, z, blockMeta);
                 }
             }
 
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
             return isHeadOfBed(blockMeta) ? 0 : Item.BED.id;
         }
@@ -236,16 +236,16 @@ namespace betareborn.Blocks
             return null;
         }
 
-        public override void dropStacks(World world, int x, int y, int z, int meta, float luck)
+        public override void DropStacks(World world, int x, int y, int z, int meta, float luck)
         {
             if (!isHeadOfBed(meta))
             {
-                base.dropStacks(world, x, y, z, meta, luck);
+                base.DropStacks(world, x, y, z, meta, luck);
             }
 
         }
 
-        public override int getPistonBehavior()
+        public override int GetPistonBehavior()
         {
             return 1;
         }

@@ -8,7 +8,7 @@ namespace betareborn.Blocks
     {
         public BlockDetectorRail(int id, int textureId) : base(id, textureId, true)
         {
-            setTickRandomly(true);
+            SetTickRandomly(true);
         }
 
         public override int GetTickRate()
@@ -16,12 +16,12 @@ namespace betareborn.Blocks
             return 20;
         }
 
-        public override bool canEmitRedstonePower()
+        public override bool CanEmitRedstonePower()
         {
             return true;
         }
 
-        public override void onEntityCollision(World world, int x, int y, int z, Entity entity)
+        public override void OnEntityCollision(World world, int x, int y, int z, Entity entity)
         {
             if (!world.isRemote)
             {
@@ -45,12 +45,12 @@ namespace betareborn.Blocks
             }
         }
 
-        public override bool isPoweringSide(BlockView blockView, int x, int y, int z, int side)
+        public override bool IsPoweringSide(BlockView blockView, int x, int y, int z, int side)
         {
             return (blockView.getBlockMeta(x, y, z) & 8) != 0;
         }
 
-        public override bool isStrongPoweringSide(World world, int x, int y, int z, int side)
+        public override bool IsStrongPoweringSide(World world, int x, int y, int z, int side)
         {
             return (world.getBlockMeta(x, y, z) & 8) == 0 ? false : side == 1;
         }

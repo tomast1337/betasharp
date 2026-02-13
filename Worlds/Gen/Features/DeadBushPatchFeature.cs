@@ -26,7 +26,7 @@ namespace betareborn.Worlds.Gen.Features
                         int var8 = var3 + var2.nextInt(8) - var2.nextInt(8);
                         int var9 = var4 + var2.nextInt(4) - var2.nextInt(4);
                         int var10 = var5 + var2.nextInt(8) - var2.nextInt(8);
-                        if (var1.isAir(var8, var9, var10) && ((BlockPlant)Block.BLOCKS[deadBushBlockId]).canGrow(var1, var8, var9, var10))
+                        if (var1.isAir(var8, var9, var10) && ((BlockPlant)Block.BLOCKS[deadBushBlockId]).CanGrow(var1, var8, var9, var10))
                         {
                             var1.setBlockWithoutNotifyingNeighbors(var8, var9, var10, deadBushBlockId);
                         }

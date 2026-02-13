@@ -36,7 +36,7 @@ namespace betareborn.Server.Network
                 if (var2 != 0)
                 {
                     Block var3 = Block.BLOCKS[var2];
-                    float var4 = var3.getHardness(player) * (var1 + 1);
+                    float var4 = var3.GetHardness(player) * (var1 + 1);
                     if (var4 >= 1.0F)
                     {
                         mining = false;
@@ -57,10 +57,10 @@ namespace betareborn.Server.Network
             int var5 = world.getBlockId(x, y, z);
             if (var5 > 0)
             {
-                Block.BLOCKS[var5].onBlockBreakStart(world, x, y, z, player);
+                Block.BLOCKS[var5].OnBlockBreakStart(world, x, y, z, player);
             }
 
-            if (var5 > 0 && Block.BLOCKS[var5].getHardness(player) >= 1.0F)
+            if (var5 > 0 && Block.BLOCKS[var5].GetHardness(player) >= 1.0F)
             {
                 tryBreakBlock(x, y, z);
             }
@@ -81,7 +81,7 @@ namespace betareborn.Server.Network
                 if (var5 != 0)
                 {
                     Block var6 = Block.BLOCKS[var5];
-                    float var7 = var6.getHardness(player) * (var4 + 1);
+                    float var7 = var6.GetHardness(player) * (var4 + 1);
                     if (var7 >= 0.7F)
                     {
                         tryBreakBlock(x, y, z);
@@ -105,7 +105,7 @@ namespace betareborn.Server.Network
             bool var6 = world.setBlock(x, y, z, 0);
             if (var4 != null && var6)
             {
-                var4.onMetadataChange(world, x, y, z, var5);
+                var4.OnMetadataChange(world, x, y, z, var5);
             }
 
             return var6;
@@ -130,7 +130,7 @@ namespace betareborn.Server.Network
 
             if (var6 && player.canHarvest(Block.BLOCKS[blockId]))
             {
-                Block.BLOCKS[blockId].afterBreak(world, player, x, y, z, var5);
+                Block.BLOCKS[blockId].AfterBreak(world, player, x, y, z, var5);
                 ((ServerPlayerEntity)player).networkHandler.sendPacket(new BlockUpdateS2CPacket(x, y, z, world));
             }
 
@@ -160,7 +160,7 @@ namespace betareborn.Server.Network
         public bool interactBlock(EntityPlayer player, World world, ItemStack stack, int x, int y, int z, int side)
         {
             int var8 = world.getBlockId(x, y, z);
-            if (var8 > 0 && Block.BLOCKS[var8].onUse(world, x, y, z, player))
+            if (var8 > 0 && Block.BLOCKS[var8].OnUse(world, x, y, z, player))
             {
                 return true;
             }

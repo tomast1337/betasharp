@@ -11,7 +11,7 @@ namespace betareborn.Blocks
         {
         }
 
-        public override Box? getCollisionShape(World world, int x, int y, int z)
+        public override Box? GetCollisionShape(World world, int x, int y, int z)
         {
             int meta = world.getBlockMeta(x, y, z);
             float thickness = 2.0F / 16.0F;
@@ -35,10 +35,10 @@ namespace betareborn.Blocks
                 setBoundingBox(0.0F, 0.0F, 0.0F, thickness, 1.0F, 1.0F);
             }
 
-            return base.getCollisionShape(world, x, y, z);
+            return base.GetCollisionShape(world, x, y, z);
         }
 
-        public override Box getBoundingBox(World world, int x, int y, int z)
+        public override Box GetBoundingBox(World world, int x, int y, int z)
         {
             int meta = world.getBlockMeta(x, y, z);
             float thickness = 2.0F / 16.0F;
@@ -62,30 +62,30 @@ namespace betareborn.Blocks
                 setBoundingBox(0.0F, 0.0F, 0.0F, thickness, 1.0F, 1.0F);
             }
 
-            return base.getBoundingBox(world, x, y, z);
+            return base.GetBoundingBox(world, x, y, z);
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return 8;
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z)
+        public override bool CanPlaceAt(World world, int x, int y, int z)
         {
             return world.shouldSuffocate(x - 1, y, z) ? true : (world.shouldSuffocate(x + 1, y, z) ? true : (world.shouldSuffocate(x, y, z - 1) ? true : world.shouldSuffocate(x, y, z + 1)));
         }
 
-        public override void onPlaced(World world, int x, int y, int z, int direction)
+        public override void OnPlaced(World world, int x, int y, int z, int direction)
         {
             int meta = world.getBlockMeta(x, y, z);
             if ((meta == 0 || direction == 2) && world.shouldSuffocate(x, y, z + 1))
@@ -137,14 +137,14 @@ namespace betareborn.Blocks
 
             if (!hasSupport)
             {
-                dropStacks(world, x, y, z, meta);
+                DropStacks(world, x, y, z, meta);
                 world.setBlock(x, y, z, 0);
             }
 
             base.NeighborUpdate(world, x, y, z, id);
         }
 
-        public override int getDroppedItemCount(java.util.Random random)
+        public override int GetDroppedItemCount(java.util.Random random)
         {
             return 1;
         }

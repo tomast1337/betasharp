@@ -10,7 +10,7 @@ namespace betareborn.Blocks
     {
         public BlockPistonMoving(int id) : base(id, Material.PISTON)
         {
-            setHardness(-1.0F);
+            SetHardness(-1.0F);
         }
 
         protected override BlockEntity getBlockEntity()
@@ -22,7 +22,7 @@ namespace betareborn.Blocks
         {
         }
 
-        public override void onBreak(World world, int x, int y, int z)
+        public override void OnBreak(World world, int x, int y, int z)
         {
             BlockEntity var5 = world.getBlockEntity(x, y, z);
             if (var5 != null && var5 is BlockEntityPiston)
@@ -31,37 +31,37 @@ namespace betareborn.Blocks
             }
             else
             {
-                base.onBreak(world, x, y, z);
+                base.OnBreak(world, x, y, z);
             }
 
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z)
+        public override bool CanPlaceAt(World world, int x, int y, int z)
         {
             return false;
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z, int side)
+        public override bool CanPlaceAt(World world, int x, int y, int z, int side)
         {
             return false;
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return -1;
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
+        public override bool OnUse(World world, int x, int y, int z, EntityPlayer player)
         {
             if (!world.isRemote && world.getBlockEntity(x, y, z) == null)
             {
@@ -74,19 +74,19 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
             return 0;
         }
 
-        public override void dropStacks(World world, int x, int y, int z, int meta, float luck)
+        public override void DropStacks(World world, int x, int y, int z, int meta, float luck)
         {
             if (!world.isRemote)
             {
                 BlockEntityPiston var7 = getPistonBlockEntity(world, x, y, z);
                 if (var7 != null)
                 {
-                    Block.BLOCKS[var7.getPushedBlockId()].dropStacks(world, x, y, z, var7.getPushedBlockData());
+                    Block.BLOCKS[var7.getPushedBlockId()].DropStacks(world, x, y, z, var7.getPushedBlockData());
                 }
             }
         }
@@ -104,7 +104,7 @@ namespace betareborn.Blocks
             return new BlockEntityPiston(blockId, blockMeta, facing, extending, source);
         }
 
-        public override Box? getCollisionShape(World world, int x, int y, int z)
+        public override Box? GetCollisionShape(World world, int x, int y, int z)
         {
             BlockEntityPiston var5 = getPistonBlockEntity(world, x, y, z);
             if (var5 == null)
@@ -123,7 +123,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override void updateBoundingBox(BlockView blockView, int x, int y, int z)
+        public override void UpdateBoundingBox(BlockView blockView, int x, int y, int z)
         {
             BlockEntityPiston var5 = getPistonBlockEntity(blockView, x, y, z);
             if (var5 != null)
@@ -134,7 +134,7 @@ namespace betareborn.Blocks
                     return;
                 }
 
-                var6.updateBoundingBox(blockView, x, y, z);
+                var6.UpdateBoundingBox(blockView, x, y, z);
                 float var7 = var5.getProgress(0.0F);
                 if (var5.isExtending())
                 {
@@ -156,7 +156,7 @@ namespace betareborn.Blocks
         {
             if (blockId != 0 && blockId != id)
             {
-                Box? shape = Block.BLOCKS[blockId].getCollisionShape(world, x, y, z);
+                Box? shape = Block.BLOCKS[blockId].GetCollisionShape(world, x, y, z);
                 if (shape == null)
                 {
                     return null;

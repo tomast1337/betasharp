@@ -355,7 +355,7 @@ namespace betareborn.Inventorys
 
         public bool canHarvestBlock(Block block)
         {
-            if (block.material.isHandHarvestable())
+            if (block.Material.isHandHarvestable())
             {
                 return true;
             }

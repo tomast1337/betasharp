@@ -13,7 +13,7 @@ namespace betareborn.Blocks
             base.textureId = textureId;
             float halfWidth = 6.0F / 16.0F;
             setBoundingBox(0.5F - halfWidth, 0.0F, 0.5F - halfWidth, 0.5F + halfWidth, 1.0F, 0.5F + halfWidth);
-            setTickRandomly(true);
+            SetTickRandomly(true);
         }
 
         public override void OnTick(World world, int x, int y, int z, java.util.Random random)
@@ -42,7 +42,7 @@ namespace betareborn.Blocks
 
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z)
+        public override bool CanPlaceAt(World world, int x, int y, int z)
         {
             int blockBelowId = world.getBlockId(x, y - 1, z);
             return blockBelowId == id ? true : (blockBelowId != Block.GRASS_BLOCK.id && blockBelowId != Block.DIRT.id ? false : (world.getMaterial(x - 1, y - 1, z) == Material.WATER ? true : (world.getMaterial(x + 1, y - 1, z) == Material.WATER ? true : (world.getMaterial(x, y - 1, z - 1) == Material.WATER ? true : world.getMaterial(x, y - 1, z + 1) == Material.WATER))));
@@ -55,40 +55,40 @@ namespace betareborn.Blocks
 
         protected void breakIfCannotGrow(World world, int x, int y, int z)
         {
-            if (!canGrow(world, x, y, z))
+            if (!CanGrow(world, x, y, z))
             {
-                dropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
+                DropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
                 world.setBlock(x, y, z, 0);
             }
 
         }
 
-        public override bool canGrow(World world, int x, int y, int z)
+        public override bool CanGrow(World world, int x, int y, int z)
         {
-            return canPlaceAt(world, x, y, z);
+            return CanPlaceAt(world, x, y, z);
         }
 
-        public override Box? getCollisionShape(World world, int x, int y, int z)
+        public override Box? GetCollisionShape(World world, int x, int y, int z)
         {
             return null;
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
             return Item.SUGAR_CANE.id;
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return 1;
         }

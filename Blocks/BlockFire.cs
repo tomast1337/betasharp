@@ -11,10 +11,10 @@ namespace betareborn.Blocks
 
         public BlockFire(int id, int textureId) : base(id, textureId, Material.FIRE)
         {
-            setTickRandomly(true);
+            SetTickRandomly(true);
         }
 
-        protected override void init()
+        protected override void Init()
         {
             registerFlammableBlock(Block.PLANKS.id, 5, 20);
             registerFlammableBlock(Block.FENCE.id, 5, 20);
@@ -33,27 +33,27 @@ namespace betareborn.Blocks
             spreadChances[block] = spreadChance;
         }
 
-        public override Box? getCollisionShape(World world, int x, int y, int z)
+        public override Box? GetCollisionShape(World world, int x, int y, int z)
         {
             return null;
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return 3;
         }
 
-        public override int getDroppedItemCount(java.util.Random random)
+        public override int GetDroppedItemCount(java.util.Random random)
         {
             return 0;
         }
@@ -66,7 +66,7 @@ namespace betareborn.Blocks
         public override void OnTick(World world, int x, int y, int z, java.util.Random random)
         {
             bool isOnNetherrack = world.getBlockId(x, y - 1, z) == Block.NETHERRACK.id;
-            if (!canPlaceAt(world, x, y, z))
+            if (!CanPlaceAt(world, x, y, z))
             {
                 world.setBlock(x, y, z, 0);
             }
@@ -166,7 +166,7 @@ namespace betareborn.Blocks
 
                 if (isTnt)
                 {
-                    Block.TNT.onMetadataChange(world, x, y, z, 1);
+                    Block.TNT.OnMetadataChange(world, x, y, z, 1);
                 }
             }
 
@@ -196,7 +196,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override bool hasCollision()
+        public override bool HasCollision()
         {
             return false;
         }
@@ -212,7 +212,7 @@ namespace betareborn.Blocks
             return blockBurnChance > currentChance ? blockBurnChance : currentChance;
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z)
+        public override bool CanPlaceAt(World world, int x, int y, int z)
         {
             return world.shouldSuffocate(x, y - 1, z) || areBlocksAroundFlammable(world, x, y, z);
         }
@@ -240,7 +240,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override void randomDisplayTick(World world, int x, int y, int z, java.util.Random random)
+        public override void RandomDisplayTick(World world, int x, int y, int z, java.util.Random random)
         {
             if (random.nextInt(24) == 0)
             {

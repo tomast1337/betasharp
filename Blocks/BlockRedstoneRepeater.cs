@@ -19,19 +19,19 @@ namespace betareborn.Blocks
             setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 2.0F / 16.0F, 1.0F);
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z)
+        public override bool CanPlaceAt(World world, int x, int y, int z)
         {
-            return !world.shouldSuffocate(x, y - 1, z) ? false : base.canPlaceAt(world, x, y, z);
+            return !world.shouldSuffocate(x, y - 1, z) ? false : base.CanPlaceAt(world, x, y, z);
         }
 
-        public override bool canGrow(World world, int x, int y, int z)
+        public override bool CanGrow(World world, int x, int y, int z)
         {
-            return !world.shouldSuffocate(x, y - 1, z) ? false : base.canGrow(world, x, y, z);
+            return !world.shouldSuffocate(x, y - 1, z) ? false : base.CanGrow(world, x, y, z);
         }
 
         public override void OnTick(World world, int x, int y, int z, java.util.Random random)
@@ -54,32 +54,32 @@ namespace betareborn.Blocks
 
         }
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
             return side == 0 ? (lit ? 99 : 115) : (side == 1 ? (lit ? 147 : 131) : 5);
         }
 
-        public override bool isSideVisible(BlockView blockView, int x, int y, int z, int side)
+        public override bool IsSideVisible(BlockView blockView, int x, int y, int z, int side)
         {
             return side != 0 && side != 1;
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return 15;
         }
 
-        public override int getTexture(int side)
+        public override int GetTexture(int side)
         {
-            return getTexture(side, 0);
+            return GetTexture(side, 0);
         }
 
-        public override bool isStrongPoweringSide(World world, int x, int y, int z, int side)
+        public override bool IsStrongPoweringSide(World world, int x, int y, int z, int side)
         {
-            return isPoweringSide(world, x, y, z, side);
+            return IsPoweringSide(world, x, y, z, side);
         }
 
-        public override bool isPoweringSide(BlockView blockView, int x, int y, int z, int side)
+        public override bool IsPoweringSide(BlockView blockView, int x, int y, int z, int side)
         {
             if (!lit)
             {
@@ -94,9 +94,9 @@ namespace betareborn.Blocks
 
         public override void NeighborUpdate(World world, int x, int y, int z, int id)
         {
-            if (!canGrow(world, x, y, z))
+            if (!CanGrow(world, x, y, z))
             {
-                dropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
+                DropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
                 world.setBlock(x, y, z, 0);
             }
             else
@@ -134,7 +134,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
+        public override bool OnUse(World world, int x, int y, int z, EntityPlayer player)
         {
             int meta = world.getBlockMeta(x, y, z);
             int newDelaySetting = (meta & 12) >> 2;
@@ -143,12 +143,12 @@ namespace betareborn.Blocks
             return true;
         }
 
-        public override bool canEmitRedstonePower()
+        public override bool CanEmitRedstonePower()
         {
             return false;
         }
 
-        public override void onPlaced(World world, int x, int y, int z, EntityLiving placer)
+        public override void OnPlaced(World world, int x, int y, int z, EntityLiving placer)
         {
             int facing = ((MathHelper.floor_double((double)(placer.yaw * 4.0F / 360.0F) + 0.5D) & 3) + 2) % 4;
             world.setBlockMeta(x, y, z, facing);
@@ -170,17 +170,17 @@ namespace betareborn.Blocks
             world.notifyNeighbors(x, y + 1, z, id);
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
             return Item.REPEATER.id;
         }
 
-        public override void randomDisplayTick(World world, int x, int y, int z, java.util.Random random)
+        public override void RandomDisplayTick(World world, int x, int y, int z, java.util.Random random)
         {
             if (lit)
             {

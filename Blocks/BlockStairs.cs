@@ -9,93 +9,93 @@ namespace betareborn.Blocks
 
         private Block baseBlock;
 
-        public BlockStairs(int id, Block block) : base(id, block.textureId, block.material)
+        public BlockStairs(int id, Block block) : base(id, block.textureId, block.Material)
         {
             baseBlock = block;
-            setHardness(block.hardness);
-            setResistance(block.resistance / 3.0F);
-            setSoundGroup(block.soundGroup);
-            setOpacity(255);
+            SetHardness(block.Hardness);
+            SetResistance(block.Resistance / 3.0F);
+            SetSoundGroup(block.SoundGroup);
+            SetOpacity(255);
         }
 
-        public override void updateBoundingBox(BlockView blockView, int x, int y, int z)
+        public override void UpdateBoundingBox(BlockView blockView, int x, int y, int z)
         {
             setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         }
 
-        public override Box? getCollisionShape(World world, int x, int y, int z)
+        public override Box? GetCollisionShape(World world, int x, int y, int z)
         {
-            return base.getCollisionShape(world, x, y, z);
+            return base.GetCollisionShape(world, x, y, z);
         }
 
-        public override bool isOpaque()
-        {
-            return false;
-        }
-
-        public override bool isFullCube()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override int getRenderType()
+        public override bool IsFullCube()
+        {
+            return false;
+        }
+
+        public override int GetRenderType()
         {
             return 10;
         }
 
-        public override bool isSideVisible(BlockView blockView, int x, int y, int z, int side)
+        public override bool IsSideVisible(BlockView blockView, int x, int y, int z, int side)
         {
-            return base.isSideVisible(blockView, x, y, z, side);
+            return base.IsSideVisible(blockView, x, y, z, side);
         }
 
-        public override void addIntersectingBoundingBox(World world, int x, int y, int z, Box box, List<Box> boxes)
+        public override void AddIntersectingBoundingBox(World world, int x, int y, int z, Box box, List<Box> boxes)
         {
             int meta = world.getBlockMeta(x, y, z);
             if (meta == 0)
             {
                 setBoundingBox(0.0F, 0.0F, 0.0F, 0.5F, 0.5F, 1.0F);
-                base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
                 setBoundingBox(0.5F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-                base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
             }
             else if (meta == 1)
             {
                 setBoundingBox(0.0F, 0.0F, 0.0F, 0.5F, 1.0F, 1.0F);
-                base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
                 setBoundingBox(0.5F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
-                base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
             }
             else if (meta == 2)
             {
                 setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 0.5F);
-                base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
                 setBoundingBox(0.0F, 0.0F, 0.5F, 1.0F, 1.0F, 1.0F);
-                base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
             }
             else if (meta == 3)
             {
                 setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.5F);
-                base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
                 setBoundingBox(0.0F, 0.0F, 0.5F, 1.0F, 0.5F, 1.0F);
-                base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
             }
 
             setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         }
 
-        public override void randomDisplayTick(World world, int x, int y, int z, java.util.Random random)
+        public override void RandomDisplayTick(World world, int x, int y, int z, java.util.Random random)
         {
-            baseBlock.randomDisplayTick(world, x, y, z, random);
+            baseBlock.RandomDisplayTick(world, x, y, z, random);
         }
 
-        public override void onBlockBreakStart(World world, int x, int y, int z, EntityPlayer player)
+        public override void OnBlockBreakStart(World world, int x, int y, int z, EntityPlayer player)
         {
-            baseBlock.onBlockBreakStart(world, x, y, z, player);
+            baseBlock.OnBlockBreakStart(world, x, y, z, player);
         }
 
-        public override void onMetadataChange(World world, int x, int y, int z, int meta)
+        public override void OnMetadataChange(World world, int x, int y, int z, int meta)
         {
-            baseBlock.onMetadataChange(world, x, y, z, meta);
+            baseBlock.OnMetadataChange(world, x, y, z, meta);
         }
 
         public override float getLuminance(BlockView blockView, int x, int y, int z)
@@ -103,39 +103,39 @@ namespace betareborn.Blocks
             return baseBlock.getLuminance(blockView, x, y, z);
         }
 
-        public override float getBlastResistance(Entity entity)
+        public override float GetBlastResistance(Entity entity)
         {
-            return baseBlock.getBlastResistance(entity);
+            return baseBlock.GetBlastResistance(entity);
         }
 
-        public override int getRenderLayer()
+        public override int GetRenderLayer()
         {
-            return baseBlock.getRenderLayer();
+            return baseBlock.GetRenderLayer();
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
-            return baseBlock.getDroppedItemId(blockMeta, random);
+            return baseBlock.GetDroppedItemId(blockMeta, random);
         }
 
-        public override int getDroppedItemCount(java.util.Random random)
+        public override int GetDroppedItemCount(java.util.Random random)
         {
-            return baseBlock.getDroppedItemCount(random);
+            return baseBlock.GetDroppedItemCount(random);
         }
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
-            return baseBlock.getTexture(side, meta);
+            return baseBlock.GetTexture(side, meta);
         }
 
-        public override int getTexture(int side)
+        public override int GetTexture(int side)
         {
-            return baseBlock.getTexture(side);
+            return baseBlock.GetTexture(side);
         }
 
-        public override int getTextureId(BlockView blockView, int x, int y, int z, int side)
+        public override int GetTextureId(BlockView blockView, int x, int y, int z, int side)
         {
-            return baseBlock.getTextureId(blockView, x, y, z, side);
+            return baseBlock.GetTextureId(blockView, x, y, z, side);
         }
 
         public override int GetTickRate()
@@ -143,29 +143,29 @@ namespace betareborn.Blocks
             return baseBlock.GetTickRate();
         }
 
-        public override Box getBoundingBox(World world, int x, int y, int z)
+        public override Box GetBoundingBox(World world, int x, int y, int z)
         {
-            return baseBlock.getBoundingBox(world, x, y, z);
+            return baseBlock.GetBoundingBox(world, x, y, z);
         }
 
-        public override void applyVelocity(World world, int x, int y, int z, Entity entity, Vec3D velocity)
+        public override void ApplyVelocity(World world, int x, int y, int z, Entity entity, Vec3D velocity)
         {
-            baseBlock.applyVelocity(world, x, y, z, entity, velocity);
+            baseBlock.ApplyVelocity(world, x, y, z, entity, velocity);
         }
 
-        public override bool hasCollision()
+        public override bool HasCollision()
         {
-            return baseBlock.hasCollision();
+            return baseBlock.HasCollision();
         }
 
-        public override bool hasCollision(int meta, bool allowLiquids)
+        public override bool HasCollision(int meta, bool allowLiquids)
         {
-            return baseBlock.hasCollision(meta, allowLiquids);
+            return baseBlock.HasCollision(meta, allowLiquids);
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z)
+        public override bool CanPlaceAt(World world, int x, int y, int z)
         {
-            return baseBlock.canPlaceAt(world, x, y, z);
+            return baseBlock.CanPlaceAt(world, x, y, z);
         }
 
         public override void OnPlaced(World world, int x, int y, int z)
@@ -174,19 +174,19 @@ namespace betareborn.Blocks
             baseBlock.OnPlaced(world, x, y, z);
         }
 
-        public override void onBreak(World world, int x, int y, int z)
+        public override void OnBreak(World world, int x, int y, int z)
         {
-            baseBlock.onBreak(world, x, y, z);
+            baseBlock.OnBreak(world, x, y, z);
         }
 
-        public override void dropStacks(World world, int x, int y, int z, int meta, float luck)
+        public override void DropStacks(World world, int x, int y, int z, int meta, float luck)
         {
-            baseBlock.dropStacks(world, x, y, z, meta, luck);
+            baseBlock.DropStacks(world, x, y, z, meta, luck);
         }
 
-        public override void onSteppedOn(World world, int x, int y, int z, Entity entity)
+        public override void OnSteppedOn(World world, int x, int y, int z, Entity entity)
         {
-            baseBlock.onSteppedOn(world, x, y, z, entity);
+            baseBlock.OnSteppedOn(world, x, y, z, entity);
         }
 
         public override void OnTick(World world, int x, int y, int z, java.util.Random random)
@@ -194,17 +194,17 @@ namespace betareborn.Blocks
             baseBlock.OnTick(world, x, y, z, random);
         }
 
-        public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
+        public override bool OnUse(World world, int x, int y, int z, EntityPlayer player)
         {
-            return baseBlock.onUse(world, x, y, z, player);
+            return baseBlock.OnUse(world, x, y, z, player);
         }
 
-        public override void onDestroyedByExplosion(World world, int x, int y, int z)
+        public override void OnDestroyedByExplosion(World world, int x, int y, int z)
         {
-            baseBlock.onDestroyedByExplosion(world, x, y, z);
+            baseBlock.OnDestroyedByExplosion(world, x, y, z);
         }
 
-        public override void onPlaced(World world, int x, int y, int z, EntityLiving placer)
+        public override void OnPlaced(World world, int x, int y, int z, EntityLiving placer)
         {
             int facing = MathHelper.floor_double((double)(placer.yaw * 4.0F / 360.0F) + 0.5D) & 3;
             if (facing == 0)

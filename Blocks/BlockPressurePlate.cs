@@ -13,7 +13,7 @@ namespace betareborn.Blocks
         public BlockPressurePlate(int id, int textureId, PressurePlateActiviationRule rule, Material material) : base(id, textureId, material)
         {
             activationRule = rule;
-            setTickRandomly(true);
+            SetTickRandomly(true);
             float edgeInset = 1.0F / 16.0F;
             setBoundingBox(edgeInset, 0.0F, edgeInset, 1.0F - edgeInset, 0.03125F, 1.0F - edgeInset);
         }
@@ -23,22 +23,22 @@ namespace betareborn.Blocks
             return 20;
         }
 
-        public override Box? getCollisionShape(World world, int x, int y, int z)
+        public override Box? GetCollisionShape(World world, int x, int y, int z)
         {
             return null;
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z)
+        public override bool CanPlaceAt(World world, int x, int y, int z)
         {
             return world.shouldSuffocate(x, y - 1, z);
         }
@@ -57,7 +57,7 @@ namespace betareborn.Blocks
 
             if (shouldBreak)
             {
-                dropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
+                DropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
                 world.setBlock(x, y, z, 0);
             }
 
@@ -74,7 +74,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override void onEntityCollision(World world, int x, int y, int z, Entity entity)
+        public override void OnEntityCollision(World world, int x, int y, int z, Entity entity)
         {
             if (!world.isRemote)
             {
@@ -136,7 +136,7 @@ namespace betareborn.Blocks
 
         }
 
-        public override void onBreak(World world, int x, int y, int z)
+        public override void OnBreak(World world, int x, int y, int z)
         {
             int plateState = world.getBlockMeta(x, y, z);
             if (plateState > 0)
@@ -145,10 +145,10 @@ namespace betareborn.Blocks
                 world.notifyNeighbors(x, y - 1, z, id);
             }
 
-            base.onBreak(world, x, y, z);
+            base.OnBreak(world, x, y, z);
         }
 
-        public override void updateBoundingBox(BlockView blockView, int x, int y, int z)
+        public override void UpdateBoundingBox(BlockView blockView, int x, int y, int z)
         {
             bool isPressed = blockView.getBlockMeta(x, y, z) == 1;
             float edgeInset = 1.0F / 16.0F;
@@ -163,22 +163,22 @@ namespace betareborn.Blocks
 
         }
 
-        public override bool isPoweringSide(BlockView blockView, int x, int y, int z, int side)
+        public override bool IsPoweringSide(BlockView blockView, int x, int y, int z, int side)
         {
             return blockView.getBlockMeta(x, y, z) > 0;
         }
 
-        public override bool isStrongPoweringSide(World world, int x, int y, int z, int side)
+        public override bool IsStrongPoweringSide(World world, int x, int y, int z, int side)
         {
             return world.getBlockMeta(x, y, z) == 0 ? false : side == 1;
         }
 
-        public override bool canEmitRedstonePower()
+        public override bool CanEmitRedstonePower()
         {
             return true;
         }
 
-        public override void setupRenderBoundingBox()
+        public override void SetupRenderBoundingBox()
         {
             float halfWidth = 0.5F;
             float halfHeight = 2.0F / 16.0F;
@@ -186,7 +186,7 @@ namespace betareborn.Blocks
             setBoundingBox(0.5F - halfWidth, 0.5F - halfHeight, 0.5F - halfDepth, 0.5F + halfWidth, 0.5F + halfHeight, 0.5F + halfDepth);
         }
 
-        public override int getPistonBehavior()
+        public override int GetPistonBehavior()
         {
             return 1;
         }

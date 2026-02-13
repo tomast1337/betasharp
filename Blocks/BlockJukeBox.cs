@@ -13,12 +13,12 @@ namespace betareborn.Blocks
         {
         }
 
-        public override int getTexture(int side)
+        public override int GetTexture(int side)
         {
             return textureId + (side == 1 ? 1 : 0);
         }
 
-        public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
+        public override bool OnUse(World world, int x, int y, int z, EntityPlayer player)
         {
             if (world.getBlockMeta(x, y, z) == 0)
             {
@@ -66,17 +66,17 @@ namespace betareborn.Blocks
             }
         }
 
-        public override void onBreak(World world, int x, int y, int z)
+        public override void OnBreak(World world, int x, int y, int z)
         {
             tryEjectRecord(world, x, y, z);
-            base.onBreak(world, x, y, z);
+            base.OnBreak(world, x, y, z);
         }
 
-        public override void dropStacks(World world, int x, int y, int z, int meta, float luck)
+        public override void DropStacks(World world, int x, int y, int z, int meta, float luck)
         {
             if (!world.isRemote)
             {
-                base.dropStacks(world, x, y, z, meta, luck);
+                base.DropStacks(world, x, y, z, meta, luck);
             }
         }
 

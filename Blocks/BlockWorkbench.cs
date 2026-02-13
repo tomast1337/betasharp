@@ -12,12 +12,12 @@ namespace betareborn.Blocks
             textureId = 59;
         }
 
-        public override int getTexture(int side)
+        public override int GetTexture(int side)
         {
-            return side == 1 ? textureId - 16 : (side == 0 ? Block.PLANKS.getTexture(0) : (side != 2 && side != 4 ? textureId : textureId + 1));
+            return side == 1 ? textureId - 16 : (side == 0 ? Block.PLANKS.GetTexture(0) : (side != 2 && side != 4 ? textureId : textureId + 1));
         }
 
-        public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
+        public override bool OnUse(World world, int x, int y, int z, EntityPlayer player)
         {
             if (world.isRemote)
             {

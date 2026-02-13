@@ -17,37 +17,37 @@ namespace betareborn.Blocks
             setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F / 16.0F, 1.0F);
         }
 
-        public override int getTexture(int var1, int var2)
+        public override int GetTexture(int var1, int var2)
         {
             return textureId;
         }
 
-        public override Box? getCollisionShape(World var1, int var2, int var3, int var4)
+        public override Box? GetCollisionShape(World var1, int var2, int var3, int var4)
         {
             return null;
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return 5;
         }
 
-        public override int getColorMultiplier(BlockView var1, int var2, int var3, int var4)
+        public override int GetColorMultiplier(BlockView var1, int var2, int var3, int var4)
         {
             return 8388608;
         }
 
-        public override bool canPlaceAt(World var1, int var2, int var3, int var4)
+        public override bool CanPlaceAt(World var1, int var2, int var3, int var4)
         {
             return var1.shouldSuffocate(var2, var3 - 1, var4);
         }
@@ -275,9 +275,9 @@ namespace betareborn.Blocks
             }
         }
 
-        public override void onBreak(World var1, int var2, int var3, int var4)
+        public override void OnBreak(World var1, int var2, int var3, int var4)
         {
-            base.onBreak(var1, var2, var3, var4);
+            base.OnBreak(var1, var2, var3, var4);
             if (!var1.isRemote)
             {
                 var1.notifyNeighbors(var2, var3 + 1, var4, id);
@@ -344,10 +344,10 @@ namespace betareborn.Blocks
             if (!var1.isRemote)
             {
                 int var6 = var1.getBlockMeta(var2, var3, var4);
-                bool var7 = canPlaceAt(var1, var2, var3, var4);
+                bool var7 = CanPlaceAt(var1, var2, var3, var4);
                 if (!var7)
                 {
-                    dropStacks(var1, var2, var3, var4, var6);
+                    DropStacks(var1, var2, var3, var4, var6);
                     var1.setBlock(var2, var3, var4, 0);
                 }
                 else
@@ -359,17 +359,17 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getDroppedItemId(int var1, java.util.Random var2)
+        public override int GetDroppedItemId(int var1, java.util.Random var2)
         {
             return Item.REDSTONE.id;
         }
 
-        public override bool isStrongPoweringSide(World var1, int var2, int var3, int var4, int var5)
+        public override bool IsStrongPoweringSide(World var1, int var2, int var3, int var4, int var5)
         {
-            return !wiresProvidePower ? false : isPoweringSide(var1, var2, var3, var4, var5);
+            return !wiresProvidePower ? false : IsPoweringSide(var1, var2, var3, var4, var5);
         }
 
-        public override bool isPoweringSide(BlockView var1, int var2, int var3, int var4, int var5)
+        public override bool IsPoweringSide(BlockView var1, int var2, int var3, int var4, int var5)
         {
             if (!wiresProvidePower)
             {
@@ -416,12 +416,12 @@ namespace betareborn.Blocks
             }
         }
 
-        public override bool canEmitRedstonePower()
+        public override bool CanEmitRedstonePower()
         {
             return wiresProvidePower;
         }
 
-        public override void randomDisplayTick(World var1, int var2, int var3, int var4, java.util.Random var5)
+        public override void RandomDisplayTick(World var1, int var2, int var3, int var4, java.util.Random var5)
         {
             int var6 = var1.getBlockMeta(var2, var3, var4);
             if (var6 > 0)
@@ -464,7 +464,7 @@ namespace betareborn.Blocks
             {
                 return false;
             }
-            else if (Block.BLOCKS[var5].canEmitRedstonePower())
+            else if (Block.BLOCKS[var5].CanEmitRedstonePower())
             {
                 return true;
             }

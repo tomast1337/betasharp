@@ -480,7 +480,7 @@ namespace betareborn.Worlds
         public Material getMaterial(int x, int y, int z)
         {
             int var4 = getBlockId(x, y, z);
-            return var4 == 0 ? Material.AIR : Block.BLOCKS[var4].material;
+            return var4 == 0 ? Material.AIR : Block.BLOCKS[var4].Material;
         }
 
         public int getBlockMeta(int x, int y, int z)
@@ -918,9 +918,9 @@ namespace betareborn.Worlds
                     int var11 = getBlockId(var8, var9, var10);
                     int var12 = getBlockMeta(var8, var9, var10);
                     Block var13 = Block.BLOCKS[var11];
-                    if ((!bl2 || var13 == null || var13.getCollisionShape(this, var8, var9, var10) != null) && var11 > 0 && var13.hasCollision(var12, bl))
+                    if ((!bl2 || var13 == null || var13.GetCollisionShape(this, var8, var9, var10) != null) && var11 > 0 && var13.HasCollision(var12, bl))
                     {
-                        HitResult var14 = var13.raycast(this, var8, var9, var10, start, pos);
+                        HitResult var14 = var13.Raycast(this, var8, var9, var10, start, pos);
                         if (var14 != null)
                         {
                             return var14;
@@ -1080,9 +1080,9 @@ namespace betareborn.Worlds
                         int var35 = getBlockId(var8, var9, var10);
                         int var36 = getBlockMeta(var8, var9, var10);
                         Block var37 = Block.BLOCKS[var35];
-                        if ((!bl2 || var37 == null || var37.getCollisionShape(this, var8, var9, var10) != null) && var35 > 0 && var37.hasCollision(var36, bl))
+                        if ((!bl2 || var37 == null || var37.GetCollisionShape(this, var8, var9, var10) != null) && var35 > 0 && var37.HasCollision(var36, bl))
                         {
-                            HitResult var38 = var37.raycast(this, var8, var9, var10, start, pos);
+                            HitResult var38 = var37.Raycast(this, var8, var9, var10, start, pos);
                             if (var38 != null)
                             {
                                 return var38;
@@ -1265,7 +1265,7 @@ namespace betareborn.Worlds
                             Block var12 = Block.BLOCKS[getBlockId(var9, var11, var10)];
                             if (var12 != null)
                             {
-                                var12.addIntersectingBoundingBox(this, var9, var11, var10, box, collidingBoundingBoxes);
+                                var12.AddIntersectingBoundingBox(this, var9, var11, var10, box, collidingBoundingBoxes);
                             }
                         }
                     }
@@ -1442,7 +1442,7 @@ namespace betareborn.Worlds
             for (z &= 15; var4 > 0; --var4)
             {
                 int var5 = var3.getBlockId(x, var4, z);
-                Material var6 = var5 == 0 ? Material.AIR : Block.BLOCKS[var5].material;
+                Material var6 = var5 == 0 ? Material.AIR : Block.BLOCKS[var5].Material;
                 if (var6.blocksMovement() || var6.isFluid())
                 {
                     return var4 + 1;
@@ -1478,7 +1478,7 @@ namespace betareborn.Worlds
             for (int var7 = z & 15; var4 > 0; var4--)
             {
                 int var5 = var3.getBlockId(x, var4, var7);
-                if (var5 != 0 && Block.BLOCKS[var5].material.blocksMovement())
+                if (var5 != 0 && Block.BLOCKS[var5].Material.blocksMovement())
                 {
                     return var4 + 1;
                 }
@@ -1842,7 +1842,7 @@ namespace betareborn.Worlds
                     for (int var10 = var6; var10 < var7; ++var10)
                     {
                         Block var11 = Block.BLOCKS[getBlockId(var8, var9, var10)];
-                        if (var11 != null && var11.material.isFluid())
+                        if (var11 != null && var11.Material.isFluid())
                         {
                             return true;
                         }
@@ -1906,13 +1906,13 @@ namespace betareborn.Worlds
                         for (int var14 = var8; var14 < var9; ++var14)
                         {
                             Block var15 = Block.BLOCKS[getBlockId(var12, var13, var14)];
-                            if (var15 != null && var15.material == fluidMaterial)
+                            if (var15 != null && var15.Material == fluidMaterial)
                             {
                                 double var16 = (double)((float)(var13 + 1) - BlockFluid.getFluidHeightFromMeta(getBlockMeta(var12, var13, var14)));
                                 if ((double)var7 >= var16)
                                 {
                                     var10 = true;
-                                    var15.applyVelocity(this, var12, var13, var14, entity, var11);
+                                    var15.ApplyVelocity(this, var12, var13, var14, entity, var11);
                                 }
                             }
                         }
@@ -1948,7 +1948,7 @@ namespace betareborn.Worlds
                     for (int var11 = var7; var11 < var8; ++var11)
                     {
                         Block var12 = Block.BLOCKS[getBlockId(var9, var10, var11)];
-                        if (var12 != null && var12.material == material)
+                        if (var12 != null && var12.Material == material)
                         {
                             return true;
                         }
@@ -1975,7 +1975,7 @@ namespace betareborn.Worlds
                     for (int var11 = var7; var11 < var8; ++var11)
                     {
                         Block var12 = Block.BLOCKS[getBlockId(var9, var10, var11)];
-                        if (var12 != null && var12.material == fluid)
+                        if (var12 != null && var12.Material == fluid)
                         {
                             int var13 = getBlockMeta(var9, var10, var11);
                             double var14 = (double)(var10 + 1);
@@ -2151,13 +2151,13 @@ namespace betareborn.Worlds
         public bool isOpaque(int x, int y, int z)
         {
             Block var4 = Block.BLOCKS[getBlockId(x, y, z)];
-            return var4 == null ? false : var4.isOpaque();
+            return var4 == null ? false : var4.IsOpaque();
         }
 
         public bool shouldSuffocate(int x, int y, int z)
         {
             Block var4 = Block.BLOCKS[getBlockId(x, y, z)];
-            return var4 == null ? false : var4.material.suffocates() && var4.isFullCube();
+            return var4 == null ? false : var4.Material.suffocates() && var4.IsFullCube();
         }
 
         public void savingProgress(LoadingDisplay display)
@@ -2547,7 +2547,7 @@ namespace betareborn.Worlds
                     {
                         var10 = var14.getBlockId(var7, var9 - 1, var8);
                         var15 = var14.getBlockId(var7, var9, var8);
-                        if (isRaining() && var15 == 0 && Block.SNOW.canPlaceAt(this, var7 + var3, var9, var8 + var4) && var10 != 0 && var10 != Block.ICE.id && Block.BLOCKS[var10].material.blocksMovement())
+                        if (isRaining() && var15 == 0 && Block.SNOW.CanPlaceAt(this, var7 + var3, var9, var8 + var4) && var10 != 0 && var10 != Block.ICE.id && Block.BLOCKS[var10].Material.blocksMovement())
                         {
                             setBlock(var7 + var3, var9, var8 + var4, Block.SNOW.id);
                         }
@@ -2628,7 +2628,7 @@ namespace betareborn.Worlds
                 int var10 = getBlockId(var7, var8, var9);
                 if (var10 > 0)
                 {
-                    Block.BLOCKS[var10].randomDisplayTick(this, var7, var8, var9, var5);
+                    Block.BLOCKS[var10].RandomDisplayTick(this, var7, var8, var9, var5);
                 }
             }
 
@@ -2742,7 +2742,7 @@ namespace betareborn.Worlds
             int var7 = getBlockId(x, y, z);
             Block var8 = Block.BLOCKS[var7];
             Block var9 = Block.BLOCKS[blockId];
-            Box? var10 = var9.getCollisionShape(this, x, y, z);
+            Box? var10 = var9.GetCollisionShape(this, x, y, z);
             if (fallingBlock)
             {
                 var10 = null;
@@ -2759,7 +2759,7 @@ namespace betareborn.Worlds
                     var8 = null;
                 }
 
-                return blockId > 0 && var8 == null && var9.canPlaceAt(this, x, y, z, side);
+                return blockId > 0 && var8 == null && var9.CanPlaceAt(this, x, y, z, side);
             }
         }
 
@@ -2798,7 +2798,7 @@ namespace betareborn.Worlds
         public bool isStrongPoweringSide(int x, int y, int z, int side)
         {
             int var5 = getBlockId(x, y, z);
-            return var5 == 0 ? false : Block.BLOCKS[var5].isStrongPoweringSide(this, x, y, z, side);
+            return var5 == 0 ? false : Block.BLOCKS[var5].IsStrongPoweringSide(this, x, y, z, side);
         }
 
         public bool isStrongPowered(int x, int y, int z)
@@ -2815,7 +2815,7 @@ namespace betareborn.Worlds
             else
             {
                 int var5 = getBlockId(x, y, z);
-                return var5 == 0 ? false : Block.BLOCKS[var5].isPoweringSide(this, x, y, z, side);
+                return var5 == 0 ? false : Block.BLOCKS[var5].IsPoweringSide(this, x, y, z, side);
             }
         }
 
@@ -3117,7 +3117,7 @@ namespace betareborn.Worlds
             int var6 = getBlockId(x, y, z);
             if (var6 > 0)
             {
-                Block.BLOCKS[var6].onBlockAction(this, x, y, z, soundType, pitch);
+                Block.BLOCKS[var6].OnBlockAction(this, x, y, z, soundType, pitch);
             }
 
         }

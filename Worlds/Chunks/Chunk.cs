@@ -295,7 +295,7 @@ namespace betareborn.Worlds.Chunks
                 blocks[x << 11 | z << 7 | y] = (byte)(var6 & 255);
                 if (var8 != 0 && !world.isRemote)
                 {
-                    Block.BLOCKS[var8].onBreak(world, var9, y, var10);
+                    Block.BLOCKS[var8].OnBreak(world, var9, y, var10);
                 }
 
                 this.meta.setNibble(x, y, z, meta);
@@ -345,7 +345,7 @@ namespace betareborn.Worlds.Chunks
                 blocks[x << 11 | z << 7 | y] = (byte)(var5 & 255);
                 if (var7 != 0)
                 {
-                    Block.BLOCKS[var7].onBreak(world, var8, y, var9);
+                    Block.BLOCKS[var7].OnBreak(world, var8, y, var9);
                 }
 
                 meta.setNibble(x, y, z, 0);

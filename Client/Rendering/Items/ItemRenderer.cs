@@ -49,12 +49,12 @@ namespace betareborn.Client.Rendering.Items
             float var16;
             float var17;
             float var18;
-            if (var10.itemId < 256 && BlockRenderer.isSideLit(Block.BLOCKS[var10.itemId].getRenderType()))
+            if (var10.itemId < 256 && BlockRenderer.isSideLit(Block.BLOCKS[var10.itemId].GetRenderType()))
             {
                 GLManager.GL.Rotate(var12, 0.0F, 1.0F, 0.0F);
                 loadTexture("/terrain.png");
                 float var28 = 0.25F;
-                if (!Block.BLOCKS[var10.itemId].isFullCube() && var10.itemId != Block.SLAB.id && Block.BLOCKS[var10.itemId].getRenderType() != 16)
+                if (!Block.BLOCKS[var10.itemId].IsFullCube() && var10.itemId != Block.SLAB.id && Block.BLOCKS[var10.itemId].GetRenderType() != 16)
                 {
                     var28 = 0.5F;
                 }
@@ -141,7 +141,7 @@ namespace betareborn.Client.Rendering.Items
         public void drawItemIntoGui(TextRenderer var1, TextureManager var2, int var3, int var4, int var5, int var6, int var7)
         {
             float var11;
-            if (var3 < 256 && BlockRenderer.isSideLit(Block.BLOCKS[var3].getRenderType()))
+            if (var3 < 256 && BlockRenderer.isSideLit(Block.BLOCKS[var3].GetRenderType()))
             {
                 var2.bindTexture(var2.getTextureId("/terrain.png"));
                 Block var14 = Block.BLOCKS[var3];

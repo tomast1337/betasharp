@@ -22,39 +22,39 @@ namespace betareborn.Blocks
             setBoundingBox(0.5F - halfWidth, 0.0F, 0.5F - halfWidth, 0.5F + halfWidth, fullHeight, 0.5F + halfWidth);
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return 0;
         }
 
-        public override Box getBoundingBox(World world, int x, int y, int z)
+        public override Box GetBoundingBox(World world, int x, int y, int z)
         {
-            updateBoundingBox(world, x, y, z);
-            return base.getBoundingBox(world, x, y, z);
+            UpdateBoundingBox(world, x, y, z);
+            return base.GetBoundingBox(world, x, y, z);
         }
 
-        public override Box? getCollisionShape(World world, int x, int y, int z)
+        public override Box? GetCollisionShape(World world, int x, int y, int z)
         {
-            updateBoundingBox(world, x, y, z);
-            return base.getCollisionShape(world, x, y, z);
+            UpdateBoundingBox(world, x, y, z);
+            return base.GetCollisionShape(world, x, y, z);
         }
 
-        public override void updateBoundingBox(BlockView blockView, int x, int y, int z)
+        public override void UpdateBoundingBox(BlockView blockView, int x, int y, int z)
         {
             updateBoundingBox(blockView.getBlockMeta(x, y, z));
         }
 
-        public override void setupRenderBoundingBox()
+        public override void SetupRenderBoundingBox()
         {
             float height = 3.0F / 16.0F;
             setBoundingBox(0.0F, 0.5F - height / 2.0F, 0.0F, 1.0F, 0.5F + height / 2.0F, 1.0F);
@@ -89,14 +89,14 @@ namespace betareborn.Blocks
 
         }
 
-        public override void onBlockBreakStart(World world, int x, int y, int z, EntityPlayer player)
+        public override void OnBlockBreakStart(World world, int x, int y, int z, EntityPlayer player)
         {
-            onUse(world, x, y, z, player);
+            OnUse(world, x, y, z, player);
         }
 
-        public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
+        public override bool OnUse(World world, int x, int y, int z, EntityPlayer player)
         {
-            if (material == Material.METAL)
+            if (Material == Material.METAL)
             {
                 return true;
             }
@@ -150,10 +150,10 @@ namespace betareborn.Blocks
                 if (!world.shouldSuffocate(xPos, y, zPos))
                 {
                     world.setBlock(x, y, z, 0);
-                    dropStacks(world, x, y, z, meta);
+                    DropStacks(world, x, y, z, meta);
                 }
 
-                if (id > 0 && Block.BLOCKS[id].canEmitRedstonePower())
+                if (id > 0 && Block.BLOCKS[id].CanEmitRedstonePower())
                 {
                     bool isPowered = world.isPowered(x, y, z);
                     setOpen(world, x, y, z, isPowered);
@@ -162,13 +162,13 @@ namespace betareborn.Blocks
             }
         }
 
-        public override HitResult raycast(World world, int x, int y, int z, Vec3D startPos, Vec3D endPos)
+        public override HitResult Raycast(World world, int x, int y, int z, Vec3D startPos, Vec3D endPos)
         {
-            updateBoundingBox(world, x, y, z);
-            return base.raycast(world, x, y, z, startPos, endPos);
+            UpdateBoundingBox(world, x, y, z);
+            return base.Raycast(world, x, y, z, startPos, endPos);
         }
 
-        public override void onPlaced(World world, int x, int y, int z, int direction)
+        public override void OnPlaced(World world, int x, int y, int z, int direction)
         {
             sbyte meta = 0;
             if (direction == 2)
@@ -194,7 +194,7 @@ namespace betareborn.Blocks
             world.setBlockMeta(x, y, z, meta);
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z, int side)
+        public override bool CanPlaceAt(World world, int x, int y, int z, int side)
         {
             if (side == 0)
             {

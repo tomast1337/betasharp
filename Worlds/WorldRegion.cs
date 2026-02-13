@@ -178,7 +178,7 @@ namespace betareborn.Worlds
         public Material getMaterial(int x, int y, int z)
         {
             int var4 = getBlockId(x, y, z);
-            return var4 == 0 ? Material.AIR : Block.BLOCKS[var4].material;
+            return var4 == 0 ? Material.AIR : Block.BLOCKS[var4].Material;
         }
 
         public BiomeSource getBiomeSource()
@@ -189,13 +189,13 @@ namespace betareborn.Worlds
         public bool isOpaque(int x, int y, int z)
         {
             Block var4 = Block.BLOCKS[getBlockId(x, y, z)];
-            return var4 == null ? false : var4.isOpaque();
+            return var4 == null ? false : var4.IsOpaque();
         }
 
         public bool shouldSuffocate(int x, int y, int z)
         {
             Block var4 = Block.BLOCKS[getBlockId(x, y, z)];
-            return var4 == null ? false : var4.material.blocksMovement() && var4.isFullCube();
+            return var4 == null ? false : var4.Material.blocksMovement() && var4.IsFullCube();
         }
     }
 

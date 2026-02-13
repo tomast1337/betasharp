@@ -23,18 +23,18 @@ namespace betareborn.Blocks
             setBoundingBox(0.5F - width, 0.0F, 0.5F - width, 0.5F + width, height, 0.5F + width);
         }
 
-        public override Box? getCollisionShape(World world, int x, int y, int z)
+        public override Box? GetCollisionShape(World world, int x, int y, int z)
         {
             return null;
         }
 
-        public override Box getBoundingBox(World world, int x, int y, int z)
+        public override Box GetBoundingBox(World world, int x, int y, int z)
         {
-            updateBoundingBox(world, x, y, z);
-            return base.getBoundingBox(world, x, y, z);
+            UpdateBoundingBox(world, x, y, z);
+            return base.GetBoundingBox(world, x, y, z);
         }
 
-        public override void updateBoundingBox(BlockView blockView, int x, int y, int z)
+        public override void UpdateBoundingBox(BlockView blockView, int x, int y, int z)
         {
             if (!standing)
             {
@@ -68,17 +68,17 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return -1;
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
@@ -95,7 +95,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
             return Item.SIGN.id;
         }
@@ -137,7 +137,7 @@ namespace betareborn.Blocks
 
             if (shouldBreak)
             {
-                dropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
+                DropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
                 world.setBlock(x, y, z, 0);
             }
 

@@ -20,7 +20,7 @@ namespace betareborn.Blocks
             textureId = 45;
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
             return Block.FURNACE.id;
         }
@@ -64,7 +64,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getTextureId(BlockView blockView, int x, int y, int z, int side)
+        public override int GetTextureId(BlockView blockView, int x, int y, int z, int side)
         {
             if (side == 1)
             {
@@ -81,7 +81,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override void randomDisplayTick(World world, int x, int y, int z, java.util.Random random)
+        public override void RandomDisplayTick(World world, int x, int y, int z, java.util.Random random)
         {
             if (lit)
             {
@@ -115,12 +115,12 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getTexture(int side)
+        public override int GetTexture(int side)
         {
             return side == 1 ? textureId + 17 : (side == 0 ? textureId + 17 : (side == 3 ? textureId - 1 : textureId));
         }
 
-        public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
+        public override bool OnUse(World world, int x, int y, int z, EntityPlayer player)
         {
             if (world.isRemote)
             {
@@ -159,7 +159,7 @@ namespace betareborn.Blocks
             return new BlockEntityFurnace();
         }
 
-        public override void onPlaced(World world, int x, int y, int z, EntityLiving placer)
+        public override void OnPlaced(World world, int x, int y, int z, EntityLiving placer)
         {
             int direction = MathHelper.floor_double((double)(placer.yaw * 4.0F / 360.0F) + 0.5D) & 3;
             if (direction == 0)
@@ -184,7 +184,7 @@ namespace betareborn.Blocks
 
         }
 
-        public override void onBreak(World world, int x, int y, int z)
+        public override void OnBreak(World world, int x, int y, int z)
         {
             if (!ignoreBlockRemoval)
             {
@@ -219,7 +219,7 @@ namespace betareborn.Blocks
                 }
             }
 
-            base.onBreak(world, x, y, z);
+            base.OnBreak(world, x, y, z);
         }
     }
 }

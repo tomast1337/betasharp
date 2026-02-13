@@ -13,11 +13,11 @@ namespace betareborn.Blocks
         public BlockPumpkin(int id, int textureId, bool lit) : base(id, Material.PUMPKIN)
         {
             this.textureId = textureId;
-            setTickRandomly(true);
+            SetTickRandomly(true);
             this.lit = lit;
         }
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
             if (side == 1)
             {
@@ -41,7 +41,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getTexture(int side)
+        public override int GetTexture(int side)
         {
             return side == 1 ? textureId : (side == 0 ? textureId : (side == 3 ? textureId + 1 + 16 : textureId + 16));
         }
@@ -51,13 +51,13 @@ namespace betareborn.Blocks
             base.OnPlaced(world, x, y, z);
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z)
+        public override bool CanPlaceAt(World world, int x, int y, int z)
         {
             int blockId = world.getBlockId(x, y, z);
-            return (blockId == 0 || Block.BLOCKS[blockId].material.isReplaceable()) && world.shouldSuffocate(x, y - 1, z);
+            return (blockId == 0 || Block.BLOCKS[blockId].Material.isReplaceable()) && world.shouldSuffocate(x, y - 1, z);
         }
 
-        public override void onPlaced(World world, int x, int y, int z, EntityLiving placer)
+        public override void OnPlaced(World world, int x, int y, int z, EntityLiving placer)
         {
             int direction = MathHelper.floor_double((double)(placer.yaw * 4.0F / 360.0F) + 2.5D) & 3;
             world.setBlockMeta(x, y, z, direction);

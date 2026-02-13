@@ -32,23 +32,23 @@ namespace betareborn.Blocks
             return alwaysStraight;
         }
 
-        public override Box? getCollisionShape(World world, int x, int y, int z)
+        public override Box? GetCollisionShape(World world, int x, int y, int z)
         {
             return null;
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override HitResult raycast(World world, int x, int y, int z, Vec3D startPos, Vec3D endPos)
+        public override HitResult Raycast(World world, int x, int y, int z, Vec3D startPos, Vec3D endPos)
         {
-            updateBoundingBox(world, x, y, z);
-            return base.raycast(world, x, y, z, startPos, endPos);
+            UpdateBoundingBox(world, x, y, z);
+            return base.Raycast(world, x, y, z, startPos, endPos);
         }
 
-        public override void updateBoundingBox(BlockView blockView, int x, int y, int z)
+        public override void UpdateBoundingBox(BlockView blockView, int x, int y, int z)
         {
             int meta = blockView.getBlockMeta(x, y, z);
             if (meta >= 2 && meta <= 5)
@@ -62,7 +62,7 @@ namespace betareborn.Blocks
 
         }
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
             if (alwaysStraight)
             {
@@ -79,17 +79,17 @@ namespace betareborn.Blocks
             return textureId;
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return 9;
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z)
+        public override bool CanPlaceAt(World world, int x, int y, int z)
         {
             return world.shouldSuffocate(x, y - 1, z);
         }
@@ -142,7 +142,7 @@ namespace betareborn.Blocks
 
                 if (shouldBreak)
                 {
-                    dropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
+                    DropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
                     world.setBlock(x, y, z, 0);
                 }
                 else if (base.id == Block.POWERED_RAIL.id)
@@ -170,7 +170,7 @@ namespace betareborn.Blocks
                         }
                     }
                 }
-                else if (id > 0 && Block.BLOCKS[id].canEmitRedstonePower() && !alwaysStraight && RailLogic.getNAdjacentTracks(new RailLogic(this, world, x, y, z)) == 3)
+                else if (id > 0 && Block.BLOCKS[id].CanEmitRedstonePower() && !alwaysStraight && RailLogic.getNAdjacentTracks(new RailLogic(this, world, x, y, z)) == 3)
                 {
                     updateShape(world, x, y, z, false);
                 }
@@ -311,7 +311,7 @@ namespace betareborn.Blocks
             return false;
         }
 
-        public override int getPistonBehavior()
+        public override int GetPistonBehavior()
         {
             return 0;
         }

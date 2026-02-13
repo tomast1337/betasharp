@@ -23,9 +23,9 @@ namespace betareborn.Blocks
             world.setBlockEntity(x, y, z, getBlockEntity());
         }
 
-        public override void onBreak(World world, int x, int y, int z)
+        public override void OnBreak(World world, int x, int y, int z)
         {
-            base.onBreak(world, x, y, z);
+            base.OnBreak(world, x, y, z);
             world.removeBlockEntity(x, y, z);
         }
 

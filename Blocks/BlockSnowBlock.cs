@@ -9,15 +9,15 @@ namespace betareborn.Blocks
 
         public BlockSnowBlock(int id, int textureId) : base(id, textureId, Material.SNOW_BLOCK)
         {
-            setTickRandomly(true);
+            SetTickRandomly(true);
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
             return Item.SNOWBALL.id;
         }
 
-        public override int getDroppedItemCount(java.util.Random random)
+        public override int GetDroppedItemCount(java.util.Random random)
         {
             return 4;
         }
@@ -26,7 +26,7 @@ namespace betareborn.Blocks
         {
             if (world.getBrightness(LightType.Block, x, y, z) > 11)
             {
-                dropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
+                DropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
                 world.setBlock(x, y, z, 0);
             }
 

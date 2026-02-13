@@ -166,7 +166,7 @@ namespace betareborn.Items
                                 colorIndex = 0;
                                 if (sampleZ > 0)
                                 {
-                                    MapColor mapColor = Block.BLOCKS[sampleZ].material.mapColor;
+                                    MapColor mapColor = Block.BLOCKS[sampleZ].Material.mapColor;
                                     if (mapColor == MapColor.waterColor)
                                     {
                                         shadeFactor = (double)fluidDepth * 0.1D + (double)(pixelX + pixelZ & 1) * 0.2D;
@@ -232,7 +232,7 @@ namespace betareborn.Items
                 {
                     foundSurface = false;
                 }
-                else if (scanY > 0 && blockId > 0 && Block.BLOCKS[blockId].material.mapColor == MapColor.airColor)
+                else if (scanY > 0 && blockId > 0 && Block.BLOCKS[blockId].Material.mapColor == MapColor.airColor)
                 {
                     foundSurface = false;
                 }
@@ -245,7 +245,7 @@ namespace betareborn.Items
 
                 if (foundSurface)
                 {
-                    if (blockId == 0 || !Block.BLOCKS[blockId].material.isFluid())
+                    if (blockId == 0 || !Block.BLOCKS[blockId].Material.isFluid())
                     {
                         exitLoop = true;
                     }
@@ -257,7 +257,7 @@ namespace betareborn.Items
                         {
                             int fluidBlockId = chunk.getBlockId(chunkX + dx, depthCheckY--, chunkZ + dz);
                             ++fluidDepth;
-                            if (depthCheckY <= 0 || fluidBlockId == 0 || !Block.BLOCKS[fluidBlockId].material.isFluid())
+                            if (depthCheckY <= 0 || fluidBlockId == 0 || !Block.BLOCKS[fluidBlockId].Material.isFluid())
                             {
                                 exitLoop = true;
                                 break;

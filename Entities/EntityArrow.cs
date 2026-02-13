@@ -110,8 +110,8 @@ namespace betareborn.Entities
             int blockId = world.getBlockId(xTile, yTile, zTile);
             if (blockId > 0)
             {
-                Block.BLOCKS[blockId].updateBoundingBox(world, xTile, yTile, zTile);
-                Box? box = Block.BLOCKS[blockId].getCollisionShape(world, xTile, yTile, zTile);
+                Block.BLOCKS[blockId].UpdateBoundingBox(world, xTile, yTile, zTile);
+                Box? box = Block.BLOCKS[blockId].GetCollisionShape(world, xTile, yTile, zTile);
                 if (box != null && box.Value.contains(new Vec3D(x, y, z)))
                 {
                     inGround = true;

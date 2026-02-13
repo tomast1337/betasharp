@@ -12,15 +12,15 @@ namespace betareborn.Blocks
             this.hideAdjacentFaces = hideAdjacentFaces;
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override bool isSideVisible(BlockView blockView, int x, int y, int z, int side)
+        public override bool IsSideVisible(BlockView blockView, int x, int y, int z, int side)
         {
             int neighborBlockId = blockView.getBlockId(x, y, z);
-            return !hideAdjacentFaces && neighborBlockId == id ? false : base.isSideVisible(blockView, x, y, z, side);
+            return !hideAdjacentFaces && neighborBlockId == id ? false : base.IsSideVisible(blockView, x, y, z, side);
         }
     }
 

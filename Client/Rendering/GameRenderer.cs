@@ -642,7 +642,7 @@ namespace betareborn.Client.Rendering
                         float var21 = random.nextFloat();
                         if (var19 > 0)
                         {
-                            if (Block.BLOCKS[var19].material == Material.LAVA)
+                            if (Block.BLOCKS[var19].Material == Material.LAVA)
                             {
                                 client.particleManager.addEffect(new EntitySmokeFX(var3, (double)(var16 + var20), (double)(var18 + 0.1F) - Block.BLOCKS[var19].minY, (double)(var17 + var21), 0.0D, 0.0D, 0.0D));
                             }

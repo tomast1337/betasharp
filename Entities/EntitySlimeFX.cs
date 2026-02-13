@@ -12,7 +12,7 @@ namespace betareborn.Entities
         {
             particleTextureIndex = item.getTextureId(0);
             particleRed = particleGreen = particleBlue = 1.0F;
-            particleGravity = Block.SNOW_BLOCK.particleFallSpeedModifier;
+            particleGravity = Block.SNOW_BLOCK.ParticleFallSpeedModifier;
             particleScale /= 2.0F;
         }
 

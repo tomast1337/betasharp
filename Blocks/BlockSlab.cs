@@ -16,20 +16,20 @@ namespace betareborn.Blocks
                 setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
             }
 
-            setOpacity(255);
+            SetOpacity(255);
         }
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
             return meta == 0 ? (side <= 1 ? 6 : 5) : (meta == 1 ? (side == 0 ? 208 : (side == 1 ? 176 : 192)) : (meta == 2 ? 4 : (meta == 3 ? 16 : 6)));
         }
 
-        public override int getTexture(int side)
+        public override int GetTexture(int side)
         {
-            return getTexture(side, 0);
+            return GetTexture(side, 0);
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return doubleSlab;
         }
@@ -55,34 +55,34 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
             return Block.SLAB.id;
         }
 
-        public override int getDroppedItemCount(java.util.Random random)
+        public override int GetDroppedItemCount(java.util.Random random)
         {
             return doubleSlab ? 2 : 1;
         }
 
-        protected override int getDroppedItemMeta(int blockMeta)
+        protected override int GetDroppedItemMeta(int blockMeta)
         {
             return blockMeta;
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return doubleSlab;
         }
 
-        public override bool isSideVisible(BlockView blockView, int x, int y, int z, int side)
+        public override bool IsSideVisible(BlockView blockView, int x, int y, int z, int side)
         {
             if (this != Block.SLAB)
             {
-                base.isSideVisible(blockView, x, y, z, side);
+                base.IsSideVisible(blockView, x, y, z, side);
             }
 
-            return side == 1 ? true : (!base.isSideVisible(blockView, x, y, z, side) ? false : (side == 0 ? true : blockView.getBlockId(x, y, z) != id));
+            return side == 1 ? true : (!base.IsSideVisible(blockView, x, y, z, side) ? false : (side == 0 ? true : blockView.getBlockId(x, y, z) != id));
         }
     }
 

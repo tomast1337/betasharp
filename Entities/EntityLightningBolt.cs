@@ -24,7 +24,7 @@ namespace betareborn.Entities
                 int strikeX = MathHelper.floor_double(x);
                 int strikeY = MathHelper.floor_double(y);
                 int strikeZ = MathHelper.floor_double(z);
-                if (world.getBlockId(strikeX, strikeY, strikeZ) == 0 && Block.FIRE.canPlaceAt(world, strikeX, strikeY, strikeZ))
+                if (world.getBlockId(strikeX, strikeY, strikeZ) == 0 && Block.FIRE.CanPlaceAt(world, strikeX, strikeY, strikeZ))
                 {
                     world.setBlock(strikeX, strikeY, strikeZ, Block.FIRE.id);
                 }
@@ -34,7 +34,7 @@ namespace betareborn.Entities
                     strikeY = MathHelper.floor_double(x) + random.nextInt(3) - 1;
                     strikeZ = MathHelper.floor_double(y) + random.nextInt(3) - 1;
                     int fireZ = MathHelper.floor_double(z) + random.nextInt(3) - 1;
-                    if (world.getBlockId(strikeY, strikeZ, fireZ) == 0 && Block.FIRE.canPlaceAt(world, strikeY, strikeZ, fireZ))
+                    if (world.getBlockId(strikeY, strikeZ, fireZ) == 0 && Block.FIRE.CanPlaceAt(world, strikeY, strikeZ, fireZ))
                     {
                         world.setBlock(strikeY, strikeZ, fireZ, Block.FIRE.id);
                     }
@@ -69,7 +69,7 @@ namespace betareborn.Entities
                         int floorX = MathHelper.floor_double(x);
                         int floorY = MathHelper.floor_double(y);
                         int floorZ = MathHelper.floor_double(z);
-                        if (world.getBlockId(floorX, floorY, floorZ) == 0 && Block.FIRE.canPlaceAt(world, floorX, floorY, floorZ))
+                        if (world.getBlockId(floorX, floorY, floorZ) == 0 && Block.FIRE.CanPlaceAt(world, floorX, floorY, floorZ))
                         {
                             world.setBlock(floorX, floorY, floorZ, Block.FIRE.id);
                         }

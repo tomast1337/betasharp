@@ -14,7 +14,7 @@ namespace betareborn.Blocks
         {
             if (lit)
             {
-                setTickRandomly(true);
+                SetTickRandomly(true);
             }
 
             this.lit = lit;
@@ -25,22 +25,22 @@ namespace betareborn.Blocks
             return 30;
         }
 
-        public override void onBlockBreakStart(World world, int x, int y, int z, EntityPlayer player)
+        public override void OnBlockBreakStart(World world, int x, int y, int z, EntityPlayer player)
         {
             light(world, x, y, z);
-            base.onBlockBreakStart(world, x, y, z, player);
+            base.OnBlockBreakStart(world, x, y, z, player);
         }
 
-        public override void onSteppedOn(World world, int x, int y, int z, Entity entity)
+        public override void OnSteppedOn(World world, int x, int y, int z, Entity entity)
         {
             light(world, x, y, z);
-            base.onSteppedOn(world, x, y, z, entity);
+            base.OnSteppedOn(world, x, y, z, entity);
         }
 
-        public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
+        public override bool OnUse(World world, int x, int y, int z, EntityPlayer player)
         {
             light(world, x, y, z);
-            return base.onUse(world, x, y, z, player);
+            return base.OnUse(world, x, y, z, player);
         }
 
         private void light(World world, int x, int y, int z)
@@ -62,17 +62,17 @@ namespace betareborn.Blocks
 
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
             return Item.REDSTONE.id;
         }
 
-        public override int getDroppedItemCount(java.util.Random random)
+        public override int GetDroppedItemCount(java.util.Random random)
         {
             return 4 + random.nextInt(2);
         }
 
-        public override void randomDisplayTick(World world, int x, int y, int z, java.util.Random random)
+        public override void RandomDisplayTick(World world, int x, int y, int z, java.util.Random random)
         {
             if (lit)
             {

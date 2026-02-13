@@ -13,10 +13,10 @@ namespace betareborn.Blocks
             float var3 = 0.0F;
             float var4 = 0.0F;
             setBoundingBox(0.0F + var4, 0.0F + var3, 0.0F + var4, 1.0F + var4, 1.0F + var3, 1.0F + var4);
-            setTickRandomly(true);
+            SetTickRandomly(true);
         }
 
-        public override int getColorMultiplier(BlockView blockView, int x, int y, int z)
+        public override int GetColorMultiplier(BlockView blockView, int x, int y, int z)
         {
             return 16777215;
         }
@@ -32,19 +32,19 @@ namespace betareborn.Blocks
             return height;
         }
 
-        public override int getTexture(int side)
+        public override int GetTexture(int side)
         {
             return side != 0 && side != 1 ? textureId + 1 : textureId;
         }
 
         protected int getLiquidState(World world, int x, int y, int z)
         {
-            return world.getMaterial(x, y, z) != material ? -1 : world.getBlockMeta(x, y, z);
+            return world.getMaterial(x, y, z) != Material ? -1 : world.getBlockMeta(x, y, z);
         }
 
         protected int getLiquidDepth(BlockView blockView, int x, int y, int z)
         {
-            if (blockView.getMaterial(x, y, z) != material)
+            if (blockView.getMaterial(x, y, z) != Material)
             {
                 return -1;
             }
@@ -60,53 +60,53 @@ namespace betareborn.Blocks
             }
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override bool hasCollision(int meta, bool allowLiquids)
+        public override bool HasCollision(int meta, bool allowLiquids)
         {
             return allowLiquids && meta == 0;
         }
 
-        public override bool isSolidFace(BlockView blockView, int x, int y, int z, int face)
+        public override bool IsSolidFace(BlockView blockView, int x, int y, int z, int face)
         {
             Material material = blockView.getMaterial(x, y, z);
-            return material == base.material ?
+            return material == base.Material ?
                 false :
-                (material == Material.ICE ? false : (face == 1 ? true : base.isSolidFace(blockView, x, y, z, face)));
+                (material == Material.ICE ? false : (face == 1 ? true : base.IsSolidFace(blockView, x, y, z, face)));
         }
 
-        public override bool isSideVisible(BlockView blockView, int x, int y, int z, int side)
+        public override bool IsSideVisible(BlockView blockView, int x, int y, int z, int side)
         {
             Material material = blockView.getMaterial(x, y, z);
-            return material == base.material ?
+            return material == base.Material ?
                 false :
-                (material == Material.ICE ? false : (side == 1 ? true : base.isSideVisible(blockView, x, y, z, side)));
+                (material == Material.ICE ? false : (side == 1 ? true : base.IsSideVisible(blockView, x, y, z, side)));
         }
 
-        public override Box? getCollisionShape(World world, int x, int y, int z)
+        public override Box? GetCollisionShape(World world, int x, int y, int z)
         {
             return null;
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return 4;
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
             return 0;
         }
 
-        public override int getDroppedItemCount(java.util.Random random)
+        public override int GetDroppedItemCount(java.util.Random random)
         {
             return 0;
         }
@@ -164,42 +164,42 @@ namespace betareborn.Blocks
             if (blockView.getBlockMeta(x, y, z) >= 8)
             {
                 bool hasAdjacentSolid = false;
-                if (hasAdjacentSolid || isSolidFace(blockView, x, y, z - 1, 2))
+                if (hasAdjacentSolid || IsSolidFace(blockView, x, y, z - 1, 2))
                 {
                     hasAdjacentSolid = true;
                 }
 
-                if (hasAdjacentSolid || isSolidFace(blockView, x, y, z + 1, 3))
+                if (hasAdjacentSolid || IsSolidFace(blockView, x, y, z + 1, 3))
                 {
                     hasAdjacentSolid = true;
                 }
 
-                if (hasAdjacentSolid || isSolidFace(blockView, x - 1, y, z, 4))
+                if (hasAdjacentSolid || IsSolidFace(blockView, x - 1, y, z, 4))
                 {
                     hasAdjacentSolid = true;
                 }
 
-                if (hasAdjacentSolid || isSolidFace(blockView, x + 1, y, z, 5))
+                if (hasAdjacentSolid || IsSolidFace(blockView, x + 1, y, z, 5))
                 {
                     hasAdjacentSolid = true;
                 }
 
-                if (hasAdjacentSolid || isSolidFace(blockView, x, y + 1, z - 1, 2))
+                if (hasAdjacentSolid || IsSolidFace(blockView, x, y + 1, z - 1, 2))
                 {
                     hasAdjacentSolid = true;
                 }
 
-                if (hasAdjacentSolid || isSolidFace(blockView, x, y + 1, z + 1, 3))
+                if (hasAdjacentSolid || IsSolidFace(blockView, x, y + 1, z + 1, 3))
                 {
                     hasAdjacentSolid = true;
                 }
 
-                if (hasAdjacentSolid || isSolidFace(blockView, x - 1, y + 1, z, 4))
+                if (hasAdjacentSolid || IsSolidFace(blockView, x - 1, y + 1, z, 4))
                 {
                     hasAdjacentSolid = true;
                 }
 
-                if (hasAdjacentSolid || isSolidFace(blockView, x + 1, y + 1, z, 5))
+                if (hasAdjacentSolid || IsSolidFace(blockView, x + 1, y + 1, z, 5))
                 {
                     hasAdjacentSolid = true;
                 }
@@ -214,7 +214,7 @@ namespace betareborn.Blocks
             return flowVector;
         }
 
-        public override void applyVelocity(World world, int x, int y, int z, Entity entity, Vec3D velocity)
+        public override void ApplyVelocity(World world, int x, int y, int z, Entity entity, Vec3D velocity)
         {
             Vector3D<double> flowVec = getFlow(world, x, y, z);
             velocity.x += flowVec.X;
@@ -224,7 +224,7 @@ namespace betareborn.Blocks
 
         public override int GetTickRate()
         {
-            return material == Material.WATER ? 5 : (material == Material.LAVA ? 30 : 0);
+            return Material == Material.WATER ? 5 : (Material == Material.LAVA ? 30 : 0);
         }
 
         public override float getLuminance(BlockView blockView, int x, int y, int z)
@@ -239,14 +239,14 @@ namespace betareborn.Blocks
             base.OnTick(world, x, y, z, random);
         }
 
-        public override int getRenderLayer()
+        public override int GetRenderLayer()
         {
-            return material == Material.WATER ? 1 : 0;
+            return Material == Material.WATER ? 1 : 0;
         }
 
-        public override void randomDisplayTick(World world, int x, int y, int z, java.util.Random random)
+        public override void RandomDisplayTick(World world, int x, int y, int z, java.util.Random random)
         {
-            if (material == Material.WATER && random.nextInt(64) == 0)
+            if (Material == Material.WATER && random.nextInt(64) == 0)
             {
                 int meta = world.getBlockMeta(x, y, z);
                 if (meta > 0 && meta < 8)
@@ -255,7 +255,7 @@ namespace betareborn.Blocks
                 }
             }
 
-            if (material == Material.LAVA && world.getMaterial(x, y + 1, z) == Material.AIR && !world.isOpaque(x, y + 1, z) && random.nextInt(100) == 0)
+            if (Material == Material.LAVA && world.getMaterial(x, y + 1, z) == Material.AIR && !world.isOpaque(x, y + 1, z) && random.nextInt(100) == 0)
             {
                 double particleX = (double)((float)x + random.nextFloat());
                 double particleY = (double)y + maxY;
@@ -295,7 +295,7 @@ namespace betareborn.Blocks
         {
             if (world.getBlockId(x, y, z) == id)
             {
-                if (material == Material.LAVA)
+                if (Material == Material.LAVA)
                 {
                     bool hasWaterAdjacent = false;
                     if (hasWaterAdjacent || world.getMaterial(x, y, z - 1) == Material.WATER)

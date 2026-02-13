@@ -109,7 +109,7 @@ namespace betareborn.Worlds.Gen.Features
                 }
             }
 
-            if (Block.BLOCKS[waterBlockId].material == Material.LAVA)
+            if (Block.BLOCKS[waterBlockId].Material == Material.LAVA)
             {
                 for (var8 = 0; var8 < 16; ++var8)
                 {

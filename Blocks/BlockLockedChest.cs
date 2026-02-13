@@ -11,7 +11,7 @@ namespace betareborn.Blocks
             textureId = 26;
         }
 
-        public override int getTextureId(BlockView blockView, int x, int y, int z, int side)
+        public override int GetTextureId(BlockView blockView, int x, int y, int z, int side)
         {
             if (side == 1)
             {
@@ -52,12 +52,12 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getTexture(int side)
+        public override int GetTexture(int side)
         {
             return side == 1 ? textureId - 1 : (side == 0 ? textureId - 1 : (side == 3 ? textureId + 1 : textureId));
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z)
+        public override bool CanPlaceAt(World world, int x, int y, int z)
         {
             return true;
         }

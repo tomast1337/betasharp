@@ -7,10 +7,10 @@ namespace betareborn.Blocks
     {
         public BlockStationary(int id, Material material) : base(id, material)
         {
-            setTickRandomly(false);
+            SetTickRandomly(false);
             if (material == Material.LAVA)
             {
-                setTickRandomly(true);
+                SetTickRandomly(true);
             }
 
         }
@@ -37,7 +37,7 @@ namespace betareborn.Blocks
 
         public override void OnTick(World world, int x, int y, int z, java.util.Random random)
         {
-            if (material == Material.LAVA)
+            if (Material == Material.LAVA)
             {
                 int attempts = random.nextInt(3);
 
@@ -55,7 +55,7 @@ namespace betareborn.Blocks
                             return;
                         }
                     }
-                    else if (Block.BLOCKS[neighborBlockId].material.blocksMovement())
+                    else if (Block.BLOCKS[neighborBlockId].Material.blocksMovement())
                     {
                         return;
                     }

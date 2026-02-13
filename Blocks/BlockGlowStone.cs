@@ -10,12 +10,12 @@ namespace betareborn.Blocks
         {
         }
 
-        public override int getDroppedItemCount(java.util.Random random)
+        public override int GetDroppedItemCount(java.util.Random random)
         {
             return 2 + random.nextInt(3);
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
             return Item.GLOWSTONE_DUST.id;
         }

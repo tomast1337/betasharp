@@ -8,7 +8,7 @@ namespace betareborn.Blocks
         {
         }
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
             if (meta == 0)
             {
@@ -21,7 +21,7 @@ namespace betareborn.Blocks
             }
         }
 
-        protected override int getDroppedItemMeta(int blockMeta)
+        protected override int GetDroppedItemMeta(int blockMeta)
         {
             return blockMeta;
         }

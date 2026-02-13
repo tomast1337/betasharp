@@ -9,10 +9,10 @@ namespace betareborn.Blocks
         public BlockGrass(int id) : base(id, Material.SOLID_ORGANIC)
         {
             textureId = 3;
-            setTickRandomly(true);
+            SetTickRandomly(true);
         }
 
-        public override int getTextureId(BlockView blockView, int x, int y, int z, int side)
+        public override int GetTextureId(BlockView blockView, int x, int y, int z, int side)
         {
             if (side == 1)
             {
@@ -29,7 +29,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getColorMultiplier(BlockView blockView, int x, int y, int z)
+        public override int GetColorMultiplier(BlockView blockView, int x, int y, int z)
         {
             blockView.getBiomeSource().getBiomesInArea(x, z, 1, 1);
             double temperature = blockView.getBiomeSource().temperatureMap[0];
@@ -65,9 +65,9 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getDroppedItemId(int blocKMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blocKMeta, java.util.Random random)
         {
-            return Block.DIRT.getDroppedItemId(0, random);
+            return Block.DIRT.GetDroppedItemId(0, random);
         }
     }
 

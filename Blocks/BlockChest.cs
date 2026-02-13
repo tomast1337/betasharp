@@ -16,7 +16,7 @@ namespace betareborn.Blocks
             textureId = 26;
         }
 
-        public override int getTextureId(BlockView blockView, int x, int y, int z, int side)
+        public override int GetTextureId(BlockView blockView, int x, int y, int z, int side)
         {
             if (side == 1)
             {
@@ -131,12 +131,12 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getTexture(int side)
+        public override int GetTexture(int side)
         {
             return side == 1 ? textureId - 1 : (side == 0 ? textureId - 1 : (side == 3 ? textureId + 1 : textureId));
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z)
+        public override bool CanPlaceAt(World world, int x, int y, int z)
         {
             int adjacentChestCount = 0;
             if (world.getBlockId(x - 1, y, z) == id)
@@ -167,7 +167,7 @@ namespace betareborn.Blocks
             return world.getBlockId(x, y, z) != id ? false : (world.getBlockId(x - 1, y, z) == id ? true : (world.getBlockId(x + 1, y, z) == id ? true : (world.getBlockId(x, y, z - 1) == id ? true : world.getBlockId(x, y, z + 1) == id)));
         }
 
-        public override void onBreak(World world, int x, int y, int z)
+        public override void OnBreak(World world, int x, int y, int z)
         {
             BlockEntityChest chest = (BlockEntityChest)world.getBlockEntity(x, y, z);
 
@@ -199,10 +199,10 @@ namespace betareborn.Blocks
                 }
             }
 
-            base.onBreak(world, x, y, z);
+            base.OnBreak(world, x, y, z);
         }
 
-        public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
+        public override bool OnUse(World world, int x, int y, int z, EntityPlayer player)
         {
             java.lang.Object chestInventory = (BlockEntityChest)world.getBlockEntity(x, y, z);
             if (world.shouldSuffocate(x, y + 1, z))

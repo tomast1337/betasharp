@@ -14,12 +14,12 @@ namespace betareborn.Blocks
             return id == Block.SAND.id;
         }
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
             return textureId;
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
             return -1;
         }

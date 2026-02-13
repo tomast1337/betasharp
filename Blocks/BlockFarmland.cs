@@ -11,27 +11,27 @@ namespace betareborn.Blocks
         public BlockFarmland(int id) : base(id, Material.SOIL)
         {
             textureId = 87;
-            setTickRandomly(true);
+            SetTickRandomly(true);
             setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 15.0F / 16.0F, 1.0F);
-            setOpacity(255);
+            SetOpacity(255);
         }
 
-        public override Box? getCollisionShape(World world, int x, int y, int z)
+        public override Box? GetCollisionShape(World world, int x, int y, int z)
         {
             return new Box((double)(x + 0), (double)(y + 0), (double)(z + 0), (double)(x + 1), (double)(y + 1), (double)(z + 1));
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
             return side == 1 && meta > 0 ? textureId - 1 : (side == 1 ? textureId : 2);
         }
@@ -60,7 +60,7 @@ namespace betareborn.Blocks
 
         }
 
-        public override void onSteppedOn(World world, int x, int y, int z, Entity entity)
+        public override void OnSteppedOn(World world, int x, int y, int z, Entity entity)
         {
             if (world.random.nextInt(4) == 0)
             {
@@ -117,9 +117,9 @@ namespace betareborn.Blocks
 
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
-            return Block.DIRT.getDroppedItemId(0, random);
+            return Block.DIRT.GetDroppedItemId(0, random);
         }
     }
 

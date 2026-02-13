@@ -116,8 +116,8 @@ namespace betareborn.Client.Rendering.Core
 
         public bool renderBlockByRenderType(Block block, int x, int y, int z)
         {
-            int type = block.getRenderType();
-            block.updateBoundingBox(blockAccess, x, y, z);
+            int type = block.GetRenderType();
+            block.UpdateBoundingBox(blockAccess, x, y, z);
 
             return type switch
             {
@@ -155,7 +155,7 @@ namespace betareborn.Client.Rendering.Core
             float var12 = 0.6F;
             float var25 = var1.getLuminance(blockAccess, var2, var3, var4);
             var5.setColorOpaque_F(var9 * var25, var9 * var25, var9 * var25);
-            int var26 = var1.getTextureId(blockAccess, var2, var3, var4, 0);
+            int var26 = var1.GetTextureId(blockAccess, var2, var3, var4, 0);
             int var27 = (var26 & 15) << 4;
             int var28 = var26 & 240;
             double var29 = (double)(var27 / 256.0F);
@@ -173,7 +173,7 @@ namespace betareborn.Client.Rendering.Core
             var5.addVertexWithUV(var39, var41, var45, var31, var35);
             float var64 = var1.getLuminance(blockAccess, var2, var3 + 1, var4);
             var5.setColorOpaque_F(var10 * var64, var10 * var64, var10 * var64);
-            var27 = var1.getTextureId(blockAccess, var2, var3, var4, 1);
+            var27 = var1.GetTextureId(blockAccess, var2, var3, var4, 1);
             var28 = (var27 & 15) << 4;
             int var67 = var27 & 240;
             double var30 = (double)(var28 / 256.0F);
@@ -247,7 +247,7 @@ namespace betareborn.Client.Rendering.Core
             }
 
             float var66;
-            if (var26 != 2 && (renderAllFaces || var1.isSideVisible(blockAccess, var2, var3, var4 - 1, 2)))
+            if (var26 != 2 && (renderAllFaces || var1.IsSideVisible(blockAccess, var2, var3, var4 - 1, 2)))
             {
                 var66 = var1.getLuminance(blockAccess, var2, var3, var4 - 1);
                 if (var1.minZ > 0.0D)
@@ -257,10 +257,10 @@ namespace betareborn.Client.Rendering.Core
 
                 var5.setColorOpaque_F(var11 * var66, var11 * var66, var11 * var66);
                 flipTexture = var65 == 2;
-                renderEastFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 2));
+                renderEastFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 2));
             }
 
-            if (var26 != 3 && (renderAllFaces || var1.isSideVisible(blockAccess, var2, var3, var4 + 1, 3)))
+            if (var26 != 3 && (renderAllFaces || var1.IsSideVisible(blockAccess, var2, var3, var4 + 1, 3)))
             {
                 var66 = var1.getLuminance(blockAccess, var2, var3, var4 + 1);
                 if (var1.maxZ < 1.0D)
@@ -270,10 +270,10 @@ namespace betareborn.Client.Rendering.Core
 
                 var5.setColorOpaque_F(var11 * var66, var11 * var66, var11 * var66);
                 flipTexture = var65 == 3;
-                renderWestFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 3));
+                renderWestFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 3));
             }
 
-            if (var26 != 4 && (renderAllFaces || var1.isSideVisible(blockAccess, var2 - 1, var3, var4, 4)))
+            if (var26 != 4 && (renderAllFaces || var1.IsSideVisible(blockAccess, var2 - 1, var3, var4, 4)))
             {
                 var66 = var1.getLuminance(blockAccess, var2 - 1, var3, var4);
                 if (var1.minX > 0.0D)
@@ -283,10 +283,10 @@ namespace betareborn.Client.Rendering.Core
 
                 var5.setColorOpaque_F(var12 * var66, var12 * var66, var12 * var66);
                 flipTexture = var65 == 4;
-                renderNorthFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 4));
+                renderNorthFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 4));
             }
 
-            if (var26 != 5 && (renderAllFaces || var1.isSideVisible(blockAccess, var2 + 1, var3, var4, 5)))
+            if (var26 != 5 && (renderAllFaces || var1.IsSideVisible(blockAccess, var2 + 1, var3, var4, 5)))
             {
                 var66 = var1.getLuminance(blockAccess, var2 + 1, var3, var4);
                 if (var1.maxX < 1.0D)
@@ -296,7 +296,7 @@ namespace betareborn.Client.Rendering.Core
 
                 var5.setColorOpaque_F(var12 * var66, var12 * var66, var12 * var66);
                 flipTexture = var65 == 5;
-                renderSouthFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 5));
+                renderSouthFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 5));
             }
 
             flipTexture = false;
@@ -382,7 +382,7 @@ namespace betareborn.Client.Rendering.Core
 
             renderTorchAtAngle(var1, var2 + var12, var3 + var10, var4 + var14, 0.0D, 0.0D);
             renderTorchAtAngle(var1, var2 + var16, var3 + var10, var4 + var18, 0.0D, 0.0D);
-            int var20 = var1.getTexture(1);
+            int var20 = var1.GetTexture(1);
             int var21 = (var20 & 15) << 4;
             int var22 = var20 & 240;
             double var23 = (double)(var21 / 256.0F);
@@ -765,7 +765,7 @@ namespace betareborn.Client.Rendering.Core
             }
 
             var8.setColorOpaque_F(var13, var13, var13);
-            int var14 = var1.getTexture(0);
+            int var14 = var1.GetTexture(0);
             if (overrideBlockTexture >= 0)
             {
                 var14 = overrideBlockTexture;
@@ -921,7 +921,7 @@ namespace betareborn.Client.Rendering.Core
         public bool renderBlockFire(Block var1, int var2, int var3, int var4)
         {
             Tessellator var5 = getTessellator();
-            int var6 = var1.getTexture(0);
+            int var6 = var1.GetTexture(0);
             if (overrideBlockTexture >= 0)
             {
                 var6 = overrideBlockTexture;
@@ -1125,7 +1125,7 @@ namespace betareborn.Client.Rendering.Core
         {
             Tessellator var5 = getTessellator();
             int var6 = blockAccess.getBlockMeta(var2, var3, var4);
-            int var7 = var1.getTexture(1, var6);
+            int var7 = var1.GetTexture(1, var6);
             if (overrideBlockTexture >= 0)
             {
                 var7 = overrideBlockTexture;
@@ -1358,7 +1358,7 @@ namespace betareborn.Client.Rendering.Core
         {
             Tessellator var5 = getTessellator();
             int var6 = blockAccess.getBlockMeta(var2, var3, var4);
-            int var7 = var1.getTexture(0, var6);
+            int var7 = var1.GetTexture(0, var6);
             if (overrideBlockTexture >= 0)
             {
                 var7 = overrideBlockTexture;
@@ -1455,7 +1455,7 @@ namespace betareborn.Client.Rendering.Core
         public bool renderBlockLadder(Block var1, int var2, int var3, int var4)
         {
             Tessellator var5 = getTessellator();
-            int var6 = var1.getTexture(0);
+            int var6 = var1.GetTexture(0);
             if (overrideBlockTexture >= 0)
             {
                 var6 = overrideBlockTexture;
@@ -1511,7 +1511,7 @@ namespace betareborn.Client.Rendering.Core
         {
             Tessellator var5 = getTessellator();
             float var6 = var1.getLuminance(blockAccess, var2, var3, var4);
-            int var7 = var1.getColorMultiplier(blockAccess, var2, var3, var4);
+            int var7 = var1.GetColorMultiplier(blockAccess, var2, var3, var4);
             float var8 = (var7 >> 16 & 255) / 255.0F;
             float var9 = (var7 >> 8 & 255) / 255.0F;
             float var10 = (var7 & 255) / 255.0F;
@@ -1545,7 +1545,7 @@ namespace betareborn.Client.Rendering.Core
         public void renderTorchAtAngle(Block var1, double var2, double var4, double var6, double var8, double var10)
         {
             Tessellator var12 = getTessellator();
-            int var13 = var1.getTexture(0);
+            int var13 = var1.GetTexture(0);
             if (overrideBlockTexture >= 0)
             {
                 var13 = overrideBlockTexture;
@@ -1594,7 +1594,7 @@ namespace betareborn.Client.Rendering.Core
         public void renderCrossedSquares(Block var1, int var2, double var3, double var5, double var7)
         {
             Tessellator var9 = getTessellator();
-            int var10 = var1.getTexture(0, var2);
+            int var10 = var1.GetTexture(0, var2);
             if (overrideBlockTexture >= 0)
             {
                 var10 = overrideBlockTexture;
@@ -1631,7 +1631,7 @@ namespace betareborn.Client.Rendering.Core
         public void func_1245_b(Block var1, int var2, double var3, double var5, double var7)
         {
             Tessellator var9 = getTessellator();
-            int var10 = var1.getTexture(0, var2);
+            int var10 = var1.GetTexture(0, var2);
             if (overrideBlockTexture >= 0)
             {
                 var10 = overrideBlockTexture;
@@ -1688,13 +1688,13 @@ namespace betareborn.Client.Rendering.Core
         public bool renderBlockFluids(Block var1, int var2, int var3, int var4)
         {
             Tessellator var5 = getTessellator();
-            int var6 = var1.getColorMultiplier(blockAccess, var2, var3, var4);
+            int var6 = var1.GetColorMultiplier(blockAccess, var2, var3, var4);
             float var7 = (var6 >> 16 & 255) / 255.0F;
             float var8 = (var6 >> 8 & 255) / 255.0F;
             float var9 = (var6 & 255) / 255.0F;
-            bool var10 = var1.isSideVisible(blockAccess, var2, var3 + 1, var4, 1);
-            bool var11 = var1.isSideVisible(blockAccess, var2, var3 - 1, var4, 0);
-            bool[] var12 = new bool[] { var1.isSideVisible(blockAccess, var2, var3, var4 - 1, 2), var1.isSideVisible(blockAccess, var2, var3, var4 + 1, 3), var1.isSideVisible(blockAccess, var2 - 1, var3, var4, 4), var1.isSideVisible(blockAccess, var2 + 1, var3, var4, 5) };
+            bool var10 = var1.IsSideVisible(blockAccess, var2, var3 + 1, var4, 1);
+            bool var11 = var1.IsSideVisible(blockAccess, var2, var3 - 1, var4, 0);
+            bool[] var12 = new bool[] { var1.IsSideVisible(blockAccess, var2, var3, var4 - 1, 2), var1.IsSideVisible(blockAccess, var2, var3, var4 + 1, 3), var1.IsSideVisible(blockAccess, var2 - 1, var3, var4, 4), var1.IsSideVisible(blockAccess, var2 + 1, var3, var4, 5) };
             if (!var10 && !var11 && !var12[0] && !var12[1] && !var12[2] && !var12[3])
             {
                 return false;
@@ -1708,7 +1708,7 @@ namespace betareborn.Client.Rendering.Core
                 float var17 = 0.6F;
                 double var18 = 0.0D;
                 double var20 = 1.0D;
-                Material var22 = var1.material;
+                Material var22 = var1.Material;
                 int var23 = blockAccess.getBlockMeta(var2, var3, var4);
                 float var24 = func_1224_a(var2, var3, var4, var22);
                 float var25 = func_1224_a(var2, var3, var4 + 1, var22);
@@ -1722,11 +1722,11 @@ namespace betareborn.Client.Rendering.Core
                 if (renderAllFaces || var10)
                 {
                     var13 = true;
-                    var28 = var1.getTexture(1, var23);
+                    var28 = var1.GetTexture(1, var23);
                     float var29 = (float)BlockFluid.getFlowingAngle(blockAccess, var2, var3, var4, var22);
                     if (var29 > -999.0F)
                     {
-                        var28 = var1.getTexture(2, var23);
+                        var28 = var1.GetTexture(2, var23);
                     }
 
                     int var30 = (var28 & 15) << 4;
@@ -1757,7 +1757,7 @@ namespace betareborn.Client.Rendering.Core
                 {
                     float var52 = var1.getLuminance(blockAccess, var2, var3 - 1, var4);
                     var5.setColorOpaque_F(var14 * var52, var14 * var52, var14 * var52);
-                    renderBottomFace(var1, var2, var3, var4, var1.getTexture(0));
+                    renderBottomFace(var1, var2, var3, var4, var1.GetTexture(0));
                     var13 = true;
                 }
 
@@ -1785,7 +1785,7 @@ namespace betareborn.Client.Rendering.Core
                         ++var53;
                     }
 
-                    int var54 = var1.getTexture(var28 + 2, var23);
+                    int var54 = var1.GetTexture(var28 + 2, var23);
                     int var33 = (var54 & 15) << 4;
                     int var55 = var54 & 240;
                     if (renderAllFaces || var12[var28])
@@ -1916,7 +1916,7 @@ namespace betareborn.Client.Rendering.Core
             }
 
             var10.setColorOpaque_F(var6 * var12, var6 * var12, var6 * var12);
-            renderBottomFace(var1, -0.5D, -0.5D, -0.5D, var1.getTexture(0));
+            renderBottomFace(var1, -0.5D, -0.5D, -0.5D, var1.GetTexture(0));
             var12 = var1.getLuminance(var2, var3, var4 + 1, var5);
             if (var12 < var11)
             {
@@ -1924,7 +1924,7 @@ namespace betareborn.Client.Rendering.Core
             }
 
             var10.setColorOpaque_F(var7 * var12, var7 * var12, var7 * var12);
-            renderTopFace(var1, -0.5D, -0.5D, -0.5D, var1.getTexture(1));
+            renderTopFace(var1, -0.5D, -0.5D, -0.5D, var1.GetTexture(1));
             var12 = var1.getLuminance(var2, var3, var4, var5 - 1);
             if (var12 < var11)
             {
@@ -1932,7 +1932,7 @@ namespace betareborn.Client.Rendering.Core
             }
 
             var10.setColorOpaque_F(var8 * var12, var8 * var12, var8 * var12);
-            renderEastFace(var1, -0.5D, -0.5D, -0.5D, var1.getTexture(2));
+            renderEastFace(var1, -0.5D, -0.5D, -0.5D, var1.GetTexture(2));
             var12 = var1.getLuminance(var2, var3, var4, var5 + 1);
             if (var12 < var11)
             {
@@ -1940,7 +1940,7 @@ namespace betareborn.Client.Rendering.Core
             }
 
             var10.setColorOpaque_F(var8 * var12, var8 * var12, var8 * var12);
-            renderWestFace(var1, -0.5D, -0.5D, -0.5D, var1.getTexture(3));
+            renderWestFace(var1, -0.5D, -0.5D, -0.5D, var1.GetTexture(3));
             var12 = var1.getLuminance(var2, var3 - 1, var4, var5);
             if (var12 < var11)
             {
@@ -1948,7 +1948,7 @@ namespace betareborn.Client.Rendering.Core
             }
 
             var10.setColorOpaque_F(var9 * var12, var9 * var12, var9 * var12);
-            renderNorthFace(var1, -0.5D, -0.5D, -0.5D, var1.getTexture(4));
+            renderNorthFace(var1, -0.5D, -0.5D, -0.5D, var1.GetTexture(4));
             var12 = var1.getLuminance(var2, var3 + 1, var4, var5);
             if (var12 < var11)
             {
@@ -1956,13 +1956,13 @@ namespace betareborn.Client.Rendering.Core
             }
 
             var10.setColorOpaque_F(var9 * var12, var9 * var12, var9 * var12);
-            renderSouthFace(var1, -0.5D, -0.5D, -0.5D, var1.getTexture(5));
+            renderSouthFace(var1, -0.5D, -0.5D, -0.5D, var1.GetTexture(5));
             var10.draw();
         }
 
         public bool renderStandardBlock(Block var1, int var2, int var3, int var4)
         {
-            int var5 = var1.getColorMultiplier(blockAccess, var2, var3, var4);
+            int var5 = var1.GetColorMultiplier(blockAccess, var2, var3, var4);
             float var6 = (var5 >> 16 & 255) / 255.0F;
             float var7 = (var5 >> 8 & 255) / 255.0F;
             float var8 = (var5 & 255) / 255.0F;
@@ -2021,7 +2021,7 @@ namespace betareborn.Client.Rendering.Core
                 var13 = var18;
             }
 
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2, var3 - 1, var4, 0))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2, var3 - 1, var4, 0))
             {
                 if (field_22352_G <= 0)
                 {
@@ -2095,11 +2095,11 @@ namespace betareborn.Client.Rendering.Core
                 colorRedTopRight *= var12;
                 colorGreenTopRight *= var12;
                 colorBlueTopRight *= var12;
-                renderBottomFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 0));
+                renderBottomFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 0));
                 var8 = true;
             }
 
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2, var3 + 1, var4, 1))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2, var3 + 1, var4, 1))
             {
                 if (field_22352_G <= 0)
                 {
@@ -2173,12 +2173,12 @@ namespace betareborn.Client.Rendering.Core
                 colorRedTopRight *= var12;
                 colorGreenTopRight *= var12;
                 colorBlueTopRight *= var12;
-                renderTopFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 1));
+                renderTopFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 1));
                 var8 = true;
             }
 
             int var19;
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2, var3, var4 - 1, 2))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2, var3, var4 - 1, 2))
             {
                 if (field_22352_G <= 0)
                 {
@@ -2252,7 +2252,7 @@ namespace betareborn.Client.Rendering.Core
                 colorRedTopRight *= var12;
                 colorGreenTopRight *= var12;
                 colorBlueTopRight *= var12;
-                var19 = var1.getTextureId(blockAccess, var2, var3, var4, 2);
+                var19 = var1.GetTextureId(blockAccess, var2, var3, var4, 2);
                 renderEastFace(var1, var2, var3, var4, var19);
                 if (fancyGrass && var19 == 3 && overrideBlockTexture < 0)
                 {
@@ -2274,7 +2274,7 @@ namespace betareborn.Client.Rendering.Core
                 var8 = true;
             }
 
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2, var3, var4 + 1, 3))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2, var3, var4 + 1, 3))
             {
                 if (field_22352_G <= 0)
                 {
@@ -2348,8 +2348,8 @@ namespace betareborn.Client.Rendering.Core
                 colorRedTopRight *= var12;
                 colorGreenTopRight *= var12;
                 colorBlueTopRight *= var12;
-                var19 = var1.getTextureId(blockAccess, var2, var3, var4, 3);
-                renderWestFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 3));
+                var19 = var1.GetTextureId(blockAccess, var2, var3, var4, 3);
+                renderWestFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 3));
                 if (fancyGrass && var19 == 3 && overrideBlockTexture < 0)
                 {
                     colorRedTopLeft *= var5;
@@ -2370,7 +2370,7 @@ namespace betareborn.Client.Rendering.Core
                 var8 = true;
             }
 
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2 - 1, var3, var4, 4))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2 - 1, var3, var4, 4))
             {
                 if (field_22352_G <= 0)
                 {
@@ -2444,7 +2444,7 @@ namespace betareborn.Client.Rendering.Core
                 colorRedTopRight *= var12;
                 colorGreenTopRight *= var12;
                 colorBlueTopRight *= var12;
-                var19 = var1.getTextureId(blockAccess, var2, var3, var4, 4);
+                var19 = var1.GetTextureId(blockAccess, var2, var3, var4, 4);
                 renderNorthFace(var1, var2, var3, var4, var19);
                 if (fancyGrass && var19 == 3 && overrideBlockTexture < 0)
                 {
@@ -2466,7 +2466,7 @@ namespace betareborn.Client.Rendering.Core
                 var8 = true;
             }
 
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2 + 1, var3, var4, 5))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2 + 1, var3, var4, 5))
             {
                 if (field_22352_G <= 0)
                 {
@@ -2540,7 +2540,7 @@ namespace betareborn.Client.Rendering.Core
                 colorRedTopRight *= var12;
                 colorGreenTopRight *= var12;
                 colorBlueTopRight *= var12;
-                var19 = var1.getTextureId(blockAccess, var2, var3, var4, 5);
+                var19 = var1.GetTextureId(blockAccess, var2, var3, var4, 5);
                 renderSouthFace(var1, var2, var3, var4, var19);
                 if (fancyGrass && var19 == 3 && overrideBlockTexture < 0)
                 {
@@ -2602,29 +2602,29 @@ namespace betareborn.Client.Rendering.Core
 
             float var26 = var1.getLuminance(blockAccess, var2, var3, var4);
             float var27;
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2, var3 - 1, var4, 0))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2, var3 - 1, var4, 0))
             {
                 var27 = var1.getLuminance(blockAccess, var2, var3 - 1, var4);
                 var8.setColorOpaque_F(var17 * var27, var20 * var27, var23 * var27);
-                renderBottomFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 0));
+                renderBottomFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 0));
                 var9 = true;
             }
 
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2, var3 + 1, var4, 1))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2, var3 + 1, var4, 1))
             {
                 var27 = var1.getLuminance(blockAccess, var2, var3 + 1, var4);
-                if (var1.maxY != 1.0D && !var1.material.isFluid())
+                if (var1.maxY != 1.0D && !var1.Material.isFluid())
                 {
                     var27 = var26;
                 }
 
                 var8.setColorOpaque_F(var14 * var27, var15 * var27, var16 * var27);
-                renderTopFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 1));
+                renderTopFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 1));
                 var9 = true;
             }
 
             int var28;
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2, var3, var4 - 1, 2))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2, var3, var4 - 1, 2))
             {
                 var27 = var1.getLuminance(blockAccess, var2, var3, var4 - 1);
                 if (var1.minZ > 0.0D)
@@ -2633,7 +2633,7 @@ namespace betareborn.Client.Rendering.Core
                 }
 
                 var8.setColorOpaque_F(var18 * var27, var21 * var27, var24 * var27);
-                var28 = var1.getTextureId(blockAccess, var2, var3, var4, 2);
+                var28 = var1.GetTextureId(blockAccess, var2, var3, var4, 2);
                 renderEastFace(var1, var2, var3, var4, var28);
                 if (fancyGrass && var28 == 3 && overrideBlockTexture < 0)
                 {
@@ -2644,7 +2644,7 @@ namespace betareborn.Client.Rendering.Core
                 var9 = true;
             }
 
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2, var3, var4 + 1, 3))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2, var3, var4 + 1, 3))
             {
                 var27 = var1.getLuminance(blockAccess, var2, var3, var4 + 1);
                 if (var1.maxZ < 1.0D)
@@ -2653,7 +2653,7 @@ namespace betareborn.Client.Rendering.Core
                 }
 
                 var8.setColorOpaque_F(var18 * var27, var21 * var27, var24 * var27);
-                var28 = var1.getTextureId(blockAccess, var2, var3, var4, 3);
+                var28 = var1.GetTextureId(blockAccess, var2, var3, var4, 3);
                 renderWestFace(var1, var2, var3, var4, var28);
                 if (fancyGrass && var28 == 3 && overrideBlockTexture < 0)
                 {
@@ -2664,7 +2664,7 @@ namespace betareborn.Client.Rendering.Core
                 var9 = true;
             }
 
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2 - 1, var3, var4, 4))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2 - 1, var3, var4, 4))
             {
                 var27 = var1.getLuminance(blockAccess, var2 - 1, var3, var4);
                 if (var1.minX > 0.0D)
@@ -2673,7 +2673,7 @@ namespace betareborn.Client.Rendering.Core
                 }
 
                 var8.setColorOpaque_F(var19 * var27, var22 * var27, var25 * var27);
-                var28 = var1.getTextureId(blockAccess, var2, var3, var4, 4);
+                var28 = var1.GetTextureId(blockAccess, var2, var3, var4, 4);
                 renderNorthFace(var1, var2, var3, var4, var28);
                 if (fancyGrass && var28 == 3 && overrideBlockTexture < 0)
                 {
@@ -2684,7 +2684,7 @@ namespace betareborn.Client.Rendering.Core
                 var9 = true;
             }
 
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2 + 1, var3, var4, 5))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2 + 1, var3, var4, 5))
             {
                 var27 = var1.getLuminance(blockAccess, var2 + 1, var3, var4);
                 if (var1.maxX < 1.0D)
@@ -2693,7 +2693,7 @@ namespace betareborn.Client.Rendering.Core
                 }
 
                 var8.setColorOpaque_F(var19 * var27, var22 * var27, var25 * var27);
-                var28 = var1.getTextureId(blockAccess, var2, var3, var4, 5);
+                var28 = var1.GetTextureId(blockAccess, var2, var3, var4, 5);
                 renderSouthFace(var1, var2, var3, var4, var28);
                 if (fancyGrass && var28 == 3 && overrideBlockTexture < 0)
                 {
@@ -2709,7 +2709,7 @@ namespace betareborn.Client.Rendering.Core
 
         public bool renderBlockCactus(Block var1, int var2, int var3, int var4)
         {
-            int var5 = var1.getColorMultiplier(blockAccess, var2, var3, var4);
+            int var5 = var1.GetColorMultiplier(blockAccess, var2, var3, var4);
             float var6 = (var5 >> 16 & 255) / 255.0F;
             float var7 = (var5 >> 8 & 255) / 255.0F;
             float var8 = (var5 & 255) / 255.0F;
@@ -2740,28 +2740,28 @@ namespace betareborn.Client.Rendering.Core
             float var26 = 1.0F / 16.0F;
             float var27 = var1.getLuminance(blockAccess, var2, var3, var4);
             float var28;
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2, var3 - 1, var4, 0))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2, var3 - 1, var4, 0))
             {
                 var28 = var1.getLuminance(blockAccess, var2, var3 - 1, var4);
                 var8.setColorOpaque_F(var14 * var28, var18 * var28, var22 * var28);
-                renderBottomFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 0));
+                renderBottomFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 0));
                 var9 = true;
             }
 
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2, var3 + 1, var4, 1))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2, var3 + 1, var4, 1))
             {
                 var28 = var1.getLuminance(blockAccess, var2, var3 + 1, var4);
-                if (var1.maxY != 1.0D && !var1.material.isFluid())
+                if (var1.maxY != 1.0D && !var1.Material.isFluid())
                 {
                     var28 = var27;
                 }
 
                 var8.setColorOpaque_F(var15 * var28, var19 * var28, var23 * var28);
-                renderTopFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 1));
+                renderTopFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 1));
                 var9 = true;
             }
 
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2, var3, var4 - 1, 2))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2, var3, var4 - 1, 2))
             {
                 var28 = var1.getLuminance(blockAccess, var2, var3, var4 - 1);
                 if (var1.minZ > 0.0D)
@@ -2771,12 +2771,12 @@ namespace betareborn.Client.Rendering.Core
 
                 var8.setColorOpaque_F(var16 * var28, var20 * var28, var24 * var28);
                 var8.setTranslationF(0.0F, 0.0F, var26);
-                renderEastFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 2));
+                renderEastFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 2));
                 var8.setTranslationF(0.0F, 0.0F, -var26);
                 var9 = true;
             }
 
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2, var3, var4 + 1, 3))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2, var3, var4 + 1, 3))
             {
                 var28 = var1.getLuminance(blockAccess, var2, var3, var4 + 1);
                 if (var1.maxZ < 1.0D)
@@ -2786,12 +2786,12 @@ namespace betareborn.Client.Rendering.Core
 
                 var8.setColorOpaque_F(var16 * var28, var20 * var28, var24 * var28);
                 var8.setTranslationF(0.0F, 0.0F, -var26);
-                renderWestFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 3));
+                renderWestFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 3));
                 var8.setTranslationF(0.0F, 0.0F, var26);
                 var9 = true;
             }
 
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2 - 1, var3, var4, 4))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2 - 1, var3, var4, 4))
             {
                 var28 = var1.getLuminance(blockAccess, var2 - 1, var3, var4);
                 if (var1.minX > 0.0D)
@@ -2801,12 +2801,12 @@ namespace betareborn.Client.Rendering.Core
 
                 var8.setColorOpaque_F(var17 * var28, var21 * var28, var25 * var28);
                 var8.setTranslationF(var26, 0.0F, 0.0F);
-                renderNorthFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 4));
+                renderNorthFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 4));
                 var8.setTranslationF(-var26, 0.0F, 0.0F);
                 var9 = true;
             }
 
-            if (renderAllFaces || var1.isSideVisible(blockAccess, var2 + 1, var3, var4, 5))
+            if (renderAllFaces || var1.IsSideVisible(blockAccess, var2 + 1, var3, var4, 5))
             {
                 var28 = var1.getLuminance(blockAccess, var2 + 1, var3, var4);
                 if (var1.maxX < 1.0D)
@@ -2816,7 +2816,7 @@ namespace betareborn.Client.Rendering.Core
 
                 var8.setColorOpaque_F(var17 * var28, var21 * var28, var25 * var28);
                 var8.setTranslationF(-var26, 0.0F, 0.0F);
-                renderSouthFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 5));
+                renderSouthFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 5));
                 var8.setTranslationF(var26, 0.0F, 0.0F);
                 var9 = true;
             }
@@ -2958,7 +2958,7 @@ namespace betareborn.Client.Rendering.Core
             }
 
             var5.setColorOpaque_F(var8 * var13, var8 * var13, var8 * var13);
-            renderBottomFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 0));
+            renderBottomFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 0));
             var7 = true;
             var13 = var1.getLuminance(blockAccess, var2, var3 + 1, var4);
             if (var6.maxY < 1.0D)
@@ -2972,7 +2972,7 @@ namespace betareborn.Client.Rendering.Core
             }
 
             var5.setColorOpaque_F(var9 * var13, var9 * var13, var9 * var13);
-            renderTopFace(var1, var2, var3, var4, var1.getTextureId(blockAccess, var2, var3, var4, 1));
+            renderTopFace(var1, var2, var3, var4, var1.GetTextureId(blockAccess, var2, var3, var4, 1));
             var7 = true;
             var13 = var1.getLuminance(blockAccess, var2, var3, var4 - 1);
             if (var6.minZ > 0.0D)
@@ -2986,7 +2986,7 @@ namespace betareborn.Client.Rendering.Core
             }
 
             var5.setColorOpaque_F(var10 * var13, var10 * var13, var10 * var13);
-            int var14 = var1.getTextureId(blockAccess, var2, var3, var4, 2);
+            int var14 = var1.GetTextureId(blockAccess, var2, var3, var4, 2);
             if (var14 < 0)
             {
                 flipTexture = true;
@@ -3008,7 +3008,7 @@ namespace betareborn.Client.Rendering.Core
             }
 
             var5.setColorOpaque_F(var10 * var13, var10 * var13, var10 * var13);
-            var14 = var1.getTextureId(blockAccess, var2, var3, var4, 3);
+            var14 = var1.GetTextureId(blockAccess, var2, var3, var4, 3);
             if (var14 < 0)
             {
                 flipTexture = true;
@@ -3030,7 +3030,7 @@ namespace betareborn.Client.Rendering.Core
             }
 
             var5.setColorOpaque_F(var11 * var13, var11 * var13, var11 * var13);
-            var14 = var1.getTextureId(blockAccess, var2, var3, var4, 4);
+            var14 = var1.GetTextureId(blockAccess, var2, var3, var4, 4);
             if (var14 < 0)
             {
                 flipTexture = true;
@@ -3052,7 +3052,7 @@ namespace betareborn.Client.Rendering.Core
             }
 
             var5.setColorOpaque_F(var11 * var13, var11 * var13, var11 * var13);
-            var14 = var1.getTextureId(blockAccess, var2, var3, var4, 5);
+            var14 = var1.GetTextureId(blockAccess, var2, var3, var4, 5);
             if (var14 < 0)
             {
                 flipTexture = true;
@@ -3669,14 +3669,14 @@ namespace betareborn.Client.Rendering.Core
             float var7;
             if (field_31088_b)
             {
-                var5 = var1.getColor(var2);
+                var5 = var1.GetColor(var2);
                 var6 = (var5 >> 16 & 255) / 255.0F;
                 var7 = (var5 >> 8 & 255) / 255.0F;
                 float var8 = (var5 & 255) / 255.0F;
                 GLManager.GL.Color4(var6 * var3, var7 * var3, var8 * var3, 1.0F);
             }
 
-            var5 = var1.getRenderType();
+            var5 = var1.GetRenderType();
             if (var5 != 0 && var5 != 16)
             {
                 if (var5 == 1)
@@ -3688,39 +3688,39 @@ namespace betareborn.Client.Rendering.Core
                 }
                 else if (var5 == 13)
                 {
-                    var1.setupRenderBoundingBox();
+                    var1.SetupRenderBoundingBox();
                     GLManager.GL.Translate(-0.5F, -0.5F, -0.5F);
                     var6 = 1.0F / 16.0F;
                     var4.startDrawingQuads();
                     var4.setNormal(0.0F, -1.0F, 0.0F);
-                    renderBottomFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(0));
+                    renderBottomFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(0));
                     var4.draw();
                     var4.startDrawingQuads();
                     var4.setNormal(0.0F, 1.0F, 0.0F);
-                    renderTopFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(1));
+                    renderTopFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(1));
                     var4.draw();
                     var4.startDrawingQuads();
                     var4.setNormal(0.0F, 0.0F, -1.0F);
                     var4.setTranslationF(0.0F, 0.0F, var6);
-                    renderEastFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(2));
+                    renderEastFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(2));
                     var4.setTranslationF(0.0F, 0.0F, -var6);
                     var4.draw();
                     var4.startDrawingQuads();
                     var4.setNormal(0.0F, 0.0F, 1.0F);
                     var4.setTranslationF(0.0F, 0.0F, -var6);
-                    renderWestFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(3));
+                    renderWestFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(3));
                     var4.setTranslationF(0.0F, 0.0F, var6);
                     var4.draw();
                     var4.startDrawingQuads();
                     var4.setNormal(-1.0F, 0.0F, 0.0F);
                     var4.setTranslationF(var6, 0.0F, 0.0F);
-                    renderNorthFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(4));
+                    renderNorthFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(4));
                     var4.setTranslationF(-var6, 0.0F, 0.0F);
                     var4.draw();
                     var4.startDrawingQuads();
                     var4.setNormal(1.0F, 0.0F, 0.0F);
                     var4.setTranslationF(-var6, 0.0F, 0.0F);
-                    renderSouthFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(5));
+                    renderSouthFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(5));
                     var4.setTranslationF(var6, 0.0F, 0.0F);
                     var4.draw();
                     GLManager.GL.Translate(0.5F, 0.5F, 0.5F);
@@ -3759,27 +3759,27 @@ namespace betareborn.Client.Rendering.Core
                             GLManager.GL.Translate(-0.5F, -0.5F, -0.5F);
                             var4.startDrawingQuads();
                             var4.setNormal(0.0F, -1.0F, 0.0F);
-                            renderBottomFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(0));
+                            renderBottomFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(0));
                             var4.draw();
                             var4.startDrawingQuads();
                             var4.setNormal(0.0F, 1.0F, 0.0F);
-                            renderTopFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(1));
+                            renderTopFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(1));
                             var4.draw();
                             var4.startDrawingQuads();
                             var4.setNormal(0.0F, 0.0F, -1.0F);
-                            renderEastFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(2));
+                            renderEastFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(2));
                             var4.draw();
                             var4.startDrawingQuads();
                             var4.setNormal(0.0F, 0.0F, 1.0F);
-                            renderWestFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(3));
+                            renderWestFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(3));
                             var4.draw();
                             var4.startDrawingQuads();
                             var4.setNormal(-1.0F, 0.0F, 0.0F);
-                            renderNorthFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(4));
+                            renderNorthFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(4));
                             var4.draw();
                             var4.startDrawingQuads();
                             var4.setNormal(1.0F, 0.0F, 0.0F);
-                            renderSouthFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(5));
+                            renderSouthFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(5));
                             var4.draw();
                             GLManager.GL.Translate(0.5F, 0.5F, 0.5F);
                         }
@@ -3813,27 +3813,27 @@ namespace betareborn.Client.Rendering.Core
                             GLManager.GL.Translate(-0.5F, -0.5F, -0.5F);
                             var4.startDrawingQuads();
                             var4.setNormal(0.0F, -1.0F, 0.0F);
-                            renderBottomFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(0));
+                            renderBottomFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(0));
                             var4.draw();
                             var4.startDrawingQuads();
                             var4.setNormal(0.0F, 1.0F, 0.0F);
-                            renderTopFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(1));
+                            renderTopFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(1));
                             var4.draw();
                             var4.startDrawingQuads();
                             var4.setNormal(0.0F, 0.0F, -1.0F);
-                            renderEastFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(2));
+                            renderEastFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(2));
                             var4.draw();
                             var4.startDrawingQuads();
                             var4.setNormal(0.0F, 0.0F, 1.0F);
-                            renderWestFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(3));
+                            renderWestFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(3));
                             var4.draw();
                             var4.startDrawingQuads();
                             var4.setNormal(-1.0F, 0.0F, 0.0F);
-                            renderNorthFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(4));
+                            renderNorthFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(4));
                             var4.draw();
                             var4.startDrawingQuads();
                             var4.setNormal(1.0F, 0.0F, 0.0F);
-                            renderSouthFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(5));
+                            renderSouthFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(5));
                             var4.draw();
                             GLManager.GL.Translate(0.5F, 0.5F, 0.5F);
                         }
@@ -3849,31 +3849,31 @@ namespace betareborn.Client.Rendering.Core
                     var2 = 1;
                 }
 
-                var1.setupRenderBoundingBox();
+                var1.SetupRenderBoundingBox();
                 GLManager.GL.Translate(-0.5F, -0.5F, -0.5F);
                 var4.startDrawingQuads();
                 var4.setNormal(0.0F, -1.0F, 0.0F);
-                renderBottomFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(0, var2));
+                renderBottomFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(0, var2));
                 var4.draw();
                 var4.startDrawingQuads();
                 var4.setNormal(0.0F, 1.0F, 0.0F);
-                renderTopFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(1, var2));
+                renderTopFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(1, var2));
                 var4.draw();
                 var4.startDrawingQuads();
                 var4.setNormal(0.0F, 0.0F, -1.0F);
-                renderEastFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(2, var2));
+                renderEastFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(2, var2));
                 var4.draw();
                 var4.startDrawingQuads();
                 var4.setNormal(0.0F, 0.0F, 1.0F);
-                renderWestFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(3, var2));
+                renderWestFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(3, var2));
                 var4.draw();
                 var4.startDrawingQuads();
                 var4.setNormal(-1.0F, 0.0F, 0.0F);
-                renderNorthFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(4, var2));
+                renderNorthFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(4, var2));
                 var4.draw();
                 var4.startDrawingQuads();
                 var4.setNormal(1.0F, 0.0F, 0.0F);
-                renderSouthFace(var1, 0.0D, 0.0D, 0.0D, var1.getTexture(5, var2));
+                renderSouthFace(var1, 0.0D, 0.0D, 0.0D, var1.GetTexture(5, var2));
                 var4.draw();
                 GLManager.GL.Translate(0.5F, 0.5F, 0.5F);
             }

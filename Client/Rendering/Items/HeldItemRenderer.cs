@@ -28,7 +28,7 @@ namespace betareborn.Client.Rendering.Items
         public void renderItem(EntityLiving var1, ItemStack var2)
         {
             GLManager.GL.PushMatrix();
-            if (var2.itemId < 256 && BlockRenderer.isSideLit(Block.BLOCKS[var2.itemId].getRenderType()))
+            if (var2.itemId < 256 && BlockRenderer.isSideLit(Block.BLOCKS[var2.itemId].GetRenderType()))
             {
                 GLManager.GL.BindTexture(GLEnum.Texture2D, (uint)mc.textureManager.getTextureId("/terrain.png"));
                 renderBlocksInstance.renderBlockOnInventory(Block.BLOCKS[var2.itemId], var2.getDamage(), var1.getBrightnessAtEyes(1.0F));
@@ -329,7 +329,7 @@ namespace betareborn.Client.Rendering.Items
                 int var6 = mc.world.getBlockId(var2, var3, var4);
                 if (mc.world.shouldSuffocate(var2, var3, var4))
                 {
-                    renderInsideOfBlock(var1, Block.BLOCKS[var6].getTexture(2));
+                    renderInsideOfBlock(var1, Block.BLOCKS[var6].GetTexture(2));
                 }
                 else
                 {
@@ -350,7 +350,7 @@ namespace betareborn.Client.Rendering.Items
 
                 if (Block.BLOCKS[var6] != null)
                 {
-                    renderInsideOfBlock(var1, Block.BLOCKS[var6].getTexture(2));
+                    renderInsideOfBlock(var1, Block.BLOCKS[var6].GetTexture(2));
                 }
             }
 

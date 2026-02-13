@@ -25,7 +25,7 @@ namespace betareborn.Client.Rendering.Entitys
                 modelBipedMain.bipedRightArm.transform(1.0F / 16.0F);
                 GLManager.GL.Translate(-(1.0F / 16.0F), 7.0F / 16.0F, 1.0F / 16.0F);
                 float var4;
-                if (var3.itemId < 256 && BlockRenderer.isSideLit(Block.BLOCKS[var3.itemId].getRenderType()))
+                if (var3.itemId < 256 && BlockRenderer.isSideLit(Block.BLOCKS[var3.itemId].GetRenderType()))
                 {
                     var4 = 0.5F;
                     GLManager.GL.Translate(0.0F, 3.0F / 16.0F, -(5.0F / 16.0F));

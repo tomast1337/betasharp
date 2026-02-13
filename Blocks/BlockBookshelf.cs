@@ -8,12 +8,12 @@ namespace betareborn.Blocks
         {
         }
 
-        public override int getTexture(int side)
+        public override int GetTexture(int side)
         {
             return side <= 1 ? 4 : textureId;
         }
 
-        public override int getDroppedItemCount(java.util.Random random)
+        public override int GetDroppedItemCount(java.util.Random random)
         {
             return 0;
         }

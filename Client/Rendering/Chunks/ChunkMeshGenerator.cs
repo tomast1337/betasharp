@@ -127,7 +127,7 @@ namespace betareborn.Client.Rendering.Chunks
                             if (id <= 0) continue;
 
                             Block b = Block.BLOCKS[id];
-                            int blockPass = b.getRenderLayer();
+                            int blockPass = b.GetRenderLayer();
 
                             if (blockPass != pass)
                                 hasNextPass = true;

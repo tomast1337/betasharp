@@ -10,7 +10,7 @@ namespace betareborn.Blocks
 
         public BlockCactus(int id, int textureId) : base(id, textureId, Material.CACTUS)
         {
-            setTickRandomly(true);
+            SetTickRandomly(true);
         }
 
         public override void OnTick(World world, int x, int y, int z, java.util.Random random)
@@ -39,54 +39,54 @@ namespace betareborn.Blocks
 
         }
 
-        public override Box? getCollisionShape(World world, int x, int y, int z)
+        public override Box? GetCollisionShape(World world, int x, int y, int z)
         {
             float edgeInset = 1.0F / 16.0F;
             return new Box((double)((float)x + edgeInset), (double)y, (double)((float)z + edgeInset), (double)((float)(x + 1) - edgeInset), (double)((float)(y + 1) - edgeInset), (double)((float)(z + 1) - edgeInset));
         }
 
-        public override Box getBoundingBox(World world, int x, int y, int z)
+        public override Box GetBoundingBox(World world, int x, int y, int z)
         {
             float edgeInset = 1.0F / 16.0F;
             return new Box((double)((float)x + edgeInset), (double)y, (double)((float)z + edgeInset), (double)((float)(x + 1) - edgeInset), (double)(y + 1), (double)((float)(z + 1) - edgeInset));
         }
 
-        public override int getTexture(int side)
+        public override int GetTexture(int side)
         {
             return side == 1 ? textureId - 1 : (side == 0 ? textureId + 1 : textureId);
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return 13;
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z)
+        public override bool CanPlaceAt(World world, int x, int y, int z)
         {
-            return !base.canPlaceAt(world, x, y, z) ? false : canGrow(world, x, y, z);
+            return !base.CanPlaceAt(world, x, y, z) ? false : CanGrow(world, x, y, z);
         }
 
         public override void NeighborUpdate(World world, int x, int y, int z, int id)
         {
-            if (!canGrow(world, x, y, z))
+            if (!CanGrow(world, x, y, z))
             {
-                dropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
+                DropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
                 world.setBlock(x, y, z, 0);
             }
 
         }
 
-        public override bool canGrow(World world, int x, int y, int z)
+        public override bool CanGrow(World world, int x, int y, int z)
         {
             if (world.getMaterial(x - 1, y, z).isSolid())
             {
@@ -111,7 +111,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override void onEntityCollision(World world, int x, int y, int z, Entity entity)
+        public override void OnEntityCollision(World world, int x, int y, int z, Entity entity)
         {
             entity.damage((Entity)null, 1);
         }

@@ -33,10 +33,10 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
             meta &= 3;
-            return meta == 1 ? 63 : (meta == 2 ? 79 : base.getTexture(side, meta));
+            return meta == 1 ? 63 : (meta == 2 ? 79 : base.GetTexture(side, meta));
         }
 
         public void generate(World world, int x, int y, int z, java.util.Random random)
@@ -68,7 +68,7 @@ namespace betareborn.Blocks
 
         }
 
-        protected override int getDroppedItemMeta(int blockMeta)
+        protected override int GetDroppedItemMeta(int blockMeta)
         {
             return blockMeta & 3;
         }

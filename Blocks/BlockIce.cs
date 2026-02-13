@@ -9,23 +9,23 @@ namespace betareborn.Blocks
 
         public BlockIce(int id, int textureId) : base(id, textureId, Material.ICE, false)
         {
-            slipperiness = 0.98F;
-            setTickRandomly(true);
+            Slipperiness = 0.98F;
+            SetTickRandomly(true);
         }
 
-        public override int getRenderLayer()
+        public override int GetRenderLayer()
         {
             return 1;
         }
 
-        public override bool isSideVisible(BlockView blockView, int x, int y, int z, int side)
+        public override bool IsSideVisible(BlockView blockView, int x, int y, int z, int side)
         {
-            return base.isSideVisible(blockView, x, y, z, 1 - side);
+            return base.IsSideVisible(blockView, x, y, z, 1 - side);
         }
 
-        public override void afterBreak(World world, EntityPlayer player, int x, int y, int z, int meta)
+        public override void AfterBreak(World world, EntityPlayer player, int x, int y, int z, int meta)
         {
-            base.afterBreak(world, player, x, y, z, meta);
+            base.AfterBreak(world, player, x, y, z, meta);
             Material materialBelow = world.getMaterial(x, y - 1, z);
             if (materialBelow.blocksMovement() || materialBelow.isFluid())
             {
@@ -34,7 +34,7 @@ namespace betareborn.Blocks
 
         }
 
-        public override int getDroppedItemCount(java.util.Random random)
+        public override int GetDroppedItemCount(java.util.Random random)
         {
             return 0;
         }
@@ -43,13 +43,13 @@ namespace betareborn.Blocks
         {
             if (world.getBrightness(LightType.Block, x, y, z) > 11 - Block.BLOCK_LIGHT_OPACITY[id])
             {
-                dropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
+                DropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
                 world.setBlock(x, y, z, Block.WATER.id);
             }
 
         }
 
-        public override int getPistonBehavior()
+        public override int GetPistonBehavior()
         {
             return 0;
         }

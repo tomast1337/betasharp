@@ -103,9 +103,9 @@ namespace betareborn.Stats
 
             for (int var3 = 0; var3 < 256; ++var3)
             {
-                if (Block.BLOCKS[var3] != null && Block.BLOCKS[var3].getEnableStats())
+                if (Block.BLOCKS[var3] != null && Block.BLOCKS[var3].GetEnableStats())
                 {
-                    string var4 = StatCollector.translateToLocalFormatted(var0, [Block.BLOCKS[var3].translateBlockName()]);
+                    string var4 = StatCollector.translateToLocalFormatted(var0, [Block.BLOCKS[var3].TranslateBlockName()]);
                     var2[var3] = (new StatCrafting(var1 + var3, var4, var3)).registerStat();
                     BLOCKS_MINED_STATS.add((StatCrafting)var2[var3]);
                 }

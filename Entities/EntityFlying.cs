@@ -43,7 +43,7 @@ namespace betareborn.Entities
                     int groundBlockId = world.getBlockId(MathHelper.floor_double(x), MathHelper.floor_double(boundingBox.minY) - 1, MathHelper.floor_double(z));
                     if (groundBlockId > 0)
                     {
-                        friction = Block.BLOCKS[groundBlockId].slipperiness * 0.91F;
+                        friction = Block.BLOCKS[groundBlockId].Slipperiness * 0.91F;
                     }
                 }
 
@@ -56,7 +56,7 @@ namespace betareborn.Entities
                     int groundBlockId = world.getBlockId(MathHelper.floor_double(x), MathHelper.floor_double(boundingBox.minY) - 1, MathHelper.floor_double(z));
                     if (groundBlockId > 0)
                     {
-                        friction = Block.BLOCKS[groundBlockId].slipperiness * 0.91F;
+                        friction = Block.BLOCKS[groundBlockId].Slipperiness * 0.91F;
                     }
                 }
 

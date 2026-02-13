@@ -14,15 +14,15 @@ namespace betareborn.Blocks
         public BlockLeaves(int id, int textureId) : base(id, textureId, Material.LEAVES, false)
         {
             spriteIndex = textureId;
-            setTickRandomly(true);
+            SetTickRandomly(true);
         }
 
-        public override int getColor(int meta)
+        public override int GetColor(int meta)
         {
             return (meta & 1) == 1 ? FoliageColors.getSpruceColor() : ((meta & 2) == 2 ? FoliageColors.getBirchColor() : FoliageColors.getDefaultColor());
         }
 
-        public override int getColorMultiplier(BlockView blockView, int x, int y, int z)
+        public override int GetColorMultiplier(BlockView blockView, int x, int y, int z)
         {
             int meta = blockView.getBlockMeta(x, y, z);
             if ((meta & 1) == 1)
@@ -42,7 +42,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override void onBreak(World world, int x, int y, int z)
+        public override void OnBreak(World world, int x, int y, int z)
         {
             sbyte searchRadius = 1;
             int loadCheckExtent = searchRadius + 1;
@@ -184,45 +184,45 @@ namespace betareborn.Blocks
 
         private void breakLeaves(World world, int x, int y, int z)
         {
-            dropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
+            DropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
             world.setBlock(x, y, z, 0);
         }
 
-        public override int getDroppedItemCount(java.util.Random random)
+        public override int GetDroppedItemCount(java.util.Random random)
         {
             return random.nextInt(20) == 0 ? 1 : 0;
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
             return Block.SAPLING.id;
         }
 
-        public override void afterBreak(World world, EntityPlayer player, int x, int y, int z, int meta)
+        public override void AfterBreak(World world, EntityPlayer player, int x, int y, int z, int meta)
         {
             if (!world.isRemote && player.getHand() != null && player.getHand().itemId == Item.SHEARS.id)
             {
                 player.increaseStat(Stats.Stats.mineBlockStatArray[id], 1);
-                dropStack(world, x, y, z, new ItemStack(Block.LEAVES.id, 1, meta & 3));
+                DropStack(world, x, y, z, new ItemStack(Block.LEAVES.id, 1, meta & 3));
             }
             else
             {
-                base.afterBreak(world, player, x, y, z, meta);
+                base.AfterBreak(world, player, x, y, z, meta);
             }
 
         }
 
-        protected override int getDroppedItemMeta(int blockMeta)
+        protected override int GetDroppedItemMeta(int blockMeta)
         {
             return blockMeta & 3;
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return !graphicsLevel;
         }
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
             return (meta & 3) == 1 ? textureId + 80 : textureId;
         }
@@ -233,9 +233,9 @@ namespace betareborn.Blocks
             textureId = spriteIndex + (bl ? 0 : 1);
         }
 
-        public override void onSteppedOn(World world, int x, int y, int z, Entity entity)
+        public override void OnSteppedOn(World world, int x, int y, int z, Entity entity)
         {
-            base.onSteppedOn(world, x, y, z, entity);
+            base.OnSteppedOn(world, x, y, z, entity);
         }
     }
 

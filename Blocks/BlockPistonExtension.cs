@@ -10,8 +10,8 @@ namespace betareborn.Blocks
 
         public BlockPistonExtension(int id, int textureId) : base(id, textureId, Material.PISTON)
         {
-            setSoundGroup(soundStoneFootstep);
-            setHardness(0.5F);
+            SetSoundGroup(SoundStoneFootstep);
+            SetHardness(0.5F);
         }
 
         public void setSprite(int sprite)
@@ -24,9 +24,9 @@ namespace betareborn.Blocks
             pistonHeadSprite = -1;
         }
 
-        public override void onBreak(World world, int x, int y, int z)
+        public override void OnBreak(World world, int x, int y, int z)
         {
-            base.onBreak(world, x, y, z);
+            base.OnBreak(world, x, y, z);
             int var5 = world.getBlockMeta(x, y, z);
             int var6 = PistonConstants.field_31057_a[getFacing(var5)];
             x += PistonConstants.HEAD_OFFSET_X[var6];
@@ -38,96 +38,96 @@ namespace betareborn.Blocks
                 var5 = world.getBlockMeta(x, y, z);
                 if (BlockPistonBase.isExtended(var5))
                 {
-                    Block.BLOCKS[var7].dropStacks(world, x, y, z, var5);
+                    Block.BLOCKS[var7].DropStacks(world, x, y, z, var5);
                     world.setBlock(x, y, z, 0);
                 }
             }
 
         }
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
             int var3 = getFacing(meta);
             return side == var3 ? (pistonHeadSprite >= 0 ? pistonHeadSprite : ((meta & 8) != 0 ? textureId - 1 : textureId)) : (side == PistonConstants.field_31057_a[var3] ? 107 : 108);
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return 17;
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z)
+        public override bool CanPlaceAt(World world, int x, int y, int z)
         {
             return false;
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z, int side)
+        public override bool CanPlaceAt(World world, int x, int y, int z, int side)
         {
             return false;
         }
 
-        public override int getDroppedItemCount(java.util.Random random)
+        public override int GetDroppedItemCount(java.util.Random random)
         {
             return 0;
         }
 
-        public override void addIntersectingBoundingBox(World world, int x, int y, int z, Box box, List<Box> boxes)
+        public override void AddIntersectingBoundingBox(World world, int x, int y, int z, Box box, List<Box> boxes)
         {
             int var7 = world.getBlockMeta(x, y, z);
             switch (getFacing(var7))
             {
                 case 0:
                     setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 0.25F, 1.0F);
-                    base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                    base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
                     setBoundingBox(6.0F / 16.0F, 0.25F, 6.0F / 16.0F, 10.0F / 16.0F, 1.0F, 10.0F / 16.0F);
-                    base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                    base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
                     break;
                 case 1:
                     setBoundingBox(0.0F, 12.0F / 16.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-                    base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                    base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
                     setBoundingBox(6.0F / 16.0F, 0.0F, 6.0F / 16.0F, 10.0F / 16.0F, 12.0F / 16.0F, 10.0F / 16.0F);
-                    base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                    base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
                     break;
                 case 2:
                     setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.25F);
-                    base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                    base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
                     setBoundingBox(0.25F, 6.0F / 16.0F, 0.25F, 12.0F / 16.0F, 10.0F / 16.0F, 1.0F);
-                    base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                    base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
                     break;
                 case 3:
                     setBoundingBox(0.0F, 0.0F, 12.0F / 16.0F, 1.0F, 1.0F, 1.0F);
-                    base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                    base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
                     setBoundingBox(0.25F, 6.0F / 16.0F, 0.0F, 12.0F / 16.0F, 10.0F / 16.0F, 12.0F / 16.0F);
-                    base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                    base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
                     break;
                 case 4:
                     setBoundingBox(0.0F, 0.0F, 0.0F, 0.25F, 1.0F, 1.0F);
-                    base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                    base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
                     setBoundingBox(6.0F / 16.0F, 0.25F, 0.25F, 10.0F / 16.0F, 12.0F / 16.0F, 1.0F);
-                    base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                    base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
                     break;
                 case 5:
                     setBoundingBox(12.0F / 16.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-                    base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                    base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
                     setBoundingBox(0.0F, 6.0F / 16.0F, 0.25F, 12.0F / 16.0F, 10.0F / 16.0F, 12.0F / 16.0F);
-                    base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+                    base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
                     break;
             }
 
             setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         }
 
-        public override void updateBoundingBox(BlockView blockView, int x, int y, int z)
+        public override void UpdateBoundingBox(BlockView blockView, int x, int y, int z)
         {
             int var5 = blockView.getBlockMeta(x, y, z);
             switch (getFacing(var5))

@@ -8,9 +8,9 @@ namespace betareborn.Blocks
         private bool lit = false;
         private static List<RedstoneUpdateInfo> torchUpdates = [];
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
-            return side == 1 ? Block.REDSTONE_WIRE.getTexture(side, meta) : base.getTexture(side, meta);
+            return side == 1 ? Block.REDSTONE_WIRE.GetTexture(side, meta) : base.GetTexture(side, meta);
         }
 
         private bool isBurnedOut(World world, int x, int y, int z, bool recordUpdate)
@@ -41,7 +41,7 @@ namespace betareborn.Blocks
         public BlockRedstoneTorch(int id, int textureId, bool lit) : base(id, textureId)
         {
             this.lit = lit;
-            setTickRandomly(true);
+            SetTickRandomly(true);
         }
 
         public override int GetTickRate()
@@ -68,7 +68,7 @@ namespace betareborn.Blocks
 
         }
 
-        public override void onBreak(World world, int x, int y, int z)
+        public override void OnBreak(World world, int x, int y, int z)
         {
             if (lit)
             {
@@ -82,7 +82,7 @@ namespace betareborn.Blocks
 
         }
 
-        public override bool isPoweringSide(BlockView blockView, int x, int y, int z, int side)
+        public override bool IsPoweringSide(BlockView blockView, int x, int y, int z, int side)
         {
             if (!lit)
             {
@@ -142,22 +142,22 @@ namespace betareborn.Blocks
             world.scheduleBlockUpdate(x, y, z, base.id, GetTickRate());
         }
 
-        public override bool isStrongPoweringSide(World world, int x, int y, int z, int side)
+        public override bool IsStrongPoweringSide(World world, int x, int y, int z, int side)
         {
-            return side == 0 ? isPoweringSide(world, x, y, z, side) : false;
+            return side == 0 ? IsPoweringSide(world, x, y, z, side) : false;
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
             return Block.LIT_REDSTONE_TORCH.id;
         }
 
-        public override bool canEmitRedstonePower()
+        public override bool CanEmitRedstonePower()
         {
             return true;
         }
 
-        public override void randomDisplayTick(World world, int x, int y, int z, java.util.Random random)
+        public override void RandomDisplayTick(World world, int x, int y, int z, java.util.Random random)
         {
             if (lit)
             {

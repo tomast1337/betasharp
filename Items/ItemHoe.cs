@@ -24,7 +24,7 @@ namespace betareborn.Items
             else
             {
                 Block block = Block.FARMLAND;
-                world.playSound((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), block.soundGroup.func_1145_d(), (block.soundGroup.getVolume() + 1.0F) / 2.0F, block.soundGroup.getPitch() * 0.8F);
+                world.playSound((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), block.SoundGroup.func_1145_d(), (block.SoundGroup.getVolume() + 1.0F) / 2.0F, block.SoundGroup.getPitch() * 0.8F);
                 if (world.isRemote)
                 {
                     return true;

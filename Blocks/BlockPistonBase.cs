@@ -14,8 +14,8 @@ namespace betareborn.Blocks
         public BlockPistonBase(int id, int textureId, bool sticky) : base(id, textureId, Material.PISTON)
         {
             this.sticky = sticky;
-            setSoundGroup(soundStoneFootstep);
-            setHardness(0.5F);
+            SetSoundGroup(SoundStoneFootstep);
+            SetHardness(0.5F);
         }
 
         public int getTopTexture()
@@ -23,28 +23,28 @@ namespace betareborn.Blocks
             return sticky ? 106 : 107;
         }
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
             int var3 = getFacing(meta);
             return var3 > 5 ? textureId : (side == var3 ? (!isExtended(meta) && minX <= 0.0D && minY <= 0.0D && minZ <= 0.0D && maxX >= 1.0D && maxY >= 1.0D && maxZ >= 1.0D ? textureId : 110) : (side == PistonConstants.field_31057_a[var3] ? 109 : 108));
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return 16;
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
+        public override bool OnUse(World world, int x, int y, int z, EntityPlayer player)
         {
             return false;
         }
 
-        public override void onPlaced(World world, int x, int y, int z, EntityLiving placer)
+        public override void OnPlaced(World world, int x, int y, int z, EntityLiving placer)
         {
             int var6 = getFacingForPlacement(world, x, y, z, (EntityPlayer)placer);
             world.setBlockMeta(x, y, z, var6);
@@ -102,7 +102,7 @@ namespace betareborn.Blocks
             return facing != 0 && world.isPoweringSide(x, y - 1, z, 0) ? true : (facing != 1 && world.isPoweringSide(x, y + 1, z, 1) ? true : (facing != 2 && world.isPoweringSide(x, y, z - 1, 2) ? true : (facing != 3 && world.isPoweringSide(x, y, z + 1, 3) ? true : (facing != 5 && world.isPoweringSide(x + 1, y, z, 5) ? true : (facing != 4 && world.isPoweringSide(x - 1, y, z, 4) ? true : (world.isPoweringSide(x, y, z, 0) ? true : (world.isPoweringSide(x, y + 2, z, 1) ? true : (world.isPoweringSide(x, y + 1, z - 1, 2) ? true : (world.isPoweringSide(x, y + 1, z + 1, 3) ? true : (world.isPoweringSide(x - 1, y + 1, z, 4) ? true : world.isPoweringSide(x + 1, y + 1, z, 5)))))))))));
         }
 
-        public override void onBlockAction(World world, int x, int y, int z, int data1, int data2)
+        public override void OnBlockAction(World world, int x, int y, int z, int data1, int data2)
         {
             deaf = true;
             if (data1 == 0)
@@ -147,7 +147,7 @@ namespace betareborn.Blocks
                         }
                     }
 
-                    if (var14 || var12 <= 0 || !canMoveBlock(var12, world, var9, var10, var11, false) || Block.BLOCKS[var12].getPistonBehavior() != 0 && var12 != Block.PISTON.id && var12 != Block.STICKY_PISTON.id)
+                    if (var14 || var12 <= 0 || !canMoveBlock(var12, world, var9, var10, var11, false) || Block.BLOCKS[var12].GetPistonBehavior() != 0 && var12 != Block.PISTON.id && var12 != Block.STICKY_PISTON.id)
                     {
                         if (!var14)
                         {
@@ -181,7 +181,7 @@ namespace betareborn.Blocks
             deaf = false;
         }
 
-        public override void updateBoundingBox(BlockView blockView, int x, int y, int z)
+        public override void UpdateBoundingBox(BlockView blockView, int x, int y, int z)
         {
             int var5 = blockView.getBlockMeta(x, y, z);
             if (isExtended(var5))
@@ -215,18 +215,18 @@ namespace betareborn.Blocks
 
         }
 
-        public override void setupRenderBoundingBox()
+        public override void SetupRenderBoundingBox()
         {
             setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         }
 
-        public override void addIntersectingBoundingBox(World world, int x, int y, int z, Box box, List<Box> boxes)
+        public override void AddIntersectingBoundingBox(World world, int x, int y, int z, Box box, List<Box> boxes)
         {
             setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-            base.addIntersectingBoundingBox(world, x, y, z, box, boxes);
+            base.AddIntersectingBoundingBox(world, x, y, z, box, boxes);
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
@@ -271,17 +271,17 @@ namespace betareborn.Blocks
             {
                 if (id != Block.PISTON.id && id != Block.STICKY_PISTON.id)
                 {
-                    if (Block.BLOCKS[id].getHardness() == -1.0F)
+                    if (Block.BLOCKS[id].GetHardness() == -1.0F)
                     {
                         return false;
                     }
 
-                    if (Block.BLOCKS[id].getPistonBehavior() == 2)
+                    if (Block.BLOCKS[id].GetPistonBehavior() == 2)
                     {
                         return false;
                     }
 
-                    if (!allowBreaking && Block.BLOCKS[id].getPistonBehavior() == 1)
+                    if (!allowBreaking && Block.BLOCKS[id].GetPistonBehavior() == 1)
                     {
                         return false;
                     }
@@ -320,7 +320,7 @@ namespace betareborn.Blocks
                             return false;
                         }
 
-                        if (Block.BLOCKS[var9].getPistonBehavior() != 1)
+                        if (Block.BLOCKS[var9].GetPistonBehavior() != 1)
                         {
                             if (var8 == 12)
                             {
@@ -365,7 +365,7 @@ namespace betareborn.Blocks
                             return false;
                         }
 
-                        if (Block.BLOCKS[var10].getPistonBehavior() != 1)
+                        if (Block.BLOCKS[var10].GetPistonBehavior() != 1)
                         {
                             if (var9 == 12)
                             {
@@ -379,7 +379,7 @@ namespace betareborn.Blocks
                             continue;
                         }
 
-                        Block.BLOCKS[var10].dropStacks(world, var6, var7, var8, world.getBlockMeta(var6, var7, var8));
+                        Block.BLOCKS[var10].DropStacks(world, var6, var7, var8, world.getBlockMeta(var6, var7, var8));
                         world.setBlock(var6, var7, var8, 0);
                     }
                 }

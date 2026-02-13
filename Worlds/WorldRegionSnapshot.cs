@@ -73,7 +73,7 @@ namespace betareborn.Worlds
         public Material getMaterial(int var1, int var2, int var3)
         {
             int var4 = getBlockId(var1, var2, var3);
-            return var4 == 0 ? Material.AIR : Block.BLOCKS[var4].material;
+            return var4 == 0 ? Material.AIR : Block.BLOCKS[var4].Material;
         }
 
         public int getBlockMeta(int var1, int var2, int var3)
@@ -204,13 +204,13 @@ namespace betareborn.Worlds
         public bool shouldSuffocate(int var1, int var2, int var3)
         {
             Block var4 = Block.BLOCKS[getBlockId(var1, var2, var3)];
-            return var4 == null ? false : var4.material.blocksMovement() && var4.isFullCube();
+            return var4 == null ? false : var4.Material.blocksMovement() && var4.IsFullCube();
         }
 
         public bool isOpaque(int var1, int var2, int var3)
         {
             Block var4 = Block.BLOCKS[getBlockId(var1, var2, var3)];
-            return var4 == null ? false : var4.isOpaque();
+            return var4 == null ? false : var4.IsOpaque();
         }
 
         public bool getIsLit()

@@ -13,7 +13,7 @@ namespace betareborn.Items
 
         public override int getTextureId(int meta)
         {
-            return Block.SLAB.getTexture(2, meta);
+            return Block.SLAB.GetTexture(2, meta);
         }
 
         public override int getPlacementMetadata(int meta)

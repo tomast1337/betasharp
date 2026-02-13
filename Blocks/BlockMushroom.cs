@@ -8,7 +8,7 @@ namespace betareborn.Blocks
         {
             float halfSize = 0.2F;
             setBoundingBox(0.5F - halfSize, 0.0F, 0.5F - halfSize, 0.5F + halfSize, halfSize * 2.0F, 0.5F + halfSize);
-            setTickRandomly(true);
+            SetTickRandomly(true);
         }
 
         public override void OnTick(World world, int x, int y, int z, java.util.Random random)
@@ -18,9 +18,9 @@ namespace betareborn.Blocks
                 int tryX = x + random.nextInt(3) - 1;
                 int tryY = y + random.nextInt(2) - random.nextInt(2);
                 int tryZ = z + random.nextInt(3) - 1;
-                if (world.isAir(tryX, tryY, tryZ) && canGrow(world, tryX, tryY, tryZ))
+                if (world.isAir(tryX, tryY, tryZ) && CanGrow(world, tryX, tryY, tryZ))
                 {
-                    if (world.isAir(tryX, tryY, tryZ) && canGrow(world, tryX, tryY, tryZ))
+                    if (world.isAir(tryX, tryY, tryZ) && CanGrow(world, tryX, tryY, tryZ))
                     {
                         world.setBlock(tryX, tryY, tryZ, id);
                     }
@@ -34,7 +34,7 @@ namespace betareborn.Blocks
             return Block.BLOCKS_OPAQUE[id];
         }
 
-        public override bool canGrow(World world, int x, int y, int z)
+        public override bool CanGrow(World world, int x, int y, int z)
         {
             return y >= 0 && y < 128 ? world.getBrightness(x, y, z) < 13 && canPlantOnTop(world.getBlockId(x, y - 1, z)) : false;
         }

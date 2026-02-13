@@ -19,7 +19,7 @@ namespace betareborn.Items
 
         public override int getTextureId(int meta)
         {
-            return Block.LEAVES.getTexture(0, meta);
+            return Block.LEAVES.GetTexture(0, meta);
         }
 
         public override int getColorMultiplier(int leafType)

@@ -25,7 +25,7 @@ namespace betareborn.Blocks
         {
             int currentState = getLiquidState(world, x, y, z);
             sbyte spreadRate = 1;
-            if (material == Material.LAVA && !world.dimension.evaporatesWater)
+            if (Material == Material.LAVA && !world.dimension.evaporatesWater)
             {
                 spreadRate = 2;
             }
@@ -59,19 +59,19 @@ namespace betareborn.Blocks
                     }
                 }
 
-                if (adjacentSources >= 2 && material == Material.WATER)
+                if (adjacentSources >= 2 && Material == Material.WATER)
                 {
                     if (world.getMaterial(x, y - 1, z).isSolid())
                     {
                         newLevel = 0;
                     }
-                    else if (world.getMaterial(x, y - 1, z) == material && world.getBlockMeta(x, y, z) == 0)
+                    else if (world.getMaterial(x, y - 1, z) == Material && world.getBlockMeta(x, y, z) == 0)
                     {
                         newLevel = 0;
                     }
                 }
 
-                if (material == Material.LAVA && currentState < 8 && newLevel < 8 && newLevel > currentState && random.nextInt(4) != 0)
+                if (Material == Material.LAVA && currentState < 8 && newLevel < 8 && newLevel > currentState && random.nextInt(4) != 0)
                 {
                     newLevel = currentState;
                     convertToSource = false;
@@ -156,13 +156,13 @@ namespace betareborn.Blocks
                 int blockId = world.getBlockId(x, y, z);
                 if (blockId > 0)
                 {
-                    if (material == Material.LAVA)
+                    if (Material == Material.LAVA)
                     {
                         fizz(world, x, y, z);
                     }
                     else
                     {
-                        Block.BLOCKS[blockId].dropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
+                        Block.BLOCKS[blockId].DropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
                     }
                 }
 
@@ -201,7 +201,7 @@ namespace betareborn.Blocks
                         ++neighborZ;
                     }
 
-                    if (!isLiquidBreaking(world, neighborX, y, neighborZ) && (world.getMaterial(neighborX, y, neighborZ) != material || world.getBlockMeta(neighborX, y, neighborZ) != 0))
+                    if (!isLiquidBreaking(world, neighborX, y, neighborZ) && (world.getMaterial(neighborX, y, neighborZ) != Material || world.getBlockMeta(neighborX, y, neighborZ) != 0))
                     {
                         if (!isLiquidBreaking(world, neighborX, y - 1, neighborZ))
                         {
@@ -252,7 +252,7 @@ namespace betareborn.Blocks
                     ++neighborZ;
                 }
 
-                if (!isLiquidBreaking(world, neighborX, y, neighborZ) && (world.getMaterial(neighborX, y, neighborZ) != material || world.getBlockMeta(neighborX, y, neighborZ) != 0))
+                if (!isLiquidBreaking(world, neighborX, y, neighborZ) && (world.getMaterial(neighborX, y, neighborZ) != Material || world.getBlockMeta(neighborX, y, neighborZ) != 0))
                 {
                     if (!isLiquidBreaking(world, neighborX, y - 1, neighborZ))
                     {
@@ -294,7 +294,7 @@ namespace betareborn.Blocks
                 }
                 else
                 {
-                    Material material = Block.BLOCKS[blockId].material;
+                    Material material = Block.BLOCKS[blockId].Material;
                     return material.blocksMovement();
                 }
             }
@@ -330,7 +330,7 @@ namespace betareborn.Blocks
         private bool canSpreadTo(World world, int x, int y, int z)
         {
             Material material = world.getMaterial(x, y, z);
-            return material == base.material ? false : (material == Material.LAVA ? false : !isLiquidBreaking(world, x, y, z));
+            return material == base.Material ? false : (material == Material.LAVA ? false : !isLiquidBreaking(world, x, y, z));
         }
 
         public override void OnPlaced(World world, int x, int y, int z)

@@ -13,8 +13,8 @@ namespace betareborn.Entities
         public EntityDiggingFX(World world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Block targetedBlock, int hitFace, int meta) : base(world, x, y, z, velocityX, velocityY, velocityZ)
         {
             this.targetedBlock = targetedBlock;
-            particleTextureIndex = targetedBlock.getTexture(0, meta);
-            particleGravity = targetedBlock.particleFallSpeedModifier;
+            particleTextureIndex = targetedBlock.GetTexture(0, meta);
+            particleGravity = targetedBlock.ParticleFallSpeedModifier;
             particleRed = particleGreen = particleBlue = 0.6F;
             particleScale /= 2.0F;
             this.hitFace = hitFace;
@@ -28,7 +28,7 @@ namespace betareborn.Entities
             }
             else
             {
-                int color = targetedBlock.getColorMultiplier(world, x, y, z);
+                int color = targetedBlock.GetColorMultiplier(world, x, y, z);
                 particleRed *= (float)(color >> 16 & 255) / 255.0F;
                 particleGreen *= (float)(color >> 8 & 255) / 255.0F;
                 particleBlue *= (float)(color & 255) / 255.0F;

@@ -51,7 +51,7 @@ namespace betareborn.Items
                     ++x;
                 }
 
-                if (!Block.SIGN.canPlaceAt(world, x, y, z))
+                if (!Block.SIGN.CanPlaceAt(world, x, y, z))
                 {
                     return false;
                 }

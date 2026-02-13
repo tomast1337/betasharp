@@ -166,7 +166,7 @@ namespace betareborn.Client.Rendering.Entitys
         private void renderShadowOnBlock(Block var1, double var2, double var4, double var6, int var8, int var9, int var10, float var11, float var12, double var13, double var15, double var17)
         {
             Tessellator var19 = Tessellator.instance;
-            if (var1.isFullCube())
+            if (var1.IsFullCube())
             {
                 double var20 = ((double)var11 - (var4 - (var9 + var15)) / 2.0D) * 0.5D * (double)getWorld().getLuminance(var8, var9, var10);
                 if (var20 >= 0.0D)

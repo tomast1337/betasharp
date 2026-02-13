@@ -10,7 +10,7 @@ namespace betareborn.Blocks
         public BlockCrops(int i, int j) : base(i, j)
         {
             textureId = j;
-            setTickRandomly(true);
+            SetTickRandomly(true);
             float halfWidth = 0.5F;
             setBoundingBox(0.5F - halfWidth, 0.0F, 0.5F - halfWidth, 0.5F + halfWidth, 0.25F, 0.5F + halfWidth);
         }
@@ -91,7 +91,7 @@ namespace betareborn.Blocks
             return totalMoisture;
         }
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
             if (meta < 0)
             {
@@ -101,14 +101,14 @@ namespace betareborn.Blocks
             return textureId + meta;
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return 6;
         }
 
-        public override void dropStacks(World world, int x, int y, int z, int meta, float luck)
+        public override void DropStacks(World world, int x, int y, int z, int meta, float luck)
         {
-            base.dropStacks(world, x, y, z, meta, luck);
+            base.DropStacks(world, x, y, z, meta, luck);
             if (!world.isRemote)
             {
                 for (int attempt = 0; attempt < 3; ++attempt)
@@ -128,12 +128,12 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
             return blockMeta == 7 ? Item.WHEAT.id : -1;
         }
 
-        public override int getDroppedItemCount(java.util.Random random)
+        public override int GetDroppedItemCount(java.util.Random random)
         {
             return 1;
         }

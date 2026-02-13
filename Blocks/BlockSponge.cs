@@ -29,7 +29,7 @@ namespace betareborn.Blocks
 
         }
 
-        public override void onBreak(World world, int x, int y, int z)
+        public override void OnBreak(World world, int x, int y, int z)
         {
             sbyte radius = 2;
 

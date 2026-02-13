@@ -12,13 +12,13 @@ namespace betareborn.Blocks
         {
         }
 
-        public override Box? getCollisionShape(World world, int x, int y, int z)
+        public override Box? GetCollisionShape(World world, int x, int y, int z)
         {
             float height = 2.0F / 16.0F;
             return new Box((double)x, (double)y, (double)z, (double)(x + 1), (double)((float)(y + 1) - height), (double)(z + 1));
         }
 
-        public override void onEntityCollision(World world, int x, int y, int z, Entity entity)
+        public override void OnEntityCollision(World world, int x, int y, int z, Entity entity)
         {
             entity.velocityX *= 0.4D;
             entity.velocityZ *= 0.4D;

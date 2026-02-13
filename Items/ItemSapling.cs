@@ -18,7 +18,7 @@ namespace betareborn.Items
 
         public override int getTextureId(int meta)
         {
-            return Block.SAPLING.getTexture(0, meta);
+            return Block.SAPLING.GetTexture(0, meta);
         }
     }
 

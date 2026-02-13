@@ -8,7 +8,7 @@ namespace betareborn.Blocks
         {
         }
 
-        public override int getTexture(int side)
+        public override int GetTexture(int side)
         {
             return side == 1 ? textureId - 16 : (side == 0 ? textureId + 16 : textureId);
         }

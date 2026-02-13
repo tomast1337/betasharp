@@ -547,7 +547,7 @@ namespace betareborn.Entities
                 int var3 = world.getBlockId(MathHelper.floor_double(x), MathHelper.floor_double(y - (double)0.2F - (double)standingEyeHeight), MathHelper.floor_double(z));
                 if (var3 > 0)
                 {
-                    BlockSoundGroup var4 = Block.BLOCKS[var3].soundGroup;
+                    BlockSoundGroup var4 = Block.BLOCKS[var3].SoundGroup;
                     world.playSound(this, var4.func_1145_d(), var4.getVolume() * 0.5F, var4.getPitch() * (12.0F / 16.0F));
                 }
             }
@@ -594,7 +594,7 @@ namespace betareborn.Entities
                     int groundBlockId = world.getBlockId(MathHelper.floor_double(x), MathHelper.floor_double(boundingBox.minY) - 1, MathHelper.floor_double(z));
                     if (groundBlockId > 0)
                     {
-                        friction = Block.BLOCKS[groundBlockId].slipperiness * 0.91F;
+                        friction = Block.BLOCKS[groundBlockId].Slipperiness * 0.91F;
                     }
                 }
 
@@ -607,7 +607,7 @@ namespace betareborn.Entities
                     int groundBlockId = world.getBlockId(MathHelper.floor_double(x), MathHelper.floor_double(boundingBox.minY) - 1, MathHelper.floor_double(z));
                     if (groundBlockId > 0)
                     {
-                        friction = Block.BLOCKS[groundBlockId].slipperiness * 0.91F;
+                        friction = Block.BLOCKS[groundBlockId].Slipperiness * 0.91F;
                     }
                 }
 

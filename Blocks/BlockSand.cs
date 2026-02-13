@@ -64,7 +64,7 @@ namespace betareborn.Blocks
             if (blockId == 0 || blockId == FIRE.id) 
                 return true;
 
-            var material = BLOCKS[blockId].material;
+            var material = BLOCKS[blockId].Material;
             return material == Material.WATER || material == Material.LAVA;
         }
     }

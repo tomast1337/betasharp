@@ -12,12 +12,12 @@ namespace betareborn.Blocks
         {
         }
 
-        public override Box? getCollisionShape(World world, int x, int y, int z)
+        public override Box? GetCollisionShape(World world, int x, int y, int z)
         {
             return null;
         }
 
-        public override void updateBoundingBox(BlockView blockView, int x, int y, int z)
+        public override void UpdateBoundingBox(BlockView blockView, int x, int y, int z)
         {
             float thickness;
             float halfExtent;
@@ -36,12 +36,12 @@ namespace betareborn.Blocks
 
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
@@ -158,7 +158,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override bool isSideVisible(BlockView blockView, int x, int y, int z, int side)
+        public override bool IsSideVisible(BlockView blockView, int x, int y, int z, int side)
         {
             if (blockView.getBlockId(x, y, z) == id)
             {
@@ -176,17 +176,17 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getDroppedItemCount(java.util.Random random)
+        public override int GetDroppedItemCount(java.util.Random random)
         {
             return 0;
         }
 
-        public override int getRenderLayer()
+        public override int GetRenderLayer()
         {
             return 1;
         }
 
-        public override void onEntityCollision(World world, int x, int y, int z, Entity entity)
+        public override void OnEntityCollision(World world, int x, int y, int z, Entity entity)
         {
             if (entity.vehicle == null && entity.passenger == null)
             {
@@ -195,7 +195,7 @@ namespace betareborn.Blocks
 
         }
 
-        public override void randomDisplayTick(World world, int x, int y, int z, java.util.Random random)
+        public override void RandomDisplayTick(World world, int x, int y, int z, java.util.Random random)
         {
             if (random.nextInt(100) == 0)
             {

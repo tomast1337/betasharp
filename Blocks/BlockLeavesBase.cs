@@ -12,15 +12,15 @@ namespace betareborn.Blocks
             this.graphicsLevel = graphicsLevel;
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override bool isSideVisible(BlockView blockView, int x, int y, int z, int side)
+        public override bool IsSideVisible(BlockView blockView, int x, int y, int z, int side)
         {
             int var6 = blockView.getBlockId(x, y, z);
-            return !graphicsLevel && var6 == id ? false : base.isSideVisible(blockView, x, y, z, side);
+            return !graphicsLevel && var6 == id ? false : base.IsSideVisible(blockView, x, y, z, side);
         }
     }
 

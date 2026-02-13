@@ -57,10 +57,10 @@ namespace betareborn
                 int var5 = mc.world.getBlockId(var1, var2, var3);
                 if (var5 > 0 && curBlockDamageMP == 0.0F)
                 {
-                    Block.BLOCKS[var5].onBlockBreakStart(mc.world, var1, var2, var3, mc.player);
+                    Block.BLOCKS[var5].OnBlockBreakStart(mc.world, var1, var2, var3, mc.player);
                 }
 
-                if (var5 > 0 && Block.BLOCKS[var5].getHardness(mc.player) >= 1.0F)
+                if (var5 > 0 && Block.BLOCKS[var5].GetHardness(mc.player) >= 1.0F)
                 {
                     sendBlockRemoved(var1, var2, var3, var4);
                 }
@@ -105,10 +105,10 @@ namespace betareborn
                         }
 
                         Block var6 = Block.BLOCKS[var5];
-                        curBlockDamageMP += var6.getHardness(mc.player);
+                        curBlockDamageMP += var6.GetHardness(mc.player);
                         if (field_9441_h % 4.0F == 0.0F && var6 != null)
                         {
-                            mc.sndManager.playSound(var6.soundGroup.func_1145_d(), (float)var1 + 0.5F, (float)var2 + 0.5F, (float)var3 + 0.5F, (var6.soundGroup.getVolume() + 1.0F) / 8.0F, var6.soundGroup.getPitch() * 0.5F);
+                            mc.sndManager.playSound(var6.SoundGroup.func_1145_d(), (float)var1 + 0.5F, (float)var2 + 0.5F, (float)var3 + 0.5F, (var6.SoundGroup.getVolume() + 1.0F) / 8.0F, var6.SoundGroup.getPitch() * 0.5F);
                         }
 
                         ++field_9441_h;

@@ -12,12 +12,12 @@ namespace betareborn.Blocks
             setBoundingBox(0.5F - halfSize, 0.0F, 0.5F - halfSize, 0.5F + halfSize, 0.8F, 0.5F + halfSize);
         }
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
             return meta == 1 ? textureId : (meta == 2 ? textureId + 16 + 1 : (meta == 0 ? textureId + 16 : textureId));
         }
 
-        public override int getColorMultiplier(BlockView blockView, int x, int y, int z)
+        public override int GetColorMultiplier(BlockView blockView, int x, int y, int z)
         {
             int meta = blockView.getBlockMeta(x, y, z);
             if (meta == 0)
@@ -38,7 +38,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
             return random.nextInt(8) == 0 ? Item.SEEDS.id : -1;
         }

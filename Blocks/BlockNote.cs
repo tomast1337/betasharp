@@ -11,14 +11,14 @@ namespace betareborn.Blocks
         {
         }
 
-        public override int getTexture(int side)
+        public override int GetTexture(int side)
         {
             return textureId;
         }
 
         public override void NeighborUpdate(World world, int x, int y, int z, int id)
         {
-            if (id > 0 && Block.BLOCKS[id].canEmitRedstonePower())
+            if (id > 0 && Block.BLOCKS[id].CanEmitRedstonePower())
             {
                 bool isPowered = world.isStrongPowered(x, y, z);
                 BlockEntityNote blockEntity = (BlockEntityNote)world.getBlockEntity(x, y, z);
@@ -35,7 +35,7 @@ namespace betareborn.Blocks
 
         }
 
-        public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
+        public override bool OnUse(World world, int x, int y, int z, EntityPlayer player)
         {
             if (world.isRemote)
             {
@@ -50,7 +50,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override void onBlockBreakStart(World world, int x, int y, int z, EntityPlayer player)
+        public override void OnBlockBreakStart(World world, int x, int y, int z, EntityPlayer player)
         {
             if (!world.isRemote)
             {
@@ -64,7 +64,7 @@ namespace betareborn.Blocks
             return new BlockEntityNote();
         }
 
-        public override void onBlockAction(World world, int x, int y, int z, int data1, int data2)
+        public override void OnBlockAction(World world, int x, int y, int z, int data1, int data2)
         {
             float pitch = (float)java.lang.Math.pow(2.0D, (double)(data2 - 12) / 12.0D);
             string instrumentName = "harp";

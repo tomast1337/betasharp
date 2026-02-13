@@ -34,7 +34,7 @@ namespace betareborn
             bool var8 = var5.setBlock(var1, var2, var3, 0);
             if (var6 != null && var8)
             {
-                var6.onMetadataChange(var5, var1, var2, var3, var7);
+                var6.OnMetadataChange(var5, var1, var2, var3, var7);
             }
 
             return var8;
@@ -97,7 +97,7 @@ namespace betareborn
         public virtual bool sendPlaceBlock(EntityPlayer var1, World var2, ItemStack var3, int var4, int var5, int var6, int var7)
         {
             int var8 = var2.getBlockId(var4, var5, var6);
-            return var8 > 0 && Block.BLOCKS[var8].onUse(var2, var4, var5, var6, var1) ? true : (var3 == null ? false : var3.useOnBlock(var1, var2, var4, var5, var6, var7));
+            return var8 > 0 && Block.BLOCKS[var8].OnUse(var2, var4, var5, var6, var1) ? true : (var3 == null ? false : var3.useOnBlock(var1, var2, var4, var5, var6, var7));
         }
 
         public virtual EntityPlayer createPlayer(World var1)

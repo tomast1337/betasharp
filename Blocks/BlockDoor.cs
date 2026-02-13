@@ -22,7 +22,7 @@ namespace betareborn.Blocks
             setBoundingBox(0.5F - halfWidth, 0.0F, 0.5F - halfWidth, 0.5F + halfWidth, height, 0.5F + halfWidth);
         }
 
-        public override int getTexture(int side, int meta)
+        public override int GetTexture(int side, int meta)
         {
             if (side != 0 && side != 1)
             {
@@ -50,34 +50,34 @@ namespace betareborn.Blocks
             }
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return 7;
         }
 
-        public override Box getBoundingBox(World world, int x, int y, int z)
+        public override Box GetBoundingBox(World world, int x, int y, int z)
         {
-            updateBoundingBox(world, x, y, z);
-            return base.getBoundingBox(world, x, y, z);
+            UpdateBoundingBox(world, x, y, z);
+            return base.GetBoundingBox(world, x, y, z);
         }
 
-        public override Box? getCollisionShape(World world, int x, int y, int z)
+        public override Box? GetCollisionShape(World world, int x, int y, int z)
         {
-            updateBoundingBox(world, x, y, z);
-            return base.getCollisionShape(world, x, y, z);
+            UpdateBoundingBox(world, x, y, z);
+            return base.GetCollisionShape(world, x, y, z);
         }
 
-        public override void updateBoundingBox(BlockView blockView, int x, int y, int z)
+        public override void UpdateBoundingBox(BlockView blockView, int x, int y, int z)
         {
             rotate(setOpen(blockView.getBlockMeta(x, y, z)));
         }
@@ -108,14 +108,14 @@ namespace betareborn.Blocks
 
         }
 
-        public override void onBlockBreakStart(World world, int x, int y, int z, EntityPlayer var5)
+        public override void OnBlockBreakStart(World world, int x, int y, int z, EntityPlayer var5)
         {
-            onUse(world, x, y, z, var5);
+            OnUse(world, x, y, z, var5);
         }
 
-        public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
+        public override bool OnUse(World world, int x, int y, int z, EntityPlayer player)
         {
-            if (material == Material.METAL)
+            if (Material == Material.METAL)
             {
                 return true;
             }
@@ -126,7 +126,7 @@ namespace betareborn.Blocks
                 {
                     if (world.getBlockId(x, y - 1, z) == id)
                     {
-                        onUse(world, x, y - 1, z, player);
+                        OnUse(world, x, y - 1, z, player);
                     }
 
                     return true;
@@ -184,7 +184,7 @@ namespace betareborn.Blocks
                     world.setBlock(x, y, z, 0);
                 }
 
-                if (id > 0 && Block.BLOCKS[id].canEmitRedstonePower())
+                if (id > 0 && Block.BLOCKS[id].CanEmitRedstonePower())
                 {
                     NeighborUpdate(world, x, y - 1, z, id);
                 }
@@ -212,10 +212,10 @@ namespace betareborn.Blocks
                 {
                     if (!world.isRemote)
                     {
-                        dropStacks(world, x, y, z, meta);
+                        DropStacks(world, x, y, z, meta);
                     }
                 }
-                else if (id > 0 && Block.BLOCKS[id].canEmitRedstonePower())
+                else if (id > 0 && Block.BLOCKS[id].CanEmitRedstonePower())
                 {
                     bool isPowered = world.isPowered(x, y, z) || world.isPowered(x, y + 1, z);
                     setOpen(world, x, y, z, isPowered);
@@ -224,15 +224,15 @@ namespace betareborn.Blocks
 
         }
 
-        public override int getDroppedItemId(int blockMeta, java.util.Random random)
+        public override int GetDroppedItemId(int blockMeta, java.util.Random random)
         {
-            return (blockMeta & 8) != 0 ? 0 : (material == Material.METAL ? Item.IRON_DOOR.id : Item.WOODEN_DOOR.id);
+            return (blockMeta & 8) != 0 ? 0 : (Material == Material.METAL ? Item.IRON_DOOR.id : Item.WOODEN_DOOR.id);
         }
 
-        public override HitResult raycast(World world, int x, int y, int z, Vec3D startPos, Vec3D endPos)
+        public override HitResult Raycast(World world, int x, int y, int z, Vec3D startPos, Vec3D endPos)
         {
-            updateBoundingBox(world, x, y, z);
-            return base.raycast(world, x, y, z, startPos, endPos);
+            UpdateBoundingBox(world, x, y, z);
+            return base.Raycast(world, x, y, z, startPos, endPos);
         }
 
         public int setOpen(int meta)
@@ -240,9 +240,9 @@ namespace betareborn.Blocks
             return (meta & 4) == 0 ? meta - 1 & 3 : meta & 3;
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z)
+        public override bool CanPlaceAt(World world, int x, int y, int z)
         {
-            return y >= 127 ? false : world.shouldSuffocate(x, y - 1, z) && base.canPlaceAt(world, x, y, z) && base.canPlaceAt(world, x, y + 1, z);
+            return y >= 127 ? false : world.shouldSuffocate(x, y - 1, z) && base.CanPlaceAt(world, x, y, z) && base.CanPlaceAt(world, x, y + 1, z);
         }
 
         public static bool isOpen(int meta)
@@ -250,7 +250,7 @@ namespace betareborn.Blocks
             return (meta & 4) != 0;
         }
 
-        public override int getPistonBehavior()
+        public override int GetPistonBehavior()
         {
             return 1;
         }

@@ -12,7 +12,7 @@ namespace betareborn.Items
         public ItemBlock(int id) : base(id)
         {
             blockID = id + 256;
-            setTextureId(Block.BLOCKS[id + 256].getTexture(2));
+            setTextureId(Block.BLOCKS[id + 256].GetTexture(2));
         }
 
         public override bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int meta)
@@ -58,7 +58,7 @@ namespace betareborn.Items
             {
                 return false;
             }
-            else if (y == 127 && Block.BLOCKS[blockID].material.isSolid())
+            else if (y == 127 && Block.BLOCKS[blockID].Material.isSolid())
             {
                 return false;
             }
@@ -67,9 +67,9 @@ namespace betareborn.Items
                 Block block = Block.BLOCKS[blockID];
                 if (world.setBlock(x, y, z, blockID, getPlacementMetadata(itemStack.getDamage())))
                 {
-                    Block.BLOCKS[blockID].onPlaced(world, x, y, z, meta);
-                    Block.BLOCKS[blockID].onPlaced(world, x, y, z, entityPlayer);
-                    world.playSound((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), block.soundGroup.func_1145_d(), (block.soundGroup.getVolume() + 1.0F) / 2.0F, block.soundGroup.getPitch() * 0.8F);
+                    Block.BLOCKS[blockID].OnPlaced(world, x, y, z, meta);
+                    Block.BLOCKS[blockID].OnPlaced(world, x, y, z, entityPlayer);
+                    world.playSound((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), block.SoundGroup.func_1145_d(), (block.SoundGroup.getVolume() + 1.0F) / 2.0F, block.SoundGroup.getPitch() * 0.8F);
                     --itemStack.count;
                 }
 
@@ -83,12 +83,12 @@ namespace betareborn.Items
 
         public override String getItemNameIS(ItemStack itemStack)
         {
-            return Block.BLOCKS[blockID].getBlockName();
+            return Block.BLOCKS[blockID].GetBlockName();
         }
 
         public override String getItemName()
         {
-            return Block.BLOCKS[blockID].getBlockName();
+            return Block.BLOCKS[blockID].GetBlockName();
         }
     }
 

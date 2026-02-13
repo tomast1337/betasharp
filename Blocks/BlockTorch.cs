@@ -10,25 +10,25 @@ namespace betareborn.Blocks
 
         public BlockTorch(int id, int textureId) : base(id, textureId, Material.PISTON_BREAKABLE)
         {
-            setTickRandomly(true);
+            SetTickRandomly(true);
         }
 
-        public override Box? getCollisionShape(World world, int x, int y, int z)
+        public override Box? GetCollisionShape(World world, int x, int y, int z)
         {
             return null;
         }
 
-        public override bool isOpaque()
+        public override bool IsOpaque()
         {
             return false;
         }
 
-        public override bool isFullCube()
+        public override bool IsFullCube()
         {
             return false;
         }
 
-        public override int getRenderType()
+        public override int GetRenderType()
         {
             return 2;
         }
@@ -38,12 +38,12 @@ namespace betareborn.Blocks
             return world.shouldSuffocate(x, y, z) || world.getBlockId(x, y, z) == Block.FENCE.id;
         }
 
-        public override bool canPlaceAt(World world, int x, int y, int z)
+        public override bool CanPlaceAt(World world, int x, int y, int z)
         {
             return world.shouldSuffocate(x - 1, y, z) ? true : (world.shouldSuffocate(x + 1, y, z) ? true : (world.shouldSuffocate(x, y, z - 1) ? true : (world.shouldSuffocate(x, y, z + 1) ? true : canPlaceOn(world, x, y - 1, z))));
         }
 
-        public override void onPlaced(World world, int x, int y, int z, int direction)
+        public override void OnPlaced(World world, int x, int y, int z, int direction)
         {
             int meta = world.getBlockMeta(x, y, z);
             if (direction == 1 && canPlaceOn(world, x, y - 1, z))
@@ -143,7 +143,7 @@ namespace betareborn.Blocks
 
                 if (canPlace)
                 {
-                    dropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
+                    DropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
                     world.setBlock(x, y, z, 0);
                 }
             }
@@ -152,9 +152,9 @@ namespace betareborn.Blocks
 
         private bool breakIfCannotPlaceAt(World world, int x, int y, int z)
         {
-            if (!canPlaceAt(world, x, y, z))
+            if (!CanPlaceAt(world, x, y, z))
             {
-                dropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
+                DropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
                 world.setBlock(x, y, z, 0);
                 return false;
             }
@@ -164,7 +164,7 @@ namespace betareborn.Blocks
             }
         }
 
-        public override HitResult raycast(World world, int x, int y, int z, Vec3D startPos, Vec3D endPos)
+        public override HitResult Raycast(World world, int x, int y, int z, Vec3D startPos, Vec3D endPos)
         {
             int meta = world.getBlockMeta(x, y, z) & 7;
             float torchWidth = 0.15F;
@@ -190,10 +190,10 @@ namespace betareborn.Blocks
                 setBoundingBox(0.5F - torchWidth, 0.0F, 0.5F - torchWidth, 0.5F + torchWidth, 0.6F, 0.5F + torchWidth);
             }
 
-            return base.raycast(world, x, y, z, startPos, endPos);
+            return base.Raycast(world, x, y, z, startPos, endPos);
         }
 
-        public override void randomDisplayTick(World world, int x, int y, int z, java.util.Random random)
+        public override void RandomDisplayTick(World world, int x, int y, int z, java.util.Random random)
         {
             int meta = world.getBlockMeta(x, y, z);
             double flameX = (double)((float)x + 0.5F);
