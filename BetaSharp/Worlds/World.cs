@@ -1611,15 +1611,15 @@ public abstract class World : java.lang.Object, BlockView
             BlockEntity var5 = blockEntities[i];
             if (!var5.isRemoved())
             {
-                var5.tick();
+                var5.Tick();
             }
             if (var5.isRemoved())
             {
                 blockEntities.RemoveAt(i);
-                Chunk var7 = getChunk(var5.x >> 4, var5.z >> 4);
+                Chunk var7 = getChunk(var5.X >> 4, var5.Z >> 4);
                 if (var7 != null)
                 {
-                    var7.removeBlockEntityAt(var5.x & 15, var5.y, var5.z & 15);
+                    var7.removeBlockEntityAt(var5.X & 15, var5.Y, var5.Z & 15);
                 }
             }
         }
@@ -1635,12 +1635,12 @@ public abstract class World : java.lang.Object, BlockView
                     {
                         blockEntities.Add(var8);
                     }
-                    Chunk var9 = getChunk(var8.x >> 4, var8.z >> 4);
+                    Chunk var9 = getChunk(var8.X >> 4, var8.Z >> 4);
                     if (var9 != null)
                     {
-                        var9.setBlockEntity(var8.x & 15, var8.y, var8.z & 15, var8);
+                        var9.setBlockEntity(var8.X & 15, var8.Y, var8.Z & 15, var8);
                     }
-                    blockUpdateEvent(var8.x, var8.y, var8.z);
+                    blockUpdateEvent(var8.X, var8.Y, var8.Z);
                 }
             }
             blockEntityUpdateQueue.Clear();
@@ -2105,9 +2105,9 @@ public abstract class World : java.lang.Object, BlockView
         {
             if (processingDeferred)
             {
-                blockEntity.x = x;
-                blockEntity.y = y;
-                blockEntity.z = z;
+                blockEntity.X = x;
+                blockEntity.Y = y;
+                blockEntity.Z = z;
                 blockEntityUpdateQueue.Add(blockEntity);
             }
             else
@@ -2128,7 +2128,7 @@ public abstract class World : java.lang.Object, BlockView
         BlockEntity var4 = getBlockEntity(x, y, z);
         if (var4 != null && processingDeferred)
         {
-            var4.markRemoved();
+            var4.MarkRemoved();
         }
         else
         {

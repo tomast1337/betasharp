@@ -511,9 +511,9 @@ public class Chunk : java.lang.Object
 
     public virtual void addBlockEntity(BlockEntity blockEntity)
     {
-        int var2 = blockEntity.x - x * 16;
-        int var3 = blockEntity.y;
-        int var4 = blockEntity.z - z * 16;
+        int var2 = blockEntity.X - x * 16;
+        int var3 = blockEntity.Y;
+        int var4 = blockEntity.Z - z * 16;
         setBlockEntity(var2, var3, var4, blockEntity);
         if (loaded)
         {
@@ -525,13 +525,13 @@ public class Chunk : java.lang.Object
     public virtual void setBlockEntity(int x, int y, int z, BlockEntity blockEntity)
     {
         BlockPos var5 = new(x, y, z);
-        blockEntity.world = world;
-        blockEntity.x = this.x * 16 + x;
-        blockEntity.y = y;
-        blockEntity.z = this.z * 16 + z;
+        blockEntity.World = world;
+        blockEntity.X = this.x * 16 + x;
+        blockEntity.Y = y;
+        blockEntity.Z = this.z * 16 + z;
         if (getBlockId(x, y, z) != 0 && Block.BLOCKS[getBlockId(x, y, z)] is BlockWithEntity)
         {
-            blockEntity.cancelRemoval();
+            blockEntity.CancelRemoval();
             blockEntities[var5] = blockEntity;
         }
         else
@@ -549,7 +549,7 @@ public class Chunk : java.lang.Object
             if (var5 != null)
             {
                 blockEntities.Remove(var4);
-                var5.markRemoved();
+                var5.MarkRemoved();
             }
         }
 
@@ -573,7 +573,7 @@ public class Chunk : java.lang.Object
 
         foreach (var var2 in blockEntities.Values)
         {
-            var2.markRemoved();
+            var2.MarkRemoved();
         }
 
         for (int var3 = 0; var3 < entities.Length; ++var3)

@@ -35,7 +35,7 @@ public class BlockEntityPiston : BlockEntity
         return pushedBlockId;
     }
 
-    public override int getPushedBlockData()
+    public override int GetPushedBlockData()
     {
         return pushedBlockData;
     }
@@ -91,10 +91,10 @@ public class BlockEntityPiston : BlockEntity
             collisionShapeSizeMultiplier = 1.0F - collisionShapeSizeMultiplier;
         }
 
-        Box? pushCollisionBox = Block.MOVING_PISTON.getPushedBlockCollisionShape(world, x, y, z, pushedBlockId, collisionShapeSizeMultiplier, facing);
+        Box? pushCollisionBox = Block.MOVING_PISTON.getPushedBlockCollisionShape(World, X, Y, Z, pushedBlockId, collisionShapeSizeMultiplier, facing);
         if (pushCollisionBox != null)
         {
-            var entitiesToPush = world.getEntities(null, pushCollisionBox.Value);
+            var entitiesToPush = World.getEntities(null, pushCollisionBox.Value);
             if (entitiesToPush.Count > 0)
             {
                 pushedEntities.AddRange(entitiesToPush);
@@ -117,27 +117,27 @@ public class BlockEntityPiston : BlockEntity
         if (progress < 1.0F)
         {
             progress = lastProgess = 1.0F;
-            world.removeBlockEntity(x, y, z);
-            markRemoved();
-            if (world.getBlockId(x, y, z) == Block.MOVING_PISTON.id)
+            World.removeBlockEntity(X, Y, Z);
+            MarkRemoved();
+            if (World.getBlockId(X, Y, Z) == Block.MOVING_PISTON.id)
             {
-                world.setBlock(x, y, z, pushedBlockId, pushedBlockData);
+                World.setBlock(X, Y, Z, pushedBlockId, pushedBlockData);
             }
         }
 
     }
 
-    public override void tick()
+    public override void Tick()
     {
         progress = lastProgess;
         if (progress >= 1.0F)
         {
             pushEntities(1.0F, 0.25F);
-            world.removeBlockEntity(x, y, z);
-            markRemoved();
-            if (world.getBlockId(x, y, z) == Block.MOVING_PISTON.id)
+            World.removeBlockEntity(X, Y, Z);
+            MarkRemoved();
+            if (World.getBlockId(X, Y, Z) == Block.MOVING_PISTON.id)
             {
-                world.setBlock(x, y, z, pushedBlockId, pushedBlockData);
+                World.setBlock(X, Y, Z, pushedBlockId, pushedBlockData);
             }
 
         }
@@ -157,9 +157,9 @@ public class BlockEntityPiston : BlockEntity
         }
     }
 
-    public override void readNbt(NBTTagCompound nbt)
+    public override void ReadNbt(NBTTagCompound nbt)
     {
-        base.readNbt(nbt);
+        base.ReadNbt(nbt);
         pushedBlockId = nbt.GetInteger("blockId");
         pushedBlockData = nbt.GetInteger("blockData");
         facing = nbt.GetInteger("facing");
@@ -167,9 +167,9 @@ public class BlockEntityPiston : BlockEntity
         extending = nbt.GetBoolean("extending");
     }
 
-    public override void writeNbt(NBTTagCompound nbt)
+    public override void WriteNbt(NBTTagCompound nbt)
     {
-        base.writeNbt(nbt);
+        base.WriteNbt(nbt);
         nbt.SetInteger("blockId", pushedBlockId);
         nbt.SetInteger("blockData", pushedBlockData);
         nbt.SetInteger("facing", facing);

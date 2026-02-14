@@ -67,9 +67,9 @@ public class BlockEntityFurnace : BlockEntity, IInventory
         return "Furnace";
     }
 
-    public override void readNbt(NBTTagCompound nbt)
+    public override void ReadNbt(NBTTagCompound nbt)
     {
-        base.readNbt(nbt);
+        base.ReadNbt(nbt);
         NBTTagList itemList = nbt.GetTagList("Items");
         inventory = new ItemStack[size()];
 
@@ -88,9 +88,9 @@ public class BlockEntityFurnace : BlockEntity, IInventory
         fuelTime = getFuelTime(inventory[1]);
     }
 
-    public override void writeNbt(NBTTagCompound nbt)
+    public override void WriteNbt(NBTTagCompound nbt)
     {
-        base.writeNbt(nbt);
+        base.WriteNbt(nbt);
         nbt.SetShort("BurnTime", (short)burnTime);
         nbt.SetShort("CookTime", (short)cookTime);
         NBTTagList itemList = new NBTTagList();
@@ -134,7 +134,7 @@ public class BlockEntityFurnace : BlockEntity, IInventory
         return burnTime > 0;
     }
 
-    public override void tick()
+    public override void Tick()
     {
         bool wasBurning = burnTime > 0;
         bool stateChanged = false;
@@ -143,7 +143,7 @@ public class BlockEntityFurnace : BlockEntity, IInventory
             --burnTime;
         }
 
-        if (!world.isRemote)
+        if (!World.isRemote)
         {
             if (burnTime == 0 && canAcceptRecipeOutput())
             {
@@ -180,13 +180,13 @@ public class BlockEntityFurnace : BlockEntity, IInventory
             if (wasBurning != burnTime > 0)
             {
                 stateChanged = true;
-                BlockFurnace.updateLitState(burnTime > 0, world, x, y, z);
+                BlockFurnace.updateLitState(burnTime > 0, World, X, Y, Z);
             }
         }
 
         if (stateChanged)
         {
-            markDirty();
+            MarkDirty();
         }
 
     }
@@ -242,6 +242,6 @@ public class BlockEntityFurnace : BlockEntity, IInventory
 
     public bool canPlayerUse(EntityPlayer player)
     {
-        return world.getBlockEntity(x, y, z) != this ? false : player.getSquaredDistance(x + 0.5D, y + 0.5D, z + 0.5D) <= 64.0D;
+        return World.getBlockEntity(X, Y, Z) != this ? false : player.getSquaredDistance(X + 0.5D, Y + 0.5D, Z + 0.5D) <= 64.0D;
     }
 }

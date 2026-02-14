@@ -47,7 +47,7 @@ public class Slot : java.lang.Object
 
     public void markDirty()
     {
-        inventory.markDirty();
+        inventory.MarkDirty();
     }
 
     public virtual int getMaxItemCount()

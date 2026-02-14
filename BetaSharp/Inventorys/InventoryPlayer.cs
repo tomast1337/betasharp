@@ -441,7 +441,7 @@ public class InventoryPlayer : java.lang.Object, IInventory
 
     }
 
-    public void markDirty()
+    public void MarkDirty()
     {
         dirty = true;
     }

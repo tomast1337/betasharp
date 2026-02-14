@@ -150,7 +150,7 @@ public class BlockFurnace : BlockWithEntity
 
         ignoreBlockRemoval = false;
         world.setBlockMeta(x, y, z, meta);
-        furnace.cancelRemoval();
+        furnace.CancelRemoval();
         world.setBlockEntity(x, y, z, furnace);
     }
 

@@ -6,142 +6,113 @@ using java.util;
 
 namespace BetaSharp.Blocks.Entities;
 
-public class BlockEntity : java.lang.Object
+public class BlockEntity
 {
-    public static readonly Class Class = ikvm.runtime.Util.getClassFromTypeHandle(typeof(BlockEntity).TypeHandle);
-    private static readonly Map idToClass = new HashMap();
-    private static readonly Map classToId = new HashMap();
-    public World world;
-    public int x;
-    public int y;
-    public int z;
-    protected bool removed;
+    public static readonly Type Class = typeof(BlockEntity);
+    private static readonly Dictionary<string, Type> IdToType = [];
+    private static readonly Dictionary<Type, string> TypeToId = [];
+    public World World { get; set; }
+    public int X { get; set; }
+    public int Y { get; set; }
+    public int Z { get; set; }
+    public bool IsRemoved { get; protected set; }
 
-    private static void create(Class blockEntityClass, string id)
+    private static void Register(Type blockEntityType, string id)
     {
-        if (classToId.containsKey(id))
+        if (TypeToId.ContainsKey(blockEntityType))
         {
-            throw new IllegalArgumentException("Duplicate id: " + id);
+            throw new ArgumentException($"Duplicate id: {id}");
         }
         else
         {
-            idToClass.put(id, blockEntityClass);
-            classToId.put(blockEntityClass, id);
+            IdToType[id] = blockEntityType;
+            TypeToId[blockEntityType] = id;
         }
     }
 
-    public virtual void readNbt(NBTTagCompound nbt)
+    public virtual void ReadNbt(NBTTagCompound nbt)
     {
-        x = nbt.GetInteger("x");
-        y = nbt.GetInteger("y");
-        z = nbt.GetInteger("z");
+        X = nbt.GetInteger("x");
+        Y = nbt.GetInteger("y");
+        Z = nbt.GetInteger("z");
     }
 
-    public virtual void writeNbt(NBTTagCompound nbt)
+    public virtual void WriteNbt(NBTTagCompound nbt)
     {
-        string entityId = (string)classToId.get(getClass());
+        string entityId = TypeToId[GetType()];
         if (entityId == null)
         {
-            throw new RuntimeException(getClass() + " is missing a mapping! This is a bug!");
+            throw new RuntimeException($"{GetType()} is missing a mapping! This is a bug!");
         }
         else
         {
             nbt.SetString("id", entityId);
-            nbt.SetInteger("x", x);
-            nbt.SetInteger("y", y);
-            nbt.SetInteger("z", z);
+            nbt.SetInteger("x", X);
+            nbt.SetInteger("y", Y);
+            nbt.SetInteger("z", Z);
         }
     }
 
-    public virtual void tick()
-    {
-    }
+    public virtual void Tick() { }
 
-    public static BlockEntity createFromNbt(NBTTagCompound nbt)
+    public static BlockEntity? CreateFromNbt(NBTTagCompound nbt)
     {
         BlockEntity blockEntity = null;
 
         try
         {
-            Class blockEntityClass = (Class)idToClass.get(nbt.GetString("id"));
+            Type blockEntityClass = IdToType[nbt.GetString("id")];
             if (blockEntityClass != null)
             {
-                blockEntity = (BlockEntity)blockEntityClass.newInstance();
+                blockEntity = (BlockEntity)Activator.CreateInstance(blockEntityClass);
             }
         }
-        catch (java.lang.Exception exception)
+        catch (System.Exception ex)
         {
-            exception.printStackTrace();
+            Console.Error.WriteLine(ex);
         }
 
         if (blockEntity != null)
         {
-            blockEntity.readNbt(nbt);
+            blockEntity.ReadNbt(nbt);
         }
         else
         {
-            java.lang.System.@out.println("Skipping TileEntity with id " + nbt.GetString("id"));
+            java.lang.System.@out.println($"Skipping TileEntity with id {nbt.GetString("id")}");
         }
 
         return blockEntity;
     }
 
-    public virtual int getPushedBlockData()
-    {
-        return world.getBlockMeta(x, y, z);
-    }
+    public virtual int GetPushedBlockData() => World.getBlockMeta(X, Y, Z);
 
-    public void markDirty()
-    {
-        if (world != null)
-        {
-            world.updateBlockEntity(x, y, z, this);
-        }
 
-    }
+    public void MarkDirty() => World?.updateBlockEntity(X, Y, Z, this);
 
-    public double distanceFrom(double x, double y, double z)
+    public double DistanceFrom(double targetX, double targetY, double targetZ)
     {
-        double dx = this.x + 0.5D - x;
-        double dy = this.y + 0.5D - y;
-        double dz = this.z + 0.5D - z;
+        double dx = X + 0.5D - targetX;
+        double dy = Y + 0.5D - targetY;
+        double dz = Z + 0.5D - targetZ;
         return dx * dx + dy * dy + dz * dz;
     }
 
-    public Block getBlock()
-    {
-        return Block.BLOCKS[world.getBlockId(x, y, z)];
-    }
+    public Block GetBlock() => Block.BLOCKS[World.getBlockId(X, Y, Z)];
 
-    public virtual Packet createUpdatePacket()
-    {
-        return null;
-    }
+    public virtual Packet? CreateUpdatePacket() => null;
+    public void MarkRemoved() => IsRemoved = true;
 
-    public bool isRemoved()
-    {
-        return removed;
-    }
-
-    public void markRemoved()
-    {
-        removed = true;
-    }
-
-    public void cancelRemoval()
-    {
-        removed = false;
-    }
+    public void CancelRemoval() => IsRemoved = false;
 
     static BlockEntity()
     {
-        create(new BlockEntityFurnace().getClass(), "Furnace");
-        create(new BlockEntityChest().getClass(), "Chest");
-        create(new BlockEntityRecordPlayer().getClass(), "RecordPlayer");
-        create(new BlockEntityDispenser().getClass(), "Trap");
-        create(new BlockEntitySign().getClass(), "Sign");
-        create(new BlockEntityMobSpawner().getClass(), "MobSpawner");
-        create(new BlockEntityNote().getClass(), "Music");
-        create(new BlockEntityPiston().getClass(), "Piston");
+        Register(typeof(BlockEntityFurnace), "Furnace");
+        Register(typeof(BlockEntityChest), "Chest");
+        Register(typeof(BlockEntityRecordPlayer), "RecordPlayer");
+        Register(typeof(BlockEntityDispenser), "Trap");
+        Register(typeof(BlockEntitySign), "Sign");
+        Register(typeof(BlockEntityMobSpawner), "MobSpawner");
+        Register(typeof(BlockEntityNote), "Music");
+        Register(typeof(BlockEntityPiston), "Piston");
     }
 }

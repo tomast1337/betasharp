@@ -11,20 +11,20 @@ public class BlockEntitySignRenderer : BlockEntitySpecialRenderer
 
     public void renderTileEntitySignAt(BlockEntitySign var1, double var2, double var4, double var6, float var8)
     {
-        Block var9 = var1.getBlock();
+        Block var9 = var1.GetBlock();
         GLManager.GL.PushMatrix();
         float var10 = 2.0F / 3.0F;
         float var12;
         if (var9 == Block.SIGN)
         {
             GLManager.GL.Translate((float)var2 + 0.5F, (float)var4 + 12.0F / 16.0F * var10, (float)var6 + 0.5F);
-            float var11 = var1.getPushedBlockData() * 360 / 16.0F;
+            float var11 = var1.GetPushedBlockData() * 360 / 16.0F;
             GLManager.GL.Rotate(-var11, 0.0F, 1.0F, 0.0F);
             signModel.signStick.visible = true;
         }
         else
         {
-            int var16 = var1.getPushedBlockData();
+            int var16 = var1.GetPushedBlockData();
             var12 = 0.0F;
             if (var16 == 2)
             {

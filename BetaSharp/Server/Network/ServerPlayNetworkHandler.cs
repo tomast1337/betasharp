@@ -681,7 +681,7 @@ public class ServerPlayNetworkHandler : NetHandler, CommandOutput
                 }
 
                 var7.setEditable(false);
-                var7.markDirty();
+                var7.MarkDirty();
                 var2.blockUpdateEvent(var10, var11, var12);
             }
         }

@@ -12,19 +12,19 @@ public class BlockEntitySign : BlockEntity
     public int currentRow = -1;
     private bool editable = true;
 
-    public override void writeNbt(NBTTagCompound nbt)
+    public override void WriteNbt(NBTTagCompound nbt)
     {
-        base.writeNbt(nbt);
+        base.WriteNbt(nbt);
         nbt.SetString("Text1", texts[0]);
         nbt.SetString("Text2", texts[1]);
         nbt.SetString("Text3", texts[2]);
         nbt.SetString("Text4", texts[3]);
     }
 
-    public override void readNbt(NBTTagCompound nbt)
+    public override void ReadNbt(NBTTagCompound nbt)
     {
         editable = false;
-        base.readNbt(nbt);
+        base.ReadNbt(nbt);
 
         for (int line = 0; line < 4; ++line)
         {
@@ -37,7 +37,7 @@ public class BlockEntitySign : BlockEntity
 
     }
 
-    public override Packet createUpdatePacket()
+    public override Packet CreateUpdatePacket()
     {
         string[] lines = new string[4];
 
@@ -46,7 +46,7 @@ public class BlockEntitySign : BlockEntity
             lines[lineIndex] = texts[lineIndex];
         }
 
-        return new UpdateSignPacket(x, y, z, lines);
+        return new UpdateSignPacket(X, Y, Z, lines);
     }
 
     public bool isEditable()

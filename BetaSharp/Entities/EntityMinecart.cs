@@ -954,7 +954,7 @@ public class EntityMinecart : Entity, IInventory
         return 64;
     }
 
-    public void markDirty()
+    public void MarkDirty()
     {
     }
 

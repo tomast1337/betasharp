@@ -28,7 +28,7 @@ public class BlockEntityChest : BlockEntity, IInventory
             {
                 itemStack = inventory[slot];
                 inventory[slot] = null;
-                markDirty();
+                MarkDirty();
                 return itemStack;
             }
             else
@@ -39,7 +39,7 @@ public class BlockEntityChest : BlockEntity, IInventory
                     inventory[slot] = null;
                 }
 
-                markDirty();
+                MarkDirty();
                 return itemStack;
             }
         }
@@ -57,7 +57,7 @@ public class BlockEntityChest : BlockEntity, IInventory
             stack.count = getMaxCountPerStack();
         }
 
-        markDirty();
+        MarkDirty();
     }
 
     public string getName()
@@ -65,9 +65,9 @@ public class BlockEntityChest : BlockEntity, IInventory
         return "Chest";
     }
 
-    public override void readNbt(NBTTagCompound nbt)
+    public override void ReadNbt(NBTTagCompound nbt)
     {
-        base.readNbt(nbt);
+        base.ReadNbt(nbt);
         NBTTagList itemList = nbt.GetTagList("Items");
         inventory = new ItemStack[size()];
 
@@ -83,9 +83,9 @@ public class BlockEntityChest : BlockEntity, IInventory
 
     }
 
-    public override void writeNbt(NBTTagCompound nbt)
+    public override void WriteNbt(NBTTagCompound nbt)
     {
-        base.writeNbt(nbt);
+        base.WriteNbt(nbt);
         NBTTagList itemList = new NBTTagList();
 
         for (int slotIndex = 0; slotIndex < inventory.Length; ++slotIndex)
@@ -109,6 +109,6 @@ public class BlockEntityChest : BlockEntity, IInventory
 
     public bool canPlayerUse(EntityPlayer player)
     {
-        return world.getBlockEntity(x, y, z) != this ? false : player.getSquaredDistance(x + 0.5D, y + 0.5D, z + 0.5D) <= 64.0D;
+        return World.getBlockEntity(X, Y, Z) != this ? false : player.getSquaredDistance(X + 0.5D, Y + 0.5D, Z + 0.5D) <= 64.0D;
     }
 }

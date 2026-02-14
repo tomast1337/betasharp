@@ -36,7 +36,7 @@ public class GuiEditSign : GuiScreen
         Keyboard.enableRepeatEvents(false);
         if (mc.world.isRemote)
         {
-            mc.getSendQueue().addToSendQueue(new UpdateSignPacket(entitySign.x, entitySign.y, entitySign.z, entitySign.texts));
+            mc.getSendQueue().addToSendQueue(new UpdateSignPacket(entitySign.X, entitySign.Y, entitySign.Z, entitySign.texts));
         }
 
     }
@@ -53,7 +53,7 @@ public class GuiEditSign : GuiScreen
             switch (button.id)
             {
                 case BUTTON_DONE:
-                    entitySign.markDirty();
+                    entitySign.MarkDirty();
                     mc.displayGuiScreen(null);
                     break;
             }
@@ -93,16 +93,16 @@ public class GuiEditSign : GuiScreen
         float scale = 93.75F;
         GLManager.GL.Scale(-scale, -scale, -scale);
         GLManager.GL.Rotate(180.0F, 0.0F, 1.0F, 0.0F);
-        Block signBlock = entitySign.getBlock();
+        Block signBlock = entitySign.GetBlock();
         if (signBlock == Block.SIGN)
         {
-            float rotation = entitySign.getPushedBlockData() * 360 / 16.0F;
+            float rotation = entitySign.GetPushedBlockData() * 360 / 16.0F;
             GLManager.GL.Rotate(rotation, 0.0F, 1.0F, 0.0F);
             GLManager.GL.Translate(0.0F, -1.0625F, 0.0F);
         }
         else
         {
-            int rotationIndex = entitySign.getPushedBlockData();
+            int rotationIndex = entitySign.GetPushedBlockData();
             float angle = 0.0F;
             if (rotationIndex == 2)
             {

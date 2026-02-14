@@ -80,11 +80,11 @@ public class BlockEntityRenderer
 
     public void renderTileEntity(BlockEntity var1, float var2)
     {
-        if (var1.distanceFrom(playerX, playerY, playerZ) < 4096.0D)
+        if (var1.DistanceFrom(playerX, playerY, playerZ) < 4096.0D)
         {
-            float var3 = worldObj.getLuminance(var1.x, var1.y, var1.z);
+            float var3 = worldObj.getLuminance(var1.X, var1.Y, var1.Z);
             GLManager.GL.Color3(var3, var3, var3);
-            renderTileEntityAt(var1, var1.x - staticPlayerX, var1.y - staticPlayerY, var1.z - staticPlayerZ, var2);
+            renderTileEntityAt(var1, var1.X - staticPlayerX, var1.Y - staticPlayerY, var1.Z - staticPlayerZ, var2);
         }
 
     }

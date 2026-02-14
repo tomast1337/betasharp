@@ -54,10 +54,10 @@ public class InventoryLargeChest : java.lang.Object, IInventory
         return upperChest.getMaxCountPerStack();
     }
 
-    public void markDirty()
+    public void MarkDirty()
     {
-        upperChest.markDirty();
-        lowerChest.markDirty();
+        upperChest.MarkDirty();
+        lowerChest.MarkDirty();
     }
 
     public bool canPlayerUse(EntityPlayer entityPlayer)

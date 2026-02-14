@@ -112,7 +112,7 @@ public class RegionChunkStorage : ChunkStorage
         foreach (var var9 in chunk.blockEntities.Values)
         {
             var7 = new NBTTagCompound();
-            var9.writeNbt(var7);
+            var9.WriteNbt(var7);
             var8.SetTag(var7);
         }
 
@@ -169,7 +169,7 @@ public class RegionChunkStorage : ChunkStorage
             for (int var11 = 0; var11 < var10.TagCount(); ++var11)
             {
                 NBTTagCompound var12 = (NBTTagCompound)var10.TagAt(var11);
-                BlockEntity var9 = BlockEntity.createFromNbt(var12);
+                BlockEntity var9 = BlockEntity.CreateFromNbt(var12);
                 if (var9 != null)
                 {
                     var4.addBlockEntity(var9);

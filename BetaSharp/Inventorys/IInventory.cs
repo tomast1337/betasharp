@@ -17,7 +17,7 @@ public interface IInventory
 
     int getMaxCountPerStack();
 
-    void markDirty();
+    void MarkDirty();
 
     bool canPlayerUse(EntityPlayer entityPlayer);
 }

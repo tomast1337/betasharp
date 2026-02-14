@@ -696,7 +696,7 @@ public class ClientNetworkHandler : NetHandler
                     signEntity.texts[i] = packet.text[i];
                 }
 
-                signEntity.markDirty();
+                signEntity.MarkDirty();
             }
         }
 

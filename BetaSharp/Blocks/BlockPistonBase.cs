@@ -141,7 +141,7 @@ public class BlockPistonBase : Block
                         {
                             var16.finish();
                             var12 = var16.getPushedBlockId();
-                            var13 = var16.getPushedBlockData();
+                            var13 = var16.GetPushedBlockData();
                             var14 = true;
                         }
                     }

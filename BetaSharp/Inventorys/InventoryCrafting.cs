@@ -87,7 +87,7 @@ public class InventoryCrafting : java.lang.Object, IInventory
         return 64;
     }
 
-    public void markDirty()
+    public void MarkDirty()
     {
     }
 

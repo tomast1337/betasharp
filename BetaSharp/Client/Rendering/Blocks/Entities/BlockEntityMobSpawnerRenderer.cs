@@ -24,7 +24,7 @@ public class BlockEntityMobSpawnerRenderer : BlockEntitySpecialRenderer
 
         if (var9 != null)
         {
-            var9.setWorld(var1.world);
+            var9.setWorld(var1.World);
             float var10 = 7.0F / 16.0F;
             GLManager.GL.Translate(0.0F, 0.4F, 0.0F);
             GLManager.GL.Rotate((float)(var1.lastRotation + (var1.rotation - var1.lastRotation) * (double)var8) * 10.0F, 0.0F, 1.0F, 0.0F);

@@ -86,7 +86,7 @@ public class BlockPistonMoving : BlockWithEntity
             BlockEntityPiston var7 = getPistonBlockEntity(world, x, y, z);
             if (var7 != null)
             {
-                Block.BLOCKS[var7.getPushedBlockId()].dropStacks(world, x, y, z, var7.getPushedBlockData());
+                Block.BLOCKS[var7.getPushedBlockId()].dropStacks(world, x, y, z, var7.GetPushedBlockData());
             }
         }
     }

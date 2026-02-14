@@ -9,15 +9,15 @@ public class BlockEntityNote : BlockEntity
     public sbyte note = 0;
     public bool powered = false;
 
-    public override void writeNbt(NBTTagCompound nbt)
+    public override void WriteNbt(NBTTagCompound nbt)
     {
-        base.writeNbt(nbt);
+        base.WriteNbt(nbt);
         nbt.SetByte("note", note);
     }
 
-    public override void readNbt(NBTTagCompound nbt)
+    public override void ReadNbt(NBTTagCompound nbt)
     {
-        base.readNbt(nbt);
+        base.ReadNbt(nbt);
         note = nbt.GetByte("note");
         if (note < 0)
         {
@@ -34,7 +34,7 @@ public class BlockEntityNote : BlockEntity
     public void cycleNote()
     {
         note = (sbyte)((note + 1) % 25);
-        markDirty();
+        MarkDirty();
     }
 
     public void playNote(World world, int x, int y, int z)
