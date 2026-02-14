@@ -1609,11 +1609,11 @@ public abstract class World : java.lang.Object, BlockView
         for (int i = blockEntities.Count - 1; i >= 0; i--)
         {
             BlockEntity var5 = blockEntities[i];
-            if (!var5.isRemoved())
+            if (!var5.IsRemoved)
             {
                 var5.Tick();
             }
-            if (var5.isRemoved())
+            if (var5.IsRemoved)
             {
                 blockEntities.RemoveAt(i);
                 Chunk var7 = getChunk(var5.X >> 4, var5.Z >> 4);
@@ -1629,7 +1629,7 @@ public abstract class World : java.lang.Object, BlockView
         {
             foreach (BlockEntity var8 in blockEntityUpdateQueue)
             {
-                if (!var8.isRemoved())
+                if (!var8.IsRemoved)
                 {
                     if (!blockEntities.Contains(var8))
                     {
@@ -2101,7 +2101,7 @@ public abstract class World : java.lang.Object, BlockView
 
     public void setBlockEntity(int x, int y, int z, BlockEntity blockEntity)
     {
-        if (!blockEntity.isRemoved())
+        if (!blockEntity.IsRemoved)
         {
             if (processingDeferred)
             {

@@ -498,7 +498,7 @@ public class Chunk : java.lang.Object
             blockEntities.TryGetValue(var4, out var5);
         }
 
-        if (var5 != null && var5.isRemoved())
+        if (var5 != null && var5.IsRemoved)
         {
             blockEntities.Remove(var4);
             return null;

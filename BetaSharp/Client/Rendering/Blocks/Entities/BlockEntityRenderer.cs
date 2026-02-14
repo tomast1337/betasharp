@@ -39,12 +39,12 @@ public class BlockEntityRenderer
 
     }
 
-    public BlockEntitySpecialRenderer getSpecialRendererForClass(Class var1)
+    public BlockEntitySpecialRenderer getSpecialRendererForClass(Type var1)
     {
         BlockEntitySpecialRenderer var2 = (BlockEntitySpecialRenderer)specialRendererMap.get(var1);
-        if (var2 == null && var1 != BlockEntity.Class)
+        if (var2 == null && var1 != typeof(BlockEntity))
         {
-            var2 = getSpecialRendererForClass(var1.getSuperclass());
+            var2 = getSpecialRendererForClass(var1.BaseType);
             specialRendererMap.put(var1, var2);
         }
 
@@ -58,7 +58,7 @@ public class BlockEntityRenderer
 
     public BlockEntitySpecialRenderer getSpecialRendererForEntity(BlockEntity var1)
     {
-        return var1 == null ? null : getSpecialRendererForClass(var1.getClass());
+        return var1 == null ? null : getSpecialRendererForClass(var1.GetType());
     }
 
     public void cacheActiveRenderInfo(World var1, TextureManager var2, TextRenderer var3, EntityLiving var4, float var5)

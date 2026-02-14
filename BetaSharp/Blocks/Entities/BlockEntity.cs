@@ -1,8 +1,6 @@
 using BetaSharp.NBT;
 using BetaSharp.Network.Packets;
 using BetaSharp.Worlds;
-using java.lang;
-using java.util;
 
 namespace BetaSharp.Blocks.Entities;
 
@@ -39,18 +37,15 @@ public class BlockEntity
 
     public virtual void WriteNbt(NBTTagCompound nbt)
     {
-        string entityId = TypeToId[GetType()];
-        if (entityId == null)
+        if (!TypeToId.TryGetValue(GetType(), out string? entityId))
         {
-            throw new RuntimeException($"{GetType()} is missing a mapping! This is a bug!");
+            throw new InvalidOperationException($"{GetType()} is missing a mapping! This is a bug!");
         }
-        else
-        {
-            nbt.SetString("id", entityId);
-            nbt.SetInteger("x", X);
-            nbt.SetInteger("y", Y);
-            nbt.SetInteger("z", Z);
-        }
+  
+        nbt.SetString("id", entityId);
+        nbt.SetInteger("x", X);
+        nbt.SetInteger("y", Y);
+        nbt.SetInteger("z", Z);
     }
 
     public virtual void Tick() { }

@@ -204,7 +204,7 @@ public class BlockChest : BlockWithEntity
 
     public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
     {
-        java.lang.Object chestInventory = (BlockEntityChest)world.getBlockEntity(x, y, z);
+        IInventory chestInventory = world.getBlockEntity(x, y, z) as BlockEntityChest;
         if (world.shouldSuffocate(x, y + 1, z))
         {
             return true;
@@ -229,22 +229,22 @@ public class BlockChest : BlockWithEntity
         {
             if (world.getBlockId(x - 1, y, z) == id)
             {
-                chestInventory = new InventoryLargeChest("Large chest", (BlockEntityChest)world.getBlockEntity(x - 1, y, z), (IInventory)chestInventory);
+                chestInventory = new InventoryLargeChest("Large chest", (BlockEntityChest)world.getBlockEntity(x - 1, y, z), chestInventory);
             }
 
             if (world.getBlockId(x + 1, y, z) == id)
             {
-                chestInventory = new InventoryLargeChest("Large chest", (IInventory)chestInventory, (BlockEntityChest)world.getBlockEntity(x + 1, y, z));
+                chestInventory = new InventoryLargeChest("Large chest", chestInventory, (BlockEntityChest)world.getBlockEntity(x + 1, y, z));
             }
 
             if (world.getBlockId(x, y, z - 1) == id)
             {
-                chestInventory = new InventoryLargeChest("Large chest", (BlockEntityChest)world.getBlockEntity(x, y, z - 1), (IInventory)chestInventory);
+                chestInventory = new InventoryLargeChest("Large chest", (BlockEntityChest)world.getBlockEntity(x, y, z - 1), chestInventory);
             }
 
             if (world.getBlockId(x, y, z + 1) == id)
             {
-                chestInventory = new InventoryLargeChest("Large chest", (IInventory)chestInventory, (BlockEntityChest)world.getBlockEntity(x, y, z + 1));
+                chestInventory = new InventoryLargeChest("Large chest", chestInventory, (BlockEntityChest)world.getBlockEntity(x, y, z + 1));
             }
 
             if (world.isRemote)
