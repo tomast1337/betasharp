@@ -537,7 +537,7 @@ public class ClientNetworkHandler : NetHandler
     public override void onPlayerSpawnPosition(PlayerSpawnPositionS2CPacket packet)
     {
         mc.player.setSpawnPos(new Vec3i(packet.x, packet.y, packet.z));
-        mc.world.getProperties().setSpawn(packet.x, packet.y, packet.z);
+        mc.world.getProperties().SetSpawn(packet.x, packet.y, packet.z);
     }
 
     public override void onEntityVehicleSet(EntityVehicleSetS2CPacket packet)
@@ -580,7 +580,7 @@ public class ClientNetworkHandler : NetHandler
         if (packet.dimensionId != mc.player.dimensionId)
         {
             terrainLoaded = false;
-            worldClient = new ClientWorld(this, worldClient.getProperties().getRandomSeed(), packet.dimensionId);
+            worldClient = new ClientWorld(this, worldClient.getProperties().RandomSeed, packet.dimensionId);
             worldClient.isRemote = true;
             mc.changeWorld1(worldClient);
             mc.player.dimensionId = packet.dimensionId;
@@ -749,12 +749,12 @@ public class ClientNetworkHandler : NetHandler
 
         if (reason == 1)
         {
-            worldClient.getProperties().setRaining(true);
+            worldClient.getProperties().IsRaining = true;
             worldClient.setRainGradient(1.0F);
         }
         else if (reason == 2)
         {
-            worldClient.getProperties().setRaining(false);
+            worldClient.getProperties().IsRaining = false;
             worldClient.setRainGradient(0.0F);
         }
 

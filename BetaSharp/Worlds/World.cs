@@ -208,7 +208,7 @@ public abstract class World : java.lang.Object, BlockView
         {
             dimension = var5;
         }
-        else if (properties != null && properties.getDimension() == -1)
+        else if (properties != null && properties.Dimension == -1)
         {
             dimension = Dimension.fromId(-1);
         }
@@ -225,7 +225,7 @@ public abstract class World : java.lang.Object, BlockView
         }
         else
         {
-            properties.setWorldName(var2);
+            properties.LevelName = var2;
         }
 
         dimension.setWorld(this);
@@ -253,27 +253,27 @@ public abstract class World : java.lang.Object, BlockView
             var1 += random.nextInt(64) - random.nextInt(64);
         }
 
-        properties.setSpawn(var1, var2, var3);
+        properties.SetSpawn(var1, var2, var3);
         eventProcessingEnabled = false;
     }
 
     public virtual void updateSpawnPosition()
     {
-        if (properties.getSpawnY() <= 0)
+        if (properties.SpawnY <= 0)
         {
-            properties.setSpawnY(64);
+            properties.SpawnY = 64;
         }
 
-        int var1 = properties.getSpawnX();
+        int var1 = properties.SpawnX;
 
         int var2;
-        for (var2 = properties.getSpawnZ(); getSpawnBlockId(var1, var2) == 0; var2 += random.nextInt(8) - random.nextInt(8))
+        for (var2 = properties.SpawnZ; getSpawnBlockId(var1, var2) == 0; var2 += random.nextInt(8) - random.nextInt(8))
         {
             var1 += random.nextInt(8) - random.nextInt(8);
         }
 
-        properties.setSpawnX(var1);
-        properties.setSpawnZ(var2);
+        properties.SpawnX = var1;
+        properties.SpawnZ = var2;
     }
 
     public int getSpawnBlockId(int var1, int var2)
@@ -294,11 +294,11 @@ public abstract class World : java.lang.Object, BlockView
     {
         try
         {
-            NBTTagCompound var2 = properties.getPlayerNBTTagCompound();
+            NBTTagCompound? var2 = properties.PlayerTag;
             if (var2 != null)
             {
                 player.read(var2);
-                properties.setPlayerNBTTagCompound((NBTTagCompound)null);
+                properties.PlayerTag = null;
             }
 
             spawnEntity(player);
@@ -339,7 +339,7 @@ public abstract class World : java.lang.Object, BlockView
         //checkSessionLock();
         Profiler.Stop("checkSessionLock");
         Profiler.Start("saveWorldInfoAndPlayer");
-        storage.save(properties, players.Cast<object>().ToList());
+        storage.save(properties, players.Cast<EntityPlayer>().ToList());
         Profiler.Stop("saveWorldInfoAndPlayer");
 
         Profiler.Start("saveAllData");
@@ -1377,7 +1377,7 @@ public abstract class World : java.lang.Object, BlockView
 
     public float getTime(float var1)
     {
-        return dimension.getTimeOfDay(properties.getTime(), var1);
+        return dimension.getTimeOfDay(properties.WorldTime, var1);
     }
 
     public Vector3D<double> getCloudColor(float partialTicks)
@@ -1507,7 +1507,7 @@ public abstract class World : java.lang.Object, BlockView
             {
                 if (id > 0)
                 {
-                    var6.setScheduledTime((long)tickRate + properties.getTime());
+                    var6.setScheduledTime((long)tickRate + properties.WorldTime);
                 }
 
                 if (!scheduledUpdateSet.contains(var6))
@@ -2303,8 +2303,8 @@ public abstract class World : java.lang.Object, BlockView
 
             if (!var1)
             {
-                var2 = properties.getTime() + 24000L;
-                properties.setWorldTime(var2 - var2 % 24000L);
+                var2 = properties.WorldTime + 24000L;
+                properties.WorldTime = var2 - var2 % 24000L;
                 afterSkipNight();
             }
         }
@@ -2328,7 +2328,7 @@ public abstract class World : java.lang.Object, BlockView
         }
         Profiler.Stop("updateSkylightSubtracted");
 
-        var2 = properties.getTime() + 1L;
+        var2 = properties.WorldTime + 1L;
         if (var2 % (long)autosavePeriod == 0L)
         {
             Profiler.PushGroup("autosave");
@@ -2338,7 +2338,7 @@ public abstract class World : java.lang.Object, BlockView
             chunkSource.markChunksForUnload(renderDistance);
         }
 
-        properties.setWorldTime(var2);
+        properties.WorldTime = var2;
         Profiler.Start("tickUpdates");
         processScheduledTicks(false);
         Profiler.Stop("tickUpdates");
@@ -2347,10 +2347,10 @@ public abstract class World : java.lang.Object, BlockView
 
     private void prepareWeather()
     {
-        if (properties.getRaining())
+        if (properties.IsRaining)
         {
             rainingStrength = 1.0F;
-            if (properties.getThundering())
+            if (properties.IsThundering)
             {
                 thunderingStrength = 1.0F;
             }
@@ -2367,52 +2367,52 @@ public abstract class World : java.lang.Object, BlockView
                 --ticksSinceLightning;
             }
 
-            int var1 = properties.getThunderTime();
+            int var1 = properties.ThunderTime;
             if (var1 <= 0)
             {
-                if (properties.getThundering())
+                if (properties.IsThundering)
                 {
-                    properties.setThunderTime(random.nextInt(12000) + 3600);
+                    properties.ThunderTime = random.nextInt(12000) + 3600;
                 }
                 else
                 {
-                    properties.setThunderTime(random.nextInt(168000) + 12000);
+                    properties.ThunderTime = random.nextInt(168000) + 12000;
                 }
             }
             else
             {
                 --var1;
-                properties.setThunderTime(var1);
+                properties.ThunderTime = var1;
                 if (var1 <= 0)
                 {
-                    properties.setThundering(!properties.getThundering());
+                    properties.IsThundering = !properties.IsThundering;
                 }
             }
 
-            int var2 = properties.getRainTime();
+            int var2 = properties.RainTime;
             if (var2 <= 0)
             {
-                if (properties.getRaining())
+                if (properties.IsRaining)
                 {
-                    properties.setRainTime(random.nextInt(12000) + 12000);
+                    properties.RainTime = random.nextInt(12000) + 12000;
                 }
                 else
                 {
-                    properties.setRainTime(random.nextInt(168000) + 12000);
+                    properties.RainTime = random.nextInt(168000) + 12000;
                 }
             }
             else
             {
                 --var2;
-                properties.setRainTime(var2);
+                properties.RainTime = var2;
                 if (var2 <= 0)
                 {
-                    properties.setRaining(!properties.getRaining());
+                    properties.IsRaining = !properties.IsRaining;
                 }
             }
 
             prevRainingStrength = rainingStrength;
-            if (properties.getRaining())
+            if (properties.IsRaining)
             {
                 rainingStrength = (float)((double)rainingStrength + 0.01D);
             }
@@ -2432,7 +2432,7 @@ public abstract class World : java.lang.Object, BlockView
             }
 
             prevThunderingStrength = thunderingStrength;
-            if (properties.getThundering())
+            if (properties.IsThundering)
             {
                 thunderingStrength = (float)((double)thunderingStrength + 0.01D);
             }
@@ -2456,10 +2456,10 @@ public abstract class World : java.lang.Object, BlockView
 
     private void clearWeather()
     {
-        properties.setRainTime(0);
-        properties.setRaining(false);
-        properties.setThunderTime(0);
-        properties.setThundering(false);
+        properties.RainTime = 0;
+        properties.IsRaining = false;
+        properties.ThunderTime = 0;
+        properties.IsThundering = false;
     }
 
     protected virtual void manageChunkUpdatesAndEvents()
@@ -2591,7 +2591,7 @@ public abstract class World : java.lang.Object, BlockView
             for (int var3 = 0; var3 < var2; ++var3)
             {
                 BlockEvent var4 = (BlockEvent)scheduledUpdates.first();
-                if (!flush && var4.ticks > properties.getTime())
+                if (!flush && var4.ticks > properties.WorldTime)
                 {
                     break;
                 }
@@ -2979,12 +2979,12 @@ public abstract class World : java.lang.Object, BlockView
 
     public void setTime(long time)
     {
-        properties.setWorldTime(time);
+        properties.WorldTime = time;
     }
 
     public void synchronizeTimeAndUpdates(long time)
     {
-        long var3 = time - properties.getTime();
+        long var3 = time - properties.WorldTime;
 
         var iter = scheduledUpdateSet.iterator();
         while (iter.hasNext())
@@ -2998,22 +2998,22 @@ public abstract class World : java.lang.Object, BlockView
 
     public long getSeed()
     {
-        return properties.getRandomSeed();
+        return properties.RandomSeed;
     }
 
     public long getTime()
     {
-        return properties.getTime();
+        return properties.WorldTime;
     }
 
     public Vec3i getSpawnPos()
     {
-        return new Vec3i(properties.getSpawnX(), properties.getSpawnY(), properties.getSpawnZ());
+        return new Vec3i(properties.SpawnX, properties.SpawnY, properties.SpawnZ);
     }
 
     public void setSpawnPos(Vec3i pos)
     {
-        properties.setSpawn(pos.x, pos.y, pos.z);
+        properties.SetSpawn(pos.x, pos.y, pos.z);
     }
 
     public void loadChunksNearEntity(Entity entity)

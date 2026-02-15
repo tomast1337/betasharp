@@ -57,10 +57,10 @@ public class ClientWorld : World
         for (var2 = 0; var2 < blockResets.size(); ++var2)
         {
             BlockReset var4 = (BlockReset)blockResets.get(var2);
-            if (--var4.delay == 0)
+            if (--var4.Delay == 0)
             {
-                base.setBlockWithoutNotifyingNeighbors(var4.x, var4.y, var4.z, var4.block, var4.meta);
-                base.blockUpdateEvent(var4.x, var4.y, var4.z);
+                base.setBlockWithoutNotifyingNeighbors(var4.X, var4.Y, var4.Z, var4.BlockId, var4.Meta);
+                base.blockUpdateEvent(var4.X, var4.Y, var4.Z);
                 blockResets.remove(var2--);
             }
         }
@@ -72,7 +72,7 @@ public class ClientWorld : World
         for (int var7 = 0; var7 < blockResets.size(); ++var7)
         {
             BlockReset var8 = (BlockReset)blockResets.get(var7);
-            if (var8.x >= var1 && var8.y >= var2 && var8.z >= var3 && var8.x <= var4 && var8.y <= var5 && var8.z <= var6)
+            if (var8.X >= var1 && var8.Y >= var2 && var8.Z >= var3 && var8.X <= var4 && var8.Y <= var5 && var8.Z <= var6)
             {
                 blockResets.remove(var7--);
             }
@@ -269,7 +269,7 @@ public class ClientWorld : World
             }
 
             prevRainingStrength = rainingStrength;
-            if (properties.getRaining())
+            if (properties.IsRaining)
             {
                 rainingStrength = (float)((double)rainingStrength + 0.01D);
             }
@@ -289,7 +289,7 @@ public class ClientWorld : World
             }
 
             prevThunderingStrength = thunderingStrength;
-            if (properties.getThundering())
+            if (properties.IsThundering)
             {
                 thunderingStrength = (float)((double)thunderingStrength + 0.01D);
             }
