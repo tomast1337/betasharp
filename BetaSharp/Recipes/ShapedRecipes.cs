@@ -7,11 +7,11 @@ public class ShapedRecipes : IRecipe
 {
     private int _width;
     private int _height;
-    private ItemStack[] _items;
+    private ItemStack?[] _items;
     private ItemStack _output;
     public readonly int RecipeOutputItemID;
 
-    public ShapedRecipes(int width, int height, ItemStack[] items, ItemStack output)
+    public ShapedRecipes(int width, int height, ItemStack?[] items, ItemStack output)
     {
         RecipeOutputItemID = output.itemId;
         _width = width;

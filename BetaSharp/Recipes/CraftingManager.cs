@@ -96,61 +96,50 @@ public class CraftingManager
         int width = 0;
         int height = 0;
 
-        if (pattern[index] is string[] rows)
+        while (index < pattern.Length && (pattern[index] is string || pattern[index] is string[]))
         {
-            index++;
-            foreach (var row in rows)
+            object current = pattern[index++];
+            if (current is string[] rows)
             {
-                height++;
-                width = row.Length;
-                patternString += row;
+                foreach (var row in rows)
+                {
+                    height++;
+                    width = row.Length;
+                    patternString += row;
+                }
             }
-        }
-        else
-        {
-            while (pattern[index] is string row)
+            else if (current is string row)
             {
-                index++;
                 height++;
                 width = row.Length;
                 patternString += row;
             }
         }
 
-        Dictionary<char, ItemStack> ingredient;
-        for (ingredient = new Dictionary<char, ItemStack>(); index < pattern.Length; index += 2)
+        var ingredients = new Dictionary<char, ItemStack?>();
+        for (; index < pattern.Length; index += 2)
         {
             char key = (char)pattern[index];
-            ItemStack value = null;
-            if (pattern[index + 1] is Item)
-            {
-                value = new ItemStack((Item)pattern[index + 1]);
-            }
-            else if (pattern[index + 1] is Block)
-            {
-                value = new ItemStack((Block)pattern[index + 1], 1, -1);
-            }
-            else if (pattern[index + 1] is ItemStack)
-            {
-                value = (ItemStack)pattern[index + 1];
-            }
+            object input = pattern[index + 1];
 
-            ingredient[key] = value;
+            ItemStack? value = input switch
+            {
+                Item item       => new ItemStack(item),
+                Block block     => new ItemStack(block, 1, -1),
+                ItemStack stack => stack,
+                _               => null // Thowing some Exception here would be ideal, but the original game does not do this
+            };
+
+            ingredients[key] = value;
         }
 
-        ItemStack[] ingredientGrid = new ItemStack[width * height];
+        var ingredientGrid = new ItemStack?[width * height];
 
-        for (int i = 0; i < width * height; ++i)
+        for (int i = 0; i < patternString.Length; i++)
         {
             char c = patternString[i];
-            if (ingredient.ContainsKey(c))
-            {
-                ingredientGrid[i] = ingredient[c].copy();
-            }
-            else
-            {
-                ingredientGrid[i] = null;
-            }
+            ingredients.TryGetValue(c, out var stack);
+            ingredientGrid[i] = stack?.copy() ?? null;
         }
 
         _recipes.Add(new ShapedRecipes(width, height, ingredientGrid, result));
