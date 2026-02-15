@@ -82,93 +82,92 @@ public class CraftingManager
         addRecipe(new ItemStack(Block.STICKY_PISTON, 1), ["S", "P", java.lang.Character.valueOf('S'), Item.SLIMEBALL, java.lang.Character.valueOf('P'), Block.PISTON]);
         addRecipe(new ItemStack(Item.BED, 1), ["###", "XXX", java.lang.Character.valueOf('#'), Block.WOOL, java.lang.Character.valueOf('X'), Block.PLANKS]);
         Collections.sort(recipes, new RecipeSorter());
-        java.lang.System.@out.println(recipes.size() + " recipes");
+        java.lang.System.@out.println($"{recipes.size()} recipes");
     }
 
-    public void addRecipe(ItemStack var1, params object[] var2)
+    public void addRecipe(ItemStack result, params object[] pattern)
     {
-        string var3 = "";
-        int var4 = 0;
-        int var5 = 0;
-        int var6 = 0;
-        if (var2[var4] is string[])
+        string patternString = "";
+        int index = 0;
+        int width = 0;
+        int height = 0;
+        if (pattern[index] is string[])
         {
-            string[] var11 = (string[])var2[var4++];
+            string[] rows = (string[])pattern[index++];
 
-            for (int var8 = 0; var8 < var11.Length; ++var8)
+            for (int i = 0; i < rows.Length; ++i)
             {
-                string var9 = var11[var8];
-                ++var6;
-                var5 = var9.Length;
-                var3 = var3 + var9;
+                string row = rows[i];
+                ++height;
+                width = row.Length;
+                patternString = patternString + row;
             }
         }
         else
         {
-            while (var2[var4] is string)
+            while (pattern[index] is string)
             {
-                string var7 = (string)var2[var4++];
-                ++var6;
-                var5 = var7.Length;
-                var3 = var3 + var7;
+                string row = (string)pattern[index++];
+                ++height;
+                width = row.Length;
+                patternString = patternString + row;
             }
         }
 
-        HashMap var12;
-        for (var12 = new HashMap(); var4 < var2.Length; var4 += 2)
+        HashMap ingredient;
+        for (ingredient = new HashMap(); index < pattern.Length; index += 2)
         {
-            java.lang.Character var13 = (java.lang.Character)var2[var4];
-            ItemStack var15 = null;
-            if (var2[var4 + 1] is Item)
+            java.lang.Character key = (java.lang.Character)pattern[index];
+            ItemStack value = null;
+            if (pattern[index + 1] is Item)
             {
-                var15 = new ItemStack((Item)var2[var4 + 1]);
+                value = new ItemStack((Item)pattern[index + 1]);
             }
-            else if (var2[var4 + 1] is Block)
+            else if (pattern[index + 1] is Block)
             {
-                var15 = new ItemStack((Block)var2[var4 + 1], 1, -1);
+                value = new ItemStack((Block)pattern[index + 1], 1, -1);
             }
-            else if (var2[var4 + 1] is ItemStack)
+            else if (pattern[index + 1] is ItemStack)
             {
-                var15 = (ItemStack)var2[var4 + 1];
+                value = (ItemStack)pattern[index + 1];
             }
 
-            var12.put(var13, var15);
+            ingredient.put(key, value);
         }
 
-        ItemStack[] var14 = new ItemStack[var5 * var6];
+        ItemStack[] ingredientGrid = new ItemStack[width * height];
 
-        for (int var16 = 0; var16 < var5 * var6; ++var16)
+        for (int i = 0; i < width * height; ++i)
         {
-            char var10 = var3[var16];
-            if (var12.containsKey(java.lang.Character.valueOf(var10)))
+            char c = patternString[i];
+            if (ingredient.containsKey(java.lang.Character.valueOf(c)))
             {
-                var14[var16] = ((ItemStack)var12.get(java.lang.Character.valueOf(var10))).copy();
+                ingredientGrid[i] = ((ItemStack)ingredient.get(java.lang.Character.valueOf(c))).copy();
             }
             else
             {
-                var14[var16] = null;
+                ingredientGrid[i] = null;
             }
         }
 
-        recipes.add(new ShapedRecipes(var5, var6, var14, var1));
+        recipes.add(new ShapedRecipes(width, height, ingredientGrid, result));
     }
 
-    public void addShapelessRecipe(ItemStack var1, params object[] var2)
+    public void addShapelessRecipe(ItemStack result, params object[] pattern)
     {
-        ArrayList var3 = new ArrayList();
-        object[] var4 = var2;
-        int var5 = var2.Length;
+        ArrayList stacks = new ArrayList();
+        int length = pattern.Length;
 
-        for (int var6 = 0; var6 < var5; ++var6)
+        for (int i = 0; i < length; ++i)
         {
-            object var7 = var4[var6];
+            object var7 = pattern[i];
             if (var7 is ItemStack)
             {
-                var3.add(((ItemStack)var7).copy());
+                stacks.add(((ItemStack)var7).copy());
             }
             else if (var7 is Item)
             {
-                var3.add(new ItemStack((Item)var7));
+                stacks.add(new ItemStack((Item)var7));
             }
             else
             {
@@ -176,23 +175,21 @@ public class CraftingManager
                 {
                     throw new java.lang.RuntimeException("Invalid shapeless recipy!");
                 }
-
-                var3.add(new ItemStack((Block)var7));
+                stacks.add(new ItemStack((Block)var7));
             }
         }
 
-        recipes.add(new ShapelessRecipes(var1, var3));
+        recipes.add(new ShapelessRecipes(result, stacks));
     }
 
-    public ItemStack findMatchingRecipe(InventoryCrafting var1)
+    public ItemStack findMatchingRecipe(InventoryCrafting craftingInventory)
     {
-        for (int var2 = 0; var2 < recipes.size(); ++var2)
+        for (int i = 0; i < recipes.size(); ++i)
         {
-            IRecipe var3 = (IRecipe)recipes.get(var2);
-            if (var3.matches(var1))
-            {
-                return var3.getCraftingResult(var1);
-            }
+            IRecipe recipe = (IRecipe)recipes.get(i);
+            if (recipe.matches(craftingInventory))
+
+                return recipe.getCraftingResult(craftingInventory);
         }
 
         return null;

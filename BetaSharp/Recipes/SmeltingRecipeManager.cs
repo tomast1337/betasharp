@@ -29,14 +29,14 @@ public class SmeltingRecipeManager
         addSmelting(Block.LOG.id, new ItemStack(Item.COAL, 1, 1));
     }
 
-    public void addSmelting(int var1, ItemStack var2)
+    public void addSmelting(int inputId, ItemStack output)
     {
-        smeltingList.put(Integer.valueOf(var1), var2);
+        smeltingList.put(Integer.valueOf(inputId), output);
     }
 
-    public ItemStack craft(int var1)
+    public ItemStack craft(int inputId)
     {
-        return (ItemStack)smeltingList.get(Integer.valueOf(var1));
+        return (ItemStack)smeltingList.get(Integer.valueOf(inputId));
     }
 
     public Map getSmeltingList()
