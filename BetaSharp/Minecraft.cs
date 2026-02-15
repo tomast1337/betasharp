@@ -1224,7 +1224,7 @@ public partial class Minecraft : java.lang.Object, Runnable
                     3 => 2,
                     _ => 999,
                 };
-                world.tick(renderDistance);
+                world.Tick(renderDistance);
             }
 
             Profiler.PopGroup();
@@ -1467,7 +1467,7 @@ public partial class Minecraft : java.lang.Object, Runnable
             else if (player != null)
             {
                 player.teleportToTop();
-                newWorld?.spawnEntity(player);
+                newWorld?.SpawnEntity(player);
             }
 
             if (player == null)
@@ -1608,13 +1608,13 @@ public partial class Minecraft : java.lang.Object, Runnable
             useBedSpawn = false;
         }
 
-        world.updateSpawnPosition();
+        world.UpdateSpawnPosition();
         world.updateEntityLists();
         int previousPlayerId = 0;
         if (player != null)
         {
             previousPlayerId = player.id;
-            world.remove(player);
+            world.Remove(player);
         }
 
         camera = null;

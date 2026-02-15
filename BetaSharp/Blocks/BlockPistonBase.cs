@@ -84,13 +84,13 @@ public class BlockPistonBase : Block
             {
                 if (canExtend(world, x, y, z, var6))
                 {
-                    world.setBlockMetaWithoutNotifyingNeighbors(x, y, z, var6 | 8);
+                    world.SetBlockMetaWithoutNotifyingNeighbors(x, y, z, var6 | 8);
                     world.playNoteBlockActionAt(x, y, z, 0, var6);
                 }
             }
             else if (!var7 && isExtended(var5))
             {
-                world.setBlockMetaWithoutNotifyingNeighbors(x, y, z, var6);
+                world.SetBlockMetaWithoutNotifyingNeighbors(x, y, z, var6);
                 world.playNoteBlockActionAt(x, y, z, 1, var6);
             }
 
@@ -121,7 +121,7 @@ public class BlockPistonBase : Block
                 ((BlockEntityPiston)var8).finish();
             }
 
-            world.setBlockWithoutNotifyingNeighbors(x, y, z, Block.MOVING_PISTON.id, data2);
+            world.SetBlockWithoutNotifyingNeighbors(x, y, z, Block.MOVING_PISTON.id, data2);
             world.setBlockEntity(x, y, z, BlockPistonMoving.createPistonBlockEntity(id, data2, data2, false, true));
             if (sticky)
             {
@@ -164,7 +164,7 @@ public class BlockPistonBase : Block
                     x += PistonConstants.HEAD_OFFSET_X[data2];
                     y += PistonConstants.HEAD_OFFSET_Y[data2];
                     z += PistonConstants.HEAD_OFFSET_Z[data2];
-                    world.setBlockWithoutNotifyingNeighbors(x, y, z, Block.MOVING_PISTON.id, var13);
+                    world.SetBlockWithoutNotifyingNeighbors(x, y, z, Block.MOVING_PISTON.id, var13);
                     world.setBlockEntity(x, y, z, BlockPistonMoving.createPistonBlockEntity(var12, var13, data2, false, false));
                 }
             }
@@ -393,12 +393,12 @@ public class BlockPistonBase : Block
                 int var13 = world.getBlockMeta(var9, var10, var11);
                 if (var12 == id && var9 == x && var10 == y && var11 == z)
                 {
-                    world.setBlockWithoutNotifyingNeighbors(var6, var7, var8, Block.MOVING_PISTON.id, dir | (sticky ? 8 : 0));
+                    world.SetBlockWithoutNotifyingNeighbors(var6, var7, var8, Block.MOVING_PISTON.id, dir | (sticky ? 8 : 0));
                     world.setBlockEntity(var6, var7, var8, BlockPistonMoving.createPistonBlockEntity(Block.PISTON_HEAD.id, dir | (sticky ? 8 : 0), dir, true, false));
                 }
                 else
                 {
-                    world.setBlockWithoutNotifyingNeighbors(var6, var7, var8, Block.MOVING_PISTON.id, var13);
+                    world.SetBlockWithoutNotifyingNeighbors(var6, var7, var8, Block.MOVING_PISTON.id, var13);
                     world.setBlockEntity(var6, var7, var8, BlockPistonMoving.createPistonBlockEntity(var12, var13, dir, true, false));
                 }
 

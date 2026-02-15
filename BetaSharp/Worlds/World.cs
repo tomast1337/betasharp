@@ -116,7 +116,7 @@ public abstract class World : java.lang.Object, BlockView
         dimension = var3;
         persistentStateManager = new PersistentStateManager(var1);
         var3.setWorld(this);
-        chunkSource = createChunkCache();
+        chunkSource = CreateChunkCache();
         updateSkyBrightness();
         prepareWeather();
     }
@@ -159,7 +159,7 @@ public abstract class World : java.lang.Object, BlockView
         persistentStateManager = new PersistentStateManager(storage);
         dimension = var2;
         var2.setWorld(this);
-        chunkSource = createChunkCache();
+        chunkSource = CreateChunkCache();
         updateSkyBrightness();
         prepareWeather();
     }
@@ -229,7 +229,7 @@ public abstract class World : java.lang.Object, BlockView
         }
 
         dimension.setWorld(this);
-        chunkSource = createChunkCache();
+        chunkSource = CreateChunkCache();
         if (var6)
         {
             initializeSpawnPoint();
@@ -239,7 +239,7 @@ public abstract class World : java.lang.Object, BlockView
         prepareWeather();
     }
 
-    protected abstract ChunkSource createChunkCache();
+    protected abstract ChunkSource CreateChunkCache();
 
     protected void initializeSpawnPoint()
     {
@@ -257,7 +257,7 @@ public abstract class World : java.lang.Object, BlockView
         eventProcessingEnabled = false;
     }
 
-    public virtual void updateSpawnPosition()
+    public virtual void UpdateSpawnPosition()
     {
         if (properties.SpawnY <= 0)
         {
@@ -301,7 +301,7 @@ public abstract class World : java.lang.Object, BlockView
                 properties.PlayerTag = null;
             }
 
-            spawnEntity(player);
+            SpawnEntity(player);
         }
         catch (java.lang.Exception var6)
         {
@@ -429,7 +429,7 @@ public abstract class World : java.lang.Object, BlockView
         return chunkSource.getChunk(chunkX, chunkZ);
     }
 
-    public virtual bool setBlockWithoutNotifyingNeighbors(int x, int y, int z, int blockId, int meta)
+    public virtual bool SetBlockWithoutNotifyingNeighbors(int x, int y, int z, int blockId, int meta)
     {
         if (x >= -32000000 && z >= -32000000 && x < 32000000 && z <= 32000000)
         {
@@ -453,7 +453,7 @@ public abstract class World : java.lang.Object, BlockView
         }
     }
 
-    public virtual bool setBlockWithoutNotifyingNeighbors(int x, int y, int z, int blockId)
+    public virtual bool SetBlockWithoutNotifyingNeighbors(int x, int y, int z, int blockId)
     {
         if (x >= -32000000 && z >= -32000000 && x < 32000000 && z <= 32000000)
         {
@@ -511,7 +511,7 @@ public abstract class World : java.lang.Object, BlockView
 
     public void setBlockMeta(int x, int y, int z, int meta)
     {
-        if (setBlockMetaWithoutNotifyingNeighbors(x, y, z, meta))
+        if (SetBlockMetaWithoutNotifyingNeighbors(x, y, z, meta))
         {
             int var5 = getBlockId(x, y, z);
             if (Block.BLOCKS_IGNORE_META_UPDATE[var5 & 255])
@@ -526,7 +526,7 @@ public abstract class World : java.lang.Object, BlockView
 
     }
 
-    public virtual bool setBlockMetaWithoutNotifyingNeighbors(int x, int y, int z, int meta)
+    public virtual bool SetBlockMetaWithoutNotifyingNeighbors(int x, int y, int z, int meta)
     {
         if (x >= -32000000 && z >= -32000000 && x < 32000000 && z <= 32000000)
         {
@@ -555,7 +555,7 @@ public abstract class World : java.lang.Object, BlockView
 
     public bool setBlock(int x, int y, int z, int blockId)
     {
-        if (setBlockWithoutNotifyingNeighbors(x, y, z, blockId))
+        if (SetBlockWithoutNotifyingNeighbors(x, y, z, blockId))
         {
             blockUpdate(x, y, z, blockId);
             return true;
@@ -568,7 +568,7 @@ public abstract class World : java.lang.Object, BlockView
 
     public bool setBlock(int x, int y, int z, int blockId, int meta)
     {
-        if (setBlockWithoutNotifyingNeighbors(x, y, z, blockId, meta))
+        if (SetBlockWithoutNotifyingNeighbors(x, y, z, blockId, meta))
         {
             blockUpdate(x, y, z, blockId);
             return true;
@@ -1143,7 +1143,7 @@ public abstract class World : java.lang.Object, BlockView
         return true;
     }
 
-    public virtual bool spawnEntity(Entity entity)
+    public virtual bool SpawnEntity(Entity entity)
     {
         int var2 = MathHelper.floor_double(entity.x / 16.0D);
         int var3 = MathHelper.floor_double(entity.z / 16.0D);
@@ -1168,12 +1168,12 @@ public abstract class World : java.lang.Object, BlockView
 
             getChunk(var2, var3).addEntity(entity);
             entities.Add(entity);
-            notifyEntityAdded(entity);
+            NotifyEntityAdded(entity);
             return true;
         }
     }
 
-    protected virtual void notifyEntityAdded(Entity entity)
+    protected virtual void NotifyEntityAdded(Entity entity)
     {
         for (int var2 = 0; var2 < eventListeners.Count; ++var2)
         {
@@ -1182,7 +1182,7 @@ public abstract class World : java.lang.Object, BlockView
 
     }
 
-    protected virtual void notifyEntityRemoved(Entity entity)
+    protected virtual void NotifyEntityRemoved(Entity entity)
     {
         for (int var2 = 0; var2 < eventListeners.Count; ++var2)
         {
@@ -1191,7 +1191,7 @@ public abstract class World : java.lang.Object, BlockView
 
     }
 
-    public virtual void remove(Entity entity)
+    public virtual void Remove(Entity entity)
     {
         if (entity.passenger != null)
         {
@@ -1229,7 +1229,7 @@ public abstract class World : java.lang.Object, BlockView
         }
 
         entities.Remove(entity);
-        notifyEntityRemoved(entity);
+        NotifyEntityRemoved(entity);
     }
 
     public void addWorldAccess(IWorldAccess worldAccess)
@@ -1485,7 +1485,7 @@ public abstract class World : java.lang.Object, BlockView
         return -1;
     }
 
-    public virtual void scheduleBlockUpdate(int x, int y, int z, int id, int tickRate)
+    public virtual void ScheduleBlockUpdate(int x, int y, int z, int id, int tickRate)
     {
         BlockEvent var6 = new(x, y, z, id);
         byte var7 = 8;
@@ -1559,7 +1559,7 @@ public abstract class World : java.lang.Object, BlockView
 
         for (var1 = 0; var1 < entitiesToUnload.Count; ++var1)
         {
-            notifyEntityRemoved(entitiesToUnload[var1]);
+            NotifyEntityRemoved(entitiesToUnload[var1]);
         }
 
         entitiesToUnload.Clear();
@@ -1597,7 +1597,7 @@ public abstract class World : java.lang.Object, BlockView
                 }
 
                 entities.RemoveAt(var1--);
-                notifyEntityRemoved(var2);
+                NotifyEntityRemoved(var2);
             }
         }
         Profiler.Stop("updateEntites.updateLoadedEntities");
@@ -2289,7 +2289,7 @@ public abstract class World : java.lang.Object, BlockView
         spawnPeacefulMobs = allowMobSpawning;
     }
 
-    public virtual void tick(int renderDistance)
+    public virtual void Tick(int renderDistance)
     {
         UpdateWeatherCycles();
         long var2;
@@ -2340,9 +2340,9 @@ public abstract class World : java.lang.Object, BlockView
 
         properties.WorldTime = var2;
         Profiler.Start("tickUpdates");
-        processScheduledTicks(false);
+        ProcessScheduledTicks(false);
         Profiler.Stop("tickUpdates");
-        manageChunkUpdatesAndEvents();
+        ManageChunkUpdatesAndEvents();
     }
 
     private void prepareWeather()
@@ -2462,7 +2462,7 @@ public abstract class World : java.lang.Object, BlockView
         properties.IsThundering = false;
     }
 
-    protected virtual void manageChunkUpdatesAndEvents()
+    protected virtual void ManageChunkUpdatesAndEvents()
     {
         activeChunks.Clear();
         int var3;
@@ -2574,7 +2574,7 @@ public abstract class World : java.lang.Object, BlockView
 
     }
 
-    public virtual bool processScheduledTicks(bool flush)
+    public virtual bool ProcessScheduledTicks(bool flush)
     {
         int var2 = scheduledUpdates.size();
         if (var2 != scheduledUpdateSet.size())
@@ -2717,7 +2717,7 @@ public abstract class World : java.lang.Object, BlockView
 
         for (int var2 = 0; var2 < entities.Count; ++var2)
         {
-            notifyEntityAdded(entities[var2]);
+            NotifyEntityAdded(entities[var2]);
         }
 
     }
@@ -3070,7 +3070,7 @@ public abstract class World : java.lang.Object, BlockView
 
         for (var1 = 0; var1 < entitiesToUnload.Count; ++var1)
         {
-            notifyEntityRemoved(entitiesToUnload[var1]);
+            NotifyEntityRemoved(entitiesToUnload[var1]);
         }
 
         entitiesToUnload.Clear();
@@ -3099,7 +3099,7 @@ public abstract class World : java.lang.Object, BlockView
                 }
 
                 entities.RemoveAt(var1--);
-                notifyEntityRemoved(var2);
+                NotifyEntityRemoved(var2);
             }
         }
 

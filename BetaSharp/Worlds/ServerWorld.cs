@@ -45,7 +45,7 @@ public class ServerWorld : World
     }
 
 
-    protected override ChunkSource createChunkCache()
+    protected override ChunkSource CreateChunkCache()
     {
         ChunkStorage var1 = storage.getChunkStorage(dimension);
         chunkCache = new ServerChunkCache(this, var1, dimension.createChunkGenerator());
@@ -82,16 +82,16 @@ public class ServerWorld : World
     }
 
 
-    protected override void notifyEntityAdded(Entity entity)
+    protected override void NotifyEntityAdded(Entity entity)
     {
-        base.notifyEntityAdded(entity);
+        base.NotifyEntityAdded(entity);
         entitiesById.Add(entity.id, entity);
     }
 
 
-    protected override void notifyEntityRemoved(Entity entity)
+    protected override void NotifyEntityRemoved(Entity entity)
     {
-        base.notifyEntityRemoved(entity);
+        base.NotifyEntityRemoved(entity);
         entitiesById.Remove(entity.id);
     }
 

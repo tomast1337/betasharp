@@ -166,7 +166,7 @@ public static class WorldCommands
 
                 if (shouldKill)
                 {
-                    world.remove(entity);
+                    world.Remove(entity);
                     count++;
                 }
             }

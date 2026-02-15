@@ -28,7 +28,7 @@ public class ClientWorld : World
         persistentStateManager = netHandler.clientPersistentStateManager;
     }
 
-    public override void tick(int _)
+    public override void Tick(int _)
     {
         setTime(getTime() + 1L);
         int ambient = getAmbientDarkness(1.0F);
@@ -47,7 +47,7 @@ public class ClientWorld : World
             Entity entity = pendingEntities.First();
             if (!entities.Contains(entity))
             {
-                spawnEntity(entity);
+                SpawnEntity(entity);
             }
         }
 
@@ -58,7 +58,7 @@ public class ClientWorld : World
             BlockReset blockReset = _blockResets[i];
             if (--blockReset.Delay == 0)
             {
-                base.setBlockWithoutNotifyingNeighbors(blockReset.X, blockReset.Y, blockReset.Z, blockReset.BlockId, blockReset.Meta);
+                base.SetBlockWithoutNotifyingNeighbors(blockReset.X, blockReset.Y, blockReset.Z, blockReset.BlockId, blockReset.Meta);
                 blockUpdateEvent(blockReset.X, blockReset.Y, blockReset.Z);
                 _blockResets.RemoveAt(i--);
             }
@@ -66,44 +66,33 @@ public class ClientWorld : World
 
     }
 
-    public void clearBlockResets(int minX, int minY, int minZ, int maxX, int maxY, int maxZ)
+    public void ClearBlockResets(int minX, int minY, int minZ, int maxX, int maxY, int maxZ)
     {
         for (int i = 0; i < _blockResets.Count; ++i)
         {
-            BlockReset blockReset = _blockResets[i];
-            if (blockReset.X >= minX && blockReset.Y >= minY && blockReset.Z >= minZ && blockReset.X <= maxX && blockReset.Y <= maxY && blockReset.Z <= maxZ)
+            BlockReset br = _blockResets[i];
+            if (br.X >= minX && br.Y >= minY && br.Z >= minZ && br.X <= maxX && br.Y <= maxY && br.Z <= maxZ)
             {
                 _blockResets.RemoveAt(i--);
             }
         }
-
     }
 
-    protected override ChunkSource createChunkCache()
+    protected override ChunkSource CreateChunkCache()
     {
         _chunkCache = new MultiplayerChunkCache(this);
         return _chunkCache;
     }
 
-    public override void updateSpawnPosition()
-    {
-        setSpawnPos(new Vec3i(8, 64, 8));
-    }
+    public override void UpdateSpawnPosition() => setSpawnPos(new Vec3i(8, 64, 8));
 
-    protected override void manageChunkUpdatesAndEvents()
-    {
-    }
+    protected override void ManageChunkUpdatesAndEvents() { }
 
-    public override void scheduleBlockUpdate(int x, int y, int z, int blockId, int delay)
-    {
-    }
+    public override void ScheduleBlockUpdate(int x, int y, int z, int blockId, int delay){}
 
-    public override bool processScheduledTicks(bool flush)
-    {
-        return false;
-    }
+    public override bool ProcessScheduledTicks(bool flush) => false;
 
-    public void updateChunk(int chunkX, int chunkZ, bool load)
+    public void UpdateChunk(int chunkX, int chunkZ, bool load)
     {
         if (load)
         {
@@ -121,9 +110,9 @@ public class ClientWorld : World
 
     }
 
-    public override bool spawnEntity(Entity entity)
+    public override bool SpawnEntity(Entity entity)
     {
-        bool var2 = base.spawnEntity(entity);
+        bool var2 = base.SpawnEntity(entity);
         forcedEntities.Add(entity);
         if (!var2)
         {
@@ -133,15 +122,15 @@ public class ClientWorld : World
         return var2;
     }
 
-    public override void remove(Entity ent)
+    public override void Remove(Entity ent)
     {
-        base.remove(ent);
+        base.Remove(ent);
         forcedEntities.Remove(ent);
     }
 
-    protected override void notifyEntityAdded(Entity ent)
+    protected override void NotifyEntityAdded(Entity ent)
     {
-        base.notifyEntityAdded(ent);
+        base.NotifyEntityAdded(ent);
         if (pendingEntities.Contains(ent))
         {
             pendingEntities.Remove(ent);
@@ -149,9 +138,9 @@ public class ClientWorld : World
 
     }
 
-    protected override void notifyEntityRemoved(Entity ent)
+    protected override void NotifyEntityRemoved(Entity ent)
     {
-        base.notifyEntityRemoved(ent);
+        base.NotifyEntityRemoved(ent);
         if (forcedEntities.Contains(ent))
         {
             pendingEntities.Add(ent);
@@ -159,17 +148,17 @@ public class ClientWorld : World
 
     }
 
-    public void forceEntity(int networkId, Entity ent)
+    public void ForceEntity(int networkId, Entity ent)
     {
-        Entity existingEnt = getEntity(networkId);
+        Entity existingEnt = GetEntity(networkId);
         if (existingEnt != null)
         {
-            remove(existingEnt);
+            Remove(existingEnt);
         }
 
         forcedEntities.Add(ent);
         ent.id = networkId;
-        if (!spawnEntity(ent))
+        if (!SpawnEntity(ent))
         {
             pendingEntities.Add(ent);
         }
@@ -177,28 +166,28 @@ public class ClientWorld : World
         entitiesByNetworkId.put(networkId, ent);
     }
 
-    public Entity getEntity(int networkId)
+    public Entity GetEntity(int networkId)
     {
         return (Entity)entitiesByNetworkId.get(networkId);
     }
 
-    public Entity removeEntityFromWorld(int networkId)
+    public Entity RemoveEntityFromWorld(int networkId)
     {
         Entity ent = (Entity)entitiesByNetworkId.remove(networkId);
         if (ent != null)
         {
             forcedEntities.Remove(ent);
-            remove(ent);
+            Remove(ent);
         }
 
         return ent;
     }
 
-    public override bool setBlockMetaWithoutNotifyingNeighbors(int x, int y, int z, int meta)
+    public override bool SetBlockMetaWithoutNotifyingNeighbors(int x, int y, int z, int meta)
     {
         int blockId = getBlockId(x, y, z);
         int previousMeta = getBlockMeta(x, y, z);
-        if (base.setBlockMetaWithoutNotifyingNeighbors(x, y, z, meta))
+        if (base.SetBlockMetaWithoutNotifyingNeighbors(x, y, z, meta))
         {
             _blockResets.Add(new BlockReset(this, x, y, z, blockId, previousMeta));
             return true;
@@ -209,11 +198,11 @@ public class ClientWorld : World
         }
     }
 
-    public override bool setBlockWithoutNotifyingNeighbors(int x, int y, int z, int blockId, int meta)
+    public override bool SetBlockWithoutNotifyingNeighbors(int x, int y, int z, int blockId, int meta)
     {
         int previousBlockId = getBlockId(x, y, z);
         int previousMeta = getBlockMeta(x, y, z);
-        if (base.setBlockWithoutNotifyingNeighbors(x, y, z, blockId, meta))
+        if (base.SetBlockWithoutNotifyingNeighbors(x, y, z, blockId, meta))
         {
             _blockResets.Add(new BlockReset(this, x, y, z, previousBlockId, previousMeta));
             return true;
@@ -224,11 +213,11 @@ public class ClientWorld : World
         }
     }
 
-    public override bool setBlockWithoutNotifyingNeighbors(int x, int y, int z, int blockId)
+    public override bool SetBlockWithoutNotifyingNeighbors(int x, int y, int z, int blockId)
     {
         int previousBlockId = getBlockId(x, y, z);
         int previousMeta = getBlockMeta(x, y, z);
-        if (base.setBlockWithoutNotifyingNeighbors(x, y, z, blockId))
+        if (base.SetBlockWithoutNotifyingNeighbors(x, y, z, blockId))
         {
             _blockResets.Add(new BlockReset(this, x, y, z, previousBlockId, previousMeta));
             return true;
@@ -241,8 +230,8 @@ public class ClientWorld : World
 
     public bool SetBlockWithMetaFromPacket(int minX, int minY, int minZ, int blockId, int meta)
     {
-        clearBlockResets(minX, minY, minZ, minX, minY, minZ);
-        if (base.setBlockWithoutNotifyingNeighbors(minX, minY, minZ, blockId, meta))
+        ClearBlockResets(minX, minY, minZ, minX, minY, minZ);
+        if (base.SetBlockWithoutNotifyingNeighbors(minX, minY, minZ, blockId, meta))
         {
             blockUpdate(minX, minY, minZ, blockId);
             return true;
@@ -253,8 +242,8 @@ public class ClientWorld : World
         }
     }
 
-    public override void Disconnect() =>_networkHandler.sendPacketAndDisconnect(new DisconnectPacket("Quitting"));
-    
+    public override void Disconnect() => _networkHandler.sendPacketAndDisconnect(new DisconnectPacket("Quitting"));
+
 
     protected override void UpdateWeatherCycles()
     {
