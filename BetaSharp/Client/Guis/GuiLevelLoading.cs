@@ -47,7 +47,7 @@ public class GuiLevelLoading(string worldDir, long seed) : GuiScreen
     public override void render(int var1, int var2, float var3)
     {
         drawDefaultBackground();
-        TranslationStorage var4 = TranslationStorage.getInstance();
+        TranslationStorage var4 = TranslationStorage.Instance;
 
         string title = "Loading level";
         string progressMsg = "";

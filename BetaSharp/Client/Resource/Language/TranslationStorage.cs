@@ -1,46 +1,57 @@
 namespace BetaSharp.Client.Resource.Language;
 
-public class TranslationStorage : java.lang.Object
+public class TranslationStorage
 {
-    private static readonly TranslationStorage instance = new();
-    private readonly java.util.Properties translateTable = new();
+    public static TranslationStorage Instance { get; } = new();
+    private readonly Dictionary<string, string> _translations = new();
 
     private TranslationStorage()
     {
+        LoadLanguageFile("lang/en_US.lang");
+        LoadLanguageFile("lang/stats_US.lang");
+    }
+
+    private void LoadLanguageFile(string path)
+    {
         try
         {
-            translateTable.load(new java.io.StringReader(AssetManager.Instance.getAsset("lang/en_US.lang").getTextContent()));
-            translateTable.load(new java.io.StringReader(AssetManager.Instance.getAsset("lang/stats_US.lang").getTextContent()));
+            var content = AssetManager.Instance.getAsset(path).getTextContent();
+            using var reader = new StringReader(content);
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                // Skip comments or empty lines
+                if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#")) continue;
+
+                var parts = line.Split('=', 2);
+                if (parts.Length == 2)
+                {
+                    _translations[parts[0].Trim()] = parts[1].Trim();
+                }
+            }
         }
-        catch (java.io.IOException err)
+        catch (Exception ex)
         {
-            err.printStackTrace();
+            // Use standard C# Console or your logger instead of printStackTrace
+            Console.WriteLine($"Failed to load language file {path}: {ex.Message}");
         }
-
     }
 
-    public static TranslationStorage getInstance()
+    public string TranslateKey(string key)
     {
-        return instance;
+        return _translations.TryGetValue(key, out string? value) ? value : key;
     }
 
-    public string translateKey(string key)
+    public string TranslateKeyFormat(string key, params object[] values)
     {
-        return translateTable.getProperty(key, key);
-    }
-
-    public string translateKeyFormat(string key, params object[] values)
-    {
-        string str = translateTable.getProperty(key, key);
+        string template = TranslateKey(key);
+        
         for (int i = 0; i < values.Length; i++)
         {
-            str = str.Replace($"%{i + 1}$s", values[i].ToString() ?? string.Empty);
+            template = template.Replace($"%{i + 1}$s", values[i]?.ToString() ?? string.Empty);
         }
-        return str;
+        return template;
     }
 
-    public string translateNamedKey(string key)
-    {
-        return translateTable.getProperty(key + ".name", "");
-    }
+    public string TranslateNamedKey(string key) => TranslateKey($"{key}.name");
 }

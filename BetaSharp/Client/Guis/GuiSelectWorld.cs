@@ -35,9 +35,9 @@ public class GuiSelectWorld : GuiScreen
 
     public override void initGui()
     {
-        TranslationStorage translations = TranslationStorage.getInstance();
-        screenTitle = translations.translateKey("selectWorld.title");
-        worldNameHeader = translations.translateKey("selectWorld.world");
+        TranslationStorage translations = TranslationStorage.Instance;
+        screenTitle = translations.TranslateKey("selectWorld.title");
+        worldNameHeader = translations.TranslateKey("selectWorld.world");
         unsupportedFormatMessage = "Unsupported Format!";
         loadSaves();
         worldSlotContainer = new GuiWorldSlot(this);
@@ -63,8 +63,8 @@ public class GuiSelectWorld : GuiScreen
         string worldName = ((WorldSaveInfo)saveList.get(worldIndex)).getDisplayName();
         if (worldName == null || MathHelper.stringNullOrLengthZero(worldName))
         {
-            TranslationStorage translations = TranslationStorage.getInstance();
-            worldName = translations.translateKey("selectWorld.world") + " " + (worldIndex + 1);
+            TranslationStorage translations = TranslationStorage.Instance;
+            worldName = translations.TranslateKey("selectWorld.world") + " " + (worldIndex + 1);
         }
 
         return worldName;
@@ -72,12 +72,12 @@ public class GuiSelectWorld : GuiScreen
 
     public void initButtons()
     {
-        TranslationStorage translations = TranslationStorage.getInstance();
-        controlList.add(buttonSelect = new GuiButton(BUTTON_SELECT, width / 2 - 154, height - 52, 150, 20, translations.translateKey("selectWorld.select")));
-        controlList.add(buttonRename = new GuiButton(BUTTON_RENAME, width / 2 - 154, height - 28, 70, 20, translations.translateKey("selectWorld.rename")));
-        controlList.add(buttonDelete = new GuiButton(BUTTON_DELETE, width / 2 - 74, height - 28, 70, 20, translations.translateKey("selectWorld.delete")));
-        controlList.add(new GuiButton(BUTTON_CREATE, width / 2 + 4, height - 52, 150, 20, translations.translateKey("selectWorld.create")));
-        controlList.add(new GuiButton(BUTTON_CANCEL, width / 2 + 4, height - 28, 150, 20, translations.translateKey("gui.cancel")));
+        TranslationStorage translations = TranslationStorage.Instance;
+        controlList.add(buttonSelect = new GuiButton(BUTTON_SELECT, width / 2 - 154, height - 52, 150, 20, translations.TranslateKey("selectWorld.select")));
+        controlList.add(buttonRename = new GuiButton(BUTTON_RENAME, width / 2 - 154, height - 28, 70, 20, translations.TranslateKey("selectWorld.rename")));
+        controlList.add(buttonDelete = new GuiButton(BUTTON_DELETE, width / 2 - 74, height - 28, 70, 20, translations.TranslateKey("selectWorld.delete")));
+        controlList.add(new GuiButton(BUTTON_CREATE, width / 2 + 4, height - 52, 150, 20, translations.TranslateKey("selectWorld.create")));
+        controlList.add(new GuiButton(BUTTON_CANCEL, width / 2 + 4, height - 28, 150, 20, translations.TranslateKey("gui.cancel")));
         buttonSelect.enabled = false;
         buttonRename.enabled = false;
         buttonDelete.enabled = false;
@@ -89,11 +89,11 @@ public class GuiSelectWorld : GuiScreen
         if (worldName != null)
         {
             deleting = true;
-            TranslationStorage translations = TranslationStorage.getInstance();
-            string deleteQuestion = translations.translateKey("selectWorld.deleteQuestion");
-            string deleteWarning = "'" + worldName + "' " + translations.translateKey("selectWorld.deleteWarning");
-            string deleteButtonText = translations.translateKey("selectWorld.deleteButton");
-            string cancelButtonText = translations.translateKey("gui.cancel");
+            TranslationStorage translations = TranslationStorage.Instance;
+            string deleteQuestion = translations.TranslateKey("selectWorld.deleteQuestion");
+            string deleteWarning = "'" + worldName + "' " + translations.TranslateKey("selectWorld.deleteWarning");
+            string deleteButtonText = translations.TranslateKey("selectWorld.deleteButton");
+            string cancelButtonText = translations.TranslateKey("gui.cancel");
             GuiYesNo confirmDialog = new GuiYesNo(this, deleteQuestion, deleteWarning, deleteButtonText, cancelButtonText, worldIndex);
             mc.displayGuiScreen(confirmDialog);
         }

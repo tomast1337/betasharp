@@ -43,12 +43,12 @@ public class GuiStats : GuiScreen
         const int BUTTON_BLOCKS = 2;
         const int BUTTON_ITEMS = 3;
 
-        TranslationStorage translations = TranslationStorage.getInstance();
-        controlList.add(new GuiButton(BUTTON_DONE, width / 2 + 4, height - 28, 150, 20, translations.translateKey("gui.done")));
-        controlList.add(new GuiButton(BUTTON_GENERAL, width / 2 - 154, height - 52, 100, 20, translations.translateKey("stat.generalButton")));
-        GuiButton blocksButton = new GuiButton(BUTTON_BLOCKS, width / 2 - 46, height - 52, 100, 20, translations.translateKey("stat.blocksButton"));
+        TranslationStorage translations = TranslationStorage.Instance;
+        controlList.add(new GuiButton(BUTTON_DONE, width / 2 + 4, height - 28, 150, 20, translations.TranslateKey("gui.done")));
+        controlList.add(new GuiButton(BUTTON_GENERAL, width / 2 - 154, height - 52, 100, 20, translations.TranslateKey("stat.generalButton")));
+        GuiButton blocksButton = new GuiButton(BUTTON_BLOCKS, width / 2 - 46, height - 52, 100, 20, translations.TranslateKey("stat.blocksButton"));
         controlList.add(blocksButton);
-        GuiButton itemsButton = new GuiButton(BUTTON_ITEMS, width / 2 + 62, height - 52, 100, 20, translations.translateKey("stat.itemsButton"));
+        GuiButton itemsButton = new GuiButton(BUTTON_ITEMS, width / 2 + 62, height - 52, 100, 20, translations.TranslateKey("stat.itemsButton"));
         controlList.add(itemsButton);
         if (slotBlock.getSize() == 0)
         {

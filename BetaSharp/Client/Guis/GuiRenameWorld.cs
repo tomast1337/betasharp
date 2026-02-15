@@ -27,11 +27,11 @@ public class GuiRenameWorld : GuiScreen
 
     public override void initGui()
     {
-        TranslationStorage translations = TranslationStorage.getInstance();
+        TranslationStorage translations = TranslationStorage.Instance;
         Keyboard.enableRepeatEvents(true);
         controlList.clear();
-        controlList.add(new GuiButton(BUTTON_RENAME, width / 2 - 100, height / 4 + 96 + 12, translations.translateKey("selectWorld.renameButton")));
-        controlList.add(new GuiButton(BUTTON_CANCEL, width / 2 - 100, height / 4 + 120 + 12, translations.translateKey("gui.cancel")));
+        controlList.add(new GuiButton(BUTTON_RENAME, width / 2 - 100, height / 4 + 96 + 12, translations.TranslateKey("selectWorld.renameButton")));
+        controlList.add(new GuiButton(BUTTON_CANCEL, width / 2 - 100, height / 4 + 120 + 12, translations.TranslateKey("gui.cancel")));
         WorldStorageSource worldStorage = mc.getSaveLoader();
         WorldProperties worldProperties = worldStorage.getProperties(worldFolderName);
         string currentWorldName = worldProperties.getWorldName();
@@ -82,10 +82,10 @@ public class GuiRenameWorld : GuiScreen
 
     public override void render(int mouseX, int mouseY, float partialTicks)
     {
-        TranslationStorage translations = TranslationStorage.getInstance();
+        TranslationStorage translations = TranslationStorage.Instance;
         drawDefaultBackground();
-        drawCenteredString(fontRenderer, translations.translateKey("selectWorld.renameTitle"), width / 2, height / 4 - 60 + 20, 0x00FFFFFF);
-        drawString(fontRenderer, translations.translateKey("selectWorld.enterName"), width / 2 - 100, 47, 10526880);
+        drawCenteredString(fontRenderer, translations.TranslateKey("selectWorld.renameTitle"), width / 2, height / 4 - 60 + 20, 0x00FFFFFF);
+        drawString(fontRenderer, translations.TranslateKey("selectWorld.enterName"), width / 2 - 100, 47, 10526880);
         nameInputField.drawTextBox();
         base.render(mouseX, mouseY, partialTicks);
     }

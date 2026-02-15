@@ -23,11 +23,11 @@ public class GuiMultiplayer : GuiScreen
 
     public override void initGui()
     {
-        TranslationStorage translations = TranslationStorage.getInstance();
+        TranslationStorage translations = TranslationStorage.Instance;
         Keyboard.enableRepeatEvents(true);
         controlList.clear();
-        controlList.add(new GuiButton(BUTTON_CONNECT, width / 2 - 100, height / 4 + 96 + 12, translations.translateKey("multiplayer.connect")));
-        controlList.add(new GuiButton(BUTTON_CANCEL, width / 2 - 100, height / 4 + 120 + 12, translations.translateKey("gui.cancel")));
+        controlList.add(new GuiButton(BUTTON_CONNECT, width / 2 - 100, height / 4 + 96 + 12, translations.TranslateKey("multiplayer.connect")));
+        controlList.add(new GuiButton(BUTTON_CANCEL, width / 2 - 100, height / 4 + 120 + 12, translations.TranslateKey("gui.cancel")));
         string lastServerAddress = mc.options.lastServer.Replace("_", ":");
         ((GuiButton)controlList.get(0)).enabled = lastServerAddress.Length > 0;
         serverAddressInputField = new GuiTextField(this, fontRenderer, width / 2 - 100, height / 4 - 10 + 50 + 18, 200, 20, lastServerAddress);
@@ -117,12 +117,12 @@ public class GuiMultiplayer : GuiScreen
 
     public override void render(int mouseX, int mouseY, float partialTicks)
     {
-        TranslationStorage translations = TranslationStorage.getInstance();
+        TranslationStorage translations = TranslationStorage.Instance;
         drawDefaultBackground();
-        drawCenteredString(fontRenderer, translations.translateKey("multiplayer.title"), width / 2, height / 4 - 60 + 20, 0x00FFFFFF);
-        drawString(fontRenderer, translations.translateKey("multiplayer.info1"), width / 2 - 140, height / 4 - 60 + 60 + 0, 10526880);
-        drawString(fontRenderer, translations.translateKey("multiplayer.info2"), width / 2 - 140, height / 4 - 60 + 60 + 9, 10526880);
-        drawString(fontRenderer, translations.translateKey("multiplayer.ipinfo"), width / 2 - 140, height / 4 - 60 + 60 + 36, 10526880);
+        drawCenteredString(fontRenderer, translations.TranslateKey("multiplayer.title"), width / 2, height / 4 - 60 + 20, 0x00FFFFFF);
+        drawString(fontRenderer, translations.TranslateKey("multiplayer.info1"), width / 2 - 140, height / 4 - 60 + 60 + 0, 10526880);
+        drawString(fontRenderer, translations.TranslateKey("multiplayer.info2"), width / 2 - 140, height / 4 - 60 + 60 + 9, 10526880);
+        drawString(fontRenderer, translations.TranslateKey("multiplayer.ipinfo"), width / 2 - 140, height / 4 - 60 + 60 + 36, 10526880);
         serverAddressInputField.drawTextBox();
         base.render(mouseX, mouseY, partialTicks);
     }

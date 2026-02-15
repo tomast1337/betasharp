@@ -7,7 +7,7 @@ namespace BetaSharp.Stats;
 public class StatStringFormatKeyInv : AchievementStatFormatter
 {
     readonly Minecraft theGame;
-    private static readonly TranslationStorage localizedName = TranslationStorage.getInstance();
+    private static readonly TranslationStorage localizedName = TranslationStorage.Instance;
 
 
     public StatStringFormatKeyInv(Minecraft game)
@@ -17,6 +17,6 @@ public class StatStringFormatKeyInv : AchievementStatFormatter
 
     public String formatString(String key)
     {
-        return localizedName.translateKeyFormat(key, Keyboard.getKeyName(theGame.options.keyBindInventory.keyCode));
+        return localizedName.TranslateKeyFormat(key, Keyboard.getKeyName(theGame.options.keyBindInventory.keyCode));
     }
 }

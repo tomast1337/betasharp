@@ -36,7 +36,7 @@ public class GuiStoppingServer : GuiScreen
     public override void render(int mouseX, int mouseY, float partialTicks)
     {
         drawDefaultBackground();
-        TranslationStorage translations = TranslationStorage.getInstance();
+        TranslationStorage translations = TranslationStorage.Instance;
         drawCenteredString(fontRenderer, "Saving level..", width / 2, height / 2 - 50, 0x00FFFFFF);
         drawCenteredString(fontRenderer, "Stopping internal server", width / 2, height / 2 - 10, 0x00FFFFFF);
         base.render(mouseX, mouseY, partialTicks);

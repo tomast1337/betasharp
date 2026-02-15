@@ -82,25 +82,25 @@ public class GuiMainMenu : GuiScreen
             splashText = "Happy new year!";
         }
 
-        TranslationStorage translator = TranslationStorage.getInstance();
+        TranslationStorage translator = TranslationStorage.Instance;
         int buttonTopY = height / 4 + 48;
 
-        controlList.add(new GuiButton(BUTTON_SINGLEPLAYER, width / 2 - 100, buttonTopY, translator.translateKey("menu.singleplayer")));
+        controlList.add(new GuiButton(BUTTON_SINGLEPLAYER, width / 2 - 100, buttonTopY, translator.TranslateKey("menu.singleplayer")));
         controlList.add(multiplayerButton =
-            new GuiButton(BUTTON_MULTIPLAYER, width / 2 - 100, buttonTopY + 24, translator.translateKey("menu.multiplayer")));
-        controlList.add(new GuiButton(BUTTON_MODS, width / 2 - 100, buttonTopY + 48, translator.translateKey("menu.mods")));
+            new GuiButton(BUTTON_MULTIPLAYER, width / 2 - 100, buttonTopY + 24, translator.TranslateKey("menu.multiplayer")));
+        controlList.add(new GuiButton(BUTTON_MODS, width / 2 - 100, buttonTopY + 48, translator.TranslateKey("menu.mods")));
 
         if (mc.hideQuitButton)
         {
-            controlList.add(new GuiButton(BUTTON_OPTIONS, width / 2 - 100, buttonTopY + 72, translator.translateKey("menu.options")));
+            controlList.add(new GuiButton(BUTTON_OPTIONS, width / 2 - 100, buttonTopY + 72, translator.TranslateKey("menu.options")));
         }
         else
         {
             controlList.add(new GuiButton(BUTTON_OPTIONS, width / 2 - 100, buttonTopY + 72 + 12, 98, 20,
-                translator.translateKey("menu.options")));
+                translator.TranslateKey("menu.options")));
 
             controlList.add(new GuiButton(BUTTON_QUIT, width / 2 + 2, buttonTopY + 72 + 12, 98, 20,
-                translator.translateKey("menu.quit")));
+                translator.TranslateKey("menu.quit")));
         }
 
         if (mc.session == null)

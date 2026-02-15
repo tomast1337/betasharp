@@ -79,7 +79,7 @@ public abstract class GuiContainer : GuiScreen
         drawGuiContainerForegroundLayer();
         if (var12.getCursorStack() == null && var6 != null && var6.hasStack())
         {
-            string var13 = ("" + TranslationStorage.getInstance().translateNamedKey(var6.getStack().getItemName())).Trim();
+            string var13 = ("" + TranslationStorage.Instance.TranslateNamedKey(var6.getStack().getItemName())).Trim();
             if (var13.Length > 0)
             {
                 var9 = var1 - var4 + 12;

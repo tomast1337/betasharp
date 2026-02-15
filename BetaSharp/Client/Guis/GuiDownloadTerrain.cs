@@ -51,8 +51,8 @@ public class GuiDownloadTerrain : GuiScreen
     public override void render(int mouseX, int mouseY, float partialTicks)
     {
         drawBackground(0);
-        TranslationStorage translations = TranslationStorage.getInstance();
-        drawCenteredString(fontRenderer, translations.translateKey("multiplayer.downloadingTerrain"), width / 2, height / 2 - 50, 0x00FFFFFF);
+        TranslationStorage translations = TranslationStorage.Instance;
+        drawCenteredString(fontRenderer, translations.TranslateKey("multiplayer.downloadingTerrain"), width / 2, height / 2 - 50, 0x00FFFFFF);
         base.render(mouseX, mouseY, partialTicks);
     }
 }

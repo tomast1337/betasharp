@@ -24,7 +24,7 @@ public class GuiControls : GuiScreen
 
     public override void initGui()
     {
-        TranslationStorage translations = TranslationStorage.getInstance();
+        TranslationStorage translations = TranslationStorage.Instance;
         int leftX = getLeftColumnX();
 
         for (int i = 0; i < options.keyBindings.Length; ++i)
@@ -32,8 +32,8 @@ public class GuiControls : GuiScreen
             controlList.add(new GuiSmallButton(i, leftX + i % 2 * 160, height / 6 + 24 * (i >> 1), 70, 20, options.getOptionDisplayString(i)));
         }
 
-        controlList.add(new GuiButton(BUTTON_DONE, width / 2 - 100, height / 6 + 168, translations.translateKey("gui.done")));
-        screenTitle = translations.translateKey("controls.title");
+        controlList.add(new GuiButton(BUTTON_DONE, width / 2 - 100, height / 6 + 168, translations.TranslateKey("gui.done")));
+        screenTitle = translations.TranslateKey("controls.title");
     }
 
     protected override void actionPerformed(GuiButton button)

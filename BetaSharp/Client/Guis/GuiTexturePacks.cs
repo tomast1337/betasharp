@@ -20,9 +20,9 @@ public class GuiTexturePacks : GuiScreen
 
     public override void initGui()
     {
-        TranslationStorage translations = TranslationStorage.getInstance();
-        controlList.add(new GuiSmallButton(BUTTON_OPEN_FOLDER, width / 2 - 154, height - 48, translations.translateKey("texturePack.openFolder")));
-        controlList.add(new GuiSmallButton(BUTTON_DONE, width / 2 + 4, height - 48, translations.translateKey("gui.done")));
+        TranslationStorage translations = TranslationStorage.Instance;
+        controlList.add(new GuiSmallButton(BUTTON_OPEN_FOLDER, width / 2 - 154, height - 48, translations.TranslateKey("texturePack.openFolder")));
+        controlList.add(new GuiSmallButton(BUTTON_DONE, width / 2 + 4, height - 48, translations.TranslateKey("gui.done")));
         mc.texturePackList.updateAvaliableTexturePacks();
         texturePackFolder = new java.io.File(Minecraft.getMinecraftDir(), "texturepacks").getAbsolutePath();
         guiTexturePackSlot = new GuiTexturePackSlot(this);
@@ -80,9 +80,9 @@ public class GuiTexturePacks : GuiScreen
             refreshTimer += 20;
         }
 
-        TranslationStorage translations = TranslationStorage.getInstance();
-        drawCenteredString(fontRenderer, translations.translateKey("texturePack.title"), width / 2, 16, 0x00FFFFFF);
-        drawCenteredString(fontRenderer, translations.translateKey("texturePack.folderInfo"), width / 2 - 77, height - 26, 8421504);
+        TranslationStorage translations = TranslationStorage.Instance;
+        drawCenteredString(fontRenderer, translations.TranslateKey("texturePack.title"), width / 2, 16, 0x00FFFFFF);
+        drawCenteredString(fontRenderer, translations.TranslateKey("texturePack.folderInfo"), width / 2 - 77, height - 26, 8421504);
         base.render(mouseX, mouseY, partialTicks);
     }
 

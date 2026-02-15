@@ -18,8 +18,8 @@ public class GuiVideoSettings : GuiScreen
 
     public override void initGui()
     {
-        TranslationStorage var1 = TranslationStorage.getInstance();
-        field_22107_a = var1.translateKey("options.videoTitle");
+        TranslationStorage var1 = TranslationStorage.Instance;
+        field_22107_a = var1.TranslateKey("options.videoTitle");
         int var2 = 0;
         EnumOptions[] var3 = field_22108_k;
         int var4 = var3.Length;
@@ -39,7 +39,7 @@ public class GuiVideoSettings : GuiScreen
             ++var2;
         }
 
-        controlList.add(new GuiButton(200, width / 2 - 100, height / 6 + 168, var1.translateKey("gui.done")));
+        controlList.add(new GuiButton(200, width / 2 - 100, height / 6 + 168, var1.TranslateKey("gui.done")));
     }
 
     protected override void actionPerformed(GuiButton var1)
