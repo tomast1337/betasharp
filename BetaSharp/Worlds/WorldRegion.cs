@@ -90,7 +90,7 @@ public class WorldRegion : BlockView
         if (useNeighborLight)
         {
             int id = getBlockId(x, y, z);
-            if (id == Block.SLAB.id || id == Block.FARMLAND.id || id == Block.WOODEN_STAIRS.id || id == Block.COBBLESTONE_STAIRS.id)
+            if (id == Block.Slab.id || id == Block.Farmland.id || id == Block.WoodenStairs.id || id == Block.CobblestoneStairs.id)
             {
                 int max = getRawBrightness(x, y + 1, z, false);
                 max = Math.Max(max, getRawBrightness(x + 1, y, z, false));
@@ -122,20 +122,20 @@ public class WorldRegion : BlockView
     public Material getMaterial(int x, int y, int z)
     {
         int var4 = getBlockId(x, y, z);
-        return var4 == 0 ? Material.Air : Block.BLOCKS[var4].material;
+        return var4 == 0 ? Material.Air : Block.Blocks[var4].material;
     }
 
     public BiomeSource getBiomeSource() => _world.getBiomeSource();
 
     public bool isOpaque(int x, int y, int z)
     {
-        Block block = Block.BLOCKS[getBlockId(x, y, z)];
+        Block block = Block.Blocks[getBlockId(x, y, z)];
         return block != null && block.isOpaque();
     }
 
     public bool shouldSuffocate(int x, int y, int z)
     {
-        Block block = Block.BLOCKS[getBlockId(x, y, z)];
+        Block block = Block.Blocks[getBlockId(x, y, z)];
         return block != null && block.material.BlocksMovement && block.isFullCube();
     }
 }

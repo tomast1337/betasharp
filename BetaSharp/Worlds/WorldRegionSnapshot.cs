@@ -68,7 +68,7 @@ public class WorldRegionSnapshot : BlockView, IDisposable
     public Material getMaterial(int x, int y, int z)
     {
         int blockId = getBlockId(x, y, z);
-        return blockId == 0 ? Material.Air : Block.BLOCKS[blockId].material;
+        return blockId == 0 ? Material.Air : Block.Blocks[blockId].material;
     }
 
     public int getBlockMeta(int x, int y, int z)
@@ -102,7 +102,7 @@ public class WorldRegionSnapshot : BlockView, IDisposable
         if (checkStairs)
         {
             int blockId = getBlockId(x, y, z);
-            if (blockId == Block.SLAB.id || blockId == Block.FARMLAND.id || blockId == Block.WOODEN_STAIRS.id || blockId == Block.COBBLESTONE_STAIRS.id)
+            if (blockId == Block.Slab.id || blockId == Block.Farmland.id || blockId == Block.WoodenStairs.id || blockId == Block.CobblestoneStairs.id)
             {
                 var maxLight = GetLightValueExt(x, y + 1, z, false);
                 maxLight = Math.Max(maxLight, GetLightValueExt(x + 1, y, z, false)); // East
@@ -141,13 +141,13 @@ public class WorldRegionSnapshot : BlockView, IDisposable
 
     public bool shouldSuffocate(int x, int y, int z)
     {
-        var block = Block.BLOCKS[getBlockId(x, y, z)];
+        var block = Block.Blocks[getBlockId(x, y, z)];
         return block == null ? false : block.material.BlocksMovement && block.isFullCube();
     }
 
     public bool isOpaque(int x, int y, int z)
     {
-        var block = Block.BLOCKS[getBlockId(x, y, z)];
+        var block = Block.Blocks[getBlockId(x, y, z)];
         return block == null ? false : block.isOpaque();
     }
 
