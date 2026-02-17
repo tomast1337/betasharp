@@ -55,7 +55,7 @@ public class PlayerEntityRenderer : LivingEntityRenderer
         modelArmorChestplate.field_1278_i = modelArmor.field_1278_i = modelBipedMain.field_1278_i = var10 != null;
         modelArmorChestplate.isSneak = modelArmor.isSneak = modelBipedMain.isSneak = var1.isSneaking();
         double var11 = var4 - var1.standingEyeHeight;
-        if (var1.isSneaking() && !(var1 is ClientPlayerEntity))
+        if (var1.isSneaking() && var1 is not ClientPlayerEntity)
         {
             var11 -= 0.125D;
         }
@@ -333,8 +333,8 @@ public class PlayerEntityRenderer : LivingEntityRenderer
         renderPlayer((EntityPlayer)var1, var2, var4, var6, var8, var9);
     }
 
-    public override void render(Entity var1, double var2, double var4, double var6, float var8, float var9)
+    public override void render(Entity target, double x, double y, double z, float yaw, float tickDelta)
     {
-        renderPlayer((EntityPlayer)var1, var2, var4, var6, var8, var9);
+        renderPlayer((EntityPlayer)target, x, y, z, yaw, tickDelta);
     }
 }

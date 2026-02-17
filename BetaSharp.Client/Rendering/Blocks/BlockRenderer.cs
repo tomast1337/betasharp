@@ -12,16 +12,16 @@ public class BlockRenderer
     private readonly BlockView blockAccess;
     private readonly Tessellator? tessellator;
     private int overrideBlockTexture = -1;
-    private bool flipTexture = false;
-    private bool renderAllFaces = false;
+    private bool flipTexture;
+    private bool renderAllFaces;
     public static bool fancyGrass = true;
     public bool field_31088_b = true;
-    private int field_31087_g = 0;
-    private int field_31086_h = 0;
-    private int field_31085_i = 0;
-    private int field_31084_j = 0;
-    private int field_31083_k = 0;
-    private int field_31082_l = 0;
+    private int field_31087_g;
+    private int field_31086_h;
+    private int field_31085_i;
+    private int field_31084_j;
+    private int field_31083_k;
+    private int field_31082_l;
     private bool enableAO;
     private float lightValueOwn;
     private float aoLightValueXNeg;
@@ -1254,39 +1254,39 @@ public class BlockRenderer
                 }
             }
 
-            var5.addVertexWithUV((double)var32, (double)(var3 + 0.015625F), (double)var34, var17, var21);
-            var5.addVertexWithUV((double)var32, (double)(var3 + 0.015625F), (double)var33, var17, var19);
-            var5.addVertexWithUV((double)var31, (double)(var3 + 0.015625F), (double)var33, var15, var19);
-            var5.addVertexWithUV((double)var31, (double)(var3 + 0.015625F), (double)var34, var15, var21);
+            var5.addVertexWithUV((double)var32, (double)(var3 + (1 / 64f)), (double)var34, var17, var21);
+            var5.addVertexWithUV((double)var32, (double)(var3 + (1 / 64f)), (double)var33, var17, var19);
+            var5.addVertexWithUV((double)var31, (double)(var3 + (1 / 64f)), (double)var33, var15, var19);
+            var5.addVertexWithUV((double)var31, (double)(var3 + (1 / 64f)), (double)var34, var15, var21);
             var5.setColorOpaque_F(var8, var8, var8);
-            var5.addVertexWithUV((double)var32, (double)(var3 + 0.015625F), (double)var34, var17, var21 + 1.0D / 16.0D);
-            var5.addVertexWithUV((double)var32, (double)(var3 + 0.015625F), (double)var33, var17, var19 + 1.0D / 16.0D);
-            var5.addVertexWithUV((double)var31, (double)(var3 + 0.015625F), (double)var33, var15, var19 + 1.0D / 16.0D);
-            var5.addVertexWithUV((double)var31, (double)(var3 + 0.015625F), (double)var34, var15, var21 + 1.0D / 16.0D);
+            var5.addVertexWithUV((double)var32, (double)(var3 + (1 / 64f)), (double)var34, var17, var21 + 1.0D / 16.0D);
+            var5.addVertexWithUV((double)var32, (double)(var3 + (1 / 64f)), (double)var33, var17, var19 + 1.0D / 16.0D);
+            var5.addVertexWithUV((double)var31, (double)(var3 + (1 / 64f)), (double)var33, var15, var19 + 1.0D / 16.0D);
+            var5.addVertexWithUV((double)var31, (double)(var3 + (1 / 64f)), (double)var34, var15, var21 + 1.0D / 16.0D);
         }
         else if (var35 == 1)
         {
-            var5.addVertexWithUV((double)var32, (double)(var3 + 0.015625F), (double)var34, var17, var21);
-            var5.addVertexWithUV((double)var32, (double)(var3 + 0.015625F), (double)var33, var17, var19);
-            var5.addVertexWithUV((double)var31, (double)(var3 + 0.015625F), (double)var33, var15, var19);
-            var5.addVertexWithUV((double)var31, (double)(var3 + 0.015625F), (double)var34, var15, var21);
+            var5.addVertexWithUV((double)var32, (double)(var3 + (1 / 64f)), (double)var34, var17, var21);
+            var5.addVertexWithUV((double)var32, (double)(var3 + (1 / 64f)), (double)var33, var17, var19);
+            var5.addVertexWithUV((double)var31, (double)(var3 + (1 / 64f)), (double)var33, var15, var19);
+            var5.addVertexWithUV((double)var31, (double)(var3 + (1 / 64f)), (double)var34, var15, var21);
             var5.setColorOpaque_F(var8, var8, var8);
-            var5.addVertexWithUV((double)var32, (double)(var3 + 0.015625F), (double)var34, var17, var21 + 1.0D / 16.0D);
-            var5.addVertexWithUV((double)var32, (double)(var3 + 0.015625F), (double)var33, var17, var19 + 1.0D / 16.0D);
-            var5.addVertexWithUV((double)var31, (double)(var3 + 0.015625F), (double)var33, var15, var19 + 1.0D / 16.0D);
-            var5.addVertexWithUV((double)var31, (double)(var3 + 0.015625F), (double)var34, var15, var21 + 1.0D / 16.0D);
+            var5.addVertexWithUV((double)var32, (double)(var3 + (1 / 64f)), (double)var34, var17, var21 + 1.0D / 16.0D);
+            var5.addVertexWithUV((double)var32, (double)(var3 + (1 / 64f)), (double)var33, var17, var19 + 1.0D / 16.0D);
+            var5.addVertexWithUV((double)var31, (double)(var3 + (1 / 64f)), (double)var33, var15, var19 + 1.0D / 16.0D);
+            var5.addVertexWithUV((double)var31, (double)(var3 + (1 / 64f)), (double)var34, var15, var21 + 1.0D / 16.0D);
         }
         else if (var35 == 2)
         {
-            var5.addVertexWithUV((double)var32, (double)(var3 + 0.015625F), (double)var34, var17, var21);
-            var5.addVertexWithUV((double)var32, (double)(var3 + 0.015625F), (double)var33, var15, var21);
-            var5.addVertexWithUV((double)var31, (double)(var3 + 0.015625F), (double)var33, var15, var19);
-            var5.addVertexWithUV((double)var31, (double)(var3 + 0.015625F), (double)var34, var17, var19);
+            var5.addVertexWithUV((double)var32, (double)(var3 + (1 / 64f)), (double)var34, var17, var21);
+            var5.addVertexWithUV((double)var32, (double)(var3 + (1 / 64f)), (double)var33, var15, var21);
+            var5.addVertexWithUV((double)var31, (double)(var3 + (1 / 64f)), (double)var33, var15, var19);
+            var5.addVertexWithUV((double)var31, (double)(var3 + (1 / 64f)), (double)var34, var17, var19);
             var5.setColorOpaque_F(var8, var8, var8);
-            var5.addVertexWithUV((double)var32, (double)(var3 + 0.015625F), (double)var34, var17, var21 + 1.0D / 16.0D);
-            var5.addVertexWithUV((double)var32, (double)(var3 + 0.015625F), (double)var33, var15, var21 + 1.0D / 16.0D);
-            var5.addVertexWithUV((double)var31, (double)(var3 + 0.015625F), (double)var33, var15, var19 + 1.0D / 16.0D);
-            var5.addVertexWithUV((double)var31, (double)(var3 + 0.015625F), (double)var34, var17, var19 + 1.0D / 16.0D);
+            var5.addVertexWithUV((double)var32, (double)(var3 + (1 / 64f)), (double)var34, var17, var21 + 1.0D / 16.0D);
+            var5.addVertexWithUV((double)var32, (double)(var3 + (1 / 64f)), (double)var33, var15, var21 + 1.0D / 16.0D);
+            var5.addVertexWithUV((double)var31, (double)(var3 + (1 / 64f)), (double)var33, var15, var19 + 1.0D / 16.0D);
+            var5.addVertexWithUV((double)var31, (double)(var3 + (1 / 64f)), (double)var34, var17, var19 + 1.0D / 16.0D);
         }
 
         if (!blockAccess.shouldSuffocate(var2, var3 + 1, var4))
@@ -1298,57 +1298,57 @@ public class BlockRenderer
             if (blockAccess.shouldSuffocate(var2 - 1, var3, var4) && blockAccess.getBlockId(var2 - 1, var3 + 1, var4) == Block.RedstoneWire.id)
             {
                 var5.setColorOpaque_F(var8 * var10, var8 * var11, var8 * var12);
-                var5.addVertexWithUV((double)(var2 + 0.015625F), (double)(var3 + 1 + 7.0F / 320.0F), var4 + 1, var17, var19);
-                var5.addVertexWithUV((double)(var2 + 0.015625F), var3 + 0, var4 + 1, var15, var19);
-                var5.addVertexWithUV((double)(var2 + 0.015625F), var3 + 0, var4 + 0, var15, var21);
-                var5.addVertexWithUV((double)(var2 + 0.015625F), (double)(var3 + 1 + 7.0F / 320.0F), var4 + 0, var17, var21);
+                var5.addVertexWithUV((double)(var2 + (1 / 64f)), (double)(var3 + 1 + 7.0F / 320.0F), var4 + 1, var17, var19);
+                var5.addVertexWithUV((double)(var2 + (1 / 64f)), var3 + 0, var4 + 1, var15, var19);
+                var5.addVertexWithUV((double)(var2 + (1 / 64f)), var3 + 0, var4 + 0, var15, var21);
+                var5.addVertexWithUV((double)(var2 + (1 / 64f)), (double)(var3 + 1 + 7.0F / 320.0F), var4 + 0, var17, var21);
                 var5.setColorOpaque_F(var8, var8, var8);
-                var5.addVertexWithUV((double)(var2 + 0.015625F), (double)(var3 + 1 + 7.0F / 320.0F), var4 + 1, var17, var19 + 1.0D / 16.0D);
-                var5.addVertexWithUV((double)(var2 + 0.015625F), var3 + 0, var4 + 1, var15, var19 + 1.0D / 16.0D);
-                var5.addVertexWithUV((double)(var2 + 0.015625F), var3 + 0, var4 + 0, var15, var21 + 1.0D / 16.0D);
-                var5.addVertexWithUV((double)(var2 + 0.015625F), (double)(var3 + 1 + 7.0F / 320.0F), var4 + 0, var17, var21 + 1.0D / 16.0D);
+                var5.addVertexWithUV((double)(var2 + (1 / 64f)), (double)(var3 + 1 + 7.0F / 320.0F), var4 + 1, var17, var19 + 1.0D / 16.0D);
+                var5.addVertexWithUV((double)(var2 + (1 / 64f)), var3 + 0, var4 + 1, var15, var19 + 1.0D / 16.0D);
+                var5.addVertexWithUV((double)(var2 + (1 / 64f)), var3 + 0, var4 + 0, var15, var21 + 1.0D / 16.0D);
+                var5.addVertexWithUV((double)(var2 + (1 / 64f)), (double)(var3 + 1 + 7.0F / 320.0F), var4 + 0, var17, var21 + 1.0D / 16.0D);
             }
 
             if (blockAccess.shouldSuffocate(var2 + 1, var3, var4) && blockAccess.getBlockId(var2 + 1, var3 + 1, var4) == Block.RedstoneWire.id)
             {
                 var5.setColorOpaque_F(var8 * var10, var8 * var11, var8 * var12);
-                var5.addVertexWithUV((double)(var2 + 1 - 0.015625F), var3 + 0, var4 + 1, var15, var21);
-                var5.addVertexWithUV((double)(var2 + 1 - 0.015625F), (double)(var3 + 1 + 7.0F / 320.0F), var4 + 1, var17, var21);
-                var5.addVertexWithUV((double)(var2 + 1 - 0.015625F), (double)(var3 + 1 + 7.0F / 320.0F), var4 + 0, var17, var19);
-                var5.addVertexWithUV((double)(var2 + 1 - 0.015625F), var3 + 0, var4 + 0, var15, var19);
+                var5.addVertexWithUV((double)(var2 + 1 - (1 / 64f)), var3 + 0, var4 + 1, var15, var21);
+                var5.addVertexWithUV((double)(var2 + 1 - (1 / 64f)), (double)(var3 + 1 + 7.0F / 320.0F), var4 + 1, var17, var21);
+                var5.addVertexWithUV((double)(var2 + 1 - (1 / 64f)), (double)(var3 + 1 + 7.0F / 320.0F), var4 + 0, var17, var19);
+                var5.addVertexWithUV((double)(var2 + 1 - (1 / 64f)), var3 + 0, var4 + 0, var15, var19);
                 var5.setColorOpaque_F(var8, var8, var8);
-                var5.addVertexWithUV((double)(var2 + 1 - 0.015625F), var3 + 0, var4 + 1, var15, var21 + 1.0D / 16.0D);
-                var5.addVertexWithUV((double)(var2 + 1 - 0.015625F), (double)(var3 + 1 + 7.0F / 320.0F), var4 + 1, var17, var21 + 1.0D / 16.0D);
-                var5.addVertexWithUV((double)(var2 + 1 - 0.015625F), (double)(var3 + 1 + 7.0F / 320.0F), var4 + 0, var17, var19 + 1.0D / 16.0D);
-                var5.addVertexWithUV((double)(var2 + 1 - 0.015625F), var3 + 0, var4 + 0, var15, var19 + 1.0D / 16.0D);
+                var5.addVertexWithUV((double)(var2 + 1 - (1 / 64f)), var3 + 0, var4 + 1, var15, var21 + 1.0D / 16.0D);
+                var5.addVertexWithUV((double)(var2 + 1 - (1 / 64f)), (double)(var3 + 1 + 7.0F / 320.0F), var4 + 1, var17, var21 + 1.0D / 16.0D);
+                var5.addVertexWithUV((double)(var2 + 1 - (1 / 64f)), (double)(var3 + 1 + 7.0F / 320.0F), var4 + 0, var17, var19 + 1.0D / 16.0D);
+                var5.addVertexWithUV((double)(var2 + 1 - (1 / 64f)), var3 + 0, var4 + 0, var15, var19 + 1.0D / 16.0D);
             }
 
             if (blockAccess.shouldSuffocate(var2, var3, var4 - 1) && blockAccess.getBlockId(var2, var3 + 1, var4 - 1) == Block.RedstoneWire.id)
             {
                 var5.setColorOpaque_F(var8 * var10, var8 * var11, var8 * var12);
-                var5.addVertexWithUV(var2 + 1, var3 + 0, (double)(var4 + 0.015625F), var15, var21);
-                var5.addVertexWithUV(var2 + 1, (double)(var3 + 1 + 7.0F / 320.0F), (double)(var4 + 0.015625F), var17, var21);
-                var5.addVertexWithUV(var2 + 0, (double)(var3 + 1 + 7.0F / 320.0F), (double)(var4 + 0.015625F), var17, var19);
-                var5.addVertexWithUV(var2 + 0, var3 + 0, (double)(var4 + 0.015625F), var15, var19);
+                var5.addVertexWithUV(var2 + 1, var3 + 0, (double)(var4 + (1 / 64f)), var15, var21);
+                var5.addVertexWithUV(var2 + 1, (double)(var3 + 1 + 7.0F / 320.0F), (double)(var4 + (1 / 64f)), var17, var21);
+                var5.addVertexWithUV(var2 + 0, (double)(var3 + 1 + 7.0F / 320.0F), (double)(var4 + (1 / 64f)), var17, var19);
+                var5.addVertexWithUV(var2 + 0, var3 + 0, (double)(var4 + (1 / 64f)), var15, var19);
                 var5.setColorOpaque_F(var8, var8, var8);
-                var5.addVertexWithUV(var2 + 1, var3 + 0, (double)(var4 + 0.015625F), var15, var21 + 1.0D / 16.0D);
-                var5.addVertexWithUV(var2 + 1, (double)(var3 + 1 + 7.0F / 320.0F), (double)(var4 + 0.015625F), var17, var21 + 1.0D / 16.0D);
-                var5.addVertexWithUV(var2 + 0, (double)(var3 + 1 + 7.0F / 320.0F), (double)(var4 + 0.015625F), var17, var19 + 1.0D / 16.0D);
-                var5.addVertexWithUV(var2 + 0, var3 + 0, (double)(var4 + 0.015625F), var15, var19 + 1.0D / 16.0D);
+                var5.addVertexWithUV(var2 + 1, var3 + 0, (double)(var4 + (1 / 64f)), var15, var21 + 1.0D / 16.0D);
+                var5.addVertexWithUV(var2 + 1, (double)(var3 + 1 + 7.0F / 320.0F), (double)(var4 + (1 / 64f)), var17, var21 + 1.0D / 16.0D);
+                var5.addVertexWithUV(var2 + 0, (double)(var3 + 1 + 7.0F / 320.0F), (double)(var4 + (1 / 64f)), var17, var19 + 1.0D / 16.0D);
+                var5.addVertexWithUV(var2 + 0, var3 + 0, (double)(var4 + (1 / 64f)), var15, var19 + 1.0D / 16.0D);
             }
 
             if (blockAccess.shouldSuffocate(var2, var3, var4 + 1) && blockAccess.getBlockId(var2, var3 + 1, var4 + 1) == Block.RedstoneWire.id)
             {
                 var5.setColorOpaque_F(var8 * var10, var8 * var11, var8 * var12);
-                var5.addVertexWithUV(var2 + 1, (double)(var3 + 1 + 7.0F / 320.0F), (double)(var4 + 1 - 0.015625F), var17, var19);
-                var5.addVertexWithUV(var2 + 1, var3 + 0, (double)(var4 + 1 - 0.015625F), var15, var19);
-                var5.addVertexWithUV(var2 + 0, var3 + 0, (double)(var4 + 1 - 0.015625F), var15, var21);
-                var5.addVertexWithUV(var2 + 0, (double)(var3 + 1 + 7.0F / 320.0F), (double)(var4 + 1 - 0.015625F), var17, var21);
+                var5.addVertexWithUV(var2 + 1, (double)(var3 + 1 + 7.0F / 320.0F), (double)(var4 + 1 - (1 / 64f)), var17, var19);
+                var5.addVertexWithUV(var2 + 1, var3 + 0, (double)(var4 + 1 - (1 / 64f)), var15, var19);
+                var5.addVertexWithUV(var2 + 0, var3 + 0, (double)(var4 + 1 - (1 / 64f)), var15, var21);
+                var5.addVertexWithUV(var2 + 0, (double)(var3 + 1 + 7.0F / 320.0F), (double)(var4 + 1 - (1 / 64f)), var17, var21);
                 var5.setColorOpaque_F(var8, var8, var8);
-                var5.addVertexWithUV(var2 + 1, (double)(var3 + 1 + 7.0F / 320.0F), (double)(var4 + 1 - 0.015625F), var17, var19 + 1.0D / 16.0D);
-                var5.addVertexWithUV(var2 + 1, var3 + 0, (double)(var4 + 1 - 0.015625F), var15, var19 + 1.0D / 16.0D);
-                var5.addVertexWithUV(var2 + 0, var3 + 0, (double)(var4 + 1 - 0.015625F), var15, var21 + 1.0D / 16.0D);
-                var5.addVertexWithUV(var2 + 0, (double)(var3 + 1 + 7.0F / 320.0F), (double)(var4 + 1 - 0.015625F), var17, var21 + 1.0D / 16.0D);
+                var5.addVertexWithUV(var2 + 1, (double)(var3 + 1 + 7.0F / 320.0F), (double)(var4 + 1 - (1 / 64f)), var17, var19 + 1.0D / 16.0D);
+                var5.addVertexWithUV(var2 + 1, var3 + 0, (double)(var4 + 1 - (1 / 64f)), var15, var19 + 1.0D / 16.0D);
+                var5.addVertexWithUV(var2 + 0, var3 + 0, (double)(var4 + 1 - (1 / 64f)), var15, var21 + 1.0D / 16.0D);
+                var5.addVertexWithUV(var2 + 0, (double)(var3 + 1 + 7.0F / 320.0F), (double)(var4 + 1 - (1 / 64f)), var17, var21 + 1.0D / 16.0D);
             }
         }
 

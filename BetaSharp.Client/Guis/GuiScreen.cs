@@ -15,7 +15,7 @@ public class GuiScreen : Gui
     public int Width;
     public int Height;
     protected List<GuiButton> _controlList = new();
-    public bool AllowUserInput = false;
+    public bool IsInventoryScreen = false;
     public TextRenderer fontRenderer;
     public GuiParticle ParticlesGui;
     private GuiButton SelectedButton = null;
@@ -26,7 +26,6 @@ public class GuiScreen : Gui
         {
             control.DrawButton(mc, mouseX, mouseY);
         }
-
     }
 
     protected virtual void KeyTyped(char eventChar, int eventKey)

@@ -1,4 +1,4 @@
-using BetaSharp.Blocks.Entities;
+﻿using BetaSharp.Blocks.Entities;
 using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Inventorys;
 using BetaSharp.Screens;

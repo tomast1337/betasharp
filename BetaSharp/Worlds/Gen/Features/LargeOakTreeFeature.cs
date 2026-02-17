@@ -9,7 +9,7 @@ public class LargeOakTreeFeature : Feature
     java.util.Random random = new();
     World world;
     int[] origin = new int[] { 0, 0, 0 };
-    int height = 0;
+    int height;
     int trunkHeight;
     double trunkScale = 0.618D;
     double branchSlope = 0.381D;
@@ -391,16 +391,16 @@ public class LargeOakTreeFeature : Feature
         }
     }
 
-    public override void prepare(double var1, double var3, double var5)
+    public override void prepare(double d0, double d1, double d2)
     {
-        maxTrunkHeight = (int)(var1 * 12.0D);
-        if (var1 > 0.5D)
+        maxTrunkHeight = (int)(d0 * 12.0D);
+        if (d0 > 0.5D)
         {
             foliageClusterHeight = 5;
         }
 
-        branchLengthScale = var3;
-        foliageDensity = var5;
+        branchLengthScale = d1;
+        foliageDensity = d2;
     }
 
     public override bool Generate(World world, java.util.Random rand, int x, int y, int z)

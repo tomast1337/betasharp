@@ -1,4 +1,4 @@
-using BetaSharp.Client.Rendering.Core;
+﻿using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Inventorys;
 using BetaSharp.Screens;
 
@@ -15,7 +15,7 @@ public class GuiChest : GuiContainer
     {
         _upperChestInventory = upper;
         _lowerChestInventory = lower;
-        AllowUserInput = false;
+        IsInventoryScreen = false;
         short baseHeight = 222;
         int guiHeightMinus = baseHeight - 108;
         _inventoryRows = lower.size() / 9;

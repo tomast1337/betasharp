@@ -2,7 +2,7 @@ namespace BetaSharp.Client.Guis;
 
 public class GuiStoppingServer : GuiScreen
 {
-    private int tickCounter = 0;
+    private int tickCounter;
 
     public override void InitGui()
     {

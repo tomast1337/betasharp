@@ -1,4 +1,4 @@
-using BetaSharp.Blocks;
+﻿using BetaSharp.Blocks;
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Client.Rendering;
 using BetaSharp.Client.Rendering.Core;
@@ -205,30 +205,30 @@ public class GuiIngame : Gui
             if (Minecraft.hasPaidCheckTime > 0L)
                 GLManager.GL.Translate(0.0F, 32.0F, 0.0F);
 
-            font.drawStringWithShadow("Minecraft Beta 1.7.3 (" + _mc.debug + ")", 2, 2, 0x00FFFFFF);
-            font.drawStringWithShadow(_mc.func_6262_n(), 2, 22, 0x00FFFFFF);
-            font.drawStringWithShadow(_mc.func_6245_o(), 2, 32, 0x00FFFFFF);
-            font.drawStringWithShadow(_mc.func_21002_o(), 2, 42, 0x00FFFFFF);
+            font.drawStringWithShadow("Minecraft Beta 1.7.3 (" + _mc.debug + ")", 2, 2, 0xFFFFFF);
+            font.drawStringWithShadow(_mc.getEntityDebugInfo(), 2, 22, 0xFFFFFF);
+            font.drawStringWithShadow(_mc.getParticleAndEntityCountDebugInfo(), 2, 32, 0xFFFFFF);
+            font.drawStringWithShadow(_mc.getWorldDebugInfo(), 2, 42, 0xFFFFFF);
             long maxMem = _gcMonitor.MaxMemoryBytes;
             long usedMem = _gcMonitor.UsedMemoryBytes;
             long heapMem = _gcMonitor.UsedHeapBytes;
             debugStr = "Used memory: " + usedMem * 100L / maxMem + "% (" + usedMem / 1024L / 1024L + "MB) of " + maxMem / 1024L / 1024L + "MB";
-            DrawString(font, debugStr, scaledWidth - font.getStringWidth(debugStr) - 2, 2, 14737632);
+            DrawString(font, debugStr, scaledWidth - font.getStringWidth(debugStr) - 2, 2, 0xE0E0E0);
             debugStr = "GC heap: " + heapMem * 100L / maxMem + "% (" + heapMem / 1024L / 1024L + "MB)";
-            DrawString(font, debugStr, scaledWidth - font.getStringWidth(debugStr) - 2, 12, 14737632);
-            DrawString(font, "x: " + _mc.player.x, 2, 64, 14737632);
-            DrawString(font, "y: " + _mc.player.y, 2, 72, 14737632);
-            DrawString(font, "z: " + _mc.player.z, 2, 80, 14737632);
-            DrawString(font, "f: " + (MathHelper.floor_double((double)(_mc.player.yaw * 4.0F / 360.0F) + 0.5D) & 3), 2, 88, 14737632);
+            DrawString(font, debugStr, scaledWidth - font.getStringWidth(debugStr) - 2, 12, 0xE0E0E0);
+            DrawString(font, "x: " + _mc.player.x, 2, 64, 0xE0E0E0);
+            DrawString(font, "y: " + _mc.player.y, 2, 72, 0xE0E0E0);
+            DrawString(font, "z: " + _mc.player.z, 2, 80, 0xE0E0E0);
+            DrawString(font, "f: " + (MathHelper.floor_double((double)(_mc.player.yaw * 4.0F / 360.0F) + 0.5D) & 3), 2, 88, 0xE0E0E0);
 
             if (_mc.internalServer != null)
             {
-                DrawString(font, $"Server TPS: {_mc.internalServer.Tps:F1}", 2, 104, 14737632);
+                DrawString(font, $"Server TPS: {_mc.internalServer.Tps:F1}", 2, 104, 0xE0E0E0);
             }
 
             int meshY = _mc.internalServer != null ? 120 : 104;
             var cr = _mc.terrainRenderer.chunkRenderer;
-            DrawString(font, $"Meshes: S: {cr.LoadedMeshes} T: {cr.TranslucentMeshes}", 2, meshY, 14737632);
+            DrawString(font, $"Meshes: S: {cr.LoadedMeshes} T: {cr.TranslucentMeshes}", 2, meshY, 0xE0E0E0);
             GLManager.GL.PopMatrix();
         }
         else
@@ -254,7 +254,7 @@ public class GuiIngame : Gui
                 j = 0x00FFFFFF;
                 if (_isRecordMessageRainbow)
                 {
-                    j = Color.HSBtoRGB(t / 50.0F, 0.7F, 0.6F) & 0x00FFFFFF;
+                    j = Color.HSBtoRGB(t / 50.0F, 0.7F, 0.6F) & 0xFFFFFF;
                 }
 
                 font.drawString(_recordPlaying, -font.getStringWidth(_recordPlaying) / 2, -4, (uint)(j + (i << 24)));
@@ -308,7 +308,7 @@ public class GuiIngame : Gui
                     debugStr = _chatMessageList[j].Message;
                     DrawRect(left, y - 1, left + 320, y + 8, (uint)(alpha / 2 << 24));
                     GLManager.GL.Enable(GLEnum.Blend);
-                    font.drawStringWithShadow(debugStr, left, y, 0x00FFFFFF + (uint)(alpha << 24));
+                    font.drawStringWithShadow(debugStr, left, y, 0xFFFFFF + (uint)(alpha << 24));
                 }
             }
         }

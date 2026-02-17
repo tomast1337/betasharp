@@ -1,4 +1,4 @@
-using BetaSharp.Client.Input;
+﻿using BetaSharp.Client.Input;
 using BetaSharp.Util;
 using BetaSharp.Server;
 using BetaSharp.Server.Commands;
@@ -11,14 +11,14 @@ public class GuiChat : GuiScreen
 {
 
     protected string message = "";
-    private int updateCounter = 0;
+    private int updateCounter;
     private static readonly string allowedChars = ChatAllowedCharacters.allowedCharacters;
     private static readonly System.Collections.Generic.List<string> history = new();
-    private int historyIndex = 0;
+    private int historyIndex;
     private List<string> lastTabCompletions = new();
-    private int tabCompletionIndex = 0;
+    private int tabCompletionIndex;
     private string lastTabPrefix = "";
-    private int cursorPosition = 0;
+    private int cursorPosition;
     private int selectionStart = -1;
     private int selectionEnd = -1;
 
@@ -256,7 +256,7 @@ public class GuiChat : GuiScreen
         }
 
         string commandName = allParts[0]; // e.g., "/give"
-        
+
         // If we're only completing the command name (no space yet)
         if (allParts.Length == 1 || (allParts.Length == 2 && message.EndsWith(" ") == false && allParts[1] == ""))
         {
@@ -326,11 +326,11 @@ public class GuiChat : GuiScreen
         // Determine which argument we're currently completing
         // If message ends with space, we're completing a new argument
         bool completingNewArg = message.EndsWith(" ");
-        
+
         // Get the current argument prefix and index
         string currentArgPrefix = "";
         int argIndex; // Index relative to command (0 = first arg after command)
-        
+
         if (completingNewArg)
         {
             // User pressed Tab after a space - completing new argument
@@ -351,7 +351,7 @@ public class GuiChat : GuiScreen
         // Get completions from provider
         MinecraftServer server = mc?.internalServer;
         List<string> matchingCompletions = [];
-        
+
         if (server != null && argIndex >= 0)
         {
             matchingCompletions = CommandCompletionProvider.GetCompletions(commandName, argIndex, currentArgPrefix, server);
@@ -401,7 +401,7 @@ public class GuiChat : GuiScreen
         // argIndex is relative to command (0 = first arg after command)
         // parts[0] is the command, parts[1] is first arg, etc.
         int partIndex = argIndex + 1;
-        
+
         if (argIndex < 0 || partIndex > parts.Length)
         {
             return;
@@ -426,7 +426,7 @@ public class GuiChat : GuiScreen
             parts[partIndex] = replacement;
             message = string.Join(" ", parts);
         }
-        
+
         // Move cursor to end of message
         cursorPosition = message.Length;
     }
@@ -520,7 +520,7 @@ public class GuiChat : GuiScreen
 
         int y = Height - 12;
         int xBase = 4;
-        uint normalColor = 14737632u;
+        uint normalColor = 0x00E0E0E0u;
 
         if (HasSelection())
         {
@@ -538,7 +538,7 @@ public class GuiChat : GuiScreen
             DrawRect(xBase + beforeWidth, y - 1, xBase + beforeWidth + selWidth, y + 9, 0x80FFFFFFu);
 
             // Draw selected text in contrasting color
-            fontRenderer.drawString(sel, xBase + beforeWidth, y, 0xFF000000u);
+            fontRenderer.drawString(sel, xBase + beforeWidth, y, 0xFF000000);
 
             // Draw after selection
             fontRenderer.drawStringWithShadow(afterSel, xBase + beforeWidth + selWidth, y, normalColor);

@@ -5,7 +5,7 @@ namespace BetaSharp.Server;
 public class ServerLog
 {
     public static Logger LOGGER = Logger.getLogger("Minecraft");
-    private static bool initialized = false;
+    private static bool initialized;
 
     public static void init()
     {
@@ -27,9 +27,9 @@ public class ServerLog
             var2.setFormatter(var0);
             LOGGER.addHandler(var2);
         }
-        catch (java.lang.Exception var3)
+        catch (java.lang.Exception ex)
         {
-            LOGGER.log(Level.WARNING, "Failed to log to server.log", var3);
+            LOGGER.log(Level.WARNING, "Failed to log to server.log", ex);
         }
     }
 }

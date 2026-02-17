@@ -1,4 +1,4 @@
-using BetaSharp.Blocks.Entities;
+﻿using BetaSharp.Blocks.Entities;
 using BetaSharp.Entities;
 using BetaSharp.Inventorys;
 using BetaSharp.Items;
@@ -23,7 +23,7 @@ public class ServerPlayNetworkHandler : NetHandler, CommandOutput
 {
     public static Logger LOGGER = Logger.getLogger("Minecraft");
     public Connection connection;
-    public bool disconnected = false;
+    public bool disconnected;
     private MinecraftServer server;
     private ServerPlayerEntity player;
     private int ticks;
@@ -199,7 +199,7 @@ public class ServerPlayNetworkHandler : NetHandler, CommandOutput
                 return;
             }
 
-            float var21 = 0.0625F;
+            float var21 = (1 / 16f);
             bool var22 = var2.getEntityCollisions(player, player.boundingBox.contract(var21, var21, var21)).Count == 0;
             player.move(var32, var15, var17);
             var32 = var5 - player.x;
@@ -216,8 +216,8 @@ public class ServerPlayNetworkHandler : NetHandler, CommandOutput
             {
                 var23 = true;
                 LOGGER.warning(player.name + " moved wrongly!");
-                java.lang.System.@out.println("Got position " + var5 + ", " + var7 + ", " + var9);
-                java.lang.System.@out.println("Expected " + player.x + ", " + player.y + ", " + player.z);
+                Console.WriteLine($"Got position {var5}, {var7}, {var9}");
+                Console.WriteLine($"Expected {player.x}, {player.y}, {player.z}");
             }
 
             player.setPositionAndAngles(var5, var7, var9, var11, var12);

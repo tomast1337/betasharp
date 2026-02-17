@@ -41,8 +41,8 @@ public partial class Minecraft : java.lang.Object, Runnable
 {
     public static Minecraft INSTANCE;
     public PlayerController playerController;
-    private bool fullscreen = false;
-    private bool hasCrashed = false;
+    private bool fullscreen;
+    private bool hasCrashed;
     public int displayWidth;
     public int displayHeight;
     private readonly Timer timer = new(20.0F);
@@ -51,22 +51,22 @@ public partial class Minecraft : java.lang.Object, Runnable
     public ClientPlayerEntity player;
     public EntityLiving camera;
     public ParticleManager particleManager;
-    public Session session = null;
+    public Session session;
     public string minecraftUri;
     public bool hideQuitButton = false;
-    public volatile bool isGamePaused = false;
+    public volatile bool isGamePaused;
     public TextureManager textureManager;
     public TextRenderer fontRenderer;
-    public GuiScreen currentScreen = null;
+    public GuiScreen currentScreen;
     public LoadingScreenRenderer loadingScreen;
     public GameRenderer gameRenderer;
-    private int ticksRan = 0;
-    private int leftClickCounter = 0;
+    private int ticksRan;
+    private int leftClickCounter;
     private readonly int tempDisplayWidth;
     private readonly int tempDisplayHeight;
     public GuiAchievement guiAchievement;
     public GuiIngame ingameGUI;
-    public bool skipRenderWorld = false;
+    public bool skipRenderWorld;
     public HitResult objectMouseOver = null;
     public GameOptions options;
     public SoundManager sndManager = new();
@@ -76,23 +76,23 @@ public partial class Minecraft : java.lang.Object, Runnable
     private WorldStorageSource saveLoader;
     public static long[] frameTimes = new long[512];
     public static long[] tickTimes = new long[512];
-    public static int numRecordedFrameTimes = 0;
+    public static int numRecordedFrameTimes;
     public static long hasPaidCheckTime = 0L;
     public StatFileWriter statFileWriter;
     private string serverName;
     private int serverPort;
     private readonly WaterSprite textureWaterFX = new();
     private readonly LavaSprite textureLavaFX = new();
-    private static java.io.File minecraftDir = null;
+    private static java.io.File minecraftDir;
     public volatile bool running = true;
     public string debug = "";
-    bool isTakingScreenshot = false;
+    bool isTakingScreenshot;
     long prevFrameTime = -1L;
-    public bool inGameHasFocus = false;
-    private int mouseTicksRan = 0;
+    public bool inGameHasFocus;
+    private int mouseTicksRan;
     public bool isRaining = false;
     long systemTime = java.lang.System.currentTimeMillis();
-    private int joinPlayerCounter = 0;
+    private int joinPlayerCounter;
     private ImGuiController imGuiController;
     public InternalServer? internalServer;
 
@@ -191,9 +191,9 @@ public partial class Minecraft : java.lang.Object, Runnable
 
             GLManager.Init(Display.getGL()!);
         }
-        catch (System.Exception var6)
+        catch (System.Exception ex)
         {
-            Console.WriteLine(var6);
+            Console.WriteLine(ex);
         }
         texturePackList = new TexturePacks(this, mcDataDir);
         textureManager = new TextureManager(texturePackList, options);
@@ -305,7 +305,7 @@ public partial class Minecraft : java.lang.Object, Runnable
         GLManager.GL.Disable(GLEnum.Fog);
         GLManager.GL.BindTexture(GLEnum.Texture2D, (uint)textureManager.getTextureId("/title/mojang.png"));
         tessellator.startDrawingQuads();
-        tessellator.setColorOpaque_I(0x00FFFFFF);
+        tessellator.setColorOpaque_I(0xFFFFFF);
         tessellator.addVertexWithUV(0.0D, (double)displayHeight, 0.0D, 0.0D, 0.0D);
         tessellator.addVertexWithUV((double)displayWidth, (double)displayHeight, 0.0D, 0.0D, 0.0D);
         tessellator.addVertexWithUV((double)displayWidth, 0.0D, 0.0D, 0.0D, 0.0D);
@@ -314,8 +314,8 @@ public partial class Minecraft : java.lang.Object, Runnable
         short var3 = 256;
         short var4 = 256;
         GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 1.0F);
-        tessellator.setColorOpaque_I(0x00FFFFFF);
-        func_6274_a((var1.ScaledWidth - var3) / 2, (var1.ScaledHeight - var4) / 2, 0, 0, var3, var4);
+        tessellator.setColorOpaque_I(0xFFFFFF);
+        drawTextureRegion((var1.ScaledWidth - var3) / 2, (var1.ScaledHeight - var4) / 2, 0, 0, var3, var4);
         GLManager.GL.Disable(GLEnum.Lighting);
         GLManager.GL.Disable(GLEnum.Fog);
         GLManager.GL.Enable(GLEnum.AlphaTest);
@@ -323,21 +323,18 @@ public partial class Minecraft : java.lang.Object, Runnable
         Display.swapBuffers();
     }
 
-    public void func_6274_a(int var1, int var2, int var3, int var4, int var5, int var6)
+    public void drawTextureRegion(int x, int y, int texX, int texY, int width, int height)
     {
-        float var7 = 0.00390625F;
-        float var8 = 0.00390625F;
-        Tessellator var9 = Tessellator.instance;
-        var9.startDrawingQuads();
-        var9.addVertexWithUV((double)(var1 + 0), (double)(var2 + var6), 0.0D, (double)((float)(var3 + 0) * var7),
-            (double)((float)(var4 + var6) * var8));
-        var9.addVertexWithUV((double)(var1 + var5), (double)(var2 + var6), 0.0D,
-            (double)((float)(var3 + var5) * var7), (double)((float)(var4 + var6) * var8));
-        var9.addVertexWithUV((double)(var1 + var5), (double)(var2 + 0), 0.0D, (double)((float)(var3 + var5) * var7),
-            (double)((float)(var4 + 0) * var8));
-        var9.addVertexWithUV((double)(var1 + 0), (double)(var2 + 0), 0.0D, (double)((float)(var3 + 0) * var7),
-            (double)((float)(var4 + 0) * var8));
-        var9.draw();
+        float uScale = 1 / 256f;
+        float vScale = 1 / 256f;
+
+        Tessellator tess = Tessellator.instance;
+        tess.startDrawingQuads();
+        tess.addVertexWithUV(x + 0,     y + height, 0,  (texX + 0) * uScale,        (texY + height) * vScale);
+        tess.addVertexWithUV(x + width, y + height, 0,  (texX + width) * uScale,    (texY + height) * vScale);
+        tess.addVertexWithUV(x + width, y + 0,      0,  (texX + width) * uScale,    (texY + 0) * vScale);
+        tess.addVertexWithUV(x + 0,     y + 0,      0,  (texX + 0) * uScale,        (texY + 0) * vScale);
+        tess.draw();
     }
 
     public static java.io.File getMinecraftDir()
@@ -382,18 +379,18 @@ public partial class Minecraft : java.lang.Object, Runnable
 
     private static Util.OperatingSystem getOs()
     {
-        string var0 = java.lang.System.getProperty("os.name").ToLower();
-        return var0.Contains("win")
-            ? Util.OperatingSystem.windows
-            : (var0.Contains("mac")
-                ? Util.OperatingSystem.macos
-                : (var0.Contains("solaris")
-                    ? Util.OperatingSystem.solaris
-                    : (var0.Contains("sunos")
-                        ? Util.OperatingSystem.solaris
-                        : (var0.Contains("linux")
-                            ? Util.OperatingSystem.linux
-                            : (var0.Contains("unix") ? Util.OperatingSystem.linux : Util.OperatingSystem.unknown)))));
+        string osName = java.lang.System.getProperty("os.name").ToLower();
+
+        if (osName.Contains("win"))
+            return Util.OperatingSystem.windows;
+        if (osName.Contains("mac"))
+            return Util.OperatingSystem.macos;
+        if (osName.Contains("solaris") || osName.Contains("sunos"))
+            return Util.OperatingSystem.solaris;
+        if (osName.Contains("linux") || osName.Contains("unix"))
+            return Util.OperatingSystem.linux;
+
+        return Util.OperatingSystem.unknown;
     }
 
     public WorldStorageSource getSaveLoader()
@@ -403,7 +400,7 @@ public partial class Minecraft : java.lang.Object, Runnable
 
     public void displayGuiScreen(GuiScreen newScreen)
     {
-        if (!(currentScreen is GuiUnused))
+        if (currentScreen is not GuiUnused)
         {
             currentScreen?.OnGuiClosed();
 
@@ -472,23 +469,19 @@ public partial class Minecraft : java.lang.Object, Runnable
             statFileWriter.func_27175_b();
             statFileWriter.syncStats();
 
-            java.lang.System.@out.println("Stopping!");
+            Console.WriteLine("Stopping!");
 
             try
             {
                 changeWorld1((World)null);
             }
-            catch (Throwable worldChangeException)
-            {
-            }
+            catch (Throwable worldChangeException) { }
 
             try
             {
                 GLAllocation.deleteTexturesAndDisplayLists();
             }
-            catch (Throwable textureCleanupException)
-            {
-            }
+            catch (Throwable textureCleanupException) { }
 
             sndManager.closeMinecraft();
             Mouse.destroy();
@@ -730,18 +723,14 @@ public partial class Minecraft : java.lang.Object, Runnable
         {
             java.lang.System.gc();
         }
-        catch (Throwable vec3dCleanupException)
-        {
-        }
+        catch (Throwable vec3dCleanupException) { }
 
         try
         {
             java.lang.System.gc();
             changeWorld1((World)null);
         }
-        catch (Throwable worldCleanupException)
-        {
-        }
+        catch (Throwable worldCleanupException) { }
 
         java.lang.System.gc();
     }
@@ -787,12 +776,12 @@ public partial class Minecraft : java.lang.Object, Runnable
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawing(7);
         int barHeightPixels = (int)(targetFrameTime / 200000L);
-        tessellator.setColorOpaque_I(536870912);
+        tessellator.setColorOpaque_I(0x20000000); // BUG: tries to set alpha, which is ignored by setColorOpaque_I
         tessellator.addVertex(0.0D, (double)(displayHeight - barHeightPixels), 0.0D);
         tessellator.addVertex(0.0D, (double)displayHeight, 0.0D);
         tessellator.addVertex((double)frameTimes.Length, (double)displayHeight, 0.0D);
         tessellator.addVertex((double)frameTimes.Length, (double)(displayHeight - barHeightPixels), 0.0D);
-        tessellator.setColorOpaque_I(538968064);
+        tessellator.setColorOpaque_I(0x20200000); // BUG: tries to set alpha, which is ignored by setColorOpaque_I
         tessellator.addVertex(0.0D, (double)(displayHeight - barHeightPixels * 2), 0.0D);
         tessellator.addVertex(0.0D, (double)(displayHeight - barHeightPixels), 0.0D);
         tessellator.addVertex((double)frameTimes.Length, (double)(displayHeight - barHeightPixels), 0.0D);
@@ -808,7 +797,7 @@ public partial class Minecraft : java.lang.Object, Runnable
 
         averageFrameTimePixels = (int)(totalFrameTimesSum / 200000L / (long)frameTimes.Length);
         tessellator.startDrawing(7);
-        tessellator.setColorOpaque_I(541065216);
+        tessellator.setColorOpaque_I(0x20400000); // BUG: tries to set alpha, which is ignored by setColorOpaque_I
         tessellator.addVertex(0.0D, (double)(displayHeight - averageFrameTimePixels), 0.0D);
         tessellator.addVertex(0.0D, (double)displayHeight, 0.0D);
         tessellator.addVertex((double)frameTimes.Length, (double)displayHeight, 0.0D);
@@ -902,7 +891,7 @@ public partial class Minecraft : java.lang.Object, Runnable
 
     private void func_6254_a(int mouseButton, bool isHoldingMouse)
     {
-        if (!playerController.field_1064_b)
+        if (!playerController.IsTestPlayer)
         {
             if (!isHoldingMouse)
             {
@@ -1169,7 +1158,7 @@ public partial class Minecraft : java.lang.Object, Runnable
             }
         }
 
-        if (currentScreen == null || currentScreen.AllowUserInput)
+        if (currentScreen == null || currentScreen.IsInventoryScreen)
         {
             processInputEvents();
         }
@@ -1262,7 +1251,7 @@ public partial class Minecraft : java.lang.Object, Runnable
                 if (mouseWheelDelta != 0)
                 {
                     player.inventory.changeCurrentItem(mouseWheelDelta);
-                    if (options.field_22275_C)
+                    if (options.invertScrolling)
                     {
                         if (mouseWheelDelta > 0)
                         {
@@ -1274,7 +1263,7 @@ public partial class Minecraft : java.lang.Object, Runnable
                             mouseWheelDelta = -1;
                         }
 
-                        options.field_22272_F += (float)mouseWheelDelta * 0.25F;
+                        options.amountScrolled += (float)mouseWheelDelta * 0.25F;
                     }
                 }
 
@@ -1425,7 +1414,7 @@ public partial class Minecraft : java.lang.Object, Runnable
 
     private void forceReload()
     {
-        java.lang.System.@out.println("FORCING RELOAD!");
+        Console.WriteLine("FORCING RELOAD!");
         sndManager = new SoundManager();
         sndManager.loadSoundSettings(options);
     }
@@ -1489,7 +1478,7 @@ public partial class Minecraft : java.lang.Object, Runnable
 
             particleManager?.clearEffects(newWorld);
 
-            playerController.func_6473_b(player);
+            playerController.fillHotbar(player);
             if (targetEntity != null)
             {
                 newWorld.saveWorldData();
@@ -1576,17 +1565,17 @@ public partial class Minecraft : java.lang.Object, Runnable
         }
     }
 
-    public string func_6262_n()
+    public string getEntityDebugInfo()
     {
         return terrainRenderer.getDebugInfoEntities();
     }
 
-    public string func_21002_o()
+    public string getWorldDebugInfo()
     {
         return world.getDebugInfo();
     }
 
-    public string func_6245_o()
+    public string getParticleAndEntityCountDebugInfo()
     {
         return "P: " + particleManager.getStatistics() + ". T: " + world.getEntityCount();
     }
@@ -1641,7 +1630,7 @@ public partial class Minecraft : java.lang.Object, Runnable
         player.movementInput = new MovementInputFromOptions(options);
         player.id = previousPlayerId;
         player.spawn();
-        playerController.func_6473_b(player);
+        playerController.fillHotbar(player);
         showText("Respawning");
         if (currentScreen is GuiGameOver)
         {

@@ -125,11 +125,11 @@ public class Item : java.lang.Object
     public static Item RECORD_CAT = (new ItemRecord(2001, "cat")).setTexturePosition(1, 15).setItemName("record");
     public readonly int id;
     public int maxCount = 64;
-    private int maxDamage = 0;
+    private int maxDamage;
     protected int textureId;
-    protected bool handheld = false;
-    protected bool hasSubtypes = false;
-    private Item craftingReturnItem = null;
+    protected bool handheld;
+    protected bool hasSubtypes;
+    private Item craftingReturnItem;
     private string translationKey;
 
     protected Item(int id)
@@ -137,7 +137,7 @@ public class Item : java.lang.Object
         this.id = 256 + id;
         if (ITEMS[256 + id] != null)
         {
-            java.lang.System.@out.println("CONFLICT @ " + id);
+            Console.WriteLine($"CONFLICT @ {id}");
         }
 
         ITEMS[256 + id] = this;

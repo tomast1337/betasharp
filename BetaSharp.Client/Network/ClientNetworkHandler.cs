@@ -1,4 +1,4 @@
-using BetaSharp.Blocks;
+﻿using BetaSharp.Blocks;
 using BetaSharp.Blocks.Entities;
 using BetaSharp.Client.Entities;
 using BetaSharp.Client.Entities.FX;
@@ -17,19 +17,18 @@ using BetaSharp.Util.Maths;
 using BetaSharp.Worlds;
 using BetaSharp.Worlds.Chunks;
 using BetaSharp.Worlds.Storage;
-using java.io;
 using java.net;
 
 namespace BetaSharp.Client.Network;
 
 public class ClientNetworkHandler : NetHandler
 {
-    private bool disconnected = false;
+    private bool disconnected;
     private readonly Connection netManager;
     public string field_1209_a;
     private readonly Minecraft mc;
     private ClientWorld worldClient;
-    private bool terrainLoaded = false;
+    private bool terrainLoaded;
     public PersistentStateManager clientPersistentStateManager = new(null);
     readonly java.util.Random rand = new();
 
@@ -482,7 +481,7 @@ public class ClientNetworkHandler : NetHandler
             try
             {
                 URL authUrl = new("http://www.minecraft.net/game/joinserver.jsp?user=" + mc.session.username + "&sessionId=" + mc.session.sessionId + "&serverId=" + packet.username);
-                BufferedReader reader = new(new InputStreamReader(authUrl.openStream()));
+                java.io.BufferedReader reader = new(new java.io.InputStreamReader(authUrl.openStream()));
                 string response = reader.readLine();
                 reader.close();
                 //TODO: AUTH
@@ -777,7 +776,7 @@ public class ClientNetworkHandler : NetHandler
         }
         else
         {
-            java.lang.System.@out.println("Unknown itemid: " + packet.id);
+            Console.WriteLine($"Unknown itemid: {packet.id}");
         }
 
     }

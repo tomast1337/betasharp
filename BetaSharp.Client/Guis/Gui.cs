@@ -1,4 +1,4 @@
-using BetaSharp.Client.Rendering.Core;
+﻿using BetaSharp.Client.Rendering.Core;
 using Silk.NET.OpenGL.Legacy;
 using BetaSharp.Util;
 using BetaSharp.Client.Rendering;
@@ -116,7 +116,7 @@ public class Gui
         }
     }
 
-    private bool HasColorCodes(string text)
+    private static bool HasColorCodes(string text)
     {
         if (string.IsNullOrEmpty(text)) return false;
 
@@ -276,7 +276,7 @@ public class Gui
 
     public void DrawTexturedModalRect(int x, int y, int u, int v, int width, int height)
     {
-        float f = 0.00390625F; // 1/256
+        float f = 1 / 256f;
         Tessellator tess = Tessellator.instance;
         tess.startDrawingQuads();
         tess.addVertexWithUV(x + 0, y + height, _zLevel, (double)((u + 0) * f), (double)((v + height) * f));
