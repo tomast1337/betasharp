@@ -1,4 +1,4 @@
-﻿using BetaSharp.Client.Entities;
+using BetaSharp.Client.Entities;
 using BetaSharp.Entities;
 using BetaSharp.Network.Packets.C2SPlay;
 using BetaSharp.Network.Packets.Play;
@@ -198,7 +198,7 @@ public class EntityClientPlayerMP : ClientPlayerEntity
     {
         if (stat != null)
         {
-            if (stat.localOnly)
+            if (stat.localOnly || stat.isAchievement())
             {
                 base.increaseStat(stat, amount);
             }
@@ -210,7 +210,7 @@ public class EntityClientPlayerMP : ClientPlayerEntity
     {
         if (stat != null)
         {
-            if (!stat.localOnly)
+            if (!stat.localOnly || stat.isAchievement())
             {
                 base.increaseStat(stat, amount);
             }

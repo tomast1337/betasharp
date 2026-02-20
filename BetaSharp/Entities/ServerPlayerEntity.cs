@@ -1,4 +1,4 @@
-﻿using BetaSharp.Blocks.Entities;
+using BetaSharp.Blocks.Entities;
 using BetaSharp.Inventorys;
 using BetaSharp.Items;
 using BetaSharp.Network.Packets;
@@ -497,7 +497,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
     {
         if (stat != null)
         {
-            if (!stat.localOnly)
+            if (!stat.localOnly || stat.isAchievement())
             {
                 while (amount > 100)
                 {
