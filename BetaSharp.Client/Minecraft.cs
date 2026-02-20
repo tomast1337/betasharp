@@ -589,7 +589,7 @@ public partial class Minecraft
 
                     if (player != null && player.isInsideWall())
                     {
-                        options.cameraMode = EnumCameraMode.FirstPerson;
+                        options.cameraMode = GameOptions.CameraMode.FirstPerson;
                     }
 
                     if (!skipRenderWorld)
@@ -1345,7 +1345,7 @@ public partial class Minecraft
 
                         if (Keyboard.getEventKey() == Keyboard.KEY_F5)
                         {
-                            options.cameraMode = (EnumCameraMode)((int)(options.cameraMode + 1) % 3);
+                            options.cameraMode = (GameOptions.CameraMode)((int)(options.cameraMode + 1) % 3);
                         }
 
                         if (Keyboard.getEventKey() == Keyboard.KEY_F8)

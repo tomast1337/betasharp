@@ -234,7 +234,7 @@ public class WorldRenderer : IWorldAccess
             for (var6 = 0; var6 < var5.Count; ++var6)
             {
                 var7 = var5[var6];
-                if (var7.shouldRender(var1) && (var7.ignoreFrustumCheck || culler.isBoundingBoxInFrustum(var7.boundingBox)) && (var7 != mc.camera || mc.options.cameraMode != EnumCameraMode.FirstPerson || mc.camera.isSleeping()))
+                if (var7.shouldRender(var1) && (var7.ignoreFrustumCheck || culler.isBoundingBoxInFrustum(var7.boundingBox)) && (var7 != mc.camera || mc.options.cameraMode != GameOptions.CameraMode.FirstPerson || mc.camera.isSleeping()))
                 {
                     int var8 = MathHelper.floor_double(var7.y);
                     if (var8 < 0)

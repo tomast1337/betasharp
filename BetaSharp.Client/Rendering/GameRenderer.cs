@@ -237,10 +237,10 @@ public class GameRenderer
                 GLManager.GL.Rotate(var2.prevPitch + (var2.pitch - var2.prevPitch) * tickDelta, -1.0F, 0.0F, 0.0F);
             }
         }
-        else if (client.options.cameraMode == EnumCameraMode.ThirdPerson || client.options.cameraMode == EnumCameraMode.FrontThirdPerson)
+        else if (client.options.cameraMode == GameOptions.CameraMode.ThirdPersonBack || client.options.cameraMode == GameOptions.CameraMode.ThirdPersonFront)
         {
             double var27;
-            if (client.options.cameraMode == EnumCameraMode.FrontThirdPerson)
+            if (client.options.cameraMode == GameOptions.CameraMode.ThirdPersonFront)
             {
                 var27 = (double)(prevFrontThirdPersonDistance + (frontThirdPersonDistance - prevFrontThirdPersonDistance) * tickDelta);
             }
@@ -264,7 +264,7 @@ public class GameRenderer
                 var13 = var2.pitch;
                 double var14 = (double)(-MathHelper.sin(var28 / 180.0F * (float)java.lang.Math.PI) * MathHelper.cos(var13 / 180.0F * (float)java.lang.Math.PI)) * var27;
                 double var16 = (double)(MathHelper.cos(var28 / 180.0F * (float)java.lang.Math.PI) * MathHelper.cos(var13 / 180.0F * (float)java.lang.Math.PI)) * var27;
-                if (client.options.cameraMode == EnumCameraMode.FrontThirdPerson)
+                if (client.options.cameraMode == GameOptions.CameraMode.ThirdPersonFront)
                 {
                     var14 = -var14; // flip to front
                     var16 = -var16;
@@ -279,7 +279,7 @@ public class GameRenderer
                     var21 *= 0.1F;
                     var22 *= 0.1F;
                     var23 *= 0.1F;
-                    HitResult var24 = client.world.raycast(new Vec3D(var4 + (double)var21, var6 + (double)var22, var8 + (double)var23), new Vec3D(var4 + (client.options.cameraMode == EnumCameraMode.FrontThirdPerson ? var14 : -var14) + (double)var21 + (double)var23, var6 + (client.options.cameraMode == EnumCameraMode.FrontThirdPerson ? var18 : -var18) + (double)var22, var8 + (client.options.cameraMode == EnumCameraMode.FrontThirdPerson ? var16 : -var16) + (double)var23));
+                    HitResult var24 = client.world.raycast(new Vec3D(var4 + (double)var21, var6 + (double)var22, var8 + (double)var23), new Vec3D(var4 + (client.options.cameraMode == GameOptions.CameraMode.ThirdPersonFront ? var14 : -var14) + (double)var21 + (double)var23, var6 + (client.options.cameraMode == GameOptions.CameraMode.ThirdPersonFront ? var18 : -var18) + (double)var22, var8 + (client.options.cameraMode == GameOptions.CameraMode.ThirdPersonFront ? var16 : -var16) + (double)var23));
                     if (var24 != null)
                     {
                         double var25 = var24.pos.distanceTo(new Vec3D(var4, var6, var8));
@@ -293,7 +293,7 @@ public class GameRenderer
                 GLManager.GL.Rotate(var2.pitch - var13, 1.0F, 0.0F, 0.0F);
                 GLManager.GL.Rotate(var2.yaw - var28, 0.0F, 1.0F, 0.0F);
                 GLManager.GL.Translate(0.0F, 0.0F, (float)-var27);
-                if (client.options.cameraMode == EnumCameraMode.FrontThirdPerson)
+                if (client.options.cameraMode == GameOptions.CameraMode.ThirdPersonFront)
                 {
                     GLManager.GL.Rotate(180.0F, 0.0F, 1.0F, 0.0F);
                 }
@@ -377,13 +377,13 @@ public class GameRenderer
             applyViewBobbing(tickDelta);
         }
 
-        if (client.options.cameraMode == EnumCameraMode.FirstPerson && !client.camera.isSleeping() && !client.options.hideGUI)
+        if (client.options.cameraMode == GameOptions.CameraMode.FirstPerson && !client.camera.isSleeping() && !client.options.hideGUI)
         {
             itemRenderer.renderItemInFirstPerson(tickDelta);
         }
 
         GLManager.GL.PopMatrix();
-        if (client.options.cameraMode == EnumCameraMode.FirstPerson && !client.camera.isSleeping())
+        if (client.options.cameraMode == GameOptions.CameraMode.FirstPerson && !client.camera.isSleeping())
         {
             itemRenderer.renderOverlays(tickDelta);
             applyDamageTiltEffect(tickDelta);

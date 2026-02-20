@@ -52,7 +52,7 @@ public class GuiIngame : Gui
         }
 
         ItemStack helmet = _mc.player.inventory.armorItemInSlot(3);
-        if (_mc.options.cameraMode == EnumCameraMode.FirstPerson && helmet != null && helmet.itemId == Block.Pumpkin.id)
+        if (_mc.options.cameraMode == GameOptions.CameraMode.FirstPerson && helmet != null && helmet.itemId == Block.Pumpkin.id)
         {
             renderPumpkinBlur(scaledWidth, scaledHeight);
         }

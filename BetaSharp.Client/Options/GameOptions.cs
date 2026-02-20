@@ -5,6 +5,12 @@ namespace BetaSharp.Client.Options;
 
 public class GameOptions : java.lang.Object
 {
+    public enum CameraMode
+    {
+        FirstPerson,
+        ThirdPersonFront,
+        ThirdPersonBack
+    }
     private static readonly string[] RENDER_DISTANCES =
     [
         "options.renderDistance.far",
@@ -55,7 +61,7 @@ public class GameOptions : java.lang.Object
     private readonly java.io.File optionsFile;
     public int difficulty = 2;
     public bool hideGUI = false;
-    public EnumCameraMode cameraMode = EnumCameraMode.FirstPerson;
+    public CameraMode cameraMode = CameraMode.FirstPerson;
     public bool showDebugInfo = false;
     public string lastServer = "";
     public bool invertScrolling = false;
@@ -398,10 +404,10 @@ public class GameOptions : java.lang.Object
                 environmentAnimation = parts[1].Equals("true");
                 break;
             case "cameraMode":
-                cameraMode = (EnumCameraMode)int.Parse(parts[1]);
+                cameraMode = (CameraMode)int.Parse(parts[1]);
                 break;
             case "thirdPersonView": // backward compatibility
-                cameraMode = parts[1].Equals("true") ? EnumCameraMode.ThirdPerson : EnumCameraMode.FirstPerson;
+                cameraMode = parts[1].Equals("true") ? CameraMode.ThirdPersonBack : CameraMode.FirstPerson;
                 break;
         }
 
