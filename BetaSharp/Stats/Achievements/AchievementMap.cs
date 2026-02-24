@@ -29,9 +29,9 @@ public class AchievementMap : java.lang.Object
                 guidMap.put(Integer.valueOf(var4), var3[1]);
             }
         }
-        catch (java.lang.Exception ex)
+        catch (System.Exception ex)
         {
-            ex.printStackTrace();
+            System.Console.Error.WriteLine($"Failed to load achievement map: {ex.Message}");
         }
 
     }
