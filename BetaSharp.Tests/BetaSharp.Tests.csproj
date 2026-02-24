@@ -14,4 +14,12 @@
     <ProjectReference Include="..\BetaSharp\BetaSharp.csproj" />
   </ItemGroup>
 
+  <!-- Snapshot JSON files are generated on first test run and committed to source control.
+       They are copied to the output directory so tests can load them at runtime. -->
+  <ItemGroup>
+    <None Include="Snapshots\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
