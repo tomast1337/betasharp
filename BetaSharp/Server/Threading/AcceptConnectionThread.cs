@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BetaSharp.Server.Threading;
 
-public class AcceptConnectionThread : java.lang.Thread
+internal class AcceptConnectionThread : java.lang.Thread
 {
     private readonly ILogger<AcceptConnectionThread> _logger = Log.Instance.For<AcceptConnectionThread>();
     private readonly ConnectionListener _listener;
@@ -31,14 +31,17 @@ public class AcceptConnectionThread : java.lang.Thread
 
                 ArgumentNullException.ThrowIfNull(address);
 
-                if (map.TryGetValue(address, out long id) && ! IPAddress.Loopback.Equals(address) && java.lang.System.currentTimeMillis() - id < 5000L)
+                if (map.TryGetValue(address, out long id) && ! IPAddress.Loopback.Equals(address) && DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+ - id < 5000L)
                 {
-                    map[address] = java.lang.System.currentTimeMillis();
+                    map[address] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+;
                     socket.Close();
                 }
                 else
                 {
-                    map[address] = java.lang.System.currentTimeMillis();
+                    map[address] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+;
                     ServerLoginNetworkHandler handler = new(_listener.server, socket, "Connection # " + _listener.connectionCounter);
                     _listener.AddPendingConnection(handler);
                 }

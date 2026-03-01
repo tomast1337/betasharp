@@ -4,7 +4,7 @@ using BetaSharp.Worlds;
 
 namespace BetaSharp.Server.Commands;
 
-public static class WorldCommands
+internal static class WorldCommands
 {
     public static void Time(MinecraftServer server, string senderName, string[] args, CommandOutput output)
     {
@@ -70,7 +70,7 @@ public static class WorldCommands
             switch (weather)
             {
                 case "clear":
-                    world.globalEntities.clear();
+                    world.globalEntities.Clear();
                     world.getProperties().IsRaining = false;
                     world.getProperties().IsThundering = false;
                     break;

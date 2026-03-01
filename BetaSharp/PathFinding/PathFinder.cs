@@ -7,7 +7,7 @@ using javax.swing.text.html;
 
 namespace BetaSharp.PathFinding;
 
-public class PathFinder
+internal class PathFinder
 {
     private IBlockAccess _worldMap;
     private readonly Path _path = new();
