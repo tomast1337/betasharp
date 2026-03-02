@@ -246,7 +246,7 @@ public class GuiAchievements : GuiScreen
                     var26 = Block.Bedrock.textureId;
                 }
 
-                DrawTexturedModalRect(mc.guiBatch, var10 + var24 * 16 - var14, var11 + var22 * 16 - var15, var26 % 16 << 4, var26 >> 4 << 4, 16, 16);
+                DrawTexturedModalRect(mc.guiBatch, var10 + var24 * 16 - var14, var11 + var22 * 16 - var15, var26 % 16 << 4, var26 >> 4 << 4, 16, 16, var6);
             }
         }
 
@@ -364,7 +364,7 @@ public class GuiAchievements : GuiScreen
         GLManager.GL.Enable(GLEnum.Blend);
         GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 1.0F);
         mc.textureManager.BindTexture(var7);
-        DrawTexturedModalRect(mc.guiBatch, var8, var9, 0, 0, field_27121_a, field_27119_i);
+        DrawTexturedModalRect(mc.guiBatch, var8, var9, 0, 0, field_27121_a, field_27119_i, var7);
         GLManager.GL.PopMatrix();
         _zLevel = 0.0F;
         GLManager.GL.DepthFunc(GLEnum.Lequal);

@@ -199,14 +199,19 @@ public class GuiScreen : Gui
         GLManager.GL.Disable(EnableCap.Lighting);
         GLManager.GL.Disable(EnableCap.Fog);
 
-        mc.textureManager.BindTexture(mc.textureManager.GetTextureId("/gui/background.png"));
+        var bgTex = mc.textureManager.GetTextureId("/gui/background.png");
+        mc.textureManager.BindTexture(bgTex);
         GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 1.0F);
 
-        float scale = 32.0F;
+        // 256x256 texture: tile (width/32) x (height/32) times. Each tile = 32/256 of texture.
+        const float scale = 32.0F;
+        const float texScale = 256f;
+        float u1 = (Width / scale) * (scale / texScale);
+        float v1 = ((Height + var1) / scale) * (scale / texScale);
         mc.guiBatch.DrawTexturedQuad(0, 0, Width, Height,
-            0f, (0 + var1) / 256f,
-            Width / scale / 256f, (Height / scale + var1) / 256f,
-            Color.FromArgb(0xFF404040), 0f);
+            0f, v1,      // v1 at top (flip: top samples texture top)
+            u1, (var1 / scale) * (scale / texScale),
+            Color.FromArgb(0xFF808080), 0f, (uint)bgTex.Id);
     }
 
     public virtual void DeleteWorld(bool var1, int var2) { }

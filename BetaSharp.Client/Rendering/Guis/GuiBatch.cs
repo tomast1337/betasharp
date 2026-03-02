@@ -27,6 +27,7 @@ public class GuiBatch
     private readonly GuiVertex[] _vertices = new GuiVertex[MaxVertices];
     private int _vertexCount;
     private bool _useTexture;
+    private uint _currentTextureId;
     private bool _begun;
     private float _screenWidth;
     private float _screenHeight;
@@ -63,6 +64,15 @@ public class GuiBatch
         _screenHeight = (float)resolution.ScaledHeightDouble;
         _vertexCount = 0;
         _useTexture = false;
+        _currentTextureId = 0;
+    }
+
+    /// <summary>Call after BindTexture to ensure the batch flushes when the texture changes. Pass the texture handle's Id.</summary>
+    public void SetTexture(uint textureId)
+    {
+        if (_useTexture && textureId != _currentTextureId && _vertexCount > 0)
+            Flush();
+        _currentTextureId = textureId;
     }
 
     public void End()
@@ -70,17 +80,20 @@ public class GuiBatch
         if (_begun)
         {
             Flush();
+            GLManager.GL.RestoreWorldRenderingState();
             _begun = false;
         }
     }
 
-    private void EnsureCapacity(int additionalVertices, bool useTexture)
+    private void EnsureCapacity(int additionalVertices, bool useTexture, uint textureId = 0)
     {
         if (_useTexture != useTexture && _vertexCount > 0)
-        {
             Flush();
-        }
+        if (useTexture && textureId != 0 && _useTexture && textureId != _currentTextureId && _vertexCount > 0)
+            Flush();
         _useTexture = useTexture;
+        if (useTexture && textureId != 0)
+            _currentTextureId = textureId;
 
         if (_vertexCount + additionalVertices > MaxVertices)
         {
@@ -107,7 +120,7 @@ public class GuiBatch
         if (x1 > x2) (x1, x2) = (x2, x1);
         if (y1 > y2) (y1, y2) = (y2, y1);
 
-        EnsureCapacity(6, false);
+        EnsureCapacity(6, false, 0);
 
         byte r = (byte)color.R;
         byte g = (byte)color.G;
@@ -119,7 +132,7 @@ public class GuiBatch
 
     public void DrawGradientRect(int left, int right, int top, int bottom, Color topColor, Color bottomColor, float z = 0f)
     {
-        EnsureCapacity(6, false);
+        EnsureCapacity(6, false, 0);
 
         byte tr = (byte)topColor.R, tg = (byte)topColor.G, tb = (byte)topColor.B, ta = (byte)topColor.A;
         byte br = (byte)bottomColor.R, bg = (byte)bottomColor.G, bb = (byte)bottomColor.B, ba = (byte)bottomColor.A;
@@ -134,9 +147,9 @@ public class GuiBatch
         _vertexCount = i;
     }
 
-    public void DrawTexturedQuad(int x, int y, int w, int h, float u0, float v0, float u1, float v1, Color color, float z = 0f)
+    public void DrawTexturedQuad(int x, int y, int w, int h, float u0, float v0, float u1, float v1, Color color, float z = 0f, uint textureId = 0)
     {
-        EnsureCapacity(6, true);
+        EnsureCapacity(6, true, textureId);
 
         byte r = (byte)color.R, g = (byte)color.G, b = (byte)color.B, a = (byte)color.A;
         AddQuad(x, y, x + w, y + h, z, u0, v0, u1, v1, r, g, b, a);
@@ -149,6 +162,9 @@ public class GuiBatch
         var legacyGl = (LegacyGL)GLManager.GL;
         var silkGl = legacyGl.SilkGL;
 
+        silkGl.ActiveTexture(TextureUnit.Texture0);
+        if (_useTexture && _currentTextureId != 0)
+            silkGl.BindTexture(GLEnum.Texture2D, _currentTextureId);
         silkGl.UseProgram(_shader.Program);
         _shader.SetScreenSize(_screenWidth, _screenHeight);
         _shader.SetUseTexture(_useTexture);

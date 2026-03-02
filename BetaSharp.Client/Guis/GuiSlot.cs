@@ -190,15 +190,16 @@ public abstract class GuiSlot
         GLManager.GL.Disable(GLEnum.Fog);
         var batch = _mc.guiBatch;
 
-        _mc.textureManager.BindTexture(_mc.textureManager.GetTextureId("/gui/background.png"));
+        var bgTex = _mc.textureManager.GetTextureId("/gui/background.png");
+        _mc.textureManager.BindTexture(bgTex);
         GLManager.GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-        const float textureScale = 32.0f;
+        const float texSize = 256f;
 
-        const float uvScale = 1f / (textureScale * 256f);
+        int scroll = (int)_amountScrolled;
         batch.DrawTexturedQuad(_left, _top, _right - _left, _bottom - _top,
-            _left * uvScale, (_top + (int)_amountScrolled) * uvScale,
-            _right * uvScale, (_bottom + (int)_amountScrolled) * uvScale,
-            Color.FromArgb(0xFF202020), 0f);
+            _left / texSize, (_bottom + scroll) / texSize,   // v flipped
+            _right / texSize, (_top + scroll) / texSize,
+            Color.FromArgb(0xFF606060), 0f, (uint)bgTex.Id);
 
         int startX = _width / 2 - 92 - 16;
         int startY = _top + 4 - (int)_amountScrolled;

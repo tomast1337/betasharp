@@ -72,6 +72,7 @@ public class TextRenderer
 
         fontTextureName = textureManager.Load(_atlasImage);
         fontTextureName.Texture?.SetFilter(Silk.NET.OpenGL.Legacy.TextureMinFilter.Nearest, Silk.NET.OpenGL.Legacy.TextureMagFilter.Nearest);
+        fontTextureName.Texture?.SetWrap(Silk.NET.OpenGL.Legacy.TextureWrapMode.ClampToEdge, Silk.NET.OpenGL.Legacy.TextureWrapMode.ClampToEdge);
     }
 
     private static void ClearAtlasRegion(Image<Rgba32> image, int x, int y, int w, int h)
@@ -233,7 +234,7 @@ public class TextRenderer
                     float w = glyph.Width * DisplayScale;
                     float h = glyph.Height * DisplayScale;
                     _guiBatch.DrawTexturedQuad((int)currentX, (int)currentY, (int)w, (int)h,
-                        glyph.U0, glyph.V0, glyph.U1, glyph.V1, currentColor, 0f);
+                        glyph.U0, glyph.V0, glyph.U1, glyph.V1, currentColor, 0f, (uint)(fontTextureName?.Id ?? 0));
                 }
 
                 currentX += glyph.AdvanceWidth * DisplayScale;

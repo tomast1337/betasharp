@@ -1,6 +1,7 @@
 using BetaSharp.Client.Rendering;
-using BetaSharp.Client.Rendering.Guis;
 using BetaSharp.Client.Rendering.Core;
+using BetaSharp.Client.Rendering.Core.Textures;
+using BetaSharp.Client.Rendering.Guis;
 using Silk.NET.OpenGL.Legacy;
 
 namespace BetaSharp.Client.Guis;
@@ -50,12 +51,13 @@ public class Gui
         renderer.DrawStringWithShadow(text, x, y, color);
     }
 
-    public void DrawTexturedModalRect(GuiBatch batch, int x, int y, int u, int v, int width, int height)
+    public void DrawTexturedModalRect(GuiBatch batch, int x, int y, int u, int v, int width, int height, TextureHandle? texture = null)
     {
-        const float f = 0.00390625F;
+        const float f = 0.00390625F; // 1/256 for 256px textures
+        uint texId = texture != null ? (uint)texture.Id : 0;
         batch.DrawTexturedQuad(x, y, width, height,
-            (u + 0) * f, (v + height) * f,
+            (u + 0) * f, (v + height) * f,    // v flipped: top of quad gets texture top (high v)
             (u + width) * f, (v + 0) * f,
-            Color.White, _zLevel);
+            Color.White, _zLevel, texId);
     }
 }

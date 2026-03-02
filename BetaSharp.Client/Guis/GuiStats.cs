@@ -116,12 +116,13 @@ public class GuiStats : GuiScreen
     private void drawSlotTexture(int x, int y, int u, int v)
     {
         GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.textureManager.BindTexture(mc.textureManager.GetTextureId("/gui/slot.png"));
+        var slotTex = mc.textureManager.GetTextureId("/gui/slot.png");
+        mc.textureManager.BindTexture(slotTex);
         const float uvScale = 0.0078125F;
         mc.guiBatch.DrawTexturedQuad(x, y, 18, 18,
             (u + 0) * uvScale, (v + 18) * uvScale,
             (u + 18) * uvScale, (v + 0) * uvScale,
-            Color.White, _zLevel);
+            Color.White, _zLevel, (uint)slotTex.Id);
     }
 
     public void drawTranslucentRect(int right, int bottom, int left, int top)
