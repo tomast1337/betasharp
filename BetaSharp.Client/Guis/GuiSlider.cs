@@ -50,8 +50,8 @@ public class GuiSlider : GuiButton
             }
 
             GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 1.0F);
-            DrawTexturedModalRect(XPosition + (int)(sliderValue * (_width - 8)), YPosition, 0, 66, 4, 20);
-            DrawTexturedModalRect(XPosition + (int)(sliderValue * (_width - 8)) + 4, YPosition, 196, 66, 4, 20);
+            DrawTexturedModalRect(mc.guiBatch, XPosition + (int)(sliderValue * (_width - 8)), YPosition, 0, 66, 4, 20);
+            DrawTexturedModalRect(mc.guiBatch, XPosition + (int)(sliderValue * (_width - 8)) + 4, YPosition, 196, 66, 4, 20);
         }
     }
 

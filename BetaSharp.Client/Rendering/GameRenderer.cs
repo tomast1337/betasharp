@@ -285,7 +285,16 @@ public class GameRenderer
             if (_client.currentScreen != null)
             {
                 GLManager.GL.Clear(ClearBufferMask.DepthBufferBit);
-                _client.currentScreen.Render(var16, var17, tickDelta);
+                var scaledRes = new ScaledResolution(_client.options, _client.displayWidth, _client.displayHeight);
+                _client.guiBatch.Begin(scaledRes);
+                try
+                {
+                    _client.currentScreen.Render(var16, var17, tickDelta);
+                }
+                finally
+                {
+                    _client.guiBatch.End();
+                }
                 if (_client.currentScreen != null && _client.currentScreen.ParticlesGui != null)
                 {
                     _client.currentScreen.ParticlesGui.render(tickDelta);

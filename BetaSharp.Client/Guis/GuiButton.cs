@@ -68,8 +68,8 @@ public class GuiButton : Gui
         bool isHovered = mouseX >= XPosition && mouseY >= YPosition && mouseX < XPosition + _width && mouseY < YPosition + _height;
         HoverState hoverState = GetHoverState(isHovered);
 
-        DrawTexturedModalRect(XPosition, YPosition, 0, 46 + (int)hoverState * 20, _width / 2, _height);
-        DrawTexturedModalRect(XPosition + _width / 2, YPosition, 200 - _width / 2, 46 + (int)hoverState * 20, _width / 2, _height);
+        DrawTexturedModalRect(mc.guiBatch, XPosition, YPosition, 0, 46 + (int)hoverState * 20, _width / 2, _height);
+        DrawTexturedModalRect(mc.guiBatch, XPosition + _width / 2, YPosition, 200 - _width / 2, 46 + (int)hoverState * 20, _width / 2, _height);
 
         MouseDragged(mc, mouseX, mouseY);
 

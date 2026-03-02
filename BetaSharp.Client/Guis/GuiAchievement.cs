@@ -127,7 +127,7 @@ public class GuiAchievement : Gui
         _theGame.textureManager.BindTexture(_theGame.textureManager.GetTextureId("/achievement/bg.png"));
         GLManager.GL.Disable(GLEnum.Lighting);
 
-        DrawTexturedModalRect(achievementX, achievementY, 96, 202, 160, 32);
+        DrawTexturedModalRect(_theGame.guiBatch, achievementX, achievementY, 96, 202, 160, 32);
         drawAchievementText(achievementX, achievementY);
 
         GLManager.GL.PushMatrix();

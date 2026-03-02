@@ -1,6 +1,7 @@
 using BetaSharp.Client.Input;
 using BetaSharp.Client.Rendering;
 using BetaSharp.Client.Rendering.Core;
+using BetaSharp.Client.Rendering.Guis;
 using java.awt;
 using java.awt.datatransfer;
 using java.util;
@@ -185,7 +186,7 @@ public class GuiScreen : Gui
     {
         if (mc.world != null)
         {
-            DrawGradientRect(0, 0, Width, Height, Color.WorldBackgroundDark, Color.WorldBackground);
+            DrawGradientRect(mc.guiBatch, 0, 0, Width, Height, Color.WorldBackgroundDark, Color.WorldBackground);
         }
         else
         {
@@ -198,19 +199,14 @@ public class GuiScreen : Gui
         GLManager.GL.Disable(EnableCap.Lighting);
         GLManager.GL.Disable(EnableCap.Fog);
 
-        Tessellator tess = Tessellator.instance;
         mc.textureManager.BindTexture(mc.textureManager.GetTextureId("/gui/background.png"));
         GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 1.0F);
 
         float scale = 32.0F;
-        tess.startDrawingQuads();
-        tess.setColorOpaque_I(0x404040);
-
-        tess.addVertexWithUV(0.0D, Height, 0.0D, 0.0D, (double)(Height / scale + var1));
-        tess.addVertexWithUV(Width, Height, 0.0D, (double)(Width / scale), (double)(Height / scale + var1));
-        tess.addVertexWithUV(Width, 0.0D, 0.0D, (double)(Width / scale), 0 + var1);
-        tess.addVertexWithUV(0.0D, 0.0D, 0.0D, 0.0D, 0 + var1);
-        tess.draw();
+        mc.guiBatch.DrawTexturedQuad(0, 0, Width, Height,
+            0f, (0 + var1) / 256f,
+            Width / scale / 256f, (Height / scale + var1) / 256f,
+            Color.FromArgb(0xFF404040), 0f);
     }
 
     public virtual void DeleteWorld(bool var1, int var2) { }
