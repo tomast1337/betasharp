@@ -1,4 +1,4 @@
-﻿using BetaSharp.Client.Entities;
+using BetaSharp.Client.Entities;
 using BetaSharp.Entities;
 using BetaSharp.Network.Packets.C2SPlay;
 using BetaSharp.Network.Packets.Play;
@@ -211,13 +211,9 @@ public class EntityClientPlayerMP : ClientPlayerEntity
 
     public void func_27027_b(StatBase stat, int amount)
     {
-        if (stat != null)
+        if (stat != null && !stat.LocalOnly)
         {
-            if (!stat.LocalOnly)
-            {
-                base.increaseStat(stat, amount);
-            }
-
+            base.increaseStat(stat, amount);
         }
     }
 }
