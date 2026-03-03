@@ -1,3 +1,6 @@
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
 namespace BetaSharp.Util.Maths.Noise;
 
 internal class PerlinNoiseSampler : NoiseSampler
@@ -7,7 +10,7 @@ internal class PerlinNoiseSampler : NoiseSampler
     private readonly double _y;
     private readonly double _z;
 
-    public PerlinNoiseSampler() : this(new())
+    public PerlinNoiseSampler() : this(new JavaRandom())
     {
     }
 
@@ -29,10 +32,14 @@ internal class PerlinNoiseSampler : NoiseSampler
             (_permutations[i], _permutations[j]) = (_permutations[j], _permutations[i]);
             _permutations[i + 256] = _permutations[i];
         }
-
     }
 
-    public double GenerateNoise(double x, double y, double z)
+    public double GenerateNoise(double x, double y)
+    {
+        return GenerateNoise(x, y, 0.0D);
+    }
+
+    private double GenerateNoise(double x, double y, double z)
     {
         x += _x;
         y += _y;
@@ -40,20 +47,9 @@ internal class PerlinNoiseSampler : NoiseSampler
         int xInt = (int)x;
         int yInt = (int)y;
         int zInt = (int)z;
-        if (x < xInt)
-        {
-            --xInt;
-        }
-
-        if (y < yInt)
-        {
-            --yInt;
-        }
-
-        if (z < zInt)
-        {
-            --zInt;
-        }
+        if (x < xInt) --xInt;
+        if (y < yInt) --yInt;
+        if (z < zInt) --zInt;
 
         int xMod255 = xInt & 255;
         int yMod255 = yInt & 255;
@@ -70,46 +66,31 @@ internal class PerlinNoiseSampler : NoiseSampler
         int b = _permutations[xMod255 + 1] + yMod255;
         int ba = _permutations[b] + zMod255;
         int bb = _permutations[b + 1] + zMod255;
+
         return Lerp(sZ, Lerp(sY, Lerp(sX, Grad(_permutations[aa], x, y, z),
-                                                Grad(_permutations[ba], x - 1, y, z)),
-                                    Lerp(sX, Grad(_permutations[ab], x, y - 1, z),
-                                                Grad(_permutations[bb], x - 1, y - 1, z))),
-                        Lerp(sY, Lerp(sX, Grad(_permutations[aa + 1], x, y, z - 1),
-                                                Grad(_permutations[ba + 1], x - 1, y, z - 1)),
-                                    Lerp(sX, Grad(_permutations[ab + 1], x, y - 1, z - 1),
-                                                Grad(_permutations[bb + 1], x - 1, y - 1, z - 1))));
+                    Grad(_permutations[ba], x - 1, y, z)),
+                Lerp(sX, Grad(_permutations[ab], x, y - 1, z),
+                    Grad(_permutations[bb], x - 1, y - 1, z))),
+            Lerp(sY, Lerp(sX, Grad(_permutations[aa + 1], x, y, z - 1),
+                    Grad(_permutations[ba + 1], x - 1, y, z - 1)),
+                Lerp(sX, Grad(_permutations[ab + 1], x, y - 1, z - 1),
+                    Grad(_permutations[bb + 1], x - 1, y - 1, z - 1))));
     }
 
-    public double GenerateNoise(double x, double y)
-    {
-        return GenerateNoise(x, y, 0.0D);
-    }
-
-    public void Sample(double[] buffer,
-        double xStart,
-        double yStart,
-        double zStart,
-        int xSize,
-        int ySize,
-        int zSize,
-        double xFrequency,
-        double yFrequency,
-        double zFrequency,
-        double inverseAmplitude)
+    public void Sample(double[] buffer, double xStart, double yStart, double zStart, int xSize, int ySize, int zSize, double xFrequency, double yFrequency, double zFrequency, double inverseAmplitude)
     {
         int counter = 0;
         double amplitude = 1.0D / inverseAmplitude;
 
-        if (ySize == 1) // 2d (xz)
+        ref double bufRef = ref MemoryMarshal.GetArrayDataReference(buffer);
+
+        if (ySize == 1) // 2D
         {
             for (int x = 0; x < xSize; ++x)
             {
                 double xCoord = (xStart + x) * xFrequency + _x;
                 int xCoordInt = (int)xCoord;
-                if (xCoord < xCoordInt)
-                {
-                    --xCoordInt;
-                }
+                if (xCoord < xCoordInt) --xCoordInt;
 
                 int xMod255 = xCoordInt & 255;
                 xCoord -= xCoordInt;
@@ -120,10 +101,7 @@ internal class PerlinNoiseSampler : NoiseSampler
                 {
                     double zCoord = (zStart + z) * zFrequency + _z;
                     int zCoordInt = (int)zCoord;
-                    if (zCoord < zCoordInt)
-                    {
-                        --zCoordInt;
-                    }
+                    if (zCoord < zCoordInt) --zCoordInt;
 
                     int zMod255 = zCoordInt & 255;
                     zCoord -= zCoordInt;
@@ -135,19 +113,18 @@ internal class PerlinNoiseSampler : NoiseSampler
                     int ba = _permutations[xMod255 + 1];
                     int bb = _permutations[ba] + zMod255;
                     double xLerpZ0 = Lerp(xFinal, Grad(_permutations[ab], xCoord, zCoord),
-                                                    Grad(_permutations[bb], xCoord - 1, 0, zCoord));
+                        Grad(_permutations[bb], xCoord - 1, 0, zCoord));
                     double xLerpZ1 = Lerp(xFinal, Grad(_permutations[ab + 1], xCoord, 0, zCoord - 1),
-                                                    Grad(_permutations[bb + 1], xCoord - 1, 0, zCoord - 1));
+                        Grad(_permutations[bb + 1], xCoord - 1, 0, zCoord - 1));
                     double finalNoise = Lerp(zFinal, xLerpZ0, xLerpZ1);
-                    buffer[counter++] += finalNoise * amplitude;
+
+                    Unsafe.Add(ref bufRef, counter++) += finalNoise * amplitude;
                 }
             }
-
         }
-        else
+        else // 3d
         {
             int oldY = -1;
-            // Don't move these inside the loop
             double xLerpY0Z0 = 0.0D;
             double xLerpY1Z0 = 0.0D;
             double xLerpY0Z1 = 0.0D;
@@ -157,10 +134,7 @@ internal class PerlinNoiseSampler : NoiseSampler
             {
                 double xCoord = (xStart + x) * xFrequency + _x;
                 int xCoordInt = (int)xCoord;
-                if (xCoord < xCoordInt)
-                {
-                    --xCoordInt;
-                }
+                if (xCoord < xCoordInt) --xCoordInt;
 
                 int xMod255 = xCoordInt & 255;
                 xCoord -= xCoordInt;
@@ -171,10 +145,7 @@ internal class PerlinNoiseSampler : NoiseSampler
                 {
                     double zCoord = (zStart + z) * zFrequency + _z;
                     int zCoordInt = (int)zCoord;
-                    if (zCoord < zCoordInt)
-                    {
-                        --zCoordInt;
-                    }
+                    if (zCoord < zCoordInt) --zCoordInt;
 
                     int zMod255 = zCoordInt & 255;
                     zCoord -= zCoordInt;
@@ -185,10 +156,7 @@ internal class PerlinNoiseSampler : NoiseSampler
                     {
                         double yCoord = (yStart + y) * yFrequency + _y;
                         int yCoordInt = (int)yCoord;
-                        if (yCoord < yCoordInt)
-                        {
-                            --yCoordInt;
-                        }
+                        if (yCoord < yCoordInt) --yCoordInt;
 
                         int yMod255 = yCoordInt & 255;
                         yCoord -= yCoordInt;
@@ -205,27 +173,27 @@ internal class PerlinNoiseSampler : NoiseSampler
                             int ba = _permutations[b] + zMod255;
                             int bb = _permutations[b + 1] + zMod255;
                             xLerpY0Z0 = Lerp(xFinal,
-                                        Grad(_permutations[aa], xCoord, yCoord, zCoord),
-                                        Grad(_permutations[ba], xCoord - 1, yCoord, zCoord));
+                                Grad(_permutations[aa], xCoord, yCoord, zCoord),
+                                Grad(_permutations[ba], xCoord - 1, yCoord, zCoord));
                             xLerpY1Z0 = Lerp(xFinal,
-                                        Grad(_permutations[ab], xCoord, yCoord - 1, zCoord),
-                                        Grad(_permutations[bb], xCoord - 1, yCoord - 1, zCoord));
+                                Grad(_permutations[ab], xCoord, yCoord - 1, zCoord),
+                                Grad(_permutations[bb], xCoord - 1, yCoord - 1, zCoord));
                             xLerpY0Z1 = Lerp(xFinal,
-                                        Grad(_permutations[aa + 1], xCoord, yCoord, zCoord - 1),
-                                        Grad(_permutations[ba + 1], xCoord - 1, yCoord, zCoord - 1));
+                                Grad(_permutations[aa + 1], xCoord, yCoord, zCoord - 1),
+                                Grad(_permutations[ba + 1], xCoord - 1, yCoord, zCoord - 1));
                             xLerpY1Z1 = Lerp(xFinal,
-                                        Grad(_permutations[ab + 1], xCoord, yCoord - 1, zCoord - 1),
-                                        Grad(_permutations[bb + 1], xCoord - 1, yCoord - 1, zCoord - 1));
+                                Grad(_permutations[ab + 1], xCoord, yCoord - 1, zCoord - 1),
+                                Grad(_permutations[bb + 1], xCoord - 1, yCoord - 1, zCoord - 1));
                         }
 
                         double yLerpZ0 = Lerp(yFinal, xLerpY0Z0, xLerpY1Z0);
                         double yLerpZ1 = Lerp(yFinal, xLerpY0Z1, xLerpY1Z1);
                         double finalNoise = Lerp(zFinal, yLerpZ0, yLerpZ1);
-                        buffer[counter++] += finalNoise * amplitude;
+
+                        Unsafe.Add(ref bufRef, counter++) += finalNoise * amplitude;
                     }
                 }
             }
-
         }
     }
 }

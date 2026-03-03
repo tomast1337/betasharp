@@ -5,25 +5,19 @@ namespace BetaSharp.Util.Maths.Noise;
 public abstract class NoiseSampler
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int Floor(double num)
+    protected static int Floor(double num)
     {
         return num > 0.0D ? (int)num : (int)num - 1;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double Dot(int[] gradient, double dx, double dy)
-    {
-        return gradient[0] * dx + gradient[1] * dy;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double Lerp(double t, double a, double b)
+    protected static double Lerp(double t, double a, double b)
     {
         return a + t * (b - a);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double Grad(int hash, double x, double y)
+    protected static double Grad(int hash, double x, double y)
     {
         int h = hash & 15;
         double u = (1 - ((h & 8) >> 3)) * x;
@@ -32,7 +26,7 @@ public abstract class NoiseSampler
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double Grad(int hash, double x, double y, double z)
+    protected static double Grad(int hash, double x, double y, double z)
     {
         int h = hash & 15;
         double u = h < 8 ? x : y;
