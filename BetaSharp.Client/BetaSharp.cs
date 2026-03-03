@@ -36,6 +36,7 @@ using BetaSharp.Client.Rendering.Core.Textures;
 using BetaSharp.Client.Rendering.Core.OpenGL;
 using BetaSharp.Registry;
 using System.Runtime;
+using BetaSharp.Recipes;
 
 namespace BetaSharp.Client;
 
@@ -248,9 +249,21 @@ public partial class BetaSharp
 
         try
         {
-            // Initialize registries before loading any data-driven content that relies on them.
-            BlockBootstrap.RegisterAll();
-            ItemBootstrap.RegisterAll();
+            var recipeErrors = RecipeLoader.ValidateRecipes("Assets/Recipes/recipes.json");
+            var smeltingErrors = RecipeLoader.ValidateSmelting("Assets/Recipes/smelting.json");
+            int totalErrors = recipeErrors.Count + smeltingErrors.Count;
+            if (totalErrors > 0)
+            {
+                _logger.LogWarning("Found {TotalErrors} recipe/smelting data issues during validation.", totalErrors);
+                foreach (var error in recipeErrors)
+                {
+                    _logger.LogWarning("Recipe validation error [{Source}] id='{Id}': {Message}", error.Source, error.Id, error.Message);
+                }
+                foreach (var error in smeltingErrors)
+                {
+                    _logger.LogWarning("Smelting validation error [{Source}] id='{Id}': {Message}", error.Source, error.Id, error.Message);
+                }
+            }
 
             var window = Display.getWindow();
             var input = window.CreateInput();

@@ -201,6 +201,24 @@ public static class Stats
         return IdToStat.TryGetValue(id, out var stat) ? stat : null;
     }
 
+    internal static void RegisterInRegistry(StatBase stat)
+    {
+        // Use a simple, stable identifier based on the numeric stat id.
+        var id = new Identifier(Identifier.DefaultNamespace, $"stat.{stat.Id}");
+        Registries.Stats.Register(id, stat);
+    }
+
+    public static StatBase? GetStatByIdentifier(Identifier id)
+    {
+        return Registries.Stats.TryGet(id, out var stat) ? stat : null;
+    }
+
+    public static StatBase? GetStatByIdentifierString(string idString)
+    {
+        var id = Identifier.Parse(idString);
+        return GetStatByIdentifier(id);
+    }
+
     static Stats()
     {
         BetaSharp.Achievements.initialize();
