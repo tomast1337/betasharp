@@ -7,7 +7,7 @@ internal class NetherCaveCarver : Carver
 {
     protected void CarveNetherCavesInChunk(int chunkX, int chunkZ, byte[] blocks, double x, double y, double z)
     {
-        CarveNetherCaves(chunkX, chunkZ, blocks, x, y, z, 1.0F + rand.NextFloat() * 6.0F, 0.0F, 0.0F, -1, -1, 0.5D);
+        CarveNetherCaves(chunkX, chunkZ, blocks, x, y, z, 1.0F + Rand.NextFloat() * 6.0F, 0.0F, 0.0F, -1, -1, 0.5D);
     }
 
     protected void CarveNetherCaves(int chunkX, int chunkZ, byte[] blocks, double x, double y, double z, float tunnelRadius, float yaw, float pitch, int tunnelStep, int tunnelLength, double verticalScale)
@@ -16,10 +16,10 @@ internal class NetherCaveCarver : Carver
         double chunkCenterZ = chunkZ * 16 + 8;
         float yawSpeed = 0.0F;
         float pitchSpeed = 0.0F;
-        JavaRandom caveRand = new(rand.NextLong());
+        JavaRandom caveRand = new(Rand.NextLong());
         if (tunnelLength <= 0)
         {
-            int range = radius * 16 - 16;
+            int range = Radius * 16 - 16;
             tunnelLength = range - caveRand.NextInt(range / 4);
         }
 
@@ -179,29 +179,29 @@ internal class NetherCaveCarver : Carver
 
     protected override void CarveCaves(World world, int chunkX, int chunkZ, int centerChunkX, int centerChunkZ, byte[] blocks)
     {
-        int numCaves = rand.NextInt(rand.NextInt(rand.NextInt(10) + 1) + 1);
-        if (rand.NextInt(5) != 0)
+        int numCaves = Rand.NextInt(Rand.NextInt(Rand.NextInt(10) + 1) + 1);
+        if (Rand.NextInt(5) != 0)
         {
             numCaves = 0;
         }
 
         for (int i = 0; i < numCaves; ++i)
         {
-            double randX = chunkX * 16 + rand.NextInt(16);
-            double randY = rand.NextInt(128);
-            double randZ = chunkZ * 16 + rand.NextInt(16);
+            double randX = chunkX * 16 + Rand.NextInt(16);
+            double randY = Rand.NextInt(128);
+            double randZ = chunkZ * 16 + Rand.NextInt(16);
             int branchCount = 1;
-            if (rand.NextInt(4) == 0)
+            if (Rand.NextInt(4) == 0)
             {
                 CarveNetherCavesInChunk(centerChunkX, centerChunkZ, blocks, randX, randY, randZ);
-                branchCount += rand.NextInt(4);
+                branchCount += Rand.NextInt(4);
             }
 
             for (int branch = 0; branch < branchCount; ++branch)
             {
-                float yaw = rand.NextFloat() * (float)Math.PI * 2.0F;
-                float pitch = (rand.NextFloat() - 0.5F) * 2.0F / 8.0F;
-                float tunnelRadius = rand.NextFloat() * 2.0F + rand.NextFloat();
+                float yaw = Rand.NextFloat() * (float)Math.PI * 2.0F;
+                float pitch = (Rand.NextFloat() - 0.5F) * 2.0F / 8.0F;
+                float tunnelRadius = Rand.NextFloat() * 2.0F + Rand.NextFloat();
                 CarveNetherCaves(centerChunkX, centerChunkZ, blocks, randX, randY, randZ, tunnelRadius * 2.0F, yaw, pitch, 0, 0, 0.5D);
             }
         }

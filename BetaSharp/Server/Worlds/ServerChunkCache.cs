@@ -199,7 +199,7 @@ public class ServerChunkCache : ChunkSource
         }
     }
 
-    public bool Save(bool saveEntities, LoadingDisplay display)
+    public bool Save(bool saveEntities, LoadingDisplay loadingDisplay)
     {
         int var3 = 0;
 

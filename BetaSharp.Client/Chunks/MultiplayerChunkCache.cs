@@ -64,7 +64,7 @@ public class MultiplayerChunkCache : ChunkSource
         return chunk ?? _empty;
     }
 
-    public bool Save(bool bl, LoadingDisplay display)
+    public bool Save(bool bl, LoadingDisplay loadingDisplay)
     {
         return true;
     }
