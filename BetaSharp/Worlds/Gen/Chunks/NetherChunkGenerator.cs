@@ -142,9 +142,9 @@ internal class NetherChunkGenerator : ChunkSource
     {
         byte var4 = 64;
         double var5 = 1.0D / 32.0D;
-        sandBuffer = perlinNoise2.create(sandBuffer, chunkX * 16, chunkZ * 16, 0.0D, 16, 16, 1, var5, var5, 1.0D);
-        gravelBuffer = perlinNoise2.create(gravelBuffer, chunkX * 16, 109.0134D, chunkZ * 16, 16, 1, 16, var5, 1.0D, var5);
-        depthBuffer = perlinNoise3.create(depthBuffer, chunkX * 16, chunkZ * 16, 0.0D, 16, 16, 1, var5 * 2.0D, var5 * 2.0D, var5 * 2.0D);
+        sandBuffer = perlinNoise2.Create(sandBuffer, chunkX * 16, chunkZ * 16, 0.0D, 16, 16, 1, var5, var5, 1.0D);
+        gravelBuffer = perlinNoise2.Create(gravelBuffer, chunkX * 16, 109.0134D, chunkZ * 16, 16, 1, 16, var5, 1.0D, var5);
+        depthBuffer = perlinNoise3.Create(depthBuffer, chunkX * 16, chunkZ * 16, 0.0D, 16, 16, 1, var5 * 2.0D, var5 * 2.0D, var5 * 2.0D);
 
         for (int var7 = 0; var7 < 16; ++var7)
         {
@@ -262,11 +262,11 @@ internal class NetherChunkGenerator : ChunkSource
 
         double var8 = 684.412D;
         double var10 = 2053.236D;
-        scaleNoiseBuffer = scaleNoise.create(scaleNoiseBuffer, x, y, z, sizeX, 1, sizeZ, 1.0D, 0.0D, 1.0D);
-        depthNoiseBuffer = depthNoise.create(depthNoiseBuffer, x, y, z, sizeX, 1, sizeZ, 100.0D, 0.0D, 100.0D);
-        perlinNoiseBuffer = perlinNoise1.create(perlinNoiseBuffer, x, y, z, sizeX, sizeY, sizeZ, var8 / 80.0D, var10 / 60.0D, var8 / 80.0D);
-        minLimitPerlinNoiseBuffer = minLimitPerlinNoise.create(minLimitPerlinNoiseBuffer, x, y, z, sizeX, sizeY, sizeZ, var8, var10, var8);
-        maxLimitPerlinNoiseBuffer = maxLimitPerlinNoise.create(maxLimitPerlinNoiseBuffer, x, y, z, sizeX, sizeY, sizeZ, var8, var10, var8);
+        scaleNoiseBuffer = scaleNoise.Create(scaleNoiseBuffer, x, y, z, sizeX, 1, sizeZ, 1.0D, 0.0D, 1.0D);
+        depthNoiseBuffer = depthNoise.Create(depthNoiseBuffer, x, y, z, sizeX, 1, sizeZ, 100.0D, 0.0D, 100.0D);
+        perlinNoiseBuffer = perlinNoise1.Create(perlinNoiseBuffer, x, y, z, sizeX, sizeY, sizeZ, var8 / 80.0D, var10 / 60.0D, var8 / 80.0D);
+        minLimitPerlinNoiseBuffer = minLimitPerlinNoise.Create(minLimitPerlinNoiseBuffer, x, y, z, sizeX, sizeY, sizeZ, var8, var10, var8);
+        maxLimitPerlinNoiseBuffer = maxLimitPerlinNoise.Create(maxLimitPerlinNoiseBuffer, x, y, z, sizeX, sizeY, sizeZ, var8, var10, var8);
         int var12 = 0;
         int var13 = 0;
         double[] var14 = new double[sizeY];

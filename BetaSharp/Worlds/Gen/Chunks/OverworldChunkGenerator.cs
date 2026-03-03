@@ -248,9 +248,9 @@ internal class OverworldChunkGenerator : ChunkSource
     {
         byte blockZ = 64;
         double chunkBiome = 1.0D / 32.0D;
-        sandBuffer = sandGravelNoise.create(sandBuffer, chunkX * 16, chunkZ * 16, 0.0D, 16, 16, 1, chunkBiome, chunkBiome, 1.0D);
-        gravelBuffer = sandGravelNoise.create(gravelBuffer, chunkX * 16, 109.0134D, chunkZ * 16, 16, 1, 16, chunkBiome, 1.0D, chunkBiome);
-        depthBuffer = depthNoise.create(depthBuffer, chunkX * 16, chunkZ * 16, 0.0D, 16, 16, 1, chunkBiome * 2.0D, chunkBiome * 2.0D, chunkBiome * 2.0D);
+        sandBuffer = sandGravelNoise.Create(sandBuffer, chunkX * 16, chunkZ * 16, 0.0D, 16, 16, 1, chunkBiome, chunkBiome, 1.0D);
+        gravelBuffer = sandGravelNoise.Create(gravelBuffer, chunkX * 16, 109.0134D, chunkZ * 16, 16, 1, 16, chunkBiome, 1.0D, chunkBiome);
+        depthBuffer = depthNoise.Create(depthBuffer, chunkX * 16, chunkZ * 16, 0.0D, 16, 16, 1, chunkBiome * 2.0D, chunkBiome * 2.0D, chunkBiome * 2.0D);
 
         for (int horizontalScale = 0; horizontalScale < 16; ++horizontalScale)
         {
@@ -399,11 +399,11 @@ internal class OverworldChunkGenerator : ChunkSource
         double verticalScale = 684.412D;
         double[] temperatureBuffer = _biomeSource.TemperatureMap;
         double[] downfallBuffer = _biomeSource.DownfallMap;
-        scaleNoiseBuffer = floatingIslandScale.create(scaleNoiseBuffer, x, z, sizeX, sizeZ, 1.121D, 1.121D, 0.5D);
-        depthNoiseBuffer = floatingIslandNoise.create(depthNoiseBuffer, x, z, sizeX, sizeZ, 200.0D, 200.0D, 0.5D);
-        selectorNoiseBuffer = selectorNoise.create(selectorNoiseBuffer, x, y, z, sizeX, sizeY, sizeZ, horizontalScale / 80.0D, verticalScale / 160.0D, horizontalScale / 80.0D);
-        minLimitPerlinNoiseBuffer = minLimitPerlinNoise.create(minLimitPerlinNoiseBuffer, x, y, z, sizeX, sizeY, sizeZ, horizontalScale, verticalScale, horizontalScale);
-        maxLimitPerlinNoiseBuffer = maxLimitPerlinNoise.create(maxLimitPerlinNoiseBuffer, x, y, z, sizeX, sizeY, sizeZ, horizontalScale, verticalScale, horizontalScale);
+        scaleNoiseBuffer = floatingIslandScale.Create(scaleNoiseBuffer, x, z, sizeX, sizeZ, 1.121D, 1.121D, 0.5D);
+        depthNoiseBuffer = floatingIslandNoise.Create(depthNoiseBuffer, x, z, sizeX, sizeZ, 200.0D, 200.0D, 0.5D);
+        selectorNoiseBuffer = selectorNoise.Create(selectorNoiseBuffer, x, y, z, sizeX, sizeY, sizeZ, horizontalScale / 80.0D, verticalScale / 160.0D, horizontalScale / 80.0D);
+        minLimitPerlinNoiseBuffer = minLimitPerlinNoise.Create(minLimitPerlinNoiseBuffer, x, y, z, sizeX, sizeY, sizeZ, horizontalScale, verticalScale, horizontalScale);
+        maxLimitPerlinNoiseBuffer = maxLimitPerlinNoise.Create(maxLimitPerlinNoiseBuffer, x, y, z, sizeX, sizeY, sizeZ, horizontalScale, verticalScale, horizontalScale);
         // Used to iterate 3D noise maps (low, high, selector)
         int xyzIndex = 0;
         // Used to iterate 2D Noise maps (depth, continentalness)
@@ -656,7 +656,7 @@ internal class OverworldChunkGenerator : ChunkSource
 
 	    // Determine the number and type of trees that should be generated
         fraction = 0.5D;
-        int treeDensitySample = (int)((forestNoise.generateNoise(blockX * fraction, blockZ * fraction) / 8.0D + random.NextDouble() * 4.0D + 4.0D) / 3.0D);
+        int treeDensitySample = (int)((forestNoise.GenerateNoise(blockX * fraction, blockZ * fraction) / 8.0D + random.NextDouble() * 4.0D + 4.0D) / 3.0D);
         int numberOfTrees = 0;
         if (random.NextInt(10) == 0)
         {

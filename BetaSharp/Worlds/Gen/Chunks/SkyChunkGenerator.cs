@@ -120,9 +120,9 @@ internal class SkyChunkGenerator : ChunkSource
     public void func_28072_a(int var1, int var2, byte[] var3, Biome[] var4)
     {
         double var5 = 1.0D / 32.0D;
-        field_28079_r = field_28083_n.create(field_28079_r, var1 * 16, var2 * 16, 0.0D, 16, 16, 1, var5, var5, 1.0D);
-        field_28078_s = field_28083_n.create(field_28078_s, var1 * 16, 109.0134D, var2 * 16, 16, 1, 16, var5, 1.0D, var5);
-        field_28077_t = field_28082_o.create(field_28077_t, var1 * 16, var2 * 16, 0.0D, 16, 16, 1, var5 * 2.0D, var5 * 2.0D, var5 * 2.0D);
+        field_28079_r = field_28083_n.Create(field_28079_r, var1 * 16, var2 * 16, 0.0D, 16, 16, 1, var5, var5, 1.0D);
+        field_28078_s = field_28083_n.Create(field_28078_s, var1 * 16, 109.0134D, var2 * 16, 16, 1, 16, var5, 1.0D, var5);
+        field_28077_t = field_28082_o.Create(field_28077_t, var1 * 16, var2 * 16, 0.0D, 16, 16, 1, var5 * 2.0D, var5 * 2.0D, var5 * 2.0D);
 
         for (int var7 = 0; var7 < 16; ++var7)
         {
@@ -209,12 +209,12 @@ internal class SkyChunkGenerator : ChunkSource
         double var10 = 684.412D;
         double[] var12 = world.getBiomeSource().TemperatureMap;
         double[] var13 = world.getBiomeSource().DownfallMap;
-        field_28090_g = field_28096_a.create(field_28090_g, var2, var4, var5, var7, 1.121D, 1.121D, 0.5D);
-        field_28089_h = field_28095_b.create(field_28089_h, var2, var4, var5, var7, 200.0D, 200.0D, 0.5D);
+        field_28090_g = field_28096_a.Create(field_28090_g, var2, var4, var5, var7, 1.121D, 1.121D, 0.5D);
+        field_28089_h = field_28095_b.Create(field_28089_h, var2, var4, var5, var7, 200.0D, 200.0D, 0.5D);
         var8 *= 2.0D;
-        field_28093_d = field_28084_m.create(field_28093_d, var2, var3, var4, var5, var6, var7, var8 / 80.0D, var10 / 160.0D, var8 / 80.0D);
-        field_28092_e = field_28086_k.create(field_28092_e, var2, var3, var4, var5, var6, var7, var8, var10, var8);
-        field_28091_f = field_28085_l.create(field_28091_f, var2, var3, var4, var5, var6, var7, var8, var10, var8);
+        field_28093_d = field_28084_m.Create(field_28093_d, var2, var3, var4, var5, var6, var7, var8 / 80.0D, var10 / 160.0D, var8 / 80.0D);
+        field_28092_e = field_28086_k.Create(field_28092_e, var2, var3, var4, var5, var6, var7, var8, var10, var8);
+        field_28091_f = field_28085_l.Create(field_28091_f, var2, var3, var4, var5, var6, var7, var8, var10, var8);
         int var14 = 0;
         int var15 = 0;
         int var16 = 16 / var5;
@@ -433,7 +433,7 @@ internal class SkyChunkGenerator : ChunkSource
         }
 
         var11 = 0.5D;
-        var13 = (int)((field_28094_c.generateNoise(var4 * var11, var5 * var11) / 8.0D + rand.NextDouble() * 4.0D + 4.0D) / 3.0D);
+        var13 = (int)((field_28094_c.GenerateNoise(var4 * var11, var5 * var11) / 8.0D + rand.NextDouble() * 4.0D + 4.0D) / 3.0D);
         var14 = 0;
         if (rand.NextInt(10) == 0)
         {

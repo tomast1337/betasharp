@@ -1,6 +1,6 @@
 namespace BetaSharp.Util.Maths.Noise;
 
-internal class SimplexNoiseSampler
+internal class SimplexNoiseSampler : NoiseSampler
 {
     private static readonly int[][] grads = [[1, 1, 0], [-1, 1, 0], [1, -1, 0], [-1, -1, 0], [1, 0, 1], [-1, 0, 1], [1, 0, -1], [-1, 0, -1], [0, 1, 1], [0, -1, 1], [0, 1, -1], [0, -1, -1]];
     private readonly int[] _permutations;
@@ -36,17 +36,8 @@ internal class SimplexNoiseSampler
 
     }
 
-    private static int floor(double num)
-    {
-        return num > 0.0D ? (int)num : (int)num - 1;
-    }
 
-    private static double dot(int[] gradient, double dx, double dy)
-    {
-        return gradient[0] * dx + gradient[1] * dy;
-    }
-
-    public void sample(double[] buffer, double x, double z, int width, int depth, double xFrequency, double zFrequency, double amplitude)
+    public void Sample(double[] buffer, double x, double z, int width, int depth, double xFrequency, double zFrequency, double amplitude)
     {
         int counter = 0;
 
@@ -58,8 +49,8 @@ internal class SimplexNoiseSampler
             {
                 double z2 = (z + z1) * zFrequency + _yCoord;
                 double s = (x2 + z2) * F2;
-                int i = floor(x2 + s);
-                int j = floor(z2 + s);
+                int i = NoiseSampler.Floor(x2 + s);
+                int j = NoiseSampler.Floor(z2 + s);
                 double t = (i + j) * G2;
                 double x3 = i - t;
                 double z3 = j - t;
@@ -96,7 +87,7 @@ internal class SimplexNoiseSampler
                 else
                 {
                     t0 *= t0;
-                    n0 = t0 * t0 * dot(grads[gi0], x4, z4);
+                    n0 = t0 * t0 * Dot(grads[gi0], x4, z4);
                 }
 
                 double t1 = 0.5D - x5 * x5 - z5 * z5;
@@ -108,7 +99,7 @@ internal class SimplexNoiseSampler
                 else
                 {
                     t1 *= t1;
-                    n1 = t1 * t1 * dot(grads[gi1], x5, z5);
+                    n1 = t1 * t1 * Dot(grads[gi1], x5, z5);
                 }
 
                 double t2 = 0.5D - x6 * x6 - z6 * z6;
@@ -120,7 +111,7 @@ internal class SimplexNoiseSampler
                 else
                 {
                     t2 *= t2;
-                    n2 = t2 * t2 * dot(grads[gi2], x6, z6);
+                    n2 = t2 * t2 * Dot(grads[gi2], x6, z6);
                 }
 
                 buffer[counter++] += 70.0D * (n0 + n1 + n2) * amplitude;
