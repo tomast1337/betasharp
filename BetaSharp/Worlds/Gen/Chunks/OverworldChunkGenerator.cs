@@ -740,6 +740,11 @@ internal class OverworldChunkGenerator : ChunkSource
             treeFeature.Generate(_world, _random, featureX, _world.getTopY(featureX, featureZ), featureZ);
         }
 
+        // ====================================================================
+        // Calculate vertical shadows so mushrooms know where the sun is.
+        // ====================================================================
+        _world.GetChunk(chunkX, chunkZ).PopulateHeightMap(false);
+
         // Choose an appropriate amount of Dandelions
         byte amountOfDandelions = 0;
         if (chunkBiome == Biome.Forest)

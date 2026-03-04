@@ -95,7 +95,7 @@ public class Chunk
         Dirty = true;
     }
 
-    public virtual void PopulateHeightMap()
+    public virtual void PopulateHeightMap(bool queueHorizontalBleed = true)
     {
         int minHeight = 127;
 
@@ -114,6 +114,7 @@ public class Chunk
                 HeightMap[localZ << 4 | localX] = (byte)y;
                 if (y < minHeight) minHeight = y;
 
+                // 1. Vertical Light Pass (Straight down)
                 if (!World.dimension.HasCeiling)
                 {
                     int lightLevel = 15;
@@ -131,7 +132,11 @@ public class Chunk
                     } while (currentY > 0 && lightLevel > 0);
                 }
 
-                LightGaps(localX, localZ);
+                // 2. Horizontal Light Pass (Only run if requested!)
+                if (queueHorizontalBleed)
+                {
+                    LightGaps(localX, localZ);
+                }
             }
         }
 
