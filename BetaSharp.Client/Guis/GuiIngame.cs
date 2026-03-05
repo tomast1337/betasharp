@@ -16,7 +16,7 @@ namespace BetaSharp.Client.Guis;
 public class GuiIngame : Gui
 {
     private readonly GCMonitor _gcMonitor;
-    private static readonly ItemRenderer _itemRenderer = new();
+    private readonly ItemRenderer _itemRenderer;
     private readonly List<ChatLine> _chatMessageList = new();
     private readonly JavaRandom _rand = new();
     private int _chatScrollPos = 0;
@@ -34,6 +34,7 @@ public class GuiIngame : Gui
     {
         _game = gameInstance;
         _gcMonitor = new GCMonitor();
+        _itemRenderer = new(gameInstance);
     }
 
     private static int HSBtoRGB(float hue, float saturation, float brightness)
@@ -84,6 +85,7 @@ public class GuiIngame : Gui
                     break;
             }
         }
+
         return unchecked((int)(0xFF000000 | ((uint)r << 16) | ((uint)g << 8) | ((uint)b << 0)));
     }
 
@@ -126,6 +128,7 @@ public class GuiIngame : Gui
             DrawTexturedModalRect(scaledWidth / 2 - 7, scaledHeight / 2 - 7, 0, 0, 16, 16);
             GLManager.GL.Disable(GLEnum.Blend);
         }
+
         bool heartBlink = _game.player.hearts / 3 % 2 == 1;
         if (_game.player.hearts < 10)
         {
@@ -540,13 +543,13 @@ public class GuiIngame : Gui
         {
             ++_chatMessageList[i].UpdateCounter;
         }
-
     }
 
     public void stopChatScrollbarDrag()
     {
         _chatScrollbarDragging = false;
     }
+
     public void clearChatMessages()
     {
         _chatMessageList.Clear();
@@ -609,6 +612,4 @@ public class GuiIngame : Gui
         if (_chatScrollPos < 0) _chatScrollPos = 0;
         if (_chatScrollPos > maxScroll) _chatScrollPos = maxScroll;
     }
-
-
 }

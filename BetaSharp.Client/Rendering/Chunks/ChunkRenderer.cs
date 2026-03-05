@@ -1,6 +1,7 @@
 using BetaSharp.Client.Rendering.Chunks.Occlusion;
 using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Client.Rendering.Core.OpenGL;
+using BetaSharp.Client.Rendering.Core.Textures;
 using BetaSharp.Profiling;
 using BetaSharp.Util;
 using BetaSharp.Util.Maths;
@@ -51,6 +52,7 @@ public class ChunkRenderer : IChunkVisibilityVisitor
     private sealed class ChunkDistanceComparer : IComparer<ChunkToMeshInfo>
     {
         public Vector3D<double> Origin;
+
         public int Compare(ChunkToMeshInfo a, ChunkToMeshInfo b)
         {
             double distA = Vector3D.DistanceSquared(ToDoubleVec(a.Pos), Origin);
@@ -62,6 +64,7 @@ public class ChunkRenderer : IChunkVisibilityVisitor
     private sealed class TranslucentDistanceComparer : IComparer<SubChunkRenderer>
     {
         public Vector3D<double> Origin;
+
         public int Compare(SubChunkRenderer? a, SubChunkRenderer? b)
         {
             if (a == null || b == null) return 0;
@@ -99,6 +102,7 @@ public class ChunkRenderer : IChunkVisibilityVisitor
     private readonly ChunkDistanceComparer _chunkDistanceComparer = new();
     private readonly TranslucentDistanceComparer _translucentDistanceComparer = new();
     private int _frameIndex = 0;
+    private TextureManager textureManager;
 
     public bool UseOcclusionCulling { get; set; } = true;
 
@@ -108,10 +112,11 @@ public class ChunkRenderer : IChunkVisibilityVisitor
     public int ChunksRendered { get; private set; }
     public int TranslucentMeshes { get; private set; }
 
-    public ChunkRenderer(World world)
+    public ChunkRenderer(BetaSharp game, World world)
     {
         _meshGenerator = new();
         _world = world;
+        textureManager = game.textureManager;
 
         _chunkShader = new(AssetManager.Instance.getAsset("shaders/chunk.vert").getTextContent(), AssetManager.Instance.getAsset("shaders/chunk.frag").getTextContent());
 
@@ -218,6 +223,7 @@ public class ChunkRenderer : IChunkVisibilityVisitor
                     }
                 }
             }
+
             _visibleRenderers.Clear();
             _visibleRenderers.AddRange(_occludedRenderersBuffer);
             ChunksRendered = _visibleRenderers.Count;
@@ -341,8 +347,9 @@ public class ChunkRenderer : IChunkVisibilityVisitor
                         long? snapshot = version.SnapshotIfNeeded();
                         if (snapshot.HasValue)
                         {
-                            _meshGenerator.MeshChunk(_world, mesh.Pos, snapshot.Value);
+                            _meshGenerator.MeshChunk(_world, mesh.Pos, snapshot.Value, textureManager);
                         }
+
                         continue;
                     }
 
@@ -465,7 +472,7 @@ public class ChunkRenderer : IChunkVisibilityVisitor
                 continue;
             }
 
-            _meshGenerator.MeshChunk(_world, info.Pos, info.Version);
+            _meshGenerator.MeshChunk(_world, info.Pos, info.Version, textureManager);
             _dirtyChunks.RemoveAt(i);
             return;
         }
@@ -487,7 +494,7 @@ public class ChunkRenderer : IChunkVisibilityVisitor
                 continue;
             }
 
-            _meshGenerator.MeshChunk(_world, update.Pos, update.Version);
+            _meshGenerator.MeshChunk(_world, update.Pos, update.Version, textureManager);
             _lightingUpdates.RemoveAt(i);
             return;
         }
@@ -616,7 +623,8 @@ public class ChunkRenderer : IChunkVisibilityVisitor
 
     public bool MarkDirty(Vector3D<int> chunkPos, bool priority = false)
     {
-        if (!_world.isRegionLoaded(chunkPos.X - 1, chunkPos.Y - 1, chunkPos.Z - 1, chunkPos.X + SubChunkRenderer.Size + 1, chunkPos.Y + SubChunkRenderer.Size + 1, chunkPos.Z + SubChunkRenderer.Size + 1) | !IsChunkInRenderDistance(chunkPos, _lastViewPos))
+        if (!_world.isRegionLoaded(chunkPos.X - 1, chunkPos.Y - 1, chunkPos.Z - 1, chunkPos.X + SubChunkRenderer.Size + 1, chunkPos.Y + SubChunkRenderer.Size + 1, chunkPos.Z + SubChunkRenderer.Size + 1) |
+            !IsChunkInRenderDistance(chunkPos, _lastViewPos))
             return false;
 
         if (!_chunkVersions.TryGetValue(chunkPos, out ChunkMeshVersion? version))
@@ -624,6 +632,7 @@ public class ChunkRenderer : IChunkVisibilityVisitor
             version = ChunkMeshVersion.Get();
             _chunkVersions[chunkPos] = version;
         }
+
         version.MarkDirty();
 
         long? snapshot = version.SnapshotIfNeeded();
@@ -716,6 +725,7 @@ public class ChunkRenderer : IChunkVisibilityVisitor
         {
             version.Release();
         }
+
         _chunkVersions.Clear();
     }
 }

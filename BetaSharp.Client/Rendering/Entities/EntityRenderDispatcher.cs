@@ -14,7 +14,7 @@ namespace BetaSharp.Client.Rendering.Entities;
 public class EntityRenderDispatcher
 {
     private readonly Dictionary<Type, EntityRenderer> entityRenderMap = [];
-    public static EntityRenderDispatcher instance = new();
+    public  EntityRenderDispatcher instance;
     private TextRenderer fontRenderer;
     public static double offsetX;
     public static double offsetY;
@@ -30,37 +30,39 @@ public class EntityRenderDispatcher
     public double x;
     public double y;
     public double z;
+    BetaSharp game
 
-    private EntityRenderDispatcher()
+    private EntityRenderDispatcher(BetaSharp game)
     {
-        RegisterRenderer(typeof(EntitySpider), new SpiderEntityRenderer());
-        RegisterRenderer(typeof(EntityPig), new PigEntityRenderer(new ModelPig(), new ModelPig(0.5F), 0.7F));
-        RegisterRenderer(typeof(EntitySheep), new SheepEntityRenderer(new ModelSheep2(), new ModelSheep1(), 0.7F));
-        RegisterRenderer(typeof(EntityCow), new CowEntityRenderer(new ModelCow(), 0.7F));
-        RegisterRenderer(typeof(EntityWolf), new WolfEntityRenderer(new ModelWolf(), 0.5F));
-        RegisterRenderer(typeof(EntityChicken), new ChickenEntityRenderer(new ModelChicken(), 0.3F));
-        RegisterRenderer(typeof(EntityCreeper), new CreeperEntityRenderer());
-        RegisterRenderer(typeof(EntitySkeleton), new UndeadEntityRenderer(new ModelSkeleton(), 0.5F));
-        RegisterRenderer(typeof(EntityZombie), new UndeadEntityRenderer(new ModelZombie(), 0.5F));
-        RegisterRenderer(typeof(EntitySlime), new SlimeEntityRenderer(new ModelSlime(16), new ModelSlime(0), 0.25F));
-        RegisterRenderer(typeof(EntityPlayer), new PlayerEntityRenderer());
-        RegisterRenderer(typeof(EntityGiantZombie), new GiantEntityRenderer(new ModelZombie(), 0.5F, 6.0F));
-        RegisterRenderer(typeof(EntityGhast), new GhastEntityRenderer());
-        RegisterRenderer(typeof(EntitySquid), new SquidEntityRenderer(new ModelSquid(), 0.7F));
-        RegisterRenderer(typeof(EntityLiving), new LivingEntityRenderer(new ModelBiped(), 0.5F));
-        RegisterRenderer(typeof(Entity), new BoxEntityRenderer());
-        RegisterRenderer(typeof(EntityPainting), new PaintingEntityRenderer());
-        RegisterRenderer(typeof(EntityArrow), new ArrowEntityRenderer());
-        RegisterRenderer(typeof(EntitySnowball), new ProjectileEntityRenderer(Item.Snowball.getTextureId(0)));
-        RegisterRenderer(typeof(EntityEgg), new ProjectileEntityRenderer(Item.Egg.getTextureId(0)));
-        RegisterRenderer(typeof(EntityFireball), new FireballEntityRenderer());
-        RegisterRenderer(typeof(EntityItem), new ItemRenderer());
-        RegisterRenderer(typeof(EntityTNTPrimed), new TntEntityRenderer());
-        RegisterRenderer(typeof(EntityFallingSand), new FallingBlockEntityRenderer());
-        RegisterRenderer(typeof(EntityMinecart), new MinecartEntityRenderer());
-        RegisterRenderer(typeof(EntityBoat), new BoatEntityRenderer());
-        RegisterRenderer(typeof(EntityFish), new FishingBobberEntityRenderer());
-        RegisterRenderer(typeof(EntityLightningBolt), new LightningEntityRenderer());
+        this.game = game;
+        RegisterRenderer(typeof(EntitySpider), new SpiderEntityRenderer(),game);
+        RegisterRenderer(typeof(EntityPig), new PigEntityRenderer(new ModelPig(), new ModelPig(0.5F), 0.7F),game);
+        RegisterRenderer(typeof(EntitySheep), new SheepEntityRenderer(new ModelSheep2(), new ModelSheep1(), 0.7F),game);
+        RegisterRenderer(typeof(EntityCow), new CowEntityRenderer(new ModelCow(), 0.7F),game);
+        RegisterRenderer(typeof(EntityWolf), new WolfEntityRenderer(new ModelWolf(), 0.5F),game);
+        RegisterRenderer(typeof(EntityChicken), new ChickenEntityRenderer(new ModelChicken(), 0.3F),game);
+        RegisterRenderer(typeof(EntityCreeper), new CreeperEntityRenderer(),game);
+        RegisterRenderer(typeof(EntitySkeleton), new UndeadEntityRenderer(new ModelSkeleton(), 0.5F),game);
+        RegisterRenderer(typeof(EntityZombie), new UndeadEntityRenderer(new ModelZombie(), 0.5F),game);
+        RegisterRenderer(typeof(EntitySlime), new SlimeEntityRenderer(new ModelSlime(16), new ModelSlime(0), 0.25F),game);
+        RegisterRenderer(typeof(EntityPlayer), new PlayerEntityRenderer(),game);
+        RegisterRenderer(typeof(EntityGiantZombie), new GiantEntityRenderer(new ModelZombie(), 0.5F, 6.0F),game);
+        RegisterRenderer(typeof(EntityGhast), new GhastEntityRenderer(),game);
+        RegisterRenderer(typeof(EntitySquid), new SquidEntityRenderer(new ModelSquid(), 0.7F),game);
+        RegisterRenderer(typeof(EntityLiving), new LivingEntityRenderer(new ModelBiped(), 0.5F),game);
+        RegisterRenderer(typeof(Entity), new BoxEntityRenderer(),game);
+        RegisterRenderer(typeof(EntityPainting), new PaintingEntityRenderer(),game);
+        RegisterRenderer(typeof(EntityArrow), new ArrowEntityRenderer(),game);
+        RegisterRenderer(typeof(EntitySnowball), new ProjectileEntityRenderer(Item.Snowball.getTextureId(0)),game);
+        RegisterRenderer(typeof(EntityEgg), new ProjectileEntityRenderer(Item.Egg.getTextureId(0)),game);
+        RegisterRenderer(typeof(EntityFireball), new FireballEntityRenderer(),game);
+        RegisterRenderer(typeof(EntityItem), new ItemRenderer(game),game);
+        RegisterRenderer(typeof(EntityTNTPrimed), new TntEntityRenderer(),game);
+        RegisterRenderer(typeof(EntityFallingSand), new FallingBlockEntityRenderer(),game);
+        RegisterRenderer(typeof(EntityMinecart), new MinecartEntityRenderer(),game);
+        RegisterRenderer(typeof(EntityBoat), new BoatEntityRenderer(),game);
+        RegisterRenderer(typeof(EntityFish), new FishingBobberEntityRenderer(),game);
+        RegisterRenderer(typeof(EntityLightningBolt), new LightningEntityRenderer(),game);
 
         foreach (var render in entityRenderMap.Values)
         {
@@ -68,8 +70,9 @@ public class EntityRenderDispatcher
         }
     }
 
-    private void RegisterRenderer(Type type, EntityRenderer render)
+    private void RegisterRenderer(Type type, EntityRenderer render,BetaSharp game)
     {
+        instance = new(game);
         entityRenderMap[type] = render;
     }
 
@@ -78,7 +81,7 @@ public class EntityRenderDispatcher
         if (!entityRenderMap.TryGetValue(type, out EntityRenderer? entityRenderer) && type != typeof(Entity))
         {
             entityRenderer = GetEntityClassRenderObject(type.BaseType);
-            RegisterRenderer(type, entityRenderer);
+            RegisterRenderer(type, entityRenderer,game);
         }
 
         return entityRenderer;
@@ -134,10 +137,9 @@ public class EntityRenderDispatcher
         EntityRenderer var10 = GetEntityRenderObject(target);
         if (var10 != null)
         {
-            var10.render(target, x, y, z, yaw, tickDelta);
+            var10.render(target, textureManager, x, y, z, yaw, tickDelta);
             var10.PostRender(target, new Vec3D(x, y, z), yaw, tickDelta);
         }
-
     }
 
     public void func_852_a(World var1)
