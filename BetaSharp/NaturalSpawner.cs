@@ -3,7 +3,6 @@ using BetaSharp.Blocks;
 using BetaSharp.Entities;
 using BetaSharp.PathFinding;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Generation.Biomes;
 

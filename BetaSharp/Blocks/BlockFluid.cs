@@ -1,7 +1,6 @@
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Entities;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.Core;
 using Silk.NET.Maths;
 

@@ -1,5 +1,4 @@
 using BetaSharp.Client.Input;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Storage;
 

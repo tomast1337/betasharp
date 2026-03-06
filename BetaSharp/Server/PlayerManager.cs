@@ -7,7 +7,6 @@ using BetaSharp.Server.Network;
 using BetaSharp.Server.Worlds;
 using BetaSharp.Util;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Dimensions;
 

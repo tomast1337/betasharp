@@ -3,7 +3,6 @@ using BetaSharp.Items;
 using BetaSharp.NBT;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.Core;
 
 namespace BetaSharp.Entities;

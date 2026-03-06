@@ -1,6 +1,5 @@
 using System.Runtime.CompilerServices;
 using BetaSharp.Blocks;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.Core;
 
 namespace BetaSharp.Client.Rendering.Chunks.Occlusion;

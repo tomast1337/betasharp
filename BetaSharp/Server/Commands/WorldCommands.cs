@@ -1,7 +1,6 @@
 using BetaSharp.Entities;
 using BetaSharp.Network.Packets.S2CPlay;
 using BetaSharp.Rules;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.Core;
 
 namespace BetaSharp.Server.Commands;

@@ -6,7 +6,6 @@ using BetaSharp.Network.Packets.Play;
 using BetaSharp.Network.Packets.S2CPlay;
 using BetaSharp.Server.Internal;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.Core;
 using java.lang;
 using Microsoft.Extensions.Logging;

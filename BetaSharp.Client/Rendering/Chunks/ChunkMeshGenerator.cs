@@ -3,7 +3,6 @@ using BetaSharp.Client.Rendering.Blocks;
 using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Util;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.Core;
 using Silk.NET.Maths;
 

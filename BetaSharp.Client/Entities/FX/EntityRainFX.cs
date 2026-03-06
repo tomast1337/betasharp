@@ -2,7 +2,6 @@ using BetaSharp.Blocks;
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.Core;
 
 namespace BetaSharp.Client.Entities.FX;

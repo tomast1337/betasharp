@@ -1,6 +1,5 @@
 using BetaSharp.Entities;
 using BetaSharp.Network.Packets;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.Core;
 
 namespace BetaSharp.Items;

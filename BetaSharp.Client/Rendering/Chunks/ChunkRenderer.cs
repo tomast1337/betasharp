@@ -4,7 +4,6 @@ using BetaSharp.Client.Rendering.Core.OpenGL;
 using BetaSharp.Profiling;
 using BetaSharp.Util;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.Core;
 using Microsoft.Extensions.Logging;
 using Silk.NET.Maths;
