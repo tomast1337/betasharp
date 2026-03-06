@@ -209,14 +209,14 @@ public class WorldRenderer : IWorldAccess
             BlockEntityRenderer.StaticPlayerX = var4.lastTickX + (var4.x - var4.lastTickX) * (double)var3;
             BlockEntityRenderer.StaticPlayerY = var4.lastTickY + (var4.y - var4.lastTickY) * (double)var3;
             BlockEntityRenderer.StaticPlayerZ = var4.lastTickZ + (var4.z - var4.lastTickZ) * (double)var3;
-            List<Entity> var5 = world.getEntities();
+            List<Entity> var5 = world.Entities.Entities;
             countEntitiesTotal = var5.Count;
 
             int var6;
             Entity var7;
-            for (var6 = 0; var6 < world.globalEntities.Count; ++var6)
+            for (var6 = 0; var6 < world.Entities.GlobalEntities.Count; ++var6)
             {
-                var7 = world.globalEntities[var6];
+                var7 = world.Entities.GlobalEntities[var6];
                 ++countEntitiesRendered;
                 if (var7.shouldRender(var1))
                 {
@@ -233,6 +233,11 @@ public class WorldRenderer : IWorldAccess
                     {
                         if (living.deathTime >= 20)
                         {
+                            // TODO (Architecture): The Renderer is actively mutating the global game state here.
+                            // Removing entities from the master list should ONLY happen in EntityManager.TickEntities().
+                            // If the Render loop and Tick loop ever run on separate threads, this RemoveAt call
+                            // will throw a "Collection was modified" exception and crash the game.
+                            // For now, it works, but this list needs to be treated as read-only in the future.
                             var5.RemoveAt(var6--);
                             continue;
                         }
@@ -264,9 +269,9 @@ public class WorldRenderer : IWorldAccess
                 }
             }
 
-            for (var6 = 0; var6 < world.blockEntities.Count; ++var6)
+            for (var6 = 0; var6 < world.Entities.BlockEntities.Count; ++var6)
             {
-                BlockEntity entity = world.blockEntities[var6];
+                BlockEntity entity = world.Entities.BlockEntities[var6];
                 if (!entity.isRemoved() && culler.isBoundingBoxInFrustum(new Box(entity.X, entity.Y, entity.Z, entity.X + 1, entity.Y + 1, entity.Z + 1)))
                 {
                     BlockEntityRenderer.Instance.RenderTileEntity(entity, var3);

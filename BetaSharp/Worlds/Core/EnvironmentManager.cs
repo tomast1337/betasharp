@@ -144,19 +144,19 @@ public class EnvironmentManager
 
     public void UpdateSleepingPlayers()
     {
-        _allPlayersSleeping = _world.players.Count > 0 && _world.players.All(p => p.isSleeping());
+        _allPlayersSleeping = _world.Entities.Players.Count > 0 && _world.Entities.Players.All(p => p.isSleeping());
     }
 
     public bool CanSkipNight()
     {
         if (!_allPlayersSleeping || _world.isRemote) return false;
-        return _world.players.All(player => player.isPlayerFullyAsleep());
+        return _world.Entities.Players.All(player => player.isPlayerFullyAsleep());
     }
 
     public void AfterSkipNight()
     {
         _allPlayersSleeping = false;
-        foreach (var player in _world.players.Where(p => p.isSleeping()))
+        foreach (var player in _world.Entities.Players.Where(p => p.isSleeping()))
         {
             player.wakeUp(false, false, true);
         }

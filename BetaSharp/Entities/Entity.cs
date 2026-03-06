@@ -14,8 +14,8 @@ public abstract class Entity
     public int id = nextEntityID++;
     public double renderDistanceWeight = 1.0D;
     public bool preventEntitySpawning = false;
-    public Entity passenger;
-    public Entity vehicle;
+    public Entity? passenger;
+    public Entity? vehicle;
     public World world;
     public double prevX;
     public double prevY;
@@ -112,7 +112,7 @@ public abstract class Entity
             while (y > 0.0D)
             {
                 setPosition(x, y, z);
-                if (world.GetEntityCollisionsScratch(this, boundingBox).Count == 0)
+                if (world.Entities.GetEntityCollisionsScratch(this, boundingBox).Count == 0)
                 {
                     break;
                 }
@@ -293,7 +293,7 @@ public abstract class Entity
     public bool getEntitiesInside(double x, double y, double z)
     {
         Box box = boundingBox.Offset(x, y, z);
-        var entitiesInbound = world.GetEntityCollisionsScratch(this, box);
+        var entitiesInbound = world.Entities.GetEntityCollisionsScratch(this, box);
         return entitiesInbound.Count > 0 ? false : !world.isBoxSubmergedInFluid(box);
     }
 
@@ -330,7 +330,7 @@ public abstract class Entity
             if (var18)
             {
                 double var19;
-                for (var19 = 0.05D; x != 0.0D && world.GetEntityCollisionsScratch(this, boundingBox.Offset(x, -1.0D, 0.0D)).Count == 0; var11 = x)
+                for (var19 = 0.05D; x != 0.0D && world.Entities.GetEntityCollisionsScratch(this, boundingBox.Offset(x, -1.0D, 0.0D)).Count == 0; var11 = x)
                 {
                     if (x < var19 && x >= -var19)
                     {
@@ -346,7 +346,7 @@ public abstract class Entity
                     }
                 }
 
-                for (; z != 0.0D && world.GetEntityCollisionsScratch(this, boundingBox.Offset(0.0D, -1.0D, z)).Count == 0; var15 = z)
+                for (; z != 0.0D && world.Entities.GetEntityCollisionsScratch(this, boundingBox.Offset(0.0D, -1.0D, z)).Count == 0; var15 = z)
                 {
                     if (z < var19 && z >= -var19)
                     {
@@ -363,7 +363,7 @@ public abstract class Entity
                 }
             }
 
-            var entitiesInbound = world.GetEntityCollisionsScratch(this, boundingBox.Stretch(x, y, z));
+            var entitiesInbound = world.Entities.GetEntityCollisionsScratch(this, boundingBox.Stretch(x, y, z));
 
             for (int var20 = 0; var20 < entitiesInbound.Count; ++var20)
             {
@@ -420,7 +420,7 @@ public abstract class Entity
                 z = var15;
                 Box var27 = boundingBox;
                 boundingBox = var17;
-                entitiesInbound = world.GetEntityCollisionsScratch(this, boundingBox.Stretch(var11, y, var15));
+                entitiesInbound = world.Entities.GetEntityCollisionsScratch(this, boundingBox.Stretch(var11, y, var15));
 
                 for (var28 = 0; var28 < entitiesInbound.Count; ++var28)
                 {
@@ -1031,7 +1031,7 @@ public abstract class Entity
     {
         EntityItem var3 = new EntityItem(world, x, y + (double)var2, z, var1);
         var3.delayBeforeCanPickup = 10;
-        world.SpawnEntity(var3);
+        world.Entities.SpawnEntity(var3);
         return var3;
     }
 
@@ -1151,7 +1151,7 @@ public abstract class Entity
         return (double)height * 0.75D;
     }
 
-    public virtual void setVehicle(Entity entity)
+    public virtual void setVehicle(Entity? entity)
     {
         vehiclePitchDelta = 0.0D;
         vehicleYawDelta = 0.0D;
@@ -1192,7 +1192,7 @@ public abstract class Entity
     {
         setPosition(x, y, z);
         setRotation(var7, var8);
-        var var10 = world.GetEntityCollisionsScratch(this, boundingBox.Contract(1.0D / 32.0D, 0.0D, 1.0D / 32.0D));
+        var var10 = world.Entities.GetEntityCollisionsScratch(this, boundingBox.Contract(1.0D / 32.0D, 0.0D, 1.0D / 32.0D));
         if (var10.Count > 0)
         {
             double var11 = 0.0D;

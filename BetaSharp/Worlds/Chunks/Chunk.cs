@@ -448,7 +448,7 @@ public class Chunk
         int localZ = blockEntity.Z - Z * 16;
         SetBlockEntity(localX, blockEntity.Y, localZ, blockEntity);
 
-        if (Loaded) World.blockEntities.Add(blockEntity);
+        if (Loaded) World.Entities.BlockEntities.Add(blockEntity);
     }
 
     public virtual void SetBlockEntity(int localX, int y, int localZ, BlockEntity blockEntity)
@@ -483,11 +483,11 @@ public class Chunk
     public virtual void Load()
     {
         Loaded = true;
-        World.processBlockUpdates(BlockEntities.Values);
+        World.Entities.ProcessBlockUpdates(BlockEntities.Values);
 
         foreach (List<Entity> list in Entities)
         {
-            World.addEntities(list);
+            World.Entities.AddEntities(list);
         }
     }
 
@@ -502,7 +502,7 @@ public class Chunk
 
         for (int var3 = 0; var3 < Entities.Length; ++var3)
         {
-            World.unloadEntities(Entities[var3]);
+            World.Entities.UnloadEntities(Entities[var3]);
         }
 
     }

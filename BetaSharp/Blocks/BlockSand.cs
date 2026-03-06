@@ -43,7 +43,7 @@ internal class BlockSand : Block
             if (!fallInstantly && world.isRegionLoaded(x - checkRadius, y - checkRadius, z - checkRadius, x + checkRadius, y + checkRadius, z + checkRadius))
             {
                 EntityFallingSand fallingSand = new EntityFallingSand(world, (double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), id);
-                world.SpawnEntity(fallingSand);
+                world.Entities.SpawnEntity(fallingSand);
             }
             else
             {

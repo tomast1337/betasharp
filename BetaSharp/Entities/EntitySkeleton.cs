@@ -56,7 +56,7 @@ public class EntitySkeleton : EntityMonster
                 double targetHeightOffset = entity.y + (double)entity.getEyeHeight() - (double)0.2F - arrow.y;
                 float distanceFactor = MathHelper.Sqrt(dx * dx + dy * dy) * 0.2F;
                 world.playSound(this, "random.bow", 1.0F, 1.0F / (random.NextFloat() * 0.4F + 0.8F));
-                world.SpawnEntity(arrow);
+                world.Entities.SpawnEntity(arrow);
                 arrow.setArrowHeading(dx, targetHeightOffset + (double)distanceFactor, dy, 0.6F, 12.0F);
                 attackTime = 30;
             }

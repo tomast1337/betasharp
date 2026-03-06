@@ -11,7 +11,6 @@ using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Chunks;
 using BetaSharp.Worlds.Dimensions;
-using BetaSharp.Worlds.Generation.Biomes;
 using BetaSharp.Worlds.Generation.Biomes.Source;
 using BetaSharp.Worlds.Lighting;
 using BetaSharp.Worlds.Mechanics;
@@ -32,6 +31,7 @@ public abstract class World : IBlockAccess
     protected List<IWorldAccess> EventListeners = [];
 
     public readonly EnvironmentManager Environment;
+    public readonly EntityManager Entities;
 
     public RuleSet Rules { get; protected set; }
     public bool isNewWorld;
@@ -53,24 +53,7 @@ public abstract class World : IBlockAccess
 
     private readonly long _worldTimeMask = 0xFFFFFFL;
 
-    public List<EntityPlayer> players = [];
-    private bool _allPlayersSleeping;
-    public List<Entity> entities = [];
-    private readonly Dictionary<int, Entity> _entitiesById = new();
-    public List<Entity> globalEntities = [];
-    private readonly List<Entity> _entitiesToUnload = [];
-
-    [ThreadStatic] private static List<Entity>? _tempCollisionEntities;
-
-    // Reusable scratch list for GetEntityCollisionsScratch — avoids per-call List<Box> allocation.
-    [ThreadStatic] private static List<Box>? _tempCollisionBoxes;
-
-    // Reusable scratch list for GetEntitiesScratch — avoids per-call List<Entity> allocation.
-    [ThreadStatic] private static List<Entity>? _tempCollisionEntitiesResult;
-
     private readonly HashSet<ChunkPos> _activeChunks = new();
-    public List<BlockEntity> blockEntities = [];
-    private readonly List<BlockEntity> _blockEntityUpdateQueue = [];
 
     public int ambientDarkness = 0;
     private readonly List<LightUpdate> _lightingQueue = [];
@@ -102,9 +85,21 @@ public abstract class World : IBlockAccess
         Rules = Properties.RulesTag != null
             ? RuleSet.FromNBT(RuleRegistry.Instance, Properties.RulesTag)
             : new RuleSet(RuleRegistry.Instance);
+
+        Entities = new EntityManager(this);
         Environment = new EnvironmentManager(this);
+
         Environment.PrepareWeather();
         Environment.UpdateSkyBrightness();
+
+        Entities.OnEntityAdded += (ent) =>
+        {
+            for (int i = 0; i < EventListeners.Count; ++i) EventListeners[i].notifyEntityAdded(ent);
+        };
+        Entities.OnEntityRemoved += (ent) =>
+        {
+            for (int i = 0; i < EventListeners.Count; ++i) EventListeners[i].notifyEntityRemoved(ent);
+        };
     }
 
     protected World(IWorldStorage worldStorage, string levelName, long seed, Dimension? dim)
@@ -152,9 +147,20 @@ public abstract class World : IBlockAccess
             initializeSpawnPoint();
         }
 
+        Entities = new EntityManager(this);
         Environment = new EnvironmentManager(this);
+
         Environment.PrepareWeather();
         Environment.UpdateSkyBrightness();
+
+        Entities.OnEntityAdded += (ent) =>
+        {
+            for (int i = 0; i < EventListeners.Count; ++i) EventListeners[i].notifyEntityAdded(ent);
+        };
+        Entities.OnEntityRemoved += (ent) =>
+        {
+            for (int i = 0; i < EventListeners.Count; ++i) EventListeners[i].notifyEntityRemoved(ent);
+        };
     }
 
     public BiomeSource getBiomeSource()
@@ -234,7 +240,7 @@ public abstract class World : IBlockAccess
                 Properties.PlayerTag = null;
             }
 
-            SpawnEntity(player);
+            Entities.SpawnEntity(player);
         }
         catch (Exception e)
         {
@@ -274,7 +280,7 @@ public abstract class World : IBlockAccess
         Properties.RulesTag = new NBTTagCompound();
         Rules.WriteToNBT(Properties.RulesTag);
 
-        Storage.Save(Properties, players.ToList());
+        Storage.Save(Properties, Entities.Players.ToList());
         Profiler.Stop("saveWorldInfoAndPlayer");
 
         Profiler.Start("saveAllData");
@@ -922,93 +928,6 @@ public abstract class World : IBlockAccess
         }
     }
 
-    public virtual bool spawnGlobalEntity(Entity entity)
-    {
-        globalEntities.Add(entity);
-        return true;
-    }
-
-    public virtual bool SpawnEntity(Entity entity)
-    {
-        int chunkX = MathHelper.Floor(entity.x / 16.0D);
-        int chunkZ = MathHelper.Floor(entity.z / 16.0D);
-        bool isPlayer = entity is EntityPlayer;
-
-        if (!isPlayer && !hasChunk(chunkX, chunkZ))
-        {
-            return false;
-        }
-
-        if (entity is EntityPlayer player)
-        {
-            players.Add(player);
-            Environment.UpdateSleepingPlayers();
-        }
-
-        GetChunk(chunkX, chunkZ).AddEntity(entity);
-        entities.Add(entity);
-        _entitiesById[entity.id] = entity;
-        NotifyEntityAdded(entity);
-        return true;
-    }
-
-    protected virtual void NotifyEntityAdded(Entity entity)
-    {
-        for (int i = 0; i < EventListeners.Count; ++i)
-        {
-            EventListeners[i].notifyEntityAdded(entity);
-        }
-    }
-
-    protected virtual void NotifyEntityRemoved(Entity entity)
-    {
-        for (int i = 0; i < EventListeners.Count; ++i)
-        {
-            EventListeners[i].notifyEntityRemoved(entity);
-        }
-    }
-
-    public virtual void Remove(Entity entity)
-    {
-        if (entity.passenger != null)
-        {
-            entity.passenger.setVehicle(null);
-        }
-
-        if (entity.vehicle != null)
-        {
-            entity.setVehicle(null);
-        }
-
-        entity.markDead();
-        if (entity is EntityPlayer)
-        {
-            players.Remove((EntityPlayer)entity);
-            Environment.UpdateSleepingPlayers();
-        }
-    }
-
-    public void serverRemove(Entity entity)
-    {
-        entity.markDead();
-        if (entity is EntityPlayer player)
-        {
-            players.Remove(player);
-            Environment.UpdateSleepingPlayers();
-        }
-
-        int chunkX = entity.chunkX;
-        int chunkZ = entity.chunkZ;
-        if (entity.isPersistent && hasChunk(chunkX, chunkZ))
-        {
-            GetChunk(chunkX, chunkZ).RemoveEntity(entity);
-        }
-
-        entities.Remove(entity);
-        _entitiesById.Remove(entity.id);
-        NotifyEntityRemoved(entity);
-    }
-
     public void addWorldAccess(IWorldAccess worldAccess)
     {
         EventListeners.Add(worldAccess);
@@ -1018,85 +937,6 @@ public abstract class World : IBlockAccess
     {
         EventListeners.Remove(worldAccess);
     }
-
-    public List<Box> GetEntityCollisions(Entity entity, Box area)
-    {
-        return GetEntityCollisions(entity, area, new List<Box>());
-    }
-
-    /// <summary>
-    /// Like <see cref="GetEntityCollisions(Entity,Box)"/> but writes into a reused thread-static
-    /// scratch list instead of allocating a new one. The returned list is only valid until the
-    /// next call to this method on the same thread — do not store it.
-    /// </summary>
-    internal List<Box> GetEntityCollisionsScratch(Entity entity, Box area)
-    {
-        _tempCollisionBoxes ??= new List<Box>();
-        _tempCollisionBoxes.Clear();
-        return GetEntityCollisions(entity, area, _tempCollisionBoxes);
-    }
-
-    private List<Box> GetEntityCollisions(Entity entity, Box area, List<Box> collidingBoundingBoxes)
-    {
-        int minX = MathHelper.Floor(area.MinX);
-        int maxX = MathHelper.Floor(area.MaxX + 1.0D);
-        int minY = MathHelper.Floor(area.MinY);
-        int maxY = MathHelper.Floor(area.MaxY + 1.0D);
-        int minZ = MathHelper.Floor(area.MinZ);
-        int maxZ = MathHelper.Floor(area.MaxZ + 1.0D);
-
-        for (int x = minX; x < maxX; ++x)
-        {
-            for (int z = minZ; z < maxZ; ++z)
-            {
-                if (isPosLoaded(x, 64, z))
-                {
-                    for (int y = minY - 1; y < maxY; ++y)
-                    {
-                        Block block = Block.Blocks[getBlockId(x, y, z)];
-                        if (block != null)
-                        {
-                            block.addIntersectingBoundingBox(this, x, y, z, area, collidingBoundingBoxes);
-                        }
-                    }
-                }
-            }
-        }
-
-        const double expansion = 0.25D;
-        _tempCollisionEntities ??= new List<Entity>();
-        _tempCollisionEntities.Clear();
-
-        getEntities(entity, area.Expand(expansion, expansion, expansion), _tempCollisionEntities);
-
-        int collisionCount = 0;
-        int maxCollisions = Rules.GetInt(DefaultRules.MaxCollisions);
-
-        for (int i = 0; i < _tempCollisionEntities.Count; ++i)
-        {
-            if (collisionCount >= maxCollisions)
-            {
-                break;
-            }
-
-            Box? entityBox = _tempCollisionEntities[i].getBoundingBox();
-            if (entityBox != null && entityBox.Value.Intersects(area))
-            {
-                collidingBoundingBoxes.Add(entityBox.Value);
-                collisionCount++;
-            }
-
-            entityBox = entity.getCollisionAgainstShape(_tempCollisionEntities[i]);
-            if (entityBox != null && entityBox.Value.Intersects(area))
-            {
-                collidingBoundingBoxes.Add(entityBox.Value);
-                collisionCount++;
-            }
-        }
-
-        return collidingBoundingBoxes;
-    }
-
 
     public float getTime(float delta)
     {
@@ -1181,241 +1021,6 @@ public abstract class World : IBlockAccess
             }
         }
     }
-
-    public void tickEntities()
-    {
-        Profiler.Start("updateEntites.updateWeatherEffects");
-        for (int i = 0; i < globalEntities.Count; ++i)
-        {
-            Entity globalEntity = globalEntities[i];
-            globalEntity.tick();
-
-            if (globalEntity.dead)
-            {
-                globalEntities.RemoveAt(i--);
-            }
-        }
-
-        Profiler.Stop("updateEntites.updateWeatherEffects");
-
-        Profiler.Start("updateEntites.clearUnloadedEntities");
-        for (int i = 0; i < _entitiesToUnload.Count; ++i)
-        {
-            Entity entityToUnload = _entitiesToUnload[i];
-            int chunkX = entityToUnload.chunkX;
-            int chunkZ = entityToUnload.chunkZ;
-
-            if (entityToUnload.isPersistent && hasChunk(chunkX, chunkZ))
-            {
-                GetChunk(chunkX, chunkZ).RemoveEntity(entityToUnload);
-            }
-        }
-
-        for (int i = 0; i < _entitiesToUnload.Count; ++i)
-        {
-            NotifyEntityRemoved(_entitiesToUnload[i]);
-        }
-
-        _entitiesToUnload.Clear();
-        Profiler.Stop("updateEntites.clearUnloadedEntities");
-
-        Profiler.Start("updateEntites.updateLoadedEntities");
-        for (int i = 0; i < entities.Count; ++i)
-        {
-            Entity entity = entities[i];
-
-            if (entity.vehicle != null)
-            {
-                if (!entity.vehicle.dead && entity.vehicle.passenger == entity)
-                {
-                    continue;
-                }
-
-                entity.vehicle.passenger = null;
-                entity.vehicle = null;
-            }
-
-            if (!entity.dead)
-            {
-                updateEntity(entity);
-            }
-
-            if (entity.dead)
-            {
-                int chunkX = entity.chunkX;
-                int chunkZ = entity.chunkZ;
-
-                if (entity.isPersistent && hasChunk(chunkX, chunkZ))
-                {
-                    GetChunk(chunkX, chunkZ).RemoveEntity(entity);
-                }
-
-                entities.RemoveAt(i--);
-                _entitiesById.Remove(entity.id);
-                NotifyEntityRemoved(entity);
-            }
-        }
-
-        Profiler.Stop("updateEntites.updateLoadedEntities");
-
-        _processingDeferred = true;
-        Profiler.Start("updateEntites.updateLoadedTileEntities");
-
-        for (int i = blockEntities.Count - 1; i >= 0; i--)
-        {
-            BlockEntity blockEntity = blockEntities[i];
-            if (!blockEntity.isRemoved())
-            {
-                blockEntity.tick();
-            }
-
-            if (blockEntity.isRemoved())
-            {
-                blockEntities.RemoveAt(i);
-                Chunk chunk = GetChunk(blockEntity.X >> 4, blockEntity.Z >> 4);
-                if (chunk != null)
-                {
-                    chunk.RemoveBlockEntityAt(blockEntity.X & 15, blockEntity.Y, blockEntity.Z & 15);
-                }
-            }
-        }
-
-        _processingDeferred = false;
-
-        if (_blockEntityUpdateQueue.Count > 0)
-        {
-            foreach (BlockEntity queuedBlockEntity in _blockEntityUpdateQueue)
-            {
-                if (!queuedBlockEntity.isRemoved())
-                {
-                    if (!blockEntities.Contains(queuedBlockEntity))
-                    {
-                        blockEntities.Add(queuedBlockEntity);
-                    }
-
-                    Chunk chunk = GetChunk(queuedBlockEntity.X >> 4, queuedBlockEntity.Z >> 4);
-                    if (chunk != null)
-                    {
-                        chunk.SetBlockEntity(queuedBlockEntity.X & 15, queuedBlockEntity.Y, queuedBlockEntity.Z & 15,
-                            queuedBlockEntity);
-                    }
-
-                    blockUpdateEvent(queuedBlockEntity.X, queuedBlockEntity.Y, queuedBlockEntity.Z);
-                }
-            }
-
-            _blockEntityUpdateQueue.Clear();
-        }
-
-        Profiler.Stop("updateEntites.updateLoadedTileEntities");
-    }
-
-    public void processBlockUpdates(IEnumerable<BlockEntity> blockUpdates)
-    {
-        if (_processingDeferred)
-        {
-            _blockEntityUpdateQueue.AddRange(blockUpdates);
-        }
-        else
-        {
-            blockEntities.AddRange(blockUpdates);
-        }
-    }
-
-    public void updateEntity(Entity entity)
-    {
-        updateEntity(entity, true);
-    }
-
-    public virtual void updateEntity(Entity entity, bool requireLoaded)
-    {
-        int blockX = MathHelper.Floor(entity.x);
-        int blockZ = MathHelper.Floor(entity.z);
-
-        const byte loadRadius = 32;
-        if (!requireLoaded || isRegionLoaded(blockX - loadRadius, 0, blockZ - loadRadius,
-                blockX + loadRadius, 128, blockZ + loadRadius))
-        {
-            entity.lastTickX = entity.x;
-            entity.lastTickY = entity.y;
-            entity.lastTickZ = entity.z;
-            entity.prevYaw = entity.yaw;
-            entity.prevPitch = entity.pitch;
-
-            if (requireLoaded && entity.isPersistent)
-            {
-                if (entity.vehicle != null)
-                {
-                    entity.tickRiding();
-                }
-                else
-                {
-                    entity.tick();
-                }
-            }
-
-            if (double.IsNaN(entity.x) || double.IsInfinity(entity.x)) entity.x = entity.lastTickX;
-            if (double.IsNaN(entity.y) || double.IsInfinity(entity.y)) entity.y = entity.lastTickY;
-            if (double.IsNaN(entity.z) || double.IsInfinity(entity.z)) entity.z = entity.lastTickZ;
-            if (double.IsNaN(entity.pitch) || double.IsInfinity(entity.pitch)) entity.pitch = entity.prevPitch;
-            if (double.IsNaN(entity.yaw) || double.IsInfinity(entity.yaw)) entity.yaw = entity.prevYaw;
-
-            int newChunkX = MathHelper.Floor(entity.x / 16.0D);
-            int newChunkY = MathHelper.Floor(entity.y / 16.0D);
-            int newChunkZ = MathHelper.Floor(entity.z / 16.0D);
-
-            if (!entity.isPersistent || entity.chunkX != newChunkX ||
-                entity.chunkSlice != newChunkY || entity.chunkZ != newChunkZ)
-            {
-                if (entity.isPersistent && hasChunk(entity.chunkX, entity.chunkZ))
-                {
-                    GetChunk(entity.chunkX, entity.chunkZ).RemoveEntity(entity, entity.chunkSlice);
-                }
-
-
-                if (hasChunk(newChunkX, newChunkZ))
-                {
-                    entity.isPersistent = true;
-                    GetChunk(newChunkX, newChunkZ).AddEntity(entity);
-                }
-                else
-                {
-                    entity.isPersistent = false;
-                }
-            }
-
-            if (requireLoaded && entity.isPersistent && entity.passenger != null)
-            {
-                if (!entity.passenger.dead && entity.passenger.vehicle == entity)
-                {
-                    updateEntity(entity.passenger);
-                }
-                else
-                {
-                    entity.passenger.vehicle = null;
-                    entity.passenger = null;
-                }
-            }
-        }
-    }
-
-    public bool canSpawnEntity(Box spawnArea)
-    {
-        List<Entity> nearbyEntities = new List<Entity>();
-        getEntities(null, spawnArea, nearbyEntities);
-
-        for (int i = 0; i < nearbyEntities.Count; ++i)
-        {
-            Entity entity = nearbyEntities[i];
-            if (!entity.dead && entity.preventEntitySpawning)
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public bool isAnyBlockInBox(Box area)
     {
         int minX = MathHelper.Floor(area.MinX);
@@ -1695,10 +1300,8 @@ public abstract class World : IBlockAccess
         return null;
     }
 
-    public string getEntityCount()
-    {
-        return "All: " + entities.Count;
-    }
+
+
 
     public string getDebugInfo()
     {
@@ -1708,48 +1311,9 @@ public abstract class World : IBlockAccess
     public BlockEntity? getBlockEntity(int x, int y, int z)
     {
         Chunk? chunk = GetChunk(x >> 4, z >> 4);
-        var entity = chunk?.GetBlockEntity(x & 15, y, z & 15) ?? blockEntities.FirstOrDefault(e => e.X == x && e.Y == y && e.Z == z);
+        var entity = chunk?.GetBlockEntity(x & 15, y, z & 15) ?? Entities.BlockEntities.FirstOrDefault(e => e.X == x && e.Y == y && e.Z == z);
 
         return entity;
-    }
-
-    public void setBlockEntity(int x, int y, int z, BlockEntity blockEntity)
-    {
-        if (!blockEntity.isRemoved())
-        {
-            if (_processingDeferred)
-            {
-                blockEntity.X = x;
-                blockEntity.Y = y;
-                blockEntity.Z = z;
-                _blockEntityUpdateQueue.Add(blockEntity);
-            }
-            else
-            {
-                blockEntities.Add(blockEntity);
-                Chunk chunk = GetChunk(x >> 4, z >> 4);
-                if (chunk != null)
-                {
-                    chunk.SetBlockEntity(x & 15, y, z & 15, blockEntity);
-                }
-            }
-        }
-    }
-
-    public void removeBlockEntity(int x, int y, int z)
-    {
-        BlockEntity? entity = getBlockEntity(x, y, z);
-        if (entity != null && _processingDeferred)
-        {
-            entity.markRemoved();
-        }
-        else
-        {
-            Chunk? chunk = GetChunk(x >> 4, z >> 4);
-            chunk?.RemoveBlockEntityAt(x & 15, y, z & 15);
-
-            if (entity != null) blockEntities.Remove(entity);
-        }
     }
 
     public bool isOpaque(int x, int y, int z)
@@ -1890,7 +1454,7 @@ public abstract class World : IBlockAccess
 
             if (_spawnHostileMobs && difficulty >= 1)
             {
-                wasSpawnInterrupted = NaturalSpawner.SpawnMonstersAndWakePlayers(this, _pathFinder, players);
+                wasSpawnInterrupted = NaturalSpawner.SpawnMonstersAndWakePlayers(this, _pathFinder, Entities.Players);
             }
 
             if (!wasSpawnInterrupted)
@@ -1944,9 +1508,9 @@ public abstract class World : IBlockAccess
     {
         _activeChunks.Clear();
 
-        for (int i = 0; i < players.Count; ++i)
+        for (int i = 0; i < Entities.Players.Count; ++i)
         {
-            EntityPlayer player = players[i];
+            EntityPlayer player = Entities.Players[i];
             int playerChunkX = MathHelper.Floor(player.x / 16.0D);
             int playerChunkZ = MathHelper.Floor(player.z / 16.0D);
             const byte viewDistance = 9;
@@ -1985,7 +1549,7 @@ public abstract class World : IBlockAccess
                 if (blockId == 0 && getBrightness(worldX, localY, worldZ) <= random.NextInt(8) &&
                     getBrightness(LightType.Sky, worldX, localY, worldZ) <= 0)
                 {
-                    EntityPlayer closest = getClosestPlayer(worldX + 0.5D, localY + 0.5D, worldZ + 0.5D, 8.0D);
+                    EntityPlayer closest = Entities.GetClosestPlayer(worldX + 0.5D, localY + 0.5D, worldZ + 0.5D, 8.0D);
                     if (closest != null &&
                         closest.getSquaredDistance(worldX + 0.5D, localY + 0.5D, worldZ + 0.5D) > 4.0D)
                     {
@@ -2006,7 +1570,7 @@ public abstract class World : IBlockAccess
 
                 if (Environment.IsRainingAt(worldX, worldY, worldZ))
                 {
-                    spawnGlobalEntity(new EntityLightningBolt(this, worldX, worldY, worldZ));
+                    Entities.SpawnGlobalEntity(new EntityLightningBolt(this, worldX, worldY, worldZ));
                     TicksSinceLightning = 2;
                 }
             }
@@ -2105,17 +1669,6 @@ public abstract class World : IBlockAccess
         return getEntities(excludeEntity, area, new List<Entity>());
     }
 
-    /// <summary>
-    /// Like <see cref="getEntities(Entity?,Box)"/> but writes into a reused thread-static
-    /// scratch list. The returned list is only valid until the next call on the same thread.
-    /// </summary>
-    internal List<Entity> GetEntitiesScratch(Entity? excludeEntity, Box area)
-    {
-        _tempCollisionEntitiesResult ??= new List<Entity>();
-        _tempCollisionEntitiesResult.Clear();
-        return getEntities(excludeEntity, area, _tempCollisionEntitiesResult);
-    }
-
     public List<Entity> getEntities(Entity? excludeEntity, Box area, List<Entity> results)
     {
         int minChunkX = MathHelper.Floor((area.MinX - 2.0D) / 16.0D);
@@ -2160,12 +1713,6 @@ public abstract class World : IBlockAccess
         return results;
     }
 
-
-    public List<Entity> getEntities()
-    {
-        return entities;
-    }
-
     public void updateBlockEntity(int x, int y, int z, BlockEntity blockEntity)
     {
         if (isPosLoaded(x, y, z))
@@ -2179,34 +1726,7 @@ public abstract class World : IBlockAccess
         }
     }
 
-    public int CountEntitiesOfType(Type type)
-    {
-        int res = 0;
-
-        foreach (var entity in entities)
-        {
-            if (type.IsInstanceOfType(entity)) res++;
-        }
-
-        return res;
-    }
-
-    public void addEntities(List<Entity> entities)
-    {
-        this.entities.AddRange(entities);
-        for (int i = 0; i < entities.Count; ++i)
-        {
-            _entitiesById[entities[i].id] = entities[i];
-            NotifyEntityAdded(entities[i]);
-        }
-    }
-
-    public void unloadEntities(List<Entity> entities)
-    {
-        _entitiesToUnload.AddRange(entities);
-    }
-
-    public void tickChunks()
+    public void TickChunks()
     {
         while (_chunkSource.Tick())
         {
@@ -2226,7 +1746,7 @@ public abstract class World : IBlockAccess
             collisionBox = null;
         }
 
-        if (collisionBox != null && !canSpawnEntity(collisionBox.Value))
+        if (collisionBox != null && !Entities.CanSpawnEntity(collisionBox.Value))
         {
             return false;
         }
@@ -2327,43 +1847,7 @@ public abstract class World : IBlockAccess
 
     public EntityPlayer getClosestPlayer(Entity entity, double range)
     {
-        return getClosestPlayer(entity.x, entity.y, entity.z, range);
-    }
-
-    public EntityPlayer getClosestPlayer(double x, double y, double z, double range)
-    {
-        double minDistanceSquared = -1.0D;
-        EntityPlayer closestPlayer = null;
-
-        for (int i = 0; i < players.Count; ++i)
-        {
-            EntityPlayer player = players[i];
-            double distanceSquared = player.getSquaredDistance(x, y, z);
-
-            bool withinRange = range < 0.0D || distanceSquared < range * range;
-            bool isClosestSoFar = minDistanceSquared == -1.0D || distanceSquared < minDistanceSquared;
-
-            if (withinRange && isClosestSoFar)
-            {
-                minDistanceSquared = distanceSquared;
-                closestPlayer = player;
-            }
-        }
-
-        return closestPlayer;
-    }
-
-    public EntityPlayer getPlayer(string name)
-    {
-        for (int i = 0; i < players.Count; ++i)
-        {
-            if (name.Equals(players[i].name))
-            {
-                return players[i];
-            }
-        }
-
-        return null;
+        return Entities.GetClosestPlayer(entity.x, entity.y, entity.z, range);
     }
 
     public void handleChunkDataUpdate(int x, int y, int z, int sizeX, int sizeY, int sizeZ, byte[] chunkData)
@@ -2480,28 +1964,6 @@ public abstract class World : IBlockAccess
         Properties.SetSpawn(pos.X, pos.Y, pos.Z);
     }
 
-    public void LoadChunksNearEntity(Entity entity)
-    {
-        int chunkX = MathHelper.Floor(entity.x / 16.0D);
-        int chunkZ = MathHelper.Floor(entity.z / 16.0D);
-
-        // 5x5 area
-        const byte loadRadius = 2;
-
-        for (int x = chunkX - loadRadius; x <= chunkX + loadRadius; ++x)
-        {
-            for (int z = chunkZ - loadRadius; z <= chunkZ + loadRadius; ++z)
-            {
-                GetChunk(x, z);
-            }
-        }
-
-        if (!entities.Contains(entity))
-        {
-            entities.Add(entity);
-        }
-    }
-
     public virtual bool canInteract(EntityPlayer player, int x, int y, int z)
     {
         return true;
@@ -2510,60 +1972,6 @@ public abstract class World : IBlockAccess
     public virtual void broadcastEntityEvent(Entity entity, byte @event)
     {
     }
-
-    public void updateEntityLists()
-    {
-        foreach (var entity in _entitiesToUnload)
-        {
-            entities.Remove(entity);
-        }
-
-        for (int i = 0; i < _entitiesToUnload.Count; ++i)
-        {
-            var entity = _entitiesToUnload[i];
-            var chunkX = entity.chunkX;
-            var chunkZ = entity.chunkZ;
-            if (entity.isPersistent && hasChunk(chunkX, chunkZ))
-            {
-                GetChunk(chunkX, chunkZ).RemoveEntity(entity);
-            }
-
-            _entitiesById.Remove(entity.id);
-            NotifyEntityRemoved(entity);
-        }
-
-        _entitiesToUnload.Clear();
-
-        for (int i = 0; i < entities.Count; ++i)
-        {
-            var entity = entities[i];
-            if (entity.vehicle != null)
-            {
-                if (!entity.vehicle.dead && entity.vehicle.passenger == entity)
-                {
-                    continue;
-                }
-
-                entity.vehicle.passenger = null;
-                entity.vehicle = null;
-            }
-
-            if (entity.dead)
-            {
-                var chunkX = entity.chunkX;
-                var chunkZ = entity.chunkZ;
-                if (entity.isPersistent && hasChunk(chunkX, chunkZ))
-                {
-                    GetChunk(chunkX, chunkZ).RemoveEntity(entity);
-                }
-
-                entities.RemoveAt(i--);
-                _entitiesById.Remove(entity.id);
-                NotifyEntityRemoved(entity);
-            }
-        }
-    }
-
     public ChunkSource GetChunkSource()
     {
         return _chunkSource;
@@ -2611,8 +2019,4 @@ public abstract class World : IBlockAccess
         }
     }
 
-    public Entity? getEntityByID(int id)
-    {
-        return _entitiesById.TryGetValue(id, out var entity) ? entity : null;
-    }
 }

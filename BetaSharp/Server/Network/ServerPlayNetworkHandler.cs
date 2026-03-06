@@ -13,7 +13,6 @@ using BetaSharp.Server.Internal;
 using BetaSharp.Util;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
-using java.util;
 using Microsoft.Extensions.Logging;
 
 namespace BetaSharp.Server.Network;
@@ -116,7 +115,7 @@ public class ServerPlayNetworkHandler : NetHandler, CommandOutput
                 player.velocityZ = var34;
                 if (player.vehicle != null)
                 {
-                    var2.tickVehicle(player.vehicle, true);
+                    var2.Entities.UpdateEntity(player.vehicle, true);
                 }
 
                 if (player.vehicle != null)
@@ -128,7 +127,7 @@ public class ServerPlayNetworkHandler : NetHandler, CommandOutput
                 teleportTargetX = player.x;
                 teleportTargetY = player.y;
                 teleportTargetZ = player.z;
-                var2.updateEntity(player);
+                var2.Entities.UpdateEntity(player, true);
                 return;
             }
 
@@ -136,7 +135,7 @@ public class ServerPlayNetworkHandler : NetHandler, CommandOutput
             {
                 player.playerTick(true);
                 player.setPositionAndAngles(teleportTargetX, teleportTargetY, teleportTargetZ, player.yaw, player.pitch);
-                var2.updateEntity(player);
+                var2.Entities.UpdateEntity(player, true);
                 return;
             }
 
@@ -200,7 +199,7 @@ public class ServerPlayNetworkHandler : NetHandler, CommandOutput
             }
 
             float var21 = (1 / 16f);
-            bool var22 = var2.GetEntityCollisions(player, player.boundingBox.Contract(var21, var21, var21)).Count == 0;
+            bool var22 = var2.Entities.GetEntityCollisions(player, player.boundingBox.Contract(var21, var21, var21)).Count == 0;
             player.move(var32, var15, var17);
             var32 = var5 - player.x;
             var15 = var7 - player.y;
@@ -221,7 +220,7 @@ public class ServerPlayNetworkHandler : NetHandler, CommandOutput
             }
 
             player.setPositionAndAngles(var5, var7, var9, var11, var12);
-            bool var24 = var2.GetEntityCollisions(player, player.boundingBox.Contract(var21, var21, var21)).Count == 0;
+            bool var24 = var2.Entities.GetEntityCollisions(player, player.boundingBox.Contract(var21, var21, var21)).Count == 0;
             if (var22 && (var23 || !var24) && !player.isSleeping())
             {
                 teleport(teleportTargetX, teleportTargetY, teleportTargetZ, var11, var12);

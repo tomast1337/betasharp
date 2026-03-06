@@ -143,7 +143,7 @@ public class EntityMinecart : Entity, IInventory
                                 entityItem.velocityX = (double)((float)random.NextGaussian() * scatterSpeed);
                                 entityItem.velocityY = (double)((float)random.NextGaussian() * scatterSpeed + 0.2F);
                                 entityItem.velocityZ = (double)((float)random.NextGaussian() * scatterSpeed);
-                                world.SpawnEntity(entityItem);
+                                world.Entities.SpawnEntity(entityItem);
                             }
                         }
                     }
@@ -202,7 +202,7 @@ public class EntityMinecart : Entity, IInventory
                     entityItem.velocityX = (double)((float)random.NextGaussian() * scatterSpeed);
                     entityItem.velocityY = (double)((float)random.NextGaussian() * scatterSpeed + 0.2F);
                     entityItem.velocityZ = (double)((float)random.NextGaussian() * scatterSpeed);
-                    world.SpawnEntity(entityItem);
+                    world.Entities.SpawnEntity(entityItem);
                 }
             }
         }

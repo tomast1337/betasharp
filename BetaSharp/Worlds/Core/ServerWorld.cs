@@ -25,43 +25,72 @@ public class ServerWorld : World
     {
         this.server = server;
 
+        // Wire up all our decoupled managers!
         Environment.OnRainingStateChanged += HandleWeatherChanged;
+
+        Entities.OnEntityAdded += HandleEntityAdded;
+        Entities.OnEntityRemoved += HandleEntityRemoved;
+        Entities.OnEntityUpdating += HandleEntityUpdating;
+        Entities.OnGlobalEntityAdded += HandleGlobalEntityAdded;
     }
-
-
-    public override void updateEntity(Entity entity, bool requireLoaded)
-    {
-        if (!server.spawnAnimals && (entity is EntityAnimal || entity is EntityWaterMob))
-        {
-            entity.markDead();
-        }
-
-        if (entity.passenger == null || entity.passenger is not EntityPlayer)
-        {
-            base.updateEntity(entity, requireLoaded);
-        }
-    }
-
-    public void tickVehicle(Entity vehicle, bool requireLoaded)
-    {
-        base.updateEntity(vehicle, requireLoaded);
-    }
-
 
     protected override ChunkSource CreateChunkCache()
     {
-        IChunkStorage var1 = Storage.GetChunkStorage(dimension);
-        chunkCache = new ServerChunkCache(this, var1, dimension.CreateChunkGenerator());
+        IChunkStorage chunkStorage = Storage.GetChunkStorage(dimension);
+        chunkCache = new ServerChunkCache(this, chunkStorage, dimension.CreateChunkGenerator());
         return chunkCache;
     }
+
+    // --- Entity Event Handlers (Replacing the old overrides) ---
+
+    private void HandleEntityAdded(Entity entity)
+    {
+        entitiesById.TryAdd(entity.id, entity);
+    }
+
+    private void HandleEntityRemoved(Entity entity)
+    {
+        entitiesById.Remove(entity.id);
+    }
+
+    private void HandleGlobalEntityAdded(Entity entity)
+    {
+        server.playerManager.sendToAround(entity.x, entity.y, entity.z, 512.0, dimension.Id, new GlobalEntitySpawnS2CPacket(entity));
+    }
+
+    private bool HandleEntityUpdating(Entity entity)
+    {
+        // 1. Cull animals if the server properties say so
+        if (!server.spawnAnimals && (entity is EntityAnimal || entity is EntityWaterMob))
+        {
+            entity.markDead();
+            return false; // Cancel tick
+        }
+
+        // 2. If a player is riding this vehicle, the client handles movement, so skip server tick!
+        if (entity.passenger != null && entity.passenger is EntityPlayer)
+        {
+            return false; // Cancel tick
+        }
+
+        return true; // Allow normal ticking
+    }
+
+    public Entity getEntity(int id)
+    {
+        entitiesById.TryGetValue(id, out Entity? entity);
+        return entity;
+    }
+
+    // --- standard World/Server methods below ---
 
     public List<BlockEntity> getBlockEntities(int minX, int minY, int minZ, int maxX, int maxY, int maxZ)
     {
         List<BlockEntity> var7 = [];
 
-        for (int var8 = 0; var8 < blockEntities.Count; var8++)
+        for (int var8 = 0; var8 < Entities.BlockEntities.Count; var8++)
         {
-            BlockEntity var9 = blockEntities[var8];
+            BlockEntity var9 = Entities.BlockEntities[var8];
             if (var9.X >= minX && var9.Y >= minY && var9.Z >= minZ && var9.X < maxX && var9.Y < maxY && var9.Z < maxZ)
             {
                 var7.Add(var9);
@@ -70,7 +99,6 @@ public class ServerWorld : World
 
         return var7;
     }
-
 
     public override bool canInteract(EntityPlayer player, int x, int y, int z)
     {
@@ -84,47 +112,11 @@ public class ServerWorld : World
         return var6 > 16 || server.playerManager.isOperator(player.name) || server is InternalServer;
     }
 
-
-    protected override void NotifyEntityAdded(Entity entity)
-    {
-        base.NotifyEntityAdded(entity);
-        entitiesById.Add(entity.id, entity);
-    }
-
-
-    protected override void NotifyEntityRemoved(Entity entity)
-    {
-        base.NotifyEntityRemoved(entity);
-        entitiesById.Remove(entity.id);
-    }
-
-    public Entity getEntity(int id)
-    {
-        entitiesById.TryGetValue(id, out Entity? entity);
-        return entity;
-    }
-
-
-    public override bool spawnGlobalEntity(Entity entity)
-    {
-        if (base.spawnGlobalEntity(entity))
-        {
-            server.playerManager.sendToAround(entity.x, entity.y, entity.z, 512.0, dimension.Id, new GlobalEntitySpawnS2CPacket(entity));
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-
     public override void broadcastEntityEvent(Entity entity, byte @event)
     {
         EntityStatusS2CPacket var3 = new EntityStatusS2CPacket(entity.id, @event);
         server.getEntityTracker(dimension.Id).sendToAround(entity, var3);
     }
-
 
     public override Explosion createExplosion(Entity source, double x, double y, double z, float power, bool fire)
     {
@@ -134,7 +126,6 @@ public class ServerWorld : World
         server.playerManager.sendToAround(x, y, z, 64.0, dimension.Id, new ExplosionS2CPacket(x, y, z, power, var10.destroyedBlockPositions));
         return var10;
     }
-
 
     public override void playNoteBlockActionAt(int x, int y, int z, int soundType, int pitch)
     {
@@ -146,7 +137,6 @@ public class ServerWorld : World
     {
         Storage.ForceSave();
     }
-
 
     private void HandleWeatherChanged(bool isRaining)
     {

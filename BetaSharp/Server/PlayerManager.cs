@@ -77,12 +77,12 @@ public class PlayerManager
         ServerWorld var2 = _server.getWorld(player.dimensionId);
         var2.chunkCache.LoadChunk((int)player.x >> 4, (int)player.z >> 4);
 
-        while (var2.GetEntityCollisions(player, player.boundingBox).Count != 0)
+        while (var2.Entities.GetEntityCollisions(player, player.boundingBox).Count != 0)
         {
             player.setPosition(player.x, player.y + 1.0, player.z);
         }
 
-        var2.SpawnEntity(player);
+        var2.Entities.SpawnEntity(player);
         GetChunkMap(player.dimensionId).addPlayer(player);
     }
 
@@ -94,7 +94,7 @@ public class PlayerManager
     public void disconnect(ServerPlayerEntity player)
     {
         _saveHandler.SavePlayerData(player);
-        _server.getWorld(player.dimensionId).Remove(player);
+        _server.getWorld(player.dimensionId).Entities.Remove(player);
         players.Remove(player);
         GetChunkMap(player.dimensionId).removePlayer(player);
     }
@@ -149,7 +149,7 @@ public class PlayerManager
         _server.getEntityTracker(player.dimensionId).onEntityRemoved(player);
         GetChunkMap(player.dimensionId).removePlayer(player);
         players.Remove(player);
-        _server.getWorld(player.dimensionId).serverRemove(player);
+        _server.getWorld(player.dimensionId).Entities.ServerRemove(player);
         Vec3i? var3 = player.getSpawnPos();
         player.dimensionId = dimensionId;
         ServerPlayerEntity var4 = new(
@@ -177,7 +177,7 @@ public class PlayerManager
 
         var5.chunkCache.LoadChunk((int)var4.x >> 4, (int)var4.z >> 4);
 
-        while (var5.GetEntityCollisions(var4, var4.boundingBox).Count != 0)
+        while (var5.Entities.GetEntityCollisions(var4, var4.boundingBox).Count != 0)
         {
             var4.setPosition(var4.x, var4.y + 1.0, var4.z);
         }
@@ -186,7 +186,7 @@ public class PlayerManager
         var4.networkHandler.teleport(var4.x, var4.y, var4.z, var4.yaw, var4.pitch);
         sendWorldInfo(var4, var5);
         GetChunkMap(var4.dimensionId).addPlayer(var4);
-        var5.SpawnEntity(var4);
+        var5.Entities.SpawnEntity(var4);
         players.Add(var4);
         var4.initScreenHandler();
         return var4;
@@ -224,7 +224,7 @@ public class PlayerManager
 
         player.dimensionId = targetDim;
         player.networkHandler.sendPacket(new PlayerRespawnPacket((sbyte)player.dimensionId));
-        currentWorld.serverRemove(player);
+        currentWorld.Entities.ServerRemove(player);
         player.dead = false;
         double x = player.x;
         double z = player.z;
@@ -237,7 +237,7 @@ public class PlayerManager
             player.setPositionAndAnglesKeepPrevAngles(x, player.y, z, player.yaw, player.pitch);
             if (player.isAlive())
             {
-                currentWorld.updateEntity(player, false);
+                currentWorld.Entities.UpdateEntity(player, false);
             }
         }
         else
@@ -247,15 +247,15 @@ public class PlayerManager
             player.setPositionAndAnglesKeepPrevAngles(x, player.y, z, player.yaw, player.pitch);
             if (player.isAlive())
             {
-                currentWorld.updateEntity(player, false);
+                currentWorld.Entities.UpdateEntity(player, false);
             }
         }
 
         if (player.isAlive())
         {
-            targetWorld.SpawnEntity(player);
+            targetWorld.Entities.SpawnEntity(player);
             player.setPositionAndAnglesKeepPrevAngles(x, player.y, z, player.yaw, player.pitch);
-            targetWorld.updateEntity(player, false);
+            targetWorld.Entities.UpdateEntity(player, false);
             targetWorld.chunkCache.forceLoad = true;
             new PortalForcer().MoveToPortal(targetWorld, player);
             targetWorld.chunkCache.forceLoad = false;

@@ -150,7 +150,7 @@ public class BlockPistonBase : Block
             }
 
             world.SetBlockWithoutNotifyingNeighbors(x, y, z, MovingPiston.id, data2);
-            world.setBlockEntity(x, y, z, BlockPistonMoving.createPistonBlockEntity(id, data2, data2, false, true));
+            world.Entities.SetBlockEntity(x, y, z, BlockPistonMoving.createPistonBlockEntity(id, data2, data2, false, true));
             if (sticky)
             {
                 int var9 = x + PistonConstants.HEAD_OFFSET_X[data2] * 2;
@@ -193,7 +193,7 @@ public class BlockPistonBase : Block
                     y += PistonConstants.HEAD_OFFSET_Y[data2];
                     z += PistonConstants.HEAD_OFFSET_Z[data2];
                     world.SetBlockWithoutNotifyingNeighbors(x, y, z, MovingPiston.id, var13);
-                    world.setBlockEntity(x, y, z, BlockPistonMoving.createPistonBlockEntity(var12, var13, data2, false, false));
+                    world.Entities.SetBlockEntity(x, y, z, BlockPistonMoving.createPistonBlockEntity(var12, var13, data2, false, false));
                 }
             }
             else
@@ -421,12 +421,12 @@ public class BlockPistonBase : Block
                 if (var12 == id && var9 == x && var10 == y && var11 == z)
                 {
                     world.SetBlockWithoutNotifyingNeighbors(var6, var7, var8, MovingPiston.id, dir | (sticky ? 8 : 0));
-                    world.setBlockEntity(var6, var7, var8, BlockPistonMoving.createPistonBlockEntity(PistonHead.id, dir | (sticky ? 8 : 0), dir, true, false));
+                    world.Entities.SetBlockEntity(var6, var7, var8, BlockPistonMoving.createPistonBlockEntity(PistonHead.id, dir | (sticky ? 8 : 0), dir, true, false));
                 }
                 else
                 {
                     world.SetBlockWithoutNotifyingNeighbors(var6, var7, var8, MovingPiston.id, var13);
-                    world.setBlockEntity(var6, var7, var8, BlockPistonMoving.createPistonBlockEntity(var12, var13, dir, true, false));
+                    world.Entities.SetBlockEntity(var6, var7, var8, BlockPistonMoving.createPistonBlockEntity(var12, var13, dir, true, false));
                 }
 
                 var6 = var9;

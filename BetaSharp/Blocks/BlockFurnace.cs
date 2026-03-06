@@ -151,7 +151,7 @@ internal class BlockFurnace : BlockWithEntity
         s_ignoreBlockRemoval.Value = false;
         world.setBlockMeta(x, y, z, meta);
         furnace.cancelRemoval();
-        world.setBlockEntity(x, y, z, furnace);
+        world.Entities.SetBlockEntity(x, y, z, furnace);
     }
 
     protected override BlockEntity getBlockEntity()
@@ -213,7 +213,7 @@ internal class BlockFurnace : BlockWithEntity
                         droppedItem.velocityX = (double)((float)_random.NextGaussian() * var13);
                         droppedItem.velocityY = (double)((float)_random.NextGaussian() * var13 + 0.2F);
                         droppedItem.velocityZ = (double)((float)_random.NextGaussian() * var13);
-                        world.SpawnEntity(droppedItem);
+                        world.Entities.SpawnEntity(droppedItem);
                     }
                 }
             }

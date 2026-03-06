@@ -191,7 +191,7 @@ public class EntityEgg : Entity
                 {
                     EntityChicken var21 = new EntityChicken(world);
                     var21.setPositionAndAnglesKeepPrevAngles(x, y, z, yaw, 0.0F);
-                    world.SpawnEntity(var21);
+                    world.Entities.SpawnEntity(var21);
                 }
             }
 

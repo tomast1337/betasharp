@@ -232,7 +232,7 @@ public class ClientNetworkHandler : NetHandler
             ent.yaw = 0.0F;
             ent.pitch = 0.0F;
             ent.id = packet.id;
-            worldClient.spawnGlobalEntity(ent);
+            worldClient.Entities.SpawnGlobalEntity(ent);
         }
 
     }

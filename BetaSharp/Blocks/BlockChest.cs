@@ -196,7 +196,7 @@ internal class BlockChest : BlockWithEntity
                     entityItem.velocityX = (double)((float)random.NextGaussian() * var13);
                     entityItem.velocityY = (double)((float)random.NextGaussian() * var13 + 0.2F);
                     entityItem.velocityZ = (double)((float)random.NextGaussian() * var13);
-                    world.SpawnEntity(entityItem);
+                    world.Entities.SpawnEntity(entityItem);
                 }
             }
         }

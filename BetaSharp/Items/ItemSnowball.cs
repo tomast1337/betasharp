@@ -17,7 +17,7 @@ internal class ItemSnowball : Item
         world.playSound(entityPlayer, "random.bow", 0.5F, 0.4F / (itemRand.NextFloat() * 0.4F + 0.8F));
         if (!world.isRemote)
         {
-            world.SpawnEntity(new EntitySnowball(world, entityPlayer));
+            world.Entities.SpawnEntity(new EntitySnowball(world, entityPlayer));
         }
 
         return itemStack;

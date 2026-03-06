@@ -2,9 +2,7 @@ using BetaSharp.Client.Chunks;
 using BetaSharp.Client.Network;
 using BetaSharp.Entities;
 using BetaSharp.Network.Packets.Play;
-using BetaSharp.Util;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.Chunks;
 using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Dimensions;
@@ -17,15 +15,17 @@ public class ClientWorld : World
     private readonly List<BlockReset> _blockResets = [];
     private readonly ClientNetworkHandler _networkHandler;
     private MultiplayerChunkCache _chunkCache;
-    private readonly Dictionary<int, Entity> entitiesByNetworkId = new();
-    private readonly HashSet<Entity> forcedEntities = [];
-    private readonly HashSet<Entity> pendingEntities = [];
+    private readonly HashSet<Entity> _forcedEntities = [];
+    private readonly HashSet<Entity> _pendingEntities = [];
 
     public ClientWorld(ClientNetworkHandler netHandler, long seed, int dimId) : base(new EmptyWorldStorage(), "MpServer", Dimension.FromId(dimId), seed)
     {
         _networkHandler = netHandler;
         setSpawnPos(new Vec3i(8, 64, 8));
         persistentStateManager = netHandler.clientPersistentStateManager;
+
+        Entities.OnEntityAdded += HandleEntityAdded;
+        Entities.OnEntityRemoved += HandleEntityRemoved;
     }
 
     public override void Tick()
@@ -43,10 +43,10 @@ public class ClientWorld : World
             }
         }
 
-        for (int i = 0; i < 10 && pendingEntities.Count > 0; ++i)
+        for (int i = 0; i < 10 && _pendingEntities.Count > 0; ++i)
         {
-            Entity entity = pendingEntities.First();
-            if (!entities.Contains(entity))
+            Entity entity = _pendingEntities.First();
+            if (!Entities.Entities.Contains(entity))
             {
                 SpawnEntity(entity);
             }
@@ -116,74 +116,70 @@ public class ClientWorld : World
         }
     }
 
-    public override bool SpawnEntity(Entity entity)
+    private bool SpawnEntity(Entity entity) // Issue here
     {
-        bool spawned = base.SpawnEntity(entity);
-        forcedEntities.Add(entity);
+        bool spawned = Entities.SpawnEntity(entity);
+        _forcedEntities.Add(entity);
         if (!spawned)
         {
-            pendingEntities.Add(entity);
+            _pendingEntities.Add(entity);
         }
 
         return spawned;
     }
 
-    public override void Remove(Entity ent)
+    private void Remove(Entity ent)
     {
-        base.Remove(ent);
-        forcedEntities.Remove(ent);
+        Entities.Remove(ent);
+        _forcedEntities.Remove(ent);
     }
 
-    protected override void NotifyEntityAdded(Entity ent)
+    private void HandleEntityAdded(Entity ent)
     {
-        base.NotifyEntityAdded(ent);
-        if (pendingEntities.Contains(ent))
+        if (_pendingEntities.Contains(ent))
         {
-            pendingEntities.Remove(ent);
+            _pendingEntities.Remove(ent);
         }
     }
 
-    protected override void NotifyEntityRemoved(Entity ent)
+    private void HandleEntityRemoved(Entity ent)
     {
-        base.NotifyEntityRemoved(ent);
-        if (forcedEntities.Contains(ent))
+        if (_forcedEntities.Contains(ent))
         {
-            pendingEntities.Add(ent);
+            _pendingEntities.Add(ent);
         }
     }
 
     public void ForceEntity(int networkId, Entity ent)
     {
-        Entity existingEnt = GetEntity(networkId);
+        Entity? existingEnt = GetEntity(networkId);
         if (existingEnt != null)
         {
             Remove(existingEnt);
         }
 
-        forcedEntities.Add(ent);
+        _forcedEntities.Add(ent);
         ent.id = networkId;
 
         if (!SpawnEntity(ent))
         {
-            pendingEntities.Add(ent);
+            _pendingEntities.Add(ent);
         }
-
-        entitiesByNetworkId[networkId] = ent;
     }
 
-    public Entity GetEntity(int networkId)
+    public Entity? GetEntity(int networkId)
     {
-        return entitiesByNetworkId.GetValueOrDefault(networkId);
+        return Entities.GetEntityByID(networkId);
     }
 
-    public Entity RemoveEntityFromWorld(int networkId)
+    public Entity? RemoveEntityFromWorld(int networkId)
     {
-        if (entitiesByNetworkId.Remove(networkId, out Entity ent))
+        Entity? ent = GetEntity(networkId);
+        if (ent != null)
         {
-            forcedEntities.Remove(ent);
+            _forcedEntities.Remove(ent);
             Remove(ent);
         }
-
         return ent;
     }
 

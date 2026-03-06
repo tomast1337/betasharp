@@ -70,7 +70,7 @@ internal static class WorldCommands
             switch (weather)
             {
                 case "clear":
-                    world.globalEntities.Clear();
+                    world.Entities.GlobalEntities.Clear();
                     world.getProperties().IsRaining = false;
                     world.getProperties().IsThundering = false;
                     break;
@@ -148,7 +148,7 @@ internal static class WorldCommands
         for (int w = 0; w < server.worlds.Length; w++)
         {
             ServerWorld world = server.worlds[w];
-            var entities = new List<Entity>(world.entities);
+            var entities = new List<Entity>(world.Entities.Entities);
 
             foreach (Entity entity in entities)
             {
@@ -167,7 +167,7 @@ internal static class WorldCommands
 
                 if (shouldKill)
                 {
-                    world.Remove(entity);
+                    world.Entities.Remove(entity);
                     count++;
                 }
             }

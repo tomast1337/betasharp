@@ -107,7 +107,7 @@ public class EntityWolf : EntityAnimal
         base.tickLiving();
         if (!hasAttacked && !hasPath() && isWolfTamed() && vehicle == null)
         {
-            EntityPlayer owner = world.getPlayer(getWolfOwner());
+            EntityPlayer? owner = world.Entities.GetPlayer(getWolfOwner());
             if (owner != null)
             {
                 float distance = owner.getDistance(this);

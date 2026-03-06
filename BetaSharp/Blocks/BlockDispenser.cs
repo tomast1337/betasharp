@@ -139,21 +139,21 @@ internal class BlockDispenser : BlockWithEntity
                 EntityArrow arrow = new EntityArrow(world, spawnX, spawnY, spawnZ);
                 arrow.setArrowHeading((double)dirX, (double)0.1F, (double)dirZ, 1.1F, 6.0F);
                 arrow.doesArrowBelongToPlayer = true;
-                world.SpawnEntity(arrow);
+                world.Entities.SpawnEntity(arrow);
                 world.worldEvent(1002, x, y, z, 0);
             }
             else if (itemStack.itemId == Item.Egg.id)
             {
                 EntityEgg egg = new EntityEgg(world, spawnX, spawnY, spawnZ);
                 egg.setEggHeading((double)dirX, (double)0.1F, (double)dirZ, 1.1F, 6.0F);
-                world.SpawnEntity(egg);
+                world.Entities.SpawnEntity(egg);
                 world.worldEvent(1002, x, y, z, 0);
             }
             else if (itemStack.itemId == Item.Snowball.id)
             {
                 EntitySnowball snowball = new EntitySnowball(world, spawnX, spawnY, spawnZ);
                 snowball.setSnowballHeading((double)dirX, (double)0.1F, (double)dirZ, 1.1F, 6.0F);
-                world.SpawnEntity(snowball);
+                world.Entities.SpawnEntity(snowball);
                 world.worldEvent(1002, x, y, z, 0);
             }
             else
@@ -166,7 +166,7 @@ internal class BlockDispenser : BlockWithEntity
                 item.velocityX += random.NextGaussian() * (double)0.0075F * 6.0D;
                 item.velocityY += random.NextGaussian() * (double)0.0075F * 6.0D;
                 item.velocityZ += random.NextGaussian() * (double)0.0075F * 6.0D;
-                world.SpawnEntity(item);
+                world.Entities.SpawnEntity(item);
                 world.worldEvent(1000, x, y, z, 0);
             }
 
@@ -256,7 +256,7 @@ internal class BlockDispenser : BlockWithEntity
                     entityItem.velocityX = (double)((float)random.NextGaussian() * var13);
                     entityItem.velocityY = (double)((float)random.NextGaussian() * var13 + 0.2F);
                     entityItem.velocityZ = (double)((float)random.NextGaussian() * var13);
-                    world.SpawnEntity(entityItem);
+                    world.Entities.SpawnEntity(entityItem);
                 }
             }
         }

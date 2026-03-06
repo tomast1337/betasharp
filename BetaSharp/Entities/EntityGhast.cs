@@ -110,7 +110,7 @@ public class EntityGhast : EntityFlying, Monster
                     fireball.x = x + lookDir.x * spawnOffset;
                     fireball.y = y + (double)(height / 2.0F) + 0.5D;
                     fireball.z = z + lookDir.z * spawnOffset;
-                    world.SpawnEntity(fireball);
+                    world.Entities.SpawnEntity(fireball);
                     attackCounter = -40;
                 }
             }
@@ -150,7 +150,7 @@ public class EntityGhast : EntityFlying, Monster
         for (int i = 1; (double)i < distance; ++i)
         {
             box.Translate(stepX, stepY, stepZ);
-            if (world.GetEntityCollisions(this, box).Count > 0)
+            if (world.Entities.GetEntityCollisions(this, box).Count > 0)
             {
                 return false;
             }

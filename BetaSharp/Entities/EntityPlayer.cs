@@ -381,7 +381,7 @@ public abstract class EntityPlayer : EntityLiving
 
     protected virtual void spawnItem(EntityItem itemEntity)
     {
-        world.SpawnEntity(itemEntity);
+        world.Entities.SpawnEntity(itemEntity);
     }
 
     public float getBlockBreakingSpeed(Block block)

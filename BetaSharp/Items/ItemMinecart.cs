@@ -22,7 +22,7 @@ internal class ItemMinecart : Item
         {
             if (!world.isRemote)
             {
-                world.SpawnEntity(new EntityMinecart(world, (double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), minecartType));
+                world.Entities.SpawnEntity(new EntityMinecart(world, (double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), minecartType));
             }
 
             --itemStack.count;

@@ -132,7 +132,7 @@ public class EntitySlime : EntityLiving, Monster
                 EntitySlime slime = new EntitySlime(world);
                 slime.setSlimeSize(size / 2);
                 slime.setPositionAndAnglesKeepPrevAngles(x + (double)offsetX, y + 0.5D, z + (double)offsetY, random.NextFloat() * 360.0F, 0.0F);
-                world.SpawnEntity(slime);
+                world.Entities.SpawnEntity(slime);
             }
         }
 

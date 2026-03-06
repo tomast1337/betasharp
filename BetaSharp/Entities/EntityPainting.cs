@@ -139,7 +139,7 @@ public class EntityPainting : Entity
 
     public bool CanHangOnWall()
     {
-        if (world.GetEntityCollisions(this, boundingBox).Count > 0)
+        if (world.Entities.GetEntityCollisions(this, boundingBox).Count > 0)
         {
             return false;
         }
@@ -252,6 +252,6 @@ public class EntityPainting : Entity
         if (dead || world.isRemote) return;
 
         markDead();
-        world.SpawnEntity(new EntityItem(world, x, y, z, new ItemStack(Item.Painting)));
+        world.Entities.SpawnEntity(new EntityItem(world, x, y, z, new ItemStack(Item.Painting)));
     }
 }

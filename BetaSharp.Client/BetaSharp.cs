@@ -1277,7 +1277,7 @@ public partial class BetaSharp
                 if (joinPlayerCounter == 30)
                 {
                     joinPlayerCounter = 0;
-                    world.LoadChunksNearEntity(player);
+                    world.Entities.LoadChunksNearEntity(player);
                 }
             }
 
@@ -1313,7 +1313,7 @@ public partial class BetaSharp
                     --world.lightningTicksLeft;
                 }
 
-                world.tickEntities();
+                world.Entities.TickEntities();
             }
 
             Profiler.PopGroup();
@@ -1567,7 +1567,7 @@ public partial class BetaSharp
             else if (player != null)
             {
                 player.teleportToTop();
-                newWorld?.SpawnEntity(player);
+                newWorld?.Entities.SpawnEntity(player);
             }
 
             if (player == null)
@@ -1639,7 +1639,7 @@ public partial class BetaSharp
         }
 
         loadingScreen.progressStage("Simulating world for a bit");
-        world.tickChunks();
+        world.TickChunks();
     }
 
     public void installResource(string resourcePath, FileInfo resourceFile)
@@ -1698,7 +1698,7 @@ public partial class BetaSharp
 
     public string getParticleAndEntityCountDebugInfo()
     {
-        return "P: " + particleManager.getStatistics() + ". T: " + world.getEntityCount();
+        return $"P: {particleManager.getStatistics()}. T: {world.Entities.Count}";
     }
 
     public void respawn(bool ignoreSpawnPosition, int newDimensionId)
@@ -1725,14 +1725,14 @@ public partial class BetaSharp
         Vec3i finalRespawnPos = respawnPos ?? world.getSpawnPos();
 
         world.UpdateSpawnPosition();
-        world.updateEntityLists();
+        world.Entities.UpdateEntityLists();
 
         int previousPlayerId = 0;
 
         if (player is not null)
         {
             previousPlayerId = player.id;
-            world.Remove(player);
+            world.Entities.Remove(player);
         }
 
         camera = null;

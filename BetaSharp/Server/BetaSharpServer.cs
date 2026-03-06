@@ -422,7 +422,7 @@ public abstract class BetaSharpServer : Runnable, CommandOutput
                 {
                 }
 
-                world.tickEntities();
+                world.Entities.TickEntities();
             }
         }
 

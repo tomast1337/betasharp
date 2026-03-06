@@ -116,7 +116,7 @@ public class BlockEntityPiston : BlockEntity
         if (_progress < 1.0F)
         {
             _progress = _lastProgess = 1.0F;
-            World.removeBlockEntity(X, Y, Z);
+            World.Entities.RemoveBlockEntity(X, Y, Z);
             markRemoved();
             if (World.getBlockId(X, Y, Z) == Block.MovingPiston.id)
             {
@@ -132,7 +132,7 @@ public class BlockEntityPiston : BlockEntity
         if (_progress >= 1.0F)
         {
             pushEntities(1.0F, 0.25F);
-            World.removeBlockEntity(X, Y, Z);
+            World.Entities.RemoveBlockEntity(X, Y, Z);
             markRemoved();
             if (World.getBlockId(X, Y, Z) == Block.MovingPiston.id)
             {

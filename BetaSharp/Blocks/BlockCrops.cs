@@ -123,7 +123,7 @@ internal class BlockCrops : BlockPlant
                     float offsetZ = world.random.NextFloat() * spreadFactor + (1.0F - spreadFactor) * 0.5F;
                     EntityItem entityItem = new EntityItem(world, (double)((float)x + offsetX), (double)((float)y + offsetY), (double)((float)z + offsetZ), new ItemStack(Item.Seeds));
                     entityItem.delayBeforeCanPickup = 10;
-                    world.SpawnEntity(entityItem);
+                    world.Entities.SpawnEntity(entityItem);
                 }
             }
 

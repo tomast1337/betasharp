@@ -20,7 +20,7 @@ public class EntitySpider : EntityMonster
         {
             EntitySkeleton skeleton = new EntitySkeleton(world);
             skeleton.setPositionAndAnglesKeepPrevAngles(x, y, z, yaw, 0.0F);
-            world.SpawnEntity(skeleton);
+            world.Entities.SpawnEntity(skeleton);
             skeleton.setVehicle(this);
         }
     }

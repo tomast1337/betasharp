@@ -43,7 +43,7 @@ internal class ItemPainting : Item
             {
                 if (!world.isRemote)
                 {
-                    world.SpawnEntity(painting);
+                    world.Entities.SpawnEntity(painting);
                 }
 
                 --itemStack.count;
