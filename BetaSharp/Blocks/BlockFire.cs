@@ -85,7 +85,7 @@ internal class BlockFire : Block
                 world.SetBlockMetaWithoutNotifyingNeighbors(x, y, z, fireAge + random.NextInt(3) / 2);
             }
 
-            world.ScheduleBlockUpdate(x, y, z, id, getTickRate());
+            world.TickScheduler.ScheduleBlockUpdate(x, y, z, id, getTickRate());
             if (!isOnNetherrack && !areBlocksAroundFlammable(world, x, y, z))
             {
                 if (!world.shouldSuffocate(x, y - 1, z) || fireAge > 3)
@@ -241,7 +241,7 @@ internal class BlockFire : Block
             }
             else
             {
-                world.ScheduleBlockUpdate(x, y, z, id, getTickRate());
+                world.TickScheduler.ScheduleBlockUpdate(x, y, z, id, getTickRate());
             }
         }
     }

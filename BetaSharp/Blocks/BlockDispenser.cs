@@ -182,7 +182,7 @@ internal class BlockDispenser : BlockWithEntity
             bool isPowered = world.isPowered(x, y, z) || world.isPowered(x, y + 1, z);
             if (isPowered)
             {
-                world.ScheduleBlockUpdate(x, y, z, base.id, getTickRate());
+                world.TickScheduler.ScheduleBlockUpdate(x, y, z, base.id, getTickRate());
             }
         }
 

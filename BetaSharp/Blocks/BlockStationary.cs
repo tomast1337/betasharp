@@ -32,7 +32,7 @@ internal class BlockStationary : BlockFluid
         world.pauseTicking = true;
         world.SetBlockWithoutNotifyingNeighbors(x, y, z, id - 1, meta);
         world.setBlocksDirty(x, y, z, x, y, z);
-        world.ScheduleBlockUpdate(x, y, z, id - 1, getTickRate());
+        world.TickScheduler.ScheduleBlockUpdate(x, y, z, id - 1, getTickRate());
         world.pauseTicking = false;
     }
 

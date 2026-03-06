@@ -36,11 +36,12 @@ public abstract class World : IBlockAccess
     public readonly Dimension Dimension;
     public readonly EntityManager Entities;
 
+    public readonly WorldTickScheduler TickScheduler;
+
     public readonly EnvironmentManager Environment;
     protected readonly List<IWorldAccess> EventListeners = [];
     protected readonly IWorldStorage Storage;
 
-    private long _eventDeltaTime; // difference between world time and the scheduled time of the block events so things don't break when using the time command
     private int _lcgBlockSeed = Random.Shared.Next();
     private int _lightingUpdatesCounter;
     private int _lightingUpdatesScheduled;
@@ -52,21 +53,14 @@ public abstract class World : IBlockAccess
     protected int AutosavePeriod = s_autosavePeriod;
     public int Difficulty;
     public bool eventProcessingEnabled;
-    public bool instantBlockUpdateEnabled = false;
     public bool IsNewWorld;
     public bool IsRemote = false;
     public int lightningTicksLeft = 0;
     public bool pauseTicking = false;
     public PersistentStateManager PersistentStateManager;
 
-    protected float PrevRainingStrength;
-    protected float PrevThunderingStrength;
     public WorldProperties Properties { get; protected set; }
-    protected float RainingStrength;
-
     public JavaRandom random = new();
-    protected float ThunderingStrength;
-    protected int TicksSinceLightning;
 
     protected World(IWorldStorage worldStorage, string levelName, Dimension dim, long seed)
     {
@@ -81,6 +75,7 @@ public abstract class World : IBlockAccess
             ? RuleSet.FromNBT(RuleRegistry.Instance, Properties.RulesTag)
             : new RuleSet(RuleRegistry.Instance);
 
+        TickScheduler = new WorldTickScheduler(this);
         Entities = new EntityManager(this);
         Environment = new EnvironmentManager(this);
 
@@ -136,6 +131,7 @@ public abstract class World : IBlockAccess
             initializeSpawnPoint();
         }
 
+        TickScheduler = new WorldTickScheduler(this);
         Entities = new EntityManager(this);
         Environment = new EnvironmentManager(this);
 
@@ -1026,29 +1022,6 @@ public abstract class World : IBlockAccess
         return -1;
     }
 
-    public virtual void ScheduleBlockUpdate(int x, int y, int z, int blockId, int tickRate)
-    {
-        const byte loadRadius = 8;
-        if (isRegionLoaded(x - loadRadius, y - loadRadius, z - loadRadius, x + loadRadius, y + loadRadius,
-                z + loadRadius))
-        {
-            if (instantBlockUpdateEnabled)
-            {
-                int currentBlockId = getBlockId(x, y, z);
-                if (currentBlockId == blockId && currentBlockId > 0)
-                {
-                    Block.Blocks[currentBlockId].onTick(this, x, y, z, random);
-                }
-            }
-            else
-            {
-                long scheduledTime = GetEventTime() + tickRate;
-                BlockUpdate blockUpdate = new(x, y, z, blockId, scheduledTime);
-                _scheduledUpdates.Enqueue(blockUpdate, (blockUpdate.ScheduledTime, blockUpdate.ScheduledOrder));
-            }
-        }
-    }
-
     public bool isAnyBlockInBox(Box area)
     {
         int minX = MathHelper.Floor(area.MinX);
@@ -1472,6 +1445,7 @@ public abstract class World : IBlockAccess
 
     public virtual void Tick()
     {
+        TickScheduler.Tick();
         Environment.UpdateWeatherCycles();
 
         long nextWorldTime;
@@ -1526,7 +1500,7 @@ public abstract class World : IBlockAccess
         Properties.WorldTime = nextWorldTime;
 
         Profiler.Start("tickUpdates");
-        ProcessScheduledTicks(false);
+        TickScheduler.Tick();
         Profiler.Stop("tickUpdates");
 
         ManageChunkUpdatesAndEvents();
@@ -1599,7 +1573,7 @@ public abstract class World : IBlockAccess
                 if (Environment.IsRainingAt(worldX, worldY, worldZ))
                 {
                     Entities.SpawnGlobalEntity(new EntityLightningBolt(this, worldX, worldY, worldZ));
-                    TicksSinceLightning = 2;
+                    lightningTicksLeft = 2; // Error
                 }
             }
 
@@ -1645,35 +1619,6 @@ public abstract class World : IBlockAccess
                 if (Block.BlocksRandomTick[blockId])
                 {
                     Block.Blocks[blockId].onTick(this, localX + worldXBase, localY, localZ + worldZBase, random);
-                }
-            }
-        }
-    }
-
-    protected virtual void ProcessScheduledTicks(bool forceFlush)
-    {
-        for (int i = 0; i < 1000; ++i)
-        {
-            if (_scheduledUpdates.Count == 0)
-            {
-                break;
-            }
-
-            if (!forceFlush && _scheduledUpdates.Peek().ScheduledTime > GetEventTime())
-            {
-                break;
-            }
-
-            BlockUpdate blockUpdate = _scheduledUpdates.Dequeue();
-
-            const byte loadRadius = 8;
-            if (isRegionLoaded(blockUpdate.X - loadRadius, blockUpdate.Y - loadRadius, blockUpdate.Z - loadRadius,
-                    blockUpdate.X + loadRadius, blockUpdate.Y + loadRadius, blockUpdate.Z + loadRadius))
-            {
-                int currentBlockId = getBlockId(blockUpdate.X, blockUpdate.Y, blockUpdate.Z);
-                if (currentBlockId == blockUpdate.BlockId && currentBlockId > 0)
-                {
-                    Block.Blocks[currentBlockId].onTick(this, blockUpdate.X, blockUpdate.Y, blockUpdate.Z, random);
                 }
             }
         }
@@ -1994,18 +1939,9 @@ public abstract class World : IBlockAccess
 
     public void setTime(long time) => Properties.WorldTime = time;
 
-    public void synchronizeTimeAndUpdates(long time)
-    {
-        long deltaTime = time - Properties.WorldTime;
-        _eventDeltaTime -= deltaTime;
-        setTime(time);
-    }
-
     public long getSeed() => Properties.RandomSeed;
 
     public long getTime() => Properties.WorldTime;
-
-    private long GetEventTime() => Properties.WorldTime + _eventDeltaTime;
 
     public Vec3i getSpawnPos() => new(Properties.SpawnX, Properties.SpawnY, Properties.SpawnZ);
 

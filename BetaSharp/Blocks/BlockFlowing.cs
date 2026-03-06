@@ -88,7 +88,7 @@ internal class BlockFlowing : BlockFluid
                 else
                 {
                     world.setBlockMeta(x, y, z, newLevel);
-                    world.ScheduleBlockUpdate(x, y, z, id, getTickRate());
+                    world.TickScheduler.ScheduleBlockUpdate(x, y, z, id, getTickRate());
                     world.notifyNeighbors(x, y, z, id);
                 }
             }
@@ -341,7 +341,7 @@ internal class BlockFlowing : BlockFluid
         base.onPlaced(world, x, y, z);
         if (world.getBlockId(x, y, z) == id)
         {
-            world.ScheduleBlockUpdate(x, y, z, id, getTickRate());
+            world.TickScheduler.ScheduleBlockUpdate(x, y, z, id, getTickRate());
         }
 
     }

@@ -22,12 +22,12 @@ internal class BlockSand : Block
 
     public override void onPlaced(World world, int x, int y, int z)
     {
-        world.ScheduleBlockUpdate(x, y, z, id, getTickRate());
+        world.TickScheduler.ScheduleBlockUpdate(x, y, z, id, getTickRate());
     }
 
     public override void neighborUpdate(World world, int x, int y, int z, int id)
     {
-        world.ScheduleBlockUpdate(x, y, z, base.id, getTickRate());
+        world.TickScheduler.ScheduleBlockUpdate(x, y, z, base.id, getTickRate());
     }
 
     public override void onTick(World world, int x, int y, int z, JavaRandom random)

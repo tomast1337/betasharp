@@ -131,7 +131,7 @@ internal class BlockPressurePlate : Block
 
         if (shouldBePressed)
         {
-            world.ScheduleBlockUpdate(x, y, z, id, getTickRate());
+            world.TickScheduler.ScheduleBlockUpdate(x, y, z, id, getTickRate());
         }
 
     }

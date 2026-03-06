@@ -84,7 +84,7 @@ internal class BlockDetectorRail : BlockRail
 
         if (hasMinecart)
         {
-            world.ScheduleBlockUpdate(x, y, z, id, getTickRate());
+            world.TickScheduler.ScheduleBlockUpdate(x, y, z, id, getTickRate());
         }
 
     }

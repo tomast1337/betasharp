@@ -199,7 +199,7 @@ internal class BlockButton : Block
                 world.notifyNeighbors(x, y - 1, z, id);
             }
 
-            world.ScheduleBlockUpdate(x, y, z, id, getTickRate());
+            world.TickScheduler.ScheduleBlockUpdate(x, y, z, id, getTickRate());
             return true;
         }
     }

@@ -142,7 +142,7 @@ internal class BlockRedstoneTorch : BlockTorch
     public override void neighborUpdate(World world, int x, int y, int z, int id)
     {
         base.neighborUpdate(world, x, y, z, id);
-        world.ScheduleBlockUpdate(x, y, z, base.id, getTickRate());
+        world.TickScheduler.ScheduleBlockUpdate(x, y, z, base.id, getTickRate());
     }
 
     public override bool isStrongPoweringSide(World world, int x, int y, int z, int side)
