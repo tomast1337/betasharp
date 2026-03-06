@@ -657,7 +657,7 @@ public abstract class Entity
 
     public bool isWet()
     {
-        return inWater || world.isRaining(MathHelper.Floor(x), MathHelper.Floor(y), MathHelper.Floor(z));
+        return inWater || world.Environment.IsRainingAt(MathHelper.Floor(x), MathHelper.Floor(y), MathHelper.Floor(z));
     }
 
     public virtual bool isInWater()

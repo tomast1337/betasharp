@@ -78,7 +78,7 @@ internal class BlockFire : Block
             world.setBlock(x, y, z, 0);
         }
 
-        if (isOnNetherrack || !world.isRaining() || !world.isRaining(x, y, z) && !world.isRaining(x - 1, y, z) && !world.isRaining(x + 1, y, z) && !world.isRaining(x, y, z - 1) && !world.isRaining(x, y, z + 1))
+        if (isOnNetherrack || !world.Environment.IsRaining || !world.Environment.IsRainingAt(x, y, z) && !world.Environment.IsRainingAt(x - 1, y, z) && !world.Environment.IsRainingAt(x + 1, y, z) && !world.Environment.IsRainingAt(x, y, z - 1) && !world.Environment.IsRainingAt(x, y, z + 1))
         {
             int fireAge = world.getBlockMeta(x, y, z);
             if (fireAge < 15)
@@ -126,7 +126,7 @@ internal class BlockFire : Block
                                 if (burnChance > 0)
                                 {
                                     int var13 = (burnChance + 40) / (fireAge + 30);
-                                    if (var13 > 0 && random.NextInt(spreadDifficulty) <= var13 && (!world.isRaining() || !world.isRaining(checkX, checkZ, checkY)) && !world.isRaining(checkX - 1, checkZ, z) && !world.isRaining(checkX + 1, checkZ, checkY) && !world.isRaining(checkX, checkZ, checkY - 1) && !world.isRaining(checkX, checkZ, checkY + 1))
+                                    if (var13 > 0 && random.NextInt(spreadDifficulty) <= var13 && (!world.Environment.IsRaining || !world.Environment.IsRainingAt(checkX, checkZ, checkY)) && !world.Environment.IsRainingAt(checkX - 1, checkZ, z) && !world.Environment.IsRainingAt(checkX + 1, checkZ, checkY) && !world.Environment.IsRainingAt(checkX, checkZ, checkY - 1) && !world.Environment.IsRainingAt(checkX, checkZ, checkY + 1))
                                     {
                                         int spreadChance = fireAge + random.NextInt(5) / 4;
                                         if (spreadChance > 15)
@@ -156,7 +156,7 @@ internal class BlockFire : Block
         if (random.NextInt(spreadFactor) < targetSpreadChance)
         {
             bool isTnt = world.getBlockId(x, y, z) == Block.TNT.id;
-            if (random.NextInt(currentAge + 10) < 5 && !world.isRaining(x, y, z))
+            if (random.NextInt(currentAge + 10) < 5 && !world.Environment.IsRainingAt(x, y, z))
             {
                 int newFireAge = currentAge + random.NextInt(5) / 4;
                 if (newFireAge > 15)

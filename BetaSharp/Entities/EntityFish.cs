@@ -325,7 +325,7 @@ public class EntityFish : Entity
                     else
                     {
                         short var29 = 500;
-                        if (world.isRaining(MathHelper.Floor(x), MathHelper.Floor(y) + 1, MathHelper.Floor(z)))
+                        if (world.Environment.IsRainingAt(MathHelper.Floor(x), MathHelper.Floor(y) + 1, MathHelper.Floor(z)))
                         {
                             var29 = 300;
                         }

@@ -328,7 +328,7 @@ public class WorldRenderer : IWorldAccess
         if (!_game.world.dimension.IsNether)
         {
             GLManager.GL.Disable(GLEnum.Texture2D);
-            Vector3D<double> var2 = world.getSkyColor(_game.camera, var1);
+            Vector3D<double> var2 = world.Environment.GetSkyColor(_game.camera, var1);
             float var3 = (float)var2.X;
             float var4 = (float)var2.Y;
             float var5 = (float)var2.Z;
@@ -386,7 +386,7 @@ public class WorldRenderer : IWorldAccess
             GLManager.GL.Enable(GLEnum.Texture2D);
             GLManager.GL.BlendFunc(GLEnum.SrcAlpha, GLEnum.One);
             GLManager.GL.PushMatrix();
-            var7 = 1.0F - world.getRainGradient(var1);
+            var7 = 1.0F - world.Environment.GetRainGradient(var1);
             var8 = 0.0F;
             var9 = 0.0F;
             var10 = 0.0F;
@@ -565,7 +565,7 @@ public class WorldRenderer : IWorldAccess
         renderEngine.BindTexture(renderEngine.GetTextureId("/environment/clouds.png"));
         GLManager.GL.Enable(GLEnum.Blend);
         GLManager.GL.BlendFunc(GLEnum.SrcAlpha, GLEnum.OneMinusSrcAlpha);
-        Vector3D<double> var13 = world.getCloudColor(var1);
+        Vector3D<double> var13 = world.Environment.GetCloudColor(var1);
         float var14 = (float)var13.X;
         float var15 = (float)var13.Y;
         float var16 = (float)var13.Z;

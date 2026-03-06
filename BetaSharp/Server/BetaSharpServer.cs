@@ -295,7 +295,7 @@ public abstract class BetaSharpServer : Runnable, CommandOutput
                         continue;
                     }
 
-                    if (worlds[0].canSkipNight())
+                    if (worlds[0].Environment.CanSkipNight())
                     {
                         tick();
                         _ticksThisSecond++;

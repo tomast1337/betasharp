@@ -14,7 +14,6 @@ namespace BetaSharp.Client.Worlds;
 
 public class ClientWorld : World
 {
-
     private readonly List<BlockReset> _blockResets = [];
     private readonly ClientNetworkHandler _networkHandler;
     private MultiplayerChunkCache _chunkCache;
@@ -32,7 +31,8 @@ public class ClientWorld : World
     public override void Tick()
     {
         setTime(getTime() + 1L);
-        int ambient = getAmbientDarkness(1.0F);
+        Environment.UpdateWeatherCycles();
+        int ambient = Environment.GetAmbientDarkness(1.0F);
 
         if (ambient != ambientDarkness)
         {
@@ -64,7 +64,6 @@ public class ClientWorld : World
                 _blockResets.RemoveAt(i--);
             }
         }
-
     }
 
     public void ClearBlockResets(int minX, int minY, int minZ, int maxX, int maxY, int maxZ)
@@ -88,11 +87,17 @@ public class ClientWorld : World
 
     public override void UpdateSpawnPosition() => setSpawnPos(new Vec3i(8, 64, 8));
 
-    protected override void ManageChunkUpdatesAndEvents() { }
+    protected override void ManageChunkUpdatesAndEvents()
+    {
+    }
 
-    public override void ScheduleBlockUpdate(int x, int y, int z, int blockId, int delay) { }
+    public override void ScheduleBlockUpdate(int x, int y, int z, int blockId, int delay)
+    {
+    }
 
-    protected override void ProcessScheduledTicks(bool flush) { }
+    protected override void ProcessScheduledTicks(bool flush)
+    {
+    }
 
     public void UpdateChunk(int chunkX, int chunkZ, bool load)
     {
@@ -109,7 +114,6 @@ public class ClientWorld : World
         {
             setBlocksDirty(chunkX * 16, 0, chunkZ * 16, chunkX * 16 + 15, 128, chunkZ * 16 + 15);
         }
-
     }
 
     public override bool SpawnEntity(Entity entity)
@@ -137,7 +141,6 @@ public class ClientWorld : World
         {
             pendingEntities.Remove(ent);
         }
-
     }
 
     protected override void NotifyEntityRemoved(Entity ent)
@@ -147,7 +150,6 @@ public class ClientWorld : World
         {
             pendingEntities.Add(ent);
         }
-
     }
 
     public void ForceEntity(int networkId, Entity ent)
@@ -237,18 +239,4 @@ public class ClientWorld : World
     }
 
     public override void Disconnect() => _networkHandler.sendPacketAndDisconnect(new DisconnectPacket("Quitting"));
-
-
-    protected override void UpdateWeatherCycles()
-    {
-        if (dimension.HasCeiling) return;
-
-        if (TicksSinceLightning > 0) --TicksSinceLightning;
-
-        PrevRainingStrength = RainingStrength;
-        RainingStrength = Math.Clamp(RainingStrength + (Properties.IsRaining ? 0.01f : -0.01f), 0.0f, 1.0f);
-
-        PrevThunderingStrength = ThunderingStrength;
-        ThunderingStrength = Math.Clamp(ThunderingStrength + (Properties.IsThundering ? 0.01f : -0.01f), 0.0f, 1.0f);
-    }
 }

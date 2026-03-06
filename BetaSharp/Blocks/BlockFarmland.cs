@@ -41,7 +41,7 @@ internal class BlockFarmland : Block
     {
         if (random.NextInt(5) == 0)
         {
-            if (!isWaterNearby(world, x, y, z) && !world.isRaining(x, y + 1, z))
+            if (!isWaterNearby(world, x, y, z) && !world.Environment.IsRainingAt(x, y + 1, z))
             {
                 int meta = world.getBlockMeta(x, y, z);
                 if (meta > 0)

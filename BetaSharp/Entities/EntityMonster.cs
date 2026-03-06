@@ -102,7 +102,7 @@ public class EntityMonster : EntityCreature, Monster
         else
         {
             int lightLevel = world.getLightLevel(x, y, z);
-            if (world.isThundering())
+            if (world.Environment.IsThundering())
             {
                 int ambientDarkness = world.ambientDarkness;
                 world.ambientDarkness = 10;

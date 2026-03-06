@@ -24,6 +24,8 @@ public class ServerWorld : World
     public ServerWorld(BetaSharpServer server, IWorldStorage storage, String name, int dimensionId, long seed) : base(storage, name, seed, Dimension.FromId(dimensionId))
     {
         this.server = server;
+
+        Environment.OnRainingStateChanged += HandleWeatherChanged;
     }
 
 
@@ -126,10 +128,7 @@ public class ServerWorld : World
 
     public override Explosion createExplosion(Entity source, double x, double y, double z, float power, bool fire)
     {
-        Explosion var10 = new Explosion(this, source, x, y, z, power)
-        {
-            isFlaming = fire
-        };
+        Explosion var10 = new Explosion(this, source, x, y, z, power) { isFlaming = fire };
         var10.doExplosionA();
         var10.doExplosionB(false);
         server.playerManager.sendToAround(x, y, z, 64.0, dimension.Id, new ExplosionS2CPacket(x, y, z, power, var10.destroyedBlockPositions));
@@ -149,20 +148,12 @@ public class ServerWorld : World
     }
 
 
-    protected override void UpdateWeatherCycles()
+    private void HandleWeatherChanged(bool isRaining)
     {
-        bool raining = isRaining();
-        base.UpdateWeatherCycles();
-        if (raining != isRaining())
-        {
-            if (raining)
-            {
-                server.playerManager.sendToAll(new GameStateChangeS2CPacket(2));
-            }
-            else
-            {
-                server.playerManager.sendToAll(new GameStateChangeS2CPacket(1));
-            }
-        }
+        server.playerManager.sendToAll(
+            isRaining ? new GameStateChangeS2CPacket(1) : new GameStateChangeS2CPacket(2)
+        );
+        bool isThundering = getProperties().IsThundering;
+        server.playerManager.sendToAll(new GameStateChangeS2CPacket(isThundering ? 7 : 8));
     }
 }

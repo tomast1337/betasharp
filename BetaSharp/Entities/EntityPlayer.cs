@@ -730,7 +730,7 @@ public abstract class EntityPlayer : EntityLiving
         velocityX = velocityZ = velocityY = 0.0D;
         if (!world.isRemote)
         {
-            world.updateSleepingPlayers();
+            world.Environment.UpdateSleepingPlayers();
         }
 
         return SleepAttemptResult.OK;
@@ -778,7 +778,7 @@ public abstract class EntityPlayer : EntityLiving
         sleeping = false;
         if (!world.isRemote && updateSleepingPlayers)
         {
-            world.updateSleepingPlayers();
+            world.Environment.UpdateSleepingPlayers();
         }
 
         if (resetSleepTimer)

@@ -31,6 +31,8 @@ public abstract class World : IBlockAccess
     protected WorldProperties Properties;
     protected List<IWorldAccess> EventListeners = [];
 
+    public readonly EnvironmentManager Environment;
+
     public RuleSet Rules { get; protected set; }
     public bool isNewWorld;
     public bool isRemote = false;
@@ -58,16 +60,13 @@ public abstract class World : IBlockAccess
     public List<Entity> globalEntities = [];
     private readonly List<Entity> _entitiesToUnload = [];
 
-    [ThreadStatic]
-    private static List<Entity>? _tempCollisionEntities;
+    [ThreadStatic] private static List<Entity>? _tempCollisionEntities;
 
     // Reusable scratch list for GetEntityCollisionsScratch — avoids per-call List<Box> allocation.
-    [ThreadStatic]
-    private static List<Box>? _tempCollisionBoxes;
+    [ThreadStatic] private static List<Box>? _tempCollisionBoxes;
 
     // Reusable scratch list for GetEntitiesScratch — avoids per-call List<Entity> allocation.
-    [ThreadStatic]
-    private static List<Entity>? _tempCollisionEntitiesResult;
+    [ThreadStatic] private static List<Entity>? _tempCollisionEntitiesResult;
 
     private readonly HashSet<ChunkPos> _activeChunks = new();
     public List<BlockEntity> blockEntities = [];
@@ -103,8 +102,9 @@ public abstract class World : IBlockAccess
         Rules = Properties.RulesTag != null
             ? RuleSet.FromNBT(RuleRegistry.Instance, Properties.RulesTag)
             : new RuleSet(RuleRegistry.Instance);
-        updateSkyBrightness();
-        prepareWeather();
+        Environment = new EnvironmentManager(this);
+        Environment.PrepareWeather();
+        Environment.UpdateSkyBrightness();
     }
 
     protected World(IWorldStorage worldStorage, string levelName, long seed, Dimension? dim)
@@ -152,8 +152,9 @@ public abstract class World : IBlockAccess
             initializeSpawnPoint();
         }
 
-        updateSkyBrightness();
-        prepareWeather();
+        Environment = new EnvironmentManager(this);
+        Environment.PrepareWeather();
+        Environment.UpdateSkyBrightness();
     }
 
     public BiomeSource getBiomeSource()
@@ -941,7 +942,7 @@ public abstract class World : IBlockAccess
         if (entity is EntityPlayer player)
         {
             players.Add(player);
-            updateSleepingPlayers();
+            Environment.UpdateSleepingPlayers();
         }
 
         GetChunk(chunkX, chunkZ).AddEntity(entity);
@@ -983,7 +984,7 @@ public abstract class World : IBlockAccess
         if (entity is EntityPlayer)
         {
             players.Remove((EntityPlayer)entity);
-            updateSleepingPlayers();
+            Environment.UpdateSleepingPlayers();
         }
     }
 
@@ -993,7 +994,7 @@ public abstract class World : IBlockAccess
         if (entity is EntityPlayer player)
         {
             players.Remove(player);
-            this.updateSleepingPlayers();
+            Environment.UpdateSleepingPlayers();
         }
 
         int chunkX = entity.chunkX;
@@ -1096,122 +1097,12 @@ public abstract class World : IBlockAccess
         return collidingBoundingBoxes;
     }
 
-    protected int getAmbientDarkness(float delta)
-    {
-        float timeOfDay = getTime(delta);
-
-        float sunIntensity = 1.0F - (MathHelper.Cos(timeOfDay * (float)Math.PI * 2.0F) * 2.0F + 0.5F);
-        sunIntensity = Math.Clamp(sunIntensity, 0.0F, 1.0F);
-
-        float lightLevel = 1.0F - sunIntensity;
-        lightLevel = (float)(lightLevel * (1.0D - (getRainGradient(delta) * 5.0F) / 16.0D));
-        lightLevel = (float)(lightLevel * (1.0D - (getThunderGradient(delta) * 5.0F) / 16.0D));
-
-        float finalDarknessFactor = 1.0F - lightLevel;
-        return (int)(finalDarknessFactor * 11.0F);
-    }
-
-    public Vector3D<double> getSkyColor(Entity entity, float partialTicks)
-    {
-        float timeOfDay = getTime(partialTicks);
-
-        float sunIntensity = MathHelper.Cos(timeOfDay * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
-        sunIntensity = Math.Clamp(sunIntensity, 0.0F, 1.0F);
-
-        int blockX = MathHelper.Floor(entity.x);
-        int blockZ = MathHelper.Floor(entity.z);
-        float temperature = (float)getBiomeSource().GetTemperature(blockX, blockZ);
-        int biomeSkyColorInt = getBiomeSource().GetBiome(blockX, blockZ).GetSkyColorByTemp(temperature);
-
-        float red = (biomeSkyColorInt >> 16 & 255) / 255.0F;
-        float green = (biomeSkyColorInt >> 8 & 255) / 255.0F;
-        float blue = (biomeSkyColorInt & 255) / 255.0F;
-
-        red *= sunIntensity;
-        green *= sunIntensity;
-        blue *= sunIntensity;
-
-        float rainStrength = getRainGradient(partialTicks);
-        if (rainStrength > 0.0F)
-        {
-            float grayscaleLuminance = (red * 0.3F + green * 0.59F + blue * 0.11F) * 0.6F;
-            float rainFactor = 1.0F - rainStrength * (12.0F / 16.0F);
-
-            red = red * rainFactor + grayscaleLuminance * (1.0F - rainFactor);
-            green = green * rainFactor + grayscaleLuminance * (1.0F - rainFactor);
-            blue = blue * rainFactor + grayscaleLuminance * (1.0F - rainFactor);
-        }
-
-        float thunderStrength = getThunderGradient(partialTicks);
-        if (thunderStrength > 0.0F)
-        {
-            float grayscaleLuminance = (red * 0.3F + green * 0.59F + blue * 0.11F) * 0.2F;
-            float thunderFactor = 1.0F - thunderStrength * (12.0F / 16.0F);
-
-            red = red * thunderFactor + grayscaleLuminance * (1.0F - thunderFactor);
-            green = green * thunderFactor + grayscaleLuminance * (1.0F - thunderFactor);
-            blue = blue * thunderFactor + grayscaleLuminance * (1.0F - thunderFactor);
-        }
-
-        if (lightningTicksLeft > 0)
-        {
-            float lightningFactor = lightningTicksLeft - partialTicks;
-            if (lightningFactor > 1.0F) lightningFactor = 1.0F;
-
-            lightningFactor *= 0.45F;
-
-            red = red * (1.0F - lightningFactor) + 0.8F * lightningFactor;
-            green = green * (1.0F - lightningFactor) + 0.8F * lightningFactor;
-            blue = blue * (1.0F - lightningFactor) + 1.0F * lightningFactor;
-        }
-
-        return new(red, green, blue);
-    }
 
     public float getTime(float delta)
     {
         return dimension.GetTimeOfDay(Properties.WorldTime, delta);
     }
 
-    public Vector3D<double> getCloudColor(float partialTicks)
-    {
-        float timeOfDay = getTime(partialTicks);
-
-        float sunIntensity = MathHelper.Cos(timeOfDay * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
-        sunIntensity = Math.Clamp(sunIntensity, 0.0F, 1.0F);
-
-        float red = (_worldTimeMask >> 16 & 255L) / 255.0F;
-        float green = (_worldTimeMask >> 8 & 255L) / 255.0F;
-        float blue = (_worldTimeMask & 255L) / 255.0F;
-
-        float rainStrength = getRainGradient(partialTicks);
-        if (rainStrength > 0.0F)
-        {
-            float grayscaleLuminance = (red * 0.3F + green * 0.59F + blue * 0.11F) * 0.6F;
-            float rainFactor = 1.0F - rainStrength * 0.95F;
-
-            red = red * rainFactor + grayscaleLuminance * (1.0F - rainFactor);
-            green = green * rainFactor + grayscaleLuminance * (1.0F - rainFactor);
-            blue = blue * rainFactor + grayscaleLuminance * (1.0F - rainFactor);
-        }
-
-        red *= sunIntensity * 0.9F + 0.1F;
-        green *= sunIntensity * 0.9F + 0.1F;
-        blue *= sunIntensity * 0.85F + 0.15F;
-
-        float thunderStrength = getThunderGradient(partialTicks);
-        if (thunderStrength > 0.0F)
-        {
-            float grayscaleLuminance = (red * 0.3F + green * 0.59F + blue * 0.11F) * 0.2F;
-            float thunderFactor = 1.0F - thunderStrength * 0.95F;
-
-            red = red * thunderFactor + grayscaleLuminance * (1.0F - thunderFactor);
-            green = green * thunderFactor + grayscaleLuminance * (1.0F - thunderFactor);
-            blue = blue * thunderFactor + grayscaleLuminance * (1.0F - thunderFactor);
-        }
-
-        return new(red, green, blue);
-    }
 
     public Vector3D<double> getFogColor(float partialTicks)
     {
@@ -1304,6 +1195,7 @@ public abstract class World : IBlockAccess
                 globalEntities.RemoveAt(i--);
             }
         }
+
         Profiler.Stop("updateEntites.updateWeatherEffects");
 
         Profiler.Start("updateEntites.clearUnloadedEntities");
@@ -1547,6 +1439,7 @@ public abstract class World : IBlockAccess
                 }
             }
         }
+
         return false;
     }
 
@@ -1574,6 +1467,7 @@ public abstract class World : IBlockAccess
                 }
             }
         }
+
         return false;
     }
 
@@ -1603,6 +1497,7 @@ public abstract class World : IBlockAccess
                 }
             }
         }
+
         return false;
     }
 
@@ -1673,6 +1568,7 @@ public abstract class World : IBlockAccess
                 }
             }
         }
+
         return false;
     }
 
@@ -1706,6 +1602,7 @@ public abstract class World : IBlockAccess
                 }
             }
         }
+
         return false;
     }
 
@@ -1975,15 +1872,6 @@ public abstract class World : IBlockAccess
         }
     }
 
-    public void updateSkyBrightness()
-    {
-        int darkness = getAmbientDarkness(1.0F);
-        if (darkness != ambientDarkness)
-        {
-            ambientDarkness = darkness;
-        }
-    }
-
     public void allowSpawning(bool allowMonsterSpawning, bool allowMobSpawning)
     {
         _spawnHostileMobs = allowMonsterSpawning;
@@ -1992,11 +1880,11 @@ public abstract class World : IBlockAccess
 
     public virtual void Tick()
     {
-        UpdateWeatherCycles();
+        Environment.UpdateWeatherCycles();
 
         long nextWorldTime;
 
-        if (canSkipNight())
+        if (Environment.CanSkipNight())
         {
             bool wasSpawnInterrupted = false;
 
@@ -2009,7 +1897,7 @@ public abstract class World : IBlockAccess
             {
                 nextWorldTime = Properties.WorldTime + 24000L;
                 Properties.WorldTime = nextWorldTime - (nextWorldTime % 24000L);
-                afterSkipNight();
+                Environment.AfterSkipNight();
             }
         }
 
@@ -2022,7 +1910,7 @@ public abstract class World : IBlockAccess
         Profiler.Stop("unload100OldestChunks");
 
         Profiler.Start("updateSkylightSubtracted");
-        int currentAmbientDarkness = getAmbientDarkness(1.0F);
+        int currentAmbientDarkness = Environment.GetAmbientDarkness(1.0F);
         if (currentAmbientDarkness != ambientDarkness)
         {
             ambientDarkness = currentAmbientDarkness;
@@ -2050,104 +1938,6 @@ public abstract class World : IBlockAccess
         Profiler.Stop("tickUpdates");
 
         ManageChunkUpdatesAndEvents();
-    }
-
-    private void prepareWeather()
-    {
-        if (Properties.IsRaining)
-        {
-            RainingStrength = 1.0F;
-            if (Properties.IsThundering)
-            {
-                ThunderingStrength = 1.0F;
-            }
-        }
-    }
-
-    protected virtual void UpdateWeatherCycles()
-    {
-        if (dimension.HasCeiling) return;
-
-        if (TicksSinceLightning > 0)
-        {
-            --TicksSinceLightning;
-        }
-
-        int thunderTime = Properties.ThunderTime;
-        if (thunderTime <= 0)
-        {
-            if (Properties.IsThundering)
-            {
-                Properties.ThunderTime = random.NextInt(12000) + 3600;
-            }
-            else
-            {
-                Properties.ThunderTime = random.NextInt(168000) + 12000;
-            }
-        }
-        else
-        {
-            --thunderTime;
-            Properties.ThunderTime = thunderTime;
-            if (thunderTime <= 0)
-            {
-                Properties.IsThundering = !Properties.IsThundering;
-            }
-        }
-
-        int rainTime = Properties.RainTime;
-        if (rainTime <= 0)
-        {
-            if (Properties.IsRaining)
-            {
-                Properties.RainTime = random.NextInt(12000) + 12000;
-            }
-            else
-            {
-                Properties.RainTime = random.NextInt(168000) + 12000;
-            }
-        }
-        else
-        {
-            --rainTime;
-            Properties.RainTime = rainTime;
-            if (rainTime <= 0)
-            {
-                Properties.IsRaining = !Properties.IsRaining;
-            }
-        }
-
-        PrevRainingStrength = RainingStrength;
-        if (Properties.IsRaining)
-        {
-            RainingStrength = (float)(RainingStrength + 0.01D);
-        }
-        else
-        {
-            RainingStrength = (float)(RainingStrength - 0.01D);
-        }
-
-        RainingStrength = Math.Clamp(RainingStrength, 0.0F, 1.0F);
-
-        PrevThunderingStrength = ThunderingStrength;
-        if (Properties.IsThundering)
-        {
-            ThunderingStrength = (float)(ThunderingStrength + 0.01D);
-        }
-        else
-        {
-            ThunderingStrength = (float)(ThunderingStrength - 0.01D);
-        }
-
-        ThunderingStrength = Math.Clamp(ThunderingStrength, 0.0F, 1.0F);
-    }
-
-    private void clearWeather()
-    {
-        Properties.RainTime = 0;
-        Properties.IsRaining = false;
-        Properties.ThunderTime = 0;
-        Properties.IsThundering = false;
     }
 
     protected virtual void ManageChunkUpdatesAndEvents()
@@ -2206,7 +1996,7 @@ public abstract class World : IBlockAccess
                 }
             }
 
-            if (random.NextInt(100000) == 0 && isRaining() && isThundering())
+            if (random.NextInt(100000) == 0 && Environment.IsRaining && Environment.IsThundering())
             {
                 _lcgBlockSeed = _lcgBlockSeed * 3 + 1013904223;
                 int randomVal = _lcgBlockSeed >> 2;
@@ -2214,7 +2004,7 @@ public abstract class World : IBlockAccess
                 int worldZ = worldZBase + (randomVal >> 8 & 15);
                 int worldY = getTopSolidBlockY(worldX, worldZ);
 
-                if (isRaining(worldX, worldY, worldZ))
+                if (Environment.IsRainingAt(worldX, worldY, worldZ))
                 {
                     spawnGlobalEntity(new EntityLightningBolt(this, worldX, worldY, worldZ));
                     TicksSinceLightning = 2;
@@ -2237,7 +2027,7 @@ public abstract class World : IBlockAccess
                     int blockBelowId = currentChunk.GetBlockId(localX, worldY - 1, localZ);
                     int currentBlockId = currentChunk.GetBlockId(localX, worldY, localZ);
 
-                    if (isRaining() && currentBlockId == 0 && Block.Snow.canPlaceAt(this, worldX, worldY, worldZ) &&
+                    if (Environment.IsRaining && currentBlockId == 0 && Block.Snow.canPlaceAt(this, worldX, worldY, worldZ) &&
                         blockBelowId != 0 && blockBelowId != Block.Ice.id &&
                         Block.Blocks[blockBelowId].material.BlocksMovement)
                     {
@@ -2369,7 +2159,6 @@ public abstract class World : IBlockAccess
 
         return results;
     }
-
 
 
     public List<Entity> getEntities()
@@ -2738,9 +2527,11 @@ public abstract class World : IBlockAccess
             {
                 GetChunk(chunkX, chunkZ).RemoveEntity(entity);
             }
+
             _entitiesById.Remove(entity.id);
             NotifyEntityRemoved(entity);
         }
+
         _entitiesToUnload.Clear();
 
         for (int i = 0; i < entities.Count; ++i)
@@ -2752,6 +2543,7 @@ public abstract class World : IBlockAccess
                 {
                     continue;
                 }
+
                 entity.vehicle.passenger = null;
                 entity.vehicle = null;
             }
@@ -2789,91 +2581,6 @@ public abstract class World : IBlockAccess
     public WorldProperties getProperties()
     {
         return Properties;
-    }
-
-    public void updateSleepingPlayers()
-    {
-        _allPlayersSleeping = players.Count > 0;
-        foreach (var player in players)
-        {
-            if (!player.isSleeping())
-            {
-                _allPlayersSleeping = false;
-                break;
-            }
-        }
-    }
-
-    private void afterSkipNight()
-    {
-        _allPlayersSleeping = false;
-        foreach (var player in players)
-        {
-            if (player.isSleeping())
-            {
-                player.wakeUp(false, false, true);
-            }
-        }
-
-        clearWeather();
-    }
-
-    public bool canSkipNight()
-    {
-        if (!_allPlayersSleeping || isRemote)
-        {
-            return false;
-        }
-
-        return players.All(player => player.isPlayerFullyAsleep());
-    }
-
-    public float getThunderGradient(float delta)
-    {
-        return (PrevThunderingStrength + (ThunderingStrength - PrevThunderingStrength) * delta) *
-               getRainGradient(delta);
-    }
-
-    public float getRainGradient(float delta)
-    {
-        return PrevRainingStrength + (RainingStrength - PrevRainingStrength) * delta;
-    }
-
-    public void setRainGradient(float rainGradient)
-    {
-        PrevRainingStrength = rainGradient;
-        RainingStrength = rainGradient;
-    }
-
-    public bool isThundering()
-    {
-        return getThunderGradient(1.0F) > 0.9D;
-    }
-
-    public bool isRaining()
-    {
-        return getRainGradient(1.0F) > 0.2D;
-    }
-
-    public bool isRaining(int x, int y, int z)
-    {
-        if (!isRaining())
-        {
-            return false;
-        }
-        else if (!hasSkyLight(x, y, z))
-        {
-            return false;
-        }
-        else if (getTopSolidBlockY(x, z) > y)
-        {
-            return false;
-        }
-        else
-        {
-            Biome biome = getBiomeSource().GetBiome(x, z);
-            return biome.GetEnableSnow() ? false : biome.CanSpawnLightningBolt();
-        }
     }
 
     public void setState(string id, PersistentState state)

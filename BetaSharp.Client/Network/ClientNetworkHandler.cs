@@ -791,14 +791,23 @@ public class ClientNetworkHandler : NetHandler
         if (reason == 1)
         {
             worldClient.getProperties().IsRaining = true;
-            worldClient.setRainGradient(1.0F);
+            worldClient.Environment.SetRainGradient(1.0F);
         }
         else if (reason == 2)
         {
             worldClient.getProperties().IsRaining = false;
-            worldClient.setRainGradient(0.0F);
+            worldClient.Environment.SetRainGradient(0.0F);
         }
-
+        else if (reason == 7)
+        {
+            worldClient.getProperties().IsThundering = true;
+            worldClient.Environment.SetThunderGradient(1.0F);
+        }
+        else if (reason == 8)
+        {
+            worldClient.getProperties().IsThundering = false;
+            worldClient.Environment.SetThunderGradient(0.0F);
+        }
     }
 
     public override void onMapUpdate(MapUpdateS2CPacket packet)
