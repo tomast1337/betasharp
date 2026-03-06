@@ -1,5 +1,4 @@
 using BetaSharp.Entities;
-using BetaSharp.Network.Packets.S2CPlay;
 using BetaSharp.Rules;
 using BetaSharp.Worlds.Core;
 
@@ -74,42 +73,19 @@ internal static class WorldCommands
                     world.globalEntities.Clear();
                     world.getProperties().IsRaining = false;
                     world.getProperties().IsThundering = false;
-                    world.Environment.SetRainGradient(0.0F);
-                    world.Environment.SetThunderGradient(0.0F);
                     break;
                 case "rain":
                     world.getProperties().IsRaining = true;
                     world.getProperties().IsThundering = false;
-                    world.Environment.SetRainGradient(1.0F);
-                    world.Environment.SetThunderGradient(0.0F);
                     break;
                 case "storm":
                     world.getProperties().IsRaining = true;
                     world.getProperties().IsThundering = true;
-                    world.Environment.SetRainGradient(1.0F);
-                    world.Environment.SetThunderGradient(1.0F);
                     break;
                 default:
                     output.SendMessage("Unknown weather type. Use: clear, rain, or storm");
                     return;
             }
-        }
-
-        // Notify all clients immediately (reason 1 = start rain, 2 = stop rain, 7 = thunder on, 8 = thunder off)
-        if (weather == "storm")
-        {
-            server.playerManager.sendToAll(new GameStateChangeS2CPacket(1));
-            server.playerManager.sendToAll(new GameStateChangeS2CPacket(7));
-        }
-        else if (weather == "rain")
-        {
-            server.playerManager.sendToAll(new GameStateChangeS2CPacket(1));
-            server.playerManager.sendToAll(new GameStateChangeS2CPacket(8));
-        }
-        else if (weather == "clear")
-        {
-            server.playerManager.sendToAll(new GameStateChangeS2CPacket(2));
-            server.playerManager.sendToAll(new GameStateChangeS2CPacket(8));
         }
 
         output.SendMessage($"Weather set to {weather}.");
