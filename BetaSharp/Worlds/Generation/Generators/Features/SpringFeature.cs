@@ -76,9 +76,9 @@ internal class SpringFeature : Feature
         {
             world.setBlock(x, y, z, _liquidBlockId);
 
-            world.instantBlockUpdateEnabled = true;
+            world.InstantBlockUpdateEnabled = true;
             Block.Blocks[_liquidBlockId].onTick(world, x, y, z, rand);
-            world.instantBlockUpdateEnabled = false;
+            world.InstantBlockUpdateEnabled = false;
         }
 
         return true;

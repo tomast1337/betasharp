@@ -55,9 +55,10 @@ public abstract class World : IBlockAccess
     public bool eventProcessingEnabled;
     public bool IsNewWorld;
     public bool IsRemote = false;
-    public int lightningTicksLeft = 0;
     public bool pauseTicking = false;
     public PersistentStateManager PersistentStateManager;
+
+    public bool InstantBlockUpdateEnabled = false;
 
     public WorldProperties Properties { get; protected set; }
     public JavaRandom random = new();
@@ -1573,7 +1574,7 @@ public abstract class World : IBlockAccess
                 if (Environment.IsRainingAt(worldX, worldY, worldZ))
                 {
                     Entities.SpawnGlobalEntity(new EntityLightningBolt(this, worldX, worldY, worldZ));
-                    lightningTicksLeft = 2; // Error
+                    Environment.LightningTicksLeft = 2; // Error
                 }
             }
 

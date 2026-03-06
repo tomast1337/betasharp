@@ -86,7 +86,7 @@ public class EntityLightningBolt : EntityWeatherEffect
                 entity.onStruckByLightning(this);
             }
 
-            world.lightningTicksLeft = 2;
+            world.Environment.LightningTicksLeft = 2;
         }
 
     }

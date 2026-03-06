@@ -1308,9 +1308,9 @@ public partial class BetaSharp
             Profiler.PushGroup("theWorldUpdateEntities");
             if (!isGamePaused)
             {
-                if (world.lightningTicksLeft > 0)
+                if (world.Environment.LightningTicksLeft > 0)
                 {
-                    --world.lightningTicksLeft;
+                    --world.Environment.LightningTicksLeft;
                 }
 
                 world.Entities.TickEntities();
