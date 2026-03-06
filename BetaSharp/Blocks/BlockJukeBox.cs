@@ -20,7 +20,7 @@ internal class BlockJukeBox : BlockWithEntity
 
     public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
     {
-        if (world.getBlockMeta(x, y, z) == 0)
+        if (world.GetBlockMeta(x, y, z) == 0)
         {
             return false;
         }
@@ -35,10 +35,10 @@ internal class BlockJukeBox : BlockWithEntity
     {
         if (!world.isRemote)
         {
-            BlockEntityRecordPlayer jukebox = (BlockEntityRecordPlayer)world.getBlockEntity(x, y, z);
+            BlockEntityRecordPlayer jukebox = (BlockEntityRecordPlayer)world.GetBlockEntity(x, y, z);
             jukebox.recordId = id;
             jukebox.markDirty();
-            world.setBlockMeta(x, y, z, 1);
+            world.SetBlockMeta(x, y, z, 1);
         }
     }
 
@@ -46,15 +46,15 @@ internal class BlockJukeBox : BlockWithEntity
     {
         if (!world.isRemote)
         {
-            BlockEntityRecordPlayer jukebox = (BlockEntityRecordPlayer)world.getBlockEntity(x, y, z);
+            BlockEntityRecordPlayer jukebox = (BlockEntityRecordPlayer)world.GetBlockEntity(x, y, z);
             int recordId = jukebox.recordId;
             if (recordId != 0)
             {
-                world.worldEvent(1005, x, y, z, 0);
-                world.playStreaming((String)null, x, y, z);
+                world.WorldEvent(1005, x, y, z, 0);
+                world.PlayStreaming((String)null, x, y, z);
                 jukebox.recordId = 0;
                 jukebox.markDirty();
-                world.setBlockMeta(x, y, z, 0);
+                world.SetBlockMeta(x, y, z, 0);
                 float spreadFactor = 0.7F;
                 double offsetX = (double)(world.random.NextFloat() * spreadFactor) + (double)(1.0F - spreadFactor) * 0.5D;
                 double offsetY = (double)(world.random.NextFloat() * spreadFactor) + (double)(1.0F - spreadFactor) * 0.2D + 0.6D;

@@ -40,7 +40,7 @@ internal class BlockPressurePlate : Block
 
     public override bool canPlaceAt(World world, int x, int y, int z)
     {
-        return world.shouldSuffocate(x, y - 1, z);
+        return world.ShouldSuffocate(x, y - 1, z);
     }
 
     public override void onPlaced(World world, int x, int y, int z)
@@ -50,15 +50,15 @@ internal class BlockPressurePlate : Block
     public override void neighborUpdate(World world, int x, int y, int z, int id)
     {
         bool shouldBreak = false;
-        if (!world.shouldSuffocate(x, y - 1, z))
+        if (!world.ShouldSuffocate(x, y - 1, z))
         {
             shouldBreak = true;
         }
 
         if (shouldBreak)
         {
-            dropStacks(world, x, y, z, world.getBlockMeta(x, y, z));
-            world.setBlock(x, y, z, 0);
+            dropStacks(world, x, y, z, world.GetBlockMeta(x, y, z));
+            world.SetBlock(x, y, z, 0);
         }
 
     }
@@ -67,7 +67,7 @@ internal class BlockPressurePlate : Block
     {
         if (!world.isRemote)
         {
-            if (world.getBlockMeta(x, y, z) != 0)
+            if (world.GetBlockMeta(x, y, z) != 0)
             {
                 updatePlateState(world, x, y, z);
             }
@@ -78,7 +78,7 @@ internal class BlockPressurePlate : Block
     {
         if (!world.isRemote)
         {
-            if (world.getBlockMeta(x, y, z) != 1)
+            if (world.GetBlockMeta(x, y, z) != 1)
             {
                 updatePlateState(world, x, y, z);
             }
@@ -87,13 +87,13 @@ internal class BlockPressurePlate : Block
 
     private void updatePlateState(World world, int x, int y, int z)
     {
-        bool wasPressed = world.getBlockMeta(x, y, z) == 1;
+        bool wasPressed = world.GetBlockMeta(x, y, z) == 1;
         bool shouldBePressed = false;
         float detectionInset = 2.0F / 16.0F;
         List<Entity> entitiesInBox = null;
         if (activationRule == PressurePlateActiviationRule.EVERYTHING)
         {
-            entitiesInBox = world.getEntities((Entity)null, new Box((double)((float)x + detectionInset), (double)y, (double)((float)z + detectionInset), (double)((float)(x + 1) - detectionInset), (double)y + 0.25D, (double)((float)(z + 1) - detectionInset)));
+            entitiesInBox = world.GetEntities((Entity)null, new Box((double)((float)x + detectionInset), (double)y, (double)((float)z + detectionInset), (double)((float)(x + 1) - detectionInset), (double)y + 0.25D, (double)((float)(z + 1) - detectionInset)));
         }
 
         if (activationRule == PressurePlateActiviationRule.MOBS)
@@ -113,20 +113,20 @@ internal class BlockPressurePlate : Block
 
         if (shouldBePressed && !wasPressed)
         {
-            world.setBlockMeta(x, y, z, 1);
-            world.notifyNeighbors(x, y, z, id);
-            world.notifyNeighbors(x, y - 1, z, id);
-            world.setBlocksDirty(x, y, z, x, y, z);
-            world.playSound((double)x + 0.5D, (double)y + 0.1D, (double)z + 0.5D, "random.click", 0.3F, 0.6F);
+            world.SetBlockMeta(x, y, z, 1);
+            world.NotifyNeighbors(x, y, z, id);
+            world.NotifyNeighbors(x, y - 1, z, id);
+            world.SetBlocksDirty(x, y, z, x, y, z);
+            world.PlaySound((double)x + 0.5D, (double)y + 0.1D, (double)z + 0.5D, "random.click", 0.3F, 0.6F);
         }
 
         if (!shouldBePressed && wasPressed)
         {
-            world.setBlockMeta(x, y, z, 0);
-            world.notifyNeighbors(x, y, z, id);
-            world.notifyNeighbors(x, y - 1, z, id);
-            world.setBlocksDirty(x, y, z, x, y, z);
-            world.playSound((double)x + 0.5D, (double)y + 0.1D, (double)z + 0.5D, "random.click", 0.3F, 0.5F);
+            world.SetBlockMeta(x, y, z, 0);
+            world.NotifyNeighbors(x, y, z, id);
+            world.NotifyNeighbors(x, y - 1, z, id);
+            world.SetBlocksDirty(x, y, z, x, y, z);
+            world.PlaySound((double)x + 0.5D, (double)y + 0.1D, (double)z + 0.5D, "random.click", 0.3F, 0.5F);
         }
 
         if (shouldBePressed)
@@ -138,11 +138,11 @@ internal class BlockPressurePlate : Block
 
     public override void onBreak(World world, int x, int y, int z)
     {
-        int plateState = world.getBlockMeta(x, y, z);
+        int plateState = world.GetBlockMeta(x, y, z);
         if (plateState > 0)
         {
-            world.notifyNeighbors(x, y, z, id);
-            world.notifyNeighbors(x, y - 1, z, id);
+            world.NotifyNeighbors(x, y, z, id);
+            world.NotifyNeighbors(x, y - 1, z, id);
         }
 
         base.onBreak(world, x, y, z);
@@ -150,7 +150,7 @@ internal class BlockPressurePlate : Block
 
     public override void updateBoundingBox(IBlockAccess iBlockAccess, int x, int y, int z)
     {
-        bool isPressed = iBlockAccess.getBlockMeta(x, y, z) == 1;
+        bool isPressed = iBlockAccess.GetBlockMeta(x, y, z) == 1;
         float edgeInset = 1.0F / 16.0F;
         if (isPressed)
         {
@@ -165,12 +165,12 @@ internal class BlockPressurePlate : Block
 
     public override bool isPoweringSide(IBlockAccess iBlockAccess, int x, int y, int z, int side)
     {
-        return iBlockAccess.getBlockMeta(x, y, z) > 0;
+        return iBlockAccess.GetBlockMeta(x, y, z) > 0;
     }
 
     public override bool isStrongPoweringSide(World world, int x, int y, int z, int side)
     {
-        return world.getBlockMeta(x, y, z) == 0 ? false : side == 1;
+        return world.GetBlockMeta(x, y, z) == 0 ? false : side == 1;
     }
 
     public override bool canEmitRedstonePower()

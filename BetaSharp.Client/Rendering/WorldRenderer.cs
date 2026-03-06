@@ -150,14 +150,14 @@ public class WorldRenderer : IWorldAccess
 
     public void changeWorld(World world)
     {
-        this.world?.removeWorldAccess(this);
+        this.world?.RemoveWorldAccess(this);
 
         EntityRenderDispatcher.instance.func_852_a(world);
         this.world = world;
         globalRenderBlocks = new BlockRenderer();
         if (world != null)
         {
-            world.addWorldAccess(this);
+            world.AddWorldAccess(this);
             loadRenderers();
         }
 
@@ -208,7 +208,7 @@ public class WorldRenderer : IWorldAccess
             BlockEntityRenderer.StaticPlayerX = var4.lastTickX + (var4.x - var4.lastTickX) * (double)var3;
             BlockEntityRenderer.StaticPlayerY = var4.lastTickY + (var4.y - var4.lastTickY) * (double)var3;
             BlockEntityRenderer.StaticPlayerZ = var4.lastTickZ + (var4.z - var4.lastTickZ) * (double)var3;
-            List<Entity> var5 = world.getEntities();
+            List<Entity> var5 = world.GetEntities();
             countEntitiesTotal = var5.Count;
 
             int var6;
@@ -255,7 +255,7 @@ public class WorldRenderer : IWorldAccess
                         var8 = 127;
                     }
 
-                    if (world.isPosLoaded(MathHelper.Floor(var7.x), var8, MathHelper.Floor(var7.z)))
+                    if (world.IsPosLoaded(MathHelper.Floor(var7.x), var8, MathHelper.Floor(var7.z)))
                     {
                         ++countEntitiesRendered;
                         EntityRenderDispatcher.instance.renderEntity(var7, var3);
@@ -297,7 +297,7 @@ public class WorldRenderer : IWorldAccess
             Camera = cam,
             ViewPos = new Vector3D<double>(var33, var7, var9),
             RenderDistance = renderDistance,
-            Ticks = world.getTime(),
+            Ticks = world.GetTime(),
             PartialTicks = (float)var3,
             DeltaTime = _game.Timer.DeltaTime,
             EnvironmentAnimation = _game.options.EnvironmentAnimation,
@@ -327,7 +327,7 @@ public class WorldRenderer : IWorldAccess
         if (!_game.world.dimension.IsNether)
         {
             GLManager.GL.Disable(GLEnum.Texture2D);
-            Vector3D<double> var2 = world.getSkyColor(_game.camera, var1);
+            Vector3D<double> var2 = world.GetSkyColor(_game.camera, var1);
             float var3 = (float)var2.X;
             float var4 = (float)var2.Y;
             float var5 = (float)var2.Z;
@@ -345,7 +345,7 @@ public class WorldRenderer : IWorldAccess
             GLManager.GL.Enable(GLEnum.Blend);
             GLManager.GL.BlendFunc(GLEnum.SrcAlpha, GLEnum.OneMinusSrcAlpha);
             Lighting.turnOff();
-            float[] var18 = world.dimension.GetBackgroundColor(world.getTime(var1), var1);
+            float[] var18 = world.dimension.GetBackgroundColor(world.GetTime(var1), var1);
             float var9;
             float var10;
             float var11;
@@ -356,7 +356,7 @@ public class WorldRenderer : IWorldAccess
                 GLManager.GL.ShadeModel(GLEnum.Smooth);
                 GLManager.GL.PushMatrix();
                 GLManager.GL.Rotate(90.0F, 1.0F, 0.0F, 0.0F);
-                var8 = world.getTime(var1);
+                var8 = world.GetTime(var1);
                 GLManager.GL.Rotate(var8 > 0.5F ? 180.0F : 0.0F, 0.0F, 0.0F, 1.0F);
                 var9 = var18[0];
                 var10 = var18[1];
@@ -385,14 +385,14 @@ public class WorldRenderer : IWorldAccess
             GLManager.GL.Enable(GLEnum.Texture2D);
             GLManager.GL.BlendFunc(GLEnum.SrcAlpha, GLEnum.One);
             GLManager.GL.PushMatrix();
-            var7 = 1.0F - world.getRainGradient(var1);
+            var7 = 1.0F - world.GetRainGradient(var1);
             var8 = 0.0F;
             var9 = 0.0F;
             var10 = 0.0F;
             GLManager.GL.Color4(1.0F, 1.0F, 1.0F, var7);
             GLManager.GL.Translate(var8, var9, var10);
             GLManager.GL.Rotate(0.0F, 0.0F, 0.0F, 1.0F);
-            GLManager.GL.Rotate(world.getTime(var1) * 360.0F, 1.0F, 0.0F, 0.0F);
+            GLManager.GL.Rotate(world.GetTime(var1) * 360.0F, 1.0F, 0.0F, 0.0F);
             var11 = 30.0F;
             renderEngine.BindTexture(renderEngine.GetTextureId("/terrain/sun.png"));
             var17.startDrawingQuads();
@@ -410,7 +410,7 @@ public class WorldRenderer : IWorldAccess
             var17.addVertexWithUV((double)-var11, -100.0D, (double)-var11, 1.0D, 0.0D);
             var17.draw();
             GLManager.GL.Disable(GLEnum.Texture2D);
-            var12 = world.calcualteSkyLightIntensity(var1) * var7;
+            var12 = world.CalculateSkyLightIntensity(var1) * var7;
             if (var12 > 0.0F)
             {
                 GLManager.GL.Color4(var12, var12, var12, var12);
@@ -564,7 +564,7 @@ public class WorldRenderer : IWorldAccess
         renderEngine.BindTexture(renderEngine.GetTextureId("/environment/clouds.png"));
         GLManager.GL.Enable(GLEnum.Blend);
         GLManager.GL.BlendFunc(GLEnum.SrcAlpha, GLEnum.OneMinusSrcAlpha);
-        Vector3D<double> var13 = world.getCloudColor(var1);
+        Vector3D<double> var13 = world.GetCloudColor(var1);
         float var14 = (float)var13.X;
         float var15 = (float)var13.Y;
         float var16 = (float)var13.Z;
@@ -643,7 +643,7 @@ public class WorldRenderer : IWorldAccess
                 renderEngine.BindTexture(renderEngine.GetTextureId("/terrain.png"));
                 GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 0.5F);
                 GLManager.GL.PushMatrix();
-                var8 = world.getBlockId(var2.BlockX, var2.BlockY, var2.BlockZ);
+                var8 = world.GetBlockId(var2.BlockX, var2.BlockY, var2.BlockZ);
                 Block var9 = var8 > 0 ? Block.Blocks[var8] : null;
                 GLManager.GL.Disable(GLEnum.AlphaTest);
                 GLManager.GL.PolygonOffset(-3.0F, -3.0F);
@@ -725,7 +725,7 @@ public class WorldRenderer : IWorldAccess
             GLManager.GL.Disable(GLEnum.Texture2D);
             GLManager.GL.DepthMask(false);
             float var6 = 0.002F;
-            int var7 = world.getBlockId(var2.BlockX, var2.BlockY, var2.BlockZ);
+            int var7 = world.GetBlockId(var2.BlockX, var2.BlockY, var2.BlockZ);
             if (var7 > 0)
             {
                 Block.Blocks[var7].updateBoundingBox(world, var2.BlockX, var2.BlockY, var2.BlockZ);
@@ -932,35 +932,35 @@ public class WorldRenderer : IWorldAccess
         switch (var2)
         {
             case 1000:
-                world.playSound(var3, var4, var5, "random.click", 1.0F, 1.0F);
+                world.PlaySound(var3, var4, var5, "random.click", 1.0F, 1.0F);
                 break;
             case 1001:
-                world.playSound(var3, var4, var5, "random.click", 1.0F, 1.2F);
+                world.PlaySound(var3, var4, var5, "random.click", 1.0F, 1.2F);
                 break;
             case 1002:
-                world.playSound(var3, var4, var5, "random.bow", 1.0F, 1.2F);
+                world.PlaySound(var3, var4, var5, "random.bow", 1.0F, 1.2F);
                 break;
             case 1003:
                 if (Random.Shared.NextDouble() < 0.5D)
                 {
-                    world.playSound(var3 + 0.5D, var4 + 0.5D, var5 + 0.5D, "random.door_open", 1.0F, world.random.NextFloat() * 0.1F + 0.9F);
+                    world.PlaySound(var3 + 0.5D, var4 + 0.5D, var5 + 0.5D, "random.door_open", 1.0F, world.random.NextFloat() * 0.1F + 0.9F);
                 }
                 else
                 {
-                    world.playSound(var3 + 0.5D, var4 + 0.5D, var5 + 0.5D, "random.door_close", 1.0F, world.random.NextFloat() * 0.1F + 0.9F);
+                    world.PlaySound(var3 + 0.5D, var4 + 0.5D, var5 + 0.5D, "random.door_close", 1.0F, world.random.NextFloat() * 0.1F + 0.9F);
                 }
                 break;
             case 1004:
-                world.playSound((double)(var3 + 0.5F), (double)(var4 + 0.5F), (double)(var5 + 0.5F), "random.fizz", 0.5F, 2.6F + (var7.NextFloat() - var7.NextFloat()) * 0.8F);
+                world.PlaySound((double)(var3 + 0.5F), (double)(var4 + 0.5F), (double)(var5 + 0.5F), "random.fizz", 0.5F, 2.6F + (var7.NextFloat() - var7.NextFloat()) * 0.8F);
                 break;
             case 1005:
                 if (Item.ITEMS[var6] is ItemRecord)
                 {
-                    world.playStreaming(((ItemRecord)Item.ITEMS[var6]).recordName, var3, var4, var5);
+                    world.PlayStreaming(((ItemRecord)Item.ITEMS[var6]).recordName, var3, var4, var5);
                 }
                 else
                 {
-                    world.playStreaming(null, var3, var4, var5);
+                    world.PlayStreaming(null, var3, var4, var5);
                 }
                 break;
             case 2000:

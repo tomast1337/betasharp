@@ -29,11 +29,11 @@ internal static class WorldCommands
                 ServerWorld world = server.worlds[i];
                 if (mode == "add")
                 {
-                    world.synchronizeTimeAndUpdates(world.getTime() + timeValue);
+                    world.SynchronizeTimeAndUpdates(world.GetTime() + timeValue);
                 }
                 else
                 {
-                    world.synchronizeTimeAndUpdates(timeValue);
+                    world.SynchronizeTimeAndUpdates(timeValue);
                 }
             }
 
@@ -47,7 +47,7 @@ internal static class WorldCommands
         {
             for (int i = 0; i < server.worlds.Length; i++)
             {
-                server.worlds[i].synchronizeTimeAndUpdates(namedTime);
+                server.worlds[i].SynchronizeTimeAndUpdates(namedTime);
             }
 
             output.SendMessage($"Time set to {args[0]} ({namedTime})");
@@ -71,16 +71,16 @@ internal static class WorldCommands
             {
                 case "clear":
                     world.globalEntities.Clear();
-                    world.getProperties().IsRaining = false;
-                    world.getProperties().IsThundering = false;
+                    world.GetProperties().IsRaining = false;
+                    world.GetProperties().IsThundering = false;
                     break;
                 case "rain":
-                    world.getProperties().IsRaining = true;
-                    world.getProperties().IsThundering = false;
+                    world.GetProperties().IsRaining = true;
+                    world.GetProperties().IsThundering = false;
                     break;
                 case "storm":
-                    world.getProperties().IsRaining = true;
-                    world.getProperties().IsThundering = true;
+                    world.GetProperties().IsRaining = true;
+                    world.GetProperties().IsThundering = true;
                     break;
                 default:
                     output.SendMessage("Unknown weather type. Use: clear, rain, or storm");

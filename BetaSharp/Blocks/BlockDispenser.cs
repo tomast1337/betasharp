@@ -36,10 +36,10 @@ internal class BlockDispenser : BlockWithEntity
     {
         if (!world.isRemote)
         {
-            int blockNorth = world.getBlockId(x, y, z - 1);
-            int blockSouth = world.getBlockId(x, y, z + 1);
-            int blockWest = world.getBlockId(x - 1, y, z);
-            int blockEast = world.getBlockId(x + 1, y, z);
+            int blockNorth = world.GetBlockId(x, y, z - 1);
+            int blockSouth = world.GetBlockId(x, y, z + 1);
+            int blockWest = world.GetBlockId(x - 1, y, z);
+            int blockEast = world.GetBlockId(x + 1, y, z);
             sbyte direction = 3;
             if (Block.BlocksOpaque[blockNorth] && !Block.BlocksOpaque[blockSouth])
             {
@@ -61,7 +61,7 @@ internal class BlockDispenser : BlockWithEntity
                 direction = 4;
             }
 
-            world.setBlockMeta(x, y, z, direction);
+            world.SetBlockMeta(x, y, z, direction);
         }
     }
 
@@ -77,7 +77,7 @@ internal class BlockDispenser : BlockWithEntity
         }
         else
         {
-            int meta = iBlockAccess.getBlockMeta(x, y, z);
+            int meta = iBlockAccess.GetBlockMeta(x, y, z);
             return side != meta ? textureId : textureId + 1;
         }
     }
@@ -95,7 +95,7 @@ internal class BlockDispenser : BlockWithEntity
         }
         else
         {
-            BlockEntityDispenser dispenser = (BlockEntityDispenser)world.getBlockEntity(x, y, z);
+            BlockEntityDispenser dispenser = (BlockEntityDispenser)world.GetBlockEntity(x, y, z);
             player.openDispenserScreen(dispenser);
             return true;
         }
@@ -103,7 +103,7 @@ internal class BlockDispenser : BlockWithEntity
 
     private void dispense(World world, int x, int y, int z, JavaRandom random)
     {
-        int meta = world.getBlockMeta(x, y, z);
+        int meta = world.GetBlockMeta(x, y, z);
         int dirX = 0;
         int dirZ = 0;
         if (meta == 3)
@@ -123,14 +123,14 @@ internal class BlockDispenser : BlockWithEntity
             dirX = -1;
         }
 
-        BlockEntityDispenser dispenser = (BlockEntityDispenser)world.getBlockEntity(x, y, z);
+        BlockEntityDispenser dispenser = (BlockEntityDispenser)world.GetBlockEntity(x, y, z);
         ItemStack itemStack = dispenser.getItemToDispose();
         double spawnX = (double)x + (double)dirX * 0.6D + 0.5D;
         double spawnY = (double)y + 0.5D;
         double spawnZ = (double)z + (double)dirZ * 0.6D + 0.5D;
         if (itemStack == null)
         {
-            world.worldEvent(1001, x, y, z, 0);
+            world.WorldEvent(1001, x, y, z, 0);
         }
         else
         {
@@ -140,21 +140,21 @@ internal class BlockDispenser : BlockWithEntity
                 arrow.setArrowHeading((double)dirX, (double)0.1F, (double)dirZ, 1.1F, 6.0F);
                 arrow.doesArrowBelongToPlayer = true;
                 world.SpawnEntity(arrow);
-                world.worldEvent(1002, x, y, z, 0);
+                world.WorldEvent(1002, x, y, z, 0);
             }
             else if (itemStack.itemId == Item.Egg.id)
             {
                 EntityEgg egg = new EntityEgg(world, spawnX, spawnY, spawnZ);
                 egg.setEggHeading((double)dirX, (double)0.1F, (double)dirZ, 1.1F, 6.0F);
                 world.SpawnEntity(egg);
-                world.worldEvent(1002, x, y, z, 0);
+                world.WorldEvent(1002, x, y, z, 0);
             }
             else if (itemStack.itemId == Item.Snowball.id)
             {
                 EntitySnowball snowball = new EntitySnowball(world, spawnX, spawnY, spawnZ);
                 snowball.setSnowballHeading((double)dirX, (double)0.1F, (double)dirZ, 1.1F, 6.0F);
                 world.SpawnEntity(snowball);
-                world.worldEvent(1002, x, y, z, 0);
+                world.WorldEvent(1002, x, y, z, 0);
             }
             else
             {
@@ -167,10 +167,10 @@ internal class BlockDispenser : BlockWithEntity
                 item.velocityY += random.NextGaussian() * (double)0.0075F * 6.0D;
                 item.velocityZ += random.NextGaussian() * (double)0.0075F * 6.0D;
                 world.SpawnEntity(item);
-                world.worldEvent(1000, x, y, z, 0);
+                world.WorldEvent(1000, x, y, z, 0);
             }
 
-            world.worldEvent(2000, x, y, z, dirX + 1 + (dirZ + 1) * 3);
+            world.WorldEvent(2000, x, y, z, dirX + 1 + (dirZ + 1) * 3);
         }
 
     }
@@ -179,7 +179,7 @@ internal class BlockDispenser : BlockWithEntity
     {
         if (id > 0 && Block.Blocks[id].canEmitRedstonePower())
         {
-            bool isPowered = world.isPowered(x, y, z) || world.isPowered(x, y + 1, z);
+            bool isPowered = world.IsPowered(x, y, z) || world.IsPowered(x, y + 1, z);
             if (isPowered)
             {
                 world.ScheduleBlockUpdate(x, y, z, base.id, getTickRate());
@@ -190,7 +190,7 @@ internal class BlockDispenser : BlockWithEntity
 
     public override void onTick(World world, int x, int y, int z, JavaRandom random)
     {
-        if (world.isPowered(x, y, z) || world.isPowered(x, y + 1, z))
+        if (world.IsPowered(x, y, z) || world.IsPowered(x, y + 1, z))
         {
             dispense(world, x, y, z, random);
         }
@@ -207,29 +207,29 @@ internal class BlockDispenser : BlockWithEntity
         int direction = MathHelper.Floor((double)(placer.yaw * 4.0F / 360.0F) + 0.5D) & 3;
         if (direction == 0)
         {
-            world.setBlockMeta(x, y, z, 2);
+            world.SetBlockMeta(x, y, z, 2);
         }
 
         if (direction == 1)
         {
-            world.setBlockMeta(x, y, z, 5);
+            world.SetBlockMeta(x, y, z, 5);
         }
 
         if (direction == 2)
         {
-            world.setBlockMeta(x, y, z, 3);
+            world.SetBlockMeta(x, y, z, 3);
         }
 
         if (direction == 3)
         {
-            world.setBlockMeta(x, y, z, 4);
+            world.SetBlockMeta(x, y, z, 4);
         }
 
     }
 
     public override void onBreak(World world, int x, int y, int z)
     {
-        BlockEntityDispenser dispenser = (BlockEntityDispenser)world.getBlockEntity(x, y, z);
+        BlockEntityDispenser dispenser = (BlockEntityDispenser)world.GetBlockEntity(x, y, z);
 
         JavaRandom random = s_random.Value!;
 

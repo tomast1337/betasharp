@@ -53,7 +53,7 @@ internal static class NaturalSpawner
             }
         }
 
-        Vec3i worldSpawn = world.getSpawnPos();
+        Vec3i worldSpawn = world.GetSpawnPos();
         foreach (var creatureKind in CreatureKind.Values)
         {
             if (((!creatureKind.Peaceful && spawnHostile) || (creatureKind.Peaceful && spawnPeaceful)) &&
@@ -62,14 +62,14 @@ internal static class NaturalSpawner
             {
                 foreach (var chunk in ChunksForSpawning)
                 {
-                    Biome biome = world.getBiomeSource().GetBiome(chunk);
+                    Biome biome = world.GetBiomeSource().GetBiome(chunk);
                     var spawnSelector = biome.GetSpawnableList(creatureKind);
                     if (spawnSelector.Empty) break;
                     SpawnListEntry toSpawn = spawnSelector.GetNext(world.random);
 
                     BlockPos spawnPos = GetRandomSpawningPointInChunk(world, pathFinder, chunk.X * 16, chunk.Z * 16);
-                    if (world.shouldSuffocate(spawnPos.x, spawnPos.y, spawnPos.z)) continue;
-                    if (world.getMaterial(spawnPos.x, spawnPos.y, spawnPos.z) != creatureKind.SpawnMaterial) continue;
+                    if (world.ShouldSuffocate(spawnPos.x, spawnPos.y, spawnPos.z)) continue;
+                    if (world.GetMaterial(spawnPos.x, spawnPos.y, spawnPos.z) != creatureKind.SpawnMaterial) continue;
 
                     int spawnedCount = 0;
                     bool breakToNextChunk = false;
@@ -88,7 +88,7 @@ internal static class NaturalSpawner
                             if (creatureKind.CanSpawnAtLocation(world, x, y, z))
                             {
                                 Vec3D entityPos = new Vec3D(x + 0.5D, y, z + 0.5D);
-                                if (world.getClosestPlayer(entityPos.x, entityPos.y, entityPos.z, SpawnMinRadius) !=
+                                if (world.GetClosestPlayer(entityPos.x, entityPos.y, entityPos.z, SpawnMinRadius) !=
                                     null) continue;
                                 if (entityPos.squareDistanceTo((Vec3D)worldSpawn) < SpawnMinRadius * SpawnMinRadius)
                                     continue;
@@ -139,7 +139,7 @@ internal static class NaturalSpawner
                 int newSpawnY;
                 for (newSpawnY = spawnY; newSpawnY > 2; --newSpawnY)
                 {
-                    if (world.shouldSuffocate(spawnX, newSpawnY - 1, spawnZ)) break;
+                    if (world.ShouldSuffocate(spawnX, newSpawnY - 1, spawnZ)) break;
                 }
 
                 while (!CreatureKind.Monster.CanSpawnAtLocation(world, spawnX, newSpawnY, spawnZ) &&

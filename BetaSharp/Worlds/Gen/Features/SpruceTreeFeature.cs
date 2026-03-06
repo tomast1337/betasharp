@@ -29,7 +29,7 @@ internal class SpruceTreeFeature : Feature
                 {
                     if (cy >= 0 && cy < 128)
                     {
-                        int blockId = world.getBlockId(cx, cy, cz);
+                        int blockId = world.GetBlockId(cx, cy, cz);
                         if (blockId != 0 && blockId != Block.Leaves.id)
                         {
                             canPlace = false;
@@ -45,7 +45,7 @@ internal class SpruceTreeFeature : Feature
 
         if (!canPlace) return false;
 
-        int groundId = world.getBlockId(x, y - 1, z);
+        int groundId = world.GetBlockId(x, y - 1, z);
         if (!((groundId == Block.GrassBlock.id || groundId == Block.Dirt.id) && y < 128 - totalHeight - 1)) return false;
 
         world.SetBlockWithoutNotifyingNeighbors(x, y - 1, z, Block.Dirt.id);
@@ -65,7 +65,7 @@ internal class SpruceTreeFeature : Feature
                 {
                     int offsetZ = cz - z;
 
-                    if ((Math.Abs(offsetX) != currentRadius || Math.Abs(offsetZ) != currentRadius || currentRadius <= 0) && !Block.BlocksOpaque[world.getBlockId(cx, leafY, cz)])
+                    if ((Math.Abs(offsetX) != currentRadius || Math.Abs(offsetZ) != currentRadius || currentRadius <= 0) && !Block.BlocksOpaque[world.GetBlockId(cx, leafY, cz)])
                     {
                         world.SetBlockWithoutNotifyingNeighbors(cx, leafY, cz, Block.Leaves.id, 1);
                     }
@@ -92,7 +92,7 @@ internal class SpruceTreeFeature : Feature
 
         for (int trunkY = 0; trunkY < totalHeight - trunkVariability; ++trunkY)
         {
-            int blockAtTrunk = world.getBlockId(x, y + trunkY, z);
+            int blockAtTrunk = world.GetBlockId(x, y + trunkY, z);
             if (blockAtTrunk == 0 || blockAtTrunk == Block.Leaves.id)
             {
                 world.SetBlockWithoutNotifyingNeighbors(x, y + trunkY, z, Block.Log.id, 1);

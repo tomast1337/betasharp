@@ -69,7 +69,7 @@ internal class RegionChunkStorage : IChunkStorage
             tag.SetTag("Level", var5);
             storeChunkInCompound(chunk, world, var5);
             NbtIo.Write(tag, stream);
-            WorldProperties var6 = world.getProperties();
+            WorldProperties var6 = world.GetProperties();
             var6.SizeOnDisk = var6.SizeOnDisk + (long)RegionIo.getSizeDelta(dir, chunk.X, chunk.Z);
         }
         catch (Exception var7)
@@ -82,7 +82,7 @@ internal class RegionChunkStorage : IChunkStorage
     {
         nbt.SetInteger("xPos", chunk.X);
         nbt.SetInteger("zPos", chunk.Z);
-        nbt.SetLong("LastUpdate", world.getTime());
+        nbt.SetLong("LastUpdate", world.GetTime());
         nbt.SetByteArray("Blocks", chunk.Blocks);
         nbt.SetByteArray("Data", chunk.Meta.Bytes);
         nbt.SetByteArray("SkyLight", chunk.SkyLight.Bytes);

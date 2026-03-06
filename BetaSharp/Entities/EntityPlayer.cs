@@ -53,7 +53,7 @@ public abstract class EntityPlayer : EntityLiving
         playerScreenHandler = new PlayerScreenHandler(inventory, !world.isRemote);
         currentScreenHandler = playerScreenHandler;
         standingEyeHeight = 1.62F;
-        Vec3i var2 = world.getSpawnPos();
+        Vec3i var2 = world.GetSpawnPos();
         setPositionAndAnglesKeepPrevAngles((double)var2.X + 0.5D, (double)(var2.Y + 1), (double)var2.Z + 0.5D, 0.0F, 0.0F);
         health = 20;
         modelName = "humanoid";
@@ -84,7 +84,7 @@ public abstract class EntityPlayer : EntityLiving
                 {
                     wakeUp(true, true, false);
                 }
-                else if (world.canMonsterSpawn())
+                else if (world.CanMonsterSpawn())
                 {
                     wakeUp(false, true, true);
                 }
@@ -267,7 +267,7 @@ public abstract class EntityPlayer : EntityLiving
         tilt += (var2 - tilt) * 0.8F;
         if (health > 0)
         {
-            var var3 = world.getEntities(this, boundingBox.Expand(1.0D, 0.0D, 1.0D));
+            var var3 = world.GetEntities(this, boundingBox.Expand(1.0D, 0.0D, 1.0D));
             if (var3 != null)
             {
                 for (int var4 = 0; var4 < var3.Count; ++var4)
@@ -680,7 +680,7 @@ public abstract class EntityPlayer : EntityLiving
                 return SleepAttemptResult.NOT_POSSIBLE_HERE;
             }
 
-            if (world.canMonsterSpawn())
+            if (world.CanMonsterSpawn())
             {
                 return SleepAttemptResult.NOT_POSSIBLE_NOW;
             }
@@ -693,9 +693,9 @@ public abstract class EntityPlayer : EntityLiving
 
         setBoundingBoxSpacing(0.2F, 0.2F);
         standingEyeHeight = 0.2F;
-        if (world.isPosLoaded(x, y, z))
+        if (world.IsPosLoaded(x, y, z))
         {
-            int var4 = world.getBlockMeta(x, y, z);
+            int var4 = world.GetBlockMeta(x, y, z);
             int var5 = BlockBed.getDirection(var4);
             float var6 = 0.5F;
             float var7 = 0.5F;
@@ -729,7 +729,7 @@ public abstract class EntityPlayer : EntityLiving
         velocityX = velocityZ = velocityY = 0.0D;
         if (!world.isRemote)
         {
-            world.updateSleepingPlayers();
+            world.UpdateSleepingPlayers();
         }
 
         return SleepAttemptResult.OK;
@@ -762,7 +762,7 @@ public abstract class EntityPlayer : EntityLiving
         setBoundingBoxSpacing(0.6F, 1.8F);
         resetEyeHeight();
         Vec3i? var4 = sleepingPos;
-        if (var4 is (int x, int y, int z) && world.getBlockId(x, y, z) == Block.Bed.id)
+        if (var4 is (int x, int y, int z) && world.GetBlockId(x, y, z) == Block.Bed.id)
         {
             BlockBed.updateState(world, x, y, z, false);
             Vec3i? var5 = BlockBed.findWakeUpPosition(world, x, y, z, 0);
@@ -777,7 +777,7 @@ public abstract class EntityPlayer : EntityLiving
         sleeping = false;
         if (!world.isRemote && updateSleepingPlayers)
         {
-            world.updateSleepingPlayers();
+            world.UpdateSleepingPlayers();
         }
 
         if (resetSleepTimer)
@@ -798,7 +798,7 @@ public abstract class EntityPlayer : EntityLiving
 
     private bool isSleepingInBed()
     {
-        return world.getBlockId(sleepingPos.X, sleepingPos.Y, sleepingPos.Z) == Block.Bed.id;
+        return world.GetBlockId(sleepingPos.X, sleepingPos.Y, sleepingPos.Z) == Block.Bed.id;
     }
 
     public static Vec3i? findRespawnPosition(World world, Vec3i? spawnPos)
@@ -815,7 +815,7 @@ public abstract class EntityPlayer : EntityLiving
         chunkSource.LoadChunk((x - 3) >> 4, (z + 3) >> 4);
         chunkSource.LoadChunk((x + 3) >> 4, (z + 3) >> 4);
 
-        if (world.getBlockId(x, y, z) != Block.Bed.id)
+        if (world.GetBlockId(x, y, z) != Block.Bed.id)
         {
             return null;
         }
@@ -827,7 +827,7 @@ public abstract class EntityPlayer : EntityLiving
     {
         if (sleepingPos != null)
         {
-            int var1 = world.getBlockMeta(sleepingPos.X, sleepingPos.Y, sleepingPos.Z);
+            int var1 = world.GetBlockMeta(sleepingPos.X, sleepingPos.Y, sleepingPos.Z);
             int var2 = BlockBed.getDirection(var1);
             switch (var2)
             {

@@ -39,7 +39,7 @@ public class PlayerManager
 
     public void saveAllPlayers(ServerWorld[] world)
     {
-        _saveHandler = world[0].getWorldStorage().GetPlayerStorage();
+        _saveHandler = world[0].GetWorldStorage().GetPlayerStorage();
     }
 
     public void updatePlayerAfterDimensionChange(ServerPlayerEntity player)
@@ -149,7 +149,7 @@ public class PlayerManager
         _server.getEntityTracker(player.dimensionId).onEntityRemoved(player);
         GetChunkMap(player.dimensionId).removePlayer(player);
         players.Remove(player);
-        _server.getWorld(player.dimensionId).serverRemove(player);
+        _server.getWorld(player.dimensionId).ServerRemove(player);
         Vec3i? var3 = player.getSpawnPos();
         player.dimensionId = dimensionId;
         ServerPlayerEntity var4 = new(
@@ -224,7 +224,7 @@ public class PlayerManager
 
         player.dimensionId = targetDim;
         player.networkHandler.sendPacket(new PlayerRespawnPacket((sbyte)player.dimensionId));
-        currentWorld.serverRemove(player);
+        currentWorld.ServerRemove(player);
         player.dead = false;
         double x = player.x;
         double z = player.z;
@@ -237,7 +237,7 @@ public class PlayerManager
             player.setPositionAndAnglesKeepPrevAngles(x, player.y, z, player.yaw, player.pitch);
             if (player.isAlive())
             {
-                currentWorld.updateEntity(player, false);
+                currentWorld.UpdateEntity(player, false);
             }
         }
         else
@@ -247,7 +247,7 @@ public class PlayerManager
             player.setPositionAndAnglesKeepPrevAngles(x, player.y, z, player.yaw, player.pitch);
             if (player.isAlive())
             {
-                currentWorld.updateEntity(player, false);
+                currentWorld.UpdateEntity(player, false);
             }
         }
 
@@ -255,14 +255,14 @@ public class PlayerManager
         {
             targetWorld.SpawnEntity(player);
             player.setPositionAndAnglesKeepPrevAngles(x, player.y, z, player.yaw, player.pitch);
-            targetWorld.updateEntity(player, false);
+            targetWorld.UpdateEntity(player, false);
             targetWorld.chunkCache.forceLoad = true;
             new PortalForcer().MoveToPortal(targetWorld, player);
             targetWorld.chunkCache.forceLoad = false;
 
             // Fully drain lighting updates generated during portal chunk
             // creation before the chunks are queued for the client. 
-            while (targetWorld.doLightingUpdates()) { }
+            while (targetWorld.DoLightingUpdates()) { }
         }
 
         updatePlayerAfterDimensionChange(player);
@@ -508,8 +508,8 @@ public class PlayerManager
 
     public void sendWorldInfo(ServerPlayerEntity player, ServerWorld world)
     {
-        player.networkHandler.sendPacket(new WorldTimeUpdateS2CPacket(world.getTime()));
-        if (world.isRaining())
+        player.networkHandler.sendPacket(new WorldTimeUpdateS2CPacket(world.GetTime()));
+        if (world.IsRaining())
         {
             player.networkHandler.sendPacket(new GameStateChangeS2CPacket(1));
         }

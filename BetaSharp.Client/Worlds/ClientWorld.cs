@@ -30,8 +30,8 @@ public class ClientWorld : World
 
     public override void Tick()
     {
-        setTime(getTime() + 1L);
-        int ambient = getAmbientDarkness(1.0F);
+        SetTime(GetTime() + 1L);
+        int ambient = GetAmbientDarkness(1.0F);
 
         if (ambient != ambientDarkness)
         {
@@ -59,7 +59,7 @@ public class ClientWorld : World
             if (--blockReset.Delay == 0)
             {
                 base.SetBlockWithoutNotifyingNeighbors(blockReset.X, blockReset.Y, blockReset.Z, blockReset.BlockId, blockReset.Meta);
-                blockUpdateEvent(blockReset.X, blockReset.Y, blockReset.Z);
+                BlockUpdateEvent(blockReset.X, blockReset.Y, blockReset.Z);
                 _blockResets.RemoveAt(i--);
             }
         }
@@ -106,7 +106,7 @@ public class ClientWorld : World
 
         if (!load)
         {
-            setBlocksDirty(chunkX * 16, 0, chunkZ * 16, chunkX * 16 + 15, 128, chunkZ * 16 + 15);
+            SetBlocksDirty(chunkX * 16, 0, chunkZ * 16, chunkX * 16 + 15, 128, chunkZ * 16 + 15);
         }
 
     }
@@ -186,8 +186,8 @@ public class ClientWorld : World
 
     public override bool SetBlockMetaWithoutNotifyingNeighbors(int x, int y, int z, int meta)
     {
-        int blockId = getBlockId(x, y, z);
-        int previousMeta = getBlockMeta(x, y, z);
+        int blockId = GetBlockId(x, y, z);
+        int previousMeta = GetBlockMeta(x, y, z);
         if (base.SetBlockMetaWithoutNotifyingNeighbors(x, y, z, meta))
         {
             _blockResets.Add(new BlockReset(this, x, y, z, blockId, previousMeta));
@@ -199,8 +199,8 @@ public class ClientWorld : World
 
     public override bool SetBlockWithoutNotifyingNeighbors(int x, int y, int z, int blockId, int meta)
     {
-        int previousBlockId = getBlockId(x, y, z);
-        int previousMeta = getBlockMeta(x, y, z);
+        int previousBlockId = GetBlockId(x, y, z);
+        int previousMeta = GetBlockMeta(x, y, z);
         if (base.SetBlockWithoutNotifyingNeighbors(x, y, z, blockId, meta))
         {
             _blockResets.Add(new BlockReset(this, x, y, z, previousBlockId, previousMeta));
@@ -212,8 +212,8 @@ public class ClientWorld : World
 
     public override bool SetBlockWithoutNotifyingNeighbors(int x, int y, int z, int blockId)
     {
-        int previousBlockId = getBlockId(x, y, z);
-        int previousMeta = getBlockMeta(x, y, z);
+        int previousBlockId = GetBlockId(x, y, z);
+        int previousMeta = GetBlockMeta(x, y, z);
         if (base.SetBlockWithoutNotifyingNeighbors(x, y, z, blockId))
         {
             _blockResets.Add(new BlockReset(this, x, y, z, previousBlockId, previousMeta));
@@ -228,7 +228,7 @@ public class ClientWorld : World
         ClearBlockResets(minX, minY, minZ, minX, minY, minZ);
         if (base.SetBlockWithoutNotifyingNeighbors(minX, minY, minZ, blockId, meta))
         {
-            blockUpdate(minX, minY, minZ, blockId);
+            BlockUpdate(minX, minY, minZ, blockId);
             return true;
         }
 

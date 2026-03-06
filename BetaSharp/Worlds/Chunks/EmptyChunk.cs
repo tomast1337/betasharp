@@ -70,7 +70,7 @@ public class EmptyChunk : Chunk
 
     public override JavaRandom GetSlimeRandom(long seed)
     {
-        return new JavaRandom(World.getSeed() + X * X * 4987142L + X * 5947611L + Z * Z * 4392871L + Z * 389711L ^ seed);
+        return new JavaRandom(World.GetSeed() + X * X * 4987142L + X * 5947611L + Z * Z * 4392871L + Z * 389711L ^ seed);
     }
 
     public override bool IsEmpty() => true;

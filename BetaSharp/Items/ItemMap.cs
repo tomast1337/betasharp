@@ -18,13 +18,13 @@ public class ItemMap : NetworkSyncedItem
 
     public static MapState getMapState(short mapId, World world)
     {
-        MapState? mapState = (MapState?)world.getOrCreateState(typeof(MapState), "map_" + mapId);
+        MapState? mapState = (MapState?)world.GetOrCreateState(typeof(MapState), "map_" + mapId);
         if (mapState == null)
         {
-            int mapIdCount = world.getIdCount("map");
+            int mapIdCount = world.GetIdCount("map");
             string mapName = "map_" + mapIdCount;
             mapState = new MapState(mapName);
-            world.setState(mapName, mapState);
+            world.SetState(mapName, mapState);
         }
 
         return mapState;
@@ -33,17 +33,17 @@ public class ItemMap : NetworkSyncedItem
     public MapState getSavedMapState(ItemStack stack, World world)
     {
         string mapName = "map_" + stack.getDamage();
-        MapState? mapState = (MapState?)world.getOrCreateState(typeof(MapState), mapName);
+        MapState? mapState = (MapState?)world.GetOrCreateState(typeof(MapState), mapName);
         if (mapState == null)
         {
-            stack.setDamage(world.getIdCount("map"));
+            stack.setDamage(world.GetIdCount("map"));
             mapState = new MapState(mapName);
-            mapState.centerX = world.getProperties().SpawnX;
-            mapState.centerZ = world.getProperties().SpawnZ;
+            mapState.centerX = world.GetProperties().SpawnX;
+            mapState.centerZ = world.GetProperties().SpawnZ;
             mapState.scale = 3;
             mapState.dimension = (sbyte)world.dimension.Id;
             mapState.markDirty();
-            world.setState(mapName, mapState);
+            world.SetState(mapName, mapState);
         }
 
         return mapState;
@@ -286,10 +286,10 @@ public class ItemMap : NetworkSyncedItem
 
     public override void onCraft(ItemStack itemStack, World world, EntityPlayer entityPlayer)
     {
-        itemStack.setDamage(world.getIdCount("map"));
+        itemStack.setDamage(world.GetIdCount("map"));
         string mapName = "map_" + itemStack.getDamage();
         MapState mapState = new MapState(mapName);
-        world.setState(mapName, mapState);
+        world.SetState(mapName, mapState);
         mapState.centerX = MathHelper.Floor(entityPlayer.x);
         mapState.centerZ = MathHelper.Floor(entityPlayer.z);
         mapState.scale = 3;

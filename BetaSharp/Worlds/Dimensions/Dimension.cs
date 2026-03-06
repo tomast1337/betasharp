@@ -49,12 +49,12 @@ public abstract class Dimension
 
     public virtual ChunkSource CreateChunkGenerator()
     {
-        return new OverworldChunkGenerator(World, World.getSeed());
+        return new OverworldChunkGenerator(World, World.GetSeed());
     }
 
     public virtual bool IsValidSpawnPoint(int x, int y)
     {
-        return World.getSpawnBlockId(x, y) == Block.Sand.id;
+        return World.GetSpawnBlockId(x, y) == Block.Sand.id;
     }
 
     public virtual float GetTimeOfDay(long time, float tickDelta)

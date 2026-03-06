@@ -26,7 +26,7 @@ public class ServerWorld : World
     }
 
 
-    public override void updateEntity(Entity entity, bool requireLoaded)
+    public override void UpdateEntity(Entity entity, bool requireLoaded)
     {
         if (!server.spawnAnimals && (entity is EntityAnimal || entity is EntityWaterMob))
         {
@@ -35,13 +35,13 @@ public class ServerWorld : World
 
         if (entity.passenger == null || entity.passenger is not EntityPlayer)
         {
-            base.updateEntity(entity, requireLoaded);
+            base.UpdateEntity(entity, requireLoaded);
         }
     }
 
     public void tickVehicle(Entity vehicle, bool requireLoaded)
     {
-        base.updateEntity(vehicle, requireLoaded);
+        base.UpdateEntity(vehicle, requireLoaded);
     }
 
 
@@ -69,7 +69,7 @@ public class ServerWorld : World
     }
 
 
-    public override bool canInteract(EntityPlayer player, int x, int y, int z)
+    public override bool CanInteract(EntityPlayer player, int x, int y, int z)
     {
         int var5 = (int)MathHelper.Abs(x - Properties.SpawnX);
         int var6 = (int)MathHelper.Abs(z - Properties.SpawnZ);
@@ -102,9 +102,9 @@ public class ServerWorld : World
     }
 
 
-    public override bool spawnGlobalEntity(Entity entity)
+    public override bool SpawnGlobalEntity(Entity entity)
     {
-        if (base.spawnGlobalEntity(entity))
+        if (base.SpawnGlobalEntity(entity))
         {
             server.playerManager.sendToAround(entity.x, entity.y, entity.z, 512.0, dimension.Id, new GlobalEntitySpawnS2CPacket(entity));
             return true;
@@ -116,14 +116,14 @@ public class ServerWorld : World
     }
 
 
-    public override void broadcastEntityEvent(Entity entity, byte @event)
+    public override void BroadcastEntityEvent(Entity entity, byte @event)
     {
         EntityStatusS2CPacket var3 = new EntityStatusS2CPacket(entity.id, @event);
         server.getEntityTracker(dimension.Id).sendToAround(entity, var3);
     }
 
 
-    public override Explosion createExplosion(Entity source, double x, double y, double z, float power, bool fire)
+    public override Explosion CreateExplosion(Entity source, double x, double y, double z, float power, bool fire)
     {
         Explosion var10 = new Explosion(this, source, x, y, z, power)
         {
@@ -136,9 +136,9 @@ public class ServerWorld : World
     }
 
 
-    public override void playNoteBlockActionAt(int x, int y, int z, int soundType, int pitch)
+    public override void PlayNoteBlockActionAt(int x, int y, int z, int soundType, int pitch)
     {
-        base.playNoteBlockActionAt(x, y, z, soundType, pitch);
+        base.PlayNoteBlockActionAt(x, y, z, soundType, pitch);
         server.playerManager.sendToAround(x, y, z, 64.0, dimension.Id, new PlayNoteSoundS2CPacket(x, y, z, soundType, pitch));
     }
 
@@ -150,9 +150,9 @@ public class ServerWorld : World
 
     protected override void UpdateWeatherCycles()
     {
-        bool raining = isRaining();
+        bool raining = IsRaining();
         base.UpdateWeatherCycles();
-        if (raining != isRaining())
+        if (raining != IsRaining())
         {
             if (raining)
             {

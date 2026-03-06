@@ -159,15 +159,15 @@ public class Chunk
 
     private void LightGap(int worldX, int worldZ, int height)
     {
-        int topY = World.getTopY(worldX, worldZ);
+        int topY = World.GetTopY(worldX, worldZ);
         if (topY > height)
         {
-            World.queueLightUpdate(LightType.Sky, worldX, height, worldZ, worldX, topY, worldZ);
+            World.QueueLightUpdate(LightType.Sky, worldX, height, worldZ, worldX, topY, worldZ);
             Dirty = true;
         }
         else if (topY < height)
         {
-            World.queueLightUpdate(LightType.Sky, worldX, topY, worldZ, worldX, height, worldZ);
+            World.QueueLightUpdate(LightType.Sky, worldX, topY, worldZ, worldX, height, worldZ);
             Dirty = true;
         }
     }
@@ -187,7 +187,7 @@ public class Chunk
 
         if (newHeight == oldHeight) return;
 
-        World.setBlocksDirty(localX, localZ, newHeight, oldHeight);
+        World.SetBlocksDirty(localX, localZ, newHeight, oldHeight);
         HeightMap[localZ << 4 | localX] = (byte)newHeight;
 
         if (newHeight < MinHeightMapValue)
@@ -222,7 +222,7 @@ public class Chunk
         }
         else
         {
-            World.queueLightUpdate(LightType.Sky, worldX, oldHeight, worldZ, worldX, newHeight, worldZ);
+            World.QueueLightUpdate(LightType.Sky, worldX, oldHeight, worldZ, worldX, newHeight, worldZ);
             for (int currY = oldHeight; currY < newHeight; ++currY)
             {
                 SkyLight.SetNibble(localX, currY, localZ, 0);
@@ -251,7 +251,7 @@ public class Chunk
 
         if (newHeight != updateY)
         {
-            World.queueLightUpdate(LightType.Sky, worldX - 1, newHeight, worldZ - 1, worldX + 1, updateY, worldZ + 1);
+            World.QueueLightUpdate(LightType.Sky, worldX - 1, newHeight, worldZ - 1, worldX + 1, updateY, worldZ + 1);
         }
 
         Dirty = true;
@@ -292,10 +292,10 @@ public class Chunk
                 UpdateHeightMap(localX, y, localZ);
             }
 
-            World.queueLightUpdate(LightType.Sky, worldX, y, worldZ, worldX, y, worldZ);
+            World.QueueLightUpdate(LightType.Sky, worldX, y, worldZ, worldX, y, worldZ);
         }
 
-        World.queueLightUpdate(LightType.Block, worldX, y, worldZ, worldX, y, worldZ);
+        World.QueueLightUpdate(LightType.Block, worldX, y, worldZ, worldX, y, worldZ);
         LightGaps(localX, localZ);
         Meta.SetNibble(localX, y, localZ, meta);
 
@@ -336,8 +336,8 @@ public class Chunk
             UpdateHeightMap(localX, y, localZ);
         }
 
-        World.queueLightUpdate(LightType.Sky, worldX, y, worldZ, worldX, y, worldZ);
-        World.queueLightUpdate(LightType.Block, worldX, y, worldZ, worldX, y, worldZ);
+        World.QueueLightUpdate(LightType.Sky, worldX, y, worldZ, worldX, y, worldZ);
+        World.QueueLightUpdate(LightType.Block, worldX, y, worldZ, worldX, y, worldZ);
         LightGaps(localX, localZ);
 
         if (rawId != 0 && !World.isRemote)
@@ -482,11 +482,11 @@ public class Chunk
     public virtual void Load()
     {
         Loaded = true;
-        World.processBlockUpdates(BlockEntities.Values);
+        World.ProcessBlockUpdates(BlockEntities.Values);
 
         foreach (List<Entity> list in Entities)
         {
-            World.addEntities(list);
+            World.AddEntities(list);
         }
     }
 
@@ -501,7 +501,7 @@ public class Chunk
 
         for (int var3 = 0; var3 < Entities.Length; ++var3)
         {
-            World.unloadEntities(Entities[var3]);
+            World.UnloadEntities(Entities[var3]);
         }
 
     }
@@ -554,9 +554,9 @@ public class Chunk
 
         if (saveEntities)
         {
-            if (LastSaveHadEntities && World.getTime() != LastSaveTime) return true;
+            if (LastSaveHadEntities && World.GetTime() != LastSaveTime) return true;
         }
-        else if (LastSaveHadEntities && World.getTime() >= LastSaveTime + 600L)
+        else if (LastSaveHadEntities && World.GetTime() >= LastSaveTime + 600L)
         {
             return true;
         }
@@ -703,7 +703,7 @@ public class Chunk
 
     public virtual JavaRandom GetSlimeRandom(long scrambler)
     {
-        return new JavaRandom(World.getSeed() + X * X * 4987142 + X * 5947611 + Z * Z * 4392871L + Z * 389711 ^ scrambler);
+        return new JavaRandom(World.GetSeed() + X * X * 4987142 + X * 5947611 + Z * Z * 4392871L + Z * 389711 ^ scrambler);
     }
 
     public virtual bool IsEmpty() => false;

@@ -25,7 +25,7 @@ internal class BlockDetectorRail : BlockRail
     {
         if (!world.isRemote)
         {
-            int meta = world.getBlockMeta(x, y, z);
+            int meta = world.GetBlockMeta(x, y, z);
             if ((meta & 8) == 0)
             {
                 updatePoweredStatus(world, x, y, z, meta);
@@ -37,7 +37,7 @@ internal class BlockDetectorRail : BlockRail
     {
         if (!world.isRemote)
         {
-            int meta = world.getBlockMeta(x, y, z);
+            int meta = world.GetBlockMeta(x, y, z);
             if ((meta & 8) != 0)
             {
                 updatePoweredStatus(world, x, y, z, meta);
@@ -47,12 +47,12 @@ internal class BlockDetectorRail : BlockRail
 
     public override bool isPoweringSide(IBlockAccess iBlockAccess, int x, int y, int z, int side)
     {
-        return (iBlockAccess.getBlockMeta(x, y, z) & 8) != 0;
+        return (iBlockAccess.GetBlockMeta(x, y, z) & 8) != 0;
     }
 
     public override bool isStrongPoweringSide(World world, int x, int y, int z, int side)
     {
-        return (world.getBlockMeta(x, y, z) & 8) == 0 ? false : side == 1;
+        return (world.GetBlockMeta(x, y, z) & 8) == 0 ? false : side == 1;
     }
 
     private void updatePoweredStatus(World world, int x, int y, int z, int meta)
@@ -68,18 +68,18 @@ internal class BlockDetectorRail : BlockRail
 
         if (hasMinecart && !isPowered)
         {
-            world.setBlockMeta(x, y, z, meta | 8);
-            world.notifyNeighbors(x, y, z, id);
-            world.notifyNeighbors(x, y - 1, z, id);
-            world.setBlocksDirty(x, y, z, x, y, z);
+            world.SetBlockMeta(x, y, z, meta | 8);
+            world.NotifyNeighbors(x, y, z, id);
+            world.NotifyNeighbors(x, y - 1, z, id);
+            world.SetBlocksDirty(x, y, z, x, y, z);
         }
 
         if (!hasMinecart && isPowered)
         {
-            world.setBlockMeta(x, y, z, meta & 7);
-            world.notifyNeighbors(x, y, z, id);
-            world.notifyNeighbors(x, y - 1, z, id);
-            world.setBlocksDirty(x, y, z, x, y, z);
+            world.SetBlockMeta(x, y, z, meta & 7);
+            world.NotifyNeighbors(x, y, z, id);
+            world.NotifyNeighbors(x, y - 1, z, id);
+            world.SetBlocksDirty(x, y, z, x, y, z);
         }
 
         if (hasMinecart)

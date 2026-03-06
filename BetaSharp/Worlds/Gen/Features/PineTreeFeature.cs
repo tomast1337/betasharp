@@ -29,7 +29,7 @@ internal class PineTreeFeature : Feature
                 {
                     if (cy >= 0 && cy < 128)
                     {
-                        int blockId = world.getBlockId(cx, cy, cz);
+                        int blockId = world.GetBlockId(cx, cy, cz);
                         if (blockId != 0 && blockId != Block.Leaves.id)
                         {
                             canPlace = false;
@@ -45,7 +45,7 @@ internal class PineTreeFeature : Feature
 
         if (!canPlace) return false;
 
-        int groundId = world.getBlockId(x, y - 1, z);
+        int groundId = world.GetBlockId(x, y - 1, z);
         if ((groundId == Block.GrassBlock.id || groundId == Block.Dirt.id) && y < 128 - treeHeight - 1)
         {
             world.SetBlockWithoutNotifyingNeighbors(x, y - 1, z, Block.Dirt.id);
@@ -60,7 +60,7 @@ internal class PineTreeFeature : Feature
                     for (int cz = z - currentLeafRadius; cz <= z + currentLeafRadius; ++cz)
                     {
                         int offsetZ = cz - z;
-                        if ((Math.Abs(offsetX) != currentLeafRadius || Math.Abs(offsetZ) != currentLeafRadius || currentLeafRadius <= 0) && !Block.BlocksOpaque[world.getBlockId(cx, cy, cz)])
+                        if ((Math.Abs(offsetX) != currentLeafRadius || Math.Abs(offsetZ) != currentLeafRadius || currentLeafRadius <= 0) && !Block.BlocksOpaque[world.GetBlockId(cx, cy, cz)])
                         {
                             world.SetBlockWithoutNotifyingNeighbors(cx, cy, cz, Block.Leaves.id, 1);
                         }
@@ -79,7 +79,7 @@ internal class PineTreeFeature : Feature
 
             for (int trunkY = 0; trunkY < treeHeight - 1; ++trunkY)
             {
-                int blockAtTrunk = world.getBlockId(x, y + trunkY, z);
+                int blockAtTrunk = world.GetBlockId(x, y + trunkY, z);
                 if (blockAtTrunk == 0 || blockAtTrunk == Block.Leaves.id)
                 {
                     world.SetBlockWithoutNotifyingNeighbors(x, y + trunkY, z, Block.Log.id, 1);
