@@ -1,5 +1,4 @@
 using BetaSharp.Blocks.Materials;
-using BetaSharp.Entities;
 using BetaSharp.Items;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
@@ -26,39 +25,39 @@ internal class BlockRedstoneOre : Block
         return 30;
     }
 
-    public override void onBlockBreakStart(World world, int x, int y, int z, EntityPlayer player)
+    public override void onBlockBreakStart(OnBlockBreakStartContext ctx)
     {
-        light(world, x, y, z);
-        base.onBlockBreakStart(world, x, y, z, player);
+        light(ctx.WorldWrite, ctx.WorldRead, ctx.Broadcaster, ctx.X, ctx.Y, ctx.Z);
+        base.onBlockBreakStart(ctx);
     }
 
-    public override void onSteppedOn(World world, int x, int y, int z, Entity entity)
+    public override void onSteppedOn(OnSteppedOnContext ctx)
     {
-        light(world, x, y, z);
-        base.onSteppedOn(world, x, y, z, entity);
+        light(ctx.WorldWrite, ctx.WorldRead, ctx.Broadcaster, ctx.X, ctx.Y, ctx.Z);
+        base.onSteppedOn(ctx);
     }
 
-    public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
+    public override bool onUse(OnUseContext ctx)
     {
-        light(world, x, y, z);
-        return base.onUse(world, x, y, z, player);
+        light(ctx.WorldWrite, ctx.WorldRead, ctx.Broadcaster, ctx.X, ctx.Y, ctx.Z);
+        return base.onUse(ctx);
     }
 
-    private void light(World world, int x, int y, int z)
+    private void light(IBlockWrite worldWrite,IBlockReader worldRead,WorldEventBroadcaster broadcaster, int x, int y, int z)
     {
-        spawnParticles(world, x, y, z);
-        if (id == Block.RedstoneOre.id)
+        spawnParticles(worldRead, broadcaster, x, y, z);
+        if (worldRead.GetBlockId(x, y, z) == RedstoneOre.id)
         {
-            world.setBlock(x, y, z, Block.LitRedstoneOre.id);
+            worldWrite.SetBlock(x, y, z, LitRedstoneOre.id);
         }
 
     }
 
-    public override void onTick(WorldBlockView worldView, int x, int y, int z, JavaRandom random, WorldEventBroadcaster broadcaster, bool isRemote)
+    public override void onTick(OnTickContext ctx)
     {
-        if (id == Block.LitRedstoneOre.id)
+        if (id == LitRedstoneOre.id)
         {
-            worldView.setBlock(x, y, z, Block.RedstoneOre.id);
+            ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, Block.RedstoneOre.id);
         }
 
     }
@@ -73,58 +72,56 @@ internal class BlockRedstoneOre : Block
         return 4 + random.NextInt(2);
     }
 
-    public override void randomDisplayTick(World world, int x, int y, int z, JavaRandom random)
+    public override void randomDisplayTick(OnTickContext ctx)
     {
         if (lit)
         {
-            spawnParticles(world, x, y, z);
+            spawnParticles(ctx.WorldRead, ctx.Broadcaster, ctx.X, ctx.Y, ctx.Z);
         }
 
     }
 
-    private void spawnParticles(World world, int x, int y, int z)
+    private void spawnParticles(IBlockReader reader,WorldEventBroadcaster broadcaster, int x, int y, int z)
     {
-        JavaRandom random = world.random;
         double faceOffset = 1.0D / 16.0D;
-
         for (int direction = 0; direction < 6; ++direction)
         {
-            double particleX = (double)((float)x + random.NextFloat());
-            double particleY = (double)((float)y + random.NextFloat());
-            double particleZ = (double)((float)z + random.NextFloat());
-            if (direction == 0 && !world.isOpaque(x, y + 1, z))
+            double particleX = x + Random.Shared.NextSingle();
+            double particleY = y + Random.Shared.NextSingle();
+            double particleZ = z + Random.Shared.NextSingle();
+            if (direction == 0 && !reader.IsOpaque(x, y + 1, z))
             {
-                particleY = (double)(y + 1) + faceOffset;
+                particleY = y + 1 + faceOffset;
             }
 
-            if (direction == 1 && !world.isOpaque(x, y - 1, z))
+            if (direction == 1 && !reader.IsOpaque(x, y - 1, z))
             {
-                particleY = (double)(y + 0) - faceOffset;
+                particleY = y + 0 - faceOffset;
             }
 
-            if (direction == 2 && !world.isOpaque(x, y, z + 1))
+            if (direction == 2 && !reader.IsOpaque(x, y, z + 1))
             {
-                particleZ = (double)(z + 1) + faceOffset;
+                particleZ = z + 1 + faceOffset;
             }
 
-            if (direction == 3 && !world.isOpaque(x, y, z - 1))
+            if (direction == 3 && !reader.IsOpaque(x, y, z - 1))
             {
-                particleZ = (double)(z + 0) - faceOffset;
+                particleZ = z + 0 - faceOffset;
             }
 
-            if (direction == 4 && !world.isOpaque(x + 1, y, z))
+            if (direction == 4 && !reader.IsOpaque(x + 1, y, z))
             {
-                particleX = (double)(x + 1) + faceOffset;
+                particleX = x + 1 + faceOffset;
             }
 
-            if (direction == 5 && !world.isOpaque(x - 1, y, z))
+            if (direction == 5 && !reader.IsOpaque(x - 1, y, z))
             {
-                particleX = (double)(x + 0) - faceOffset;
+                particleX = x + 0 - faceOffset;
             }
 
-            if (particleX < (double)x || particleX > (double)(x + 1) || particleY < 0.0D || particleY > (double)(y + 1) || particleZ < (double)z || particleZ > (double)(z + 1))
+            if (particleX < x || particleX > (x + 1) || particleY < 0.0D || particleY > (y + 1) || particleZ < z || particleZ > (z + 1))
             {
-                world.addParticle("reddust", particleX, particleY, particleZ, 0.0D, 0.0D, 0.0D);
+                broadcaster.AddParticle("reddust", particleX, particleY, particleZ, 0.0D, 0.0D, 0.0D);
             }
         }
 

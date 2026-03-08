@@ -32,48 +32,47 @@ internal class BlockButton : Block
         return false;
     }
 
-    public override bool canPlaceAt(WorldBlockView world, int x, int y, int z, int side)
+    public override bool canPlaceAt(OnPlacedContext ctx)
     {
-        return side == 2 && world.shouldSuffocate(x, y, z + 1) ? true : (side == 3 && world.shouldSuffocate(x, y, z - 1) ? true : (side == 4 && world.shouldSuffocate(x + 1, y, z) ? true : side == 5 && world.shouldSuffocate(x - 1, y, z)));
+        int side = ctx.Side;
+        if (side == 2)
+            return side == 2 && ctx.WorldRead.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z + 1) ? true : (side == 3 && ctx.WorldRead.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z - 1) ? true : (side == 4 && ctx.WorldRead.ShouldSuffocate(ctx.X + 1, ctx.Y, ctx.Z) ? true : side == 5 && ctx.WorldRead.ShouldSuffocate(ctx.X - 1, ctx.Y, ctx.Z)));
+        else
+            return ctx.WorldRead.ShouldSuffocate(ctx.X - 1, ctx.Y, ctx.Z) ? true : (ctx.WorldRead.ShouldSuffocate(ctx.X + 1, ctx.Y, ctx.Z) ? true : (ctx.WorldRead.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z - 1) ? true : ctx.WorldRead.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z + 1)));
     }
 
-    public override bool canPlaceAt(WorldBlockView world, int x, int y, int z)
+    public override void onPlaced(OnPlacedContext ctx)
     {
-        return world.shouldSuffocate(x - 1, y, z) ? true : (world.shouldSuffocate(x + 1, y, z) ? true : (world.shouldSuffocate(x, y, z - 1) ? true : world.shouldSuffocate(x, y, z + 1)));
-    }
-
-    public override void onPlaced(World world, int x, int y, int z, int direction)
-    {
-        int facing = world.getBlockMeta(x, y, z);
+        int facing = ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z);
         int pressedBit = facing & 8;
         facing &= 7;
-        if (direction == 2 && world.shouldSuffocate(x, y, z + 1))
+        if (ctx.Direction == 2 && ctx.WorldRead.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z + 1))
         {
             facing = 4;
         }
-        else if (direction == 3 && world.shouldSuffocate(x, y, z - 1))
+        else if (ctx.Direction == 3 && ctx.WorldRead.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z - 1))
         {
             facing = 3;
         }
-        else if (direction == 4 && world.shouldSuffocate(x + 1, y, z))
+        else if (ctx.Direction == 4 && ctx.WorldRead.ShouldSuffocate(ctx.X + 1, ctx.Y, ctx.Z))
         {
             facing = 2;
         }
-        else if (direction == 5 && world.shouldSuffocate(x - 1, y, z))
+        else if (ctx.Direction == 5 && ctx.WorldRead.ShouldSuffocate(ctx.X - 1, ctx.Y, ctx.Z))
         {
             facing = 1;
         }
         else
         {
-            facing = getPlacementSide(world, x, y, z);
+            facing = getPlacementSide(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z);
         }
 
-        world.setBlockMeta(x, y, z, facing + pressedBit);
+        ctx.WorldWrite.SetBlockMeta(ctx.X, ctx.Y, ctx.Z, facing + pressedBit);
     }
 
-    private int getPlacementSide(World world, int x, int y, int z)
+    private int getPlacementSide(IBlockReader world, int x, int y, int z)
     {
-        return world.shouldSuffocate(x - 1, y, z) ? 1 : (world.shouldSuffocate(x + 1, y, z) ? 2 : (world.shouldSuffocate(x, y, z - 1) ? 3 : (world.shouldSuffocate(x, y, z + 1) ? 4 : 1)));
+        return world.ShouldSuffocate(x - 1, y, z) ? 1 : (world.ShouldSuffocate(x + 1, y, z) ? 2 : (world.ShouldSuffocate(x, y, z - 1) ? 3 : (world.ShouldSuffocate(x, y, z + 1) ? 4 : 1)));
     }
 
     public override void neighborUpdate(OnTickContext ctx)
@@ -119,9 +118,9 @@ internal class BlockButton : Block
             ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
             return false;
         }
-    
-            return true;
-        
+
+        return true;
+
     }
 
     public override void updateBoundingBox(IBlockReader iBlockReader, int x, int y, int z)
@@ -234,7 +233,7 @@ internal class BlockButton : Block
 
         base.onBreak(world, x, y, z);
     }
-    
+
     public override bool isPoweringSide(IBlockReader reader, IBlockWrite writer, int x, int y, int z, int side)
     {
         return (iBlockReader.getBlockMeta(x, y, z) & 8) > 0;

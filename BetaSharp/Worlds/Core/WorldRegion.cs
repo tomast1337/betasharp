@@ -150,4 +150,13 @@ internal class WorldRegion : IBlockReader
 
         return _chunks[cIdxX][cIdxZ].GetLight(x & 15, y, z & 15, _world.Environment.AmbientDarkness);
     }
+
+    public int GetBlockMeta(int x, int y, int z) => throw new NotImplementedException();
+    public Material GetMaterial(int x, int y, int z) => throw new NotImplementedException();
+    public bool IsAir(int x, int y, int z) => throw new NotImplementedException();
+    public int GetBrightness(int x, int y, int z) => throw new NotImplementedException();
+    public bool IsTopY(int x, int y, int z) => throw new NotImplementedException();
+    public int GetTopY(int x, int z) => throw new NotImplementedException();
+    public int GetTopSolidBlockY(int x, int z) => throw new NotImplementedException();
+    public int GetSpawnPositionValidityY(int x, int z) => throw new NotImplementedException();
 }
