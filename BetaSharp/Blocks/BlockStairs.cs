@@ -71,7 +71,7 @@ internal class BlockStairs : Block
     // Migrated to OnBlockBreakStartEvt
     public override void onBlockBreakStart(OnBlockBreakStartEvt ctx) => baseBlock.onBlockBreakStart(ctx);
 
-    public override void onMetadataChange(WorldBlockView world, int x, int y, int z, int meta) => baseBlock.onMetadataChange(world, x, y, z, meta);
+    public override void onMetadataChange(OnMetadataChangeEvt ctx) => baseBlock.onMetadataChange(ctx);
 
     public override float getLuminance(LightingEngine lighting, int x, int y, int z) => baseBlock.getLuminance(lighting, x, y, z);
 
@@ -93,13 +93,13 @@ internal class BlockStairs : Block
 
     public override Box getBoundingBox(IBlockReader world, int x, int y, int z) => baseBlock.getBoundingBox(world, x, y, z);
 
-    public override void applyVelocity(WorldBlockView world, int x, int y, int z, Entity entity, Vec3D velocity) => baseBlock.applyVelocity(world, x, y, z, entity, velocity);
+    public override void applyVelocity(OnApplyVelocityEvt ctx) => baseBlock.applyVelocity(ctx);
 
     public override bool hasCollision() => baseBlock.hasCollision();
 
     public override bool hasCollision(int meta, bool allowLiquids) => baseBlock.hasCollision(meta, allowLiquids);
 
-    public override bool canPlaceAt(IBlockReader world, int x, int y, int z) => baseBlock.canPlaceAt(world, x, y, z);
+    public override bool canPlaceAt(CanPlaceAtCtx ctx) => baseBlock.canPlaceAt(ctx);
 
     // Merged the two onPlaced methods into one solid context execution
     public override void onPlaced(OnPlacedEvt ctx)
@@ -144,14 +144,14 @@ internal class BlockStairs : Block
     // Migrated to OnBreakEvt
     public override void onBreak(OnBreakEvt ctx) => baseBlock.onBreak(ctx);
 
-    public override void dropStacks(WorldBlockView world, int x, int y, int z, int meta, float luck) => baseBlock.dropStacks(world, x, y, z, meta, luck);
+    public override void dropStacks(OnDropEvt ctx) => baseBlock.dropStacks(ctx);
 
-    public override void onSteppedOn(WorldBlockView world, int x, int y, int z, Entity entity) => baseBlock.onSteppedOn(world, x, y, z, entity);
+    public override void onSteppedOn(OnEntityStepEvt ctx) => baseBlock.onSteppedOn(ctx);
 
     public override void onTick(OnTickEvt ctx) => baseBlock.onTick(ctx);
 
     // Migrated to OnUseEvt
     public override bool onUse(OnUseEvt ctx) => baseBlock.onUse(ctx);
 
-    public override void onDestroyedByExplosion(WorldBlockView read, int x, int y, int z) => baseBlock.onDestroyedByExplosion(read, x, y, z);
+    public override void onDestroyedByExplosion(OnDestroyedByExplosionEvt ctx) => baseBlock.onDestroyedByExplosion(ctx);
 }

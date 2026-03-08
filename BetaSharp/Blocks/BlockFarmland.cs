@@ -27,9 +27,9 @@ internal class BlockFarmland : Block
     {
         if (ctx.Random.NextInt(5) == 0)
         {
-            if (!isWaterNearby(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z) && !ctx.WorldRead.isRaining(ctx.X, ctx.Y + 1, ctx.Z))
+            if (!isWaterNearby(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z) && !ctx.Environment.IsRaining)
             {
-                int meta = ctx.WorldRead.getBlockMeta(ctx.X, ctx.Y, ctx.Z);
+                int meta = ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z);
                 if (meta > 0)
                 {
                     ctx.WorldWrite.SetBlockMeta(ctx.X, ctx.Y, ctx.Z, meta - 1);
@@ -46,11 +46,11 @@ internal class BlockFarmland : Block
         }
     }
 
-    public override void onSteppedOn(World world, int x, int y, int z, Entity entity)
+    public override void onSteppedOn(OnEntityStepEvt ctx)
     {
-        if (world.random.NextInt(4) == 0)
+        if (Random.Shared.Next(4) == 0)
         {
-            world.setBlock(x, y, z, Dirt.id);
+            ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, Dirt.id);
         }
     }
 
@@ -72,7 +72,7 @@ internal class BlockFarmland : Block
         return false;
     }
 
-    private static bool isWaterNearby(IBlockReader world, int x, int y, int z)
+    private static bool isWaterNearby(IBlockReader reader, int x, int y, int z)
     {
         for (int checkX = x - 4; checkX <= x + 4; ++checkX)
         {
@@ -80,7 +80,7 @@ internal class BlockFarmland : Block
             {
                 for (int checkZ = z - 4; checkZ <= z + 4; ++checkZ)
                 {
-                    if (world.getMaterial(checkX, checkY, checkZ) == Material.Water)
+                    if (reader.GetMaterial(checkX, checkY, checkZ) == Material.Water)
                     {
                         return true;
                     }
@@ -91,13 +91,13 @@ internal class BlockFarmland : Block
         return false;
     }
 
-    public override void neighborUpdate(OnTickEvt ctx)
+    public override void neighborUpdate(OnTickEvt evt)
     {
-        base.neighborUpdate(ctx);
-        Material material = ctx.WorldRead.getMaterial(ctx.X, ctx.Y + 1, ctx.Z);
+        base.neighborUpdate(evt);
+        Material material = evt.WorldRead.GetMaterial(evt.X, evt.Y + 1, evt.Z);
         if (material.IsSolid)
         {
-            ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, Dirt.id);
+            evt.WorldWrite.SetBlock(evt.X, evt.Y, evt.Z, Dirt.id);
         }
     }
 

@@ -26,28 +26,28 @@ internal class BlockReed : Block
 
             if (heightBelow < 3)
             {
-                int meta = ctx.WorldRead.getBlockMeta(ctx.X, ctx.Y, ctx.Z);
+                int meta = ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z);
                 if (meta == 15)
                 {
-                    ctx.WorldRead.setBlock(ctx.X, ctx.Y + 1, ctx.Z, id);
-                    ctx.WorldRead.setBlockMeta(ctx.X, ctx.Y, ctx.Z, 0);
+                    ctx.WorldWrite.SetBlock(ctx.X, ctx.Y + 1, ctx.Z, id);
+                    ctx.WorldWrite.SetBlockMeta(ctx.X, ctx.Y, ctx.Z, 0);
                 }
                 else
                 {
-                    ctx.WorldRead.setBlockMeta(ctx.X, ctx.Y, ctx.Z, meta + 1);
+                    ctx.WorldWrite.SetBlockMeta(ctx.X, ctx.Y, ctx.Z, meta + 1);
                 }
             }
         }
     }
 
-    public override bool canPlaceAt(WorldBlockView world, int x, int y, int z)
+    public override bool canPlaceAt(CanPlaceAtCtx ctx)
     {
-        int blockBelowId = world.GetBlockId(x, y - 1, z);
+        int blockBelowId = ctx.WorldRead.GetBlockId(ctx.X, ctx.Y - 1, ctx.Z);
         return blockBelowId == id ? true :
             blockBelowId != GrassBlock.id && blockBelowId != Dirt.id ? false :
-            world.getMaterial(x - 1, y - 1, z) == Material.Water ? true :
-            world.getMaterial(x + 1, y - 1, z) == Material.Water ? true :
-            world.getMaterial(x, y - 1, z - 1) == Material.Water ? true : world.getMaterial(x, y - 1, z + 1) == Material.Water;
+            ctx.WorldRead.GetMaterial(ctx.X - 1, ctx.Y - 1, ctx.Z) == Material.Water ? true :
+            ctx.WorldRead.GetMaterial(ctx.X + 1, ctx.Y - 1, ctx.Z) == Material.Water ? true :
+            ctx.WorldRead.GetMaterial(ctx.X, ctx.Y - 1, ctx.Z - 1) == Material.Water ? true : ctx.WorldRead.GetMaterial(ctx.X, ctx.Y - 1, ctx.Z + 1) == Material.Water;
     }
 
     public override void neighborUpdate(OnTickEvt ctx) => breakIfCannotGrow(ctx);
@@ -56,12 +56,13 @@ internal class BlockReed : Block
     {
         if (!canGrow(ctx))
         {
-            dropStacks(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z, ctx.WorldRead.getBlockMeta(ctx.X, ctx.Y, ctx.Z));
-            ctx.WorldRead.setBlock(ctx.X, ctx.Y, ctx.Z, 0);
+            // TODO: Implement this
+            // dropStacks(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z, ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z));
+            ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
         }
     }
 
-    public override bool canGrow(OnTickEvt ctx) => canPlaceAt(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z);
+    public override bool canGrow(OnTickEvt ctx) => canPlaceAt(new CanPlaceAtCtx(ctx.WorldRead, ctx.WorldWrite, 0, ctx.X, ctx.Y, ctx.Z));
 
     public override Box? getCollisionShape(IBlockReader world, int x, int y, int z) => null;
 

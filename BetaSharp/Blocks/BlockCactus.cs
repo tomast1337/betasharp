@@ -40,7 +40,7 @@ internal class BlockCactus : Block
         return new Box(x + edgeInset, y, z + edgeInset, x + 1 - edgeInset, y + 1 - edgeInset, z + 1 - edgeInset);
     }
 
-    public override Box getBoundingBox(World world, int x, int y, int z)
+    public override Box getBoundingBox(IBlockReader world, int x, int y, int z)
     {
         float edgeInset = 1.0F / 16.0F;
         return new Box(x + edgeInset, y, z + edgeInset, x + 1 - edgeInset, y + 1, z + 1 - edgeInset);
@@ -54,13 +54,14 @@ internal class BlockCactus : Block
 
     public override BlockRendererType getRenderType() => BlockRendererType.Cactus;
 
-    public override bool canPlaceAt(OnPlacedEvt ctx) => !base.canPlaceAt(ctx) ? false : canGrow(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z);
+    public override bool canPlaceAt(CanPlaceAtCtx ctx) => !base.canPlaceAt(ctx) ? false : canGrow(new CanPlaceAtCtx(ctx.WorldRead, ctx.WorldWrite, 0, ctx.X, ctx.Y, ctx.Z));
 
     public override void neighborUpdate(OnTickEvt ctx)
     {
         if (!canGrow(ctx))
         {
-            dropStacks(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z, ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z));
+            // TODO: Implement this
+            // dropStacks(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z, ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z));
             ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
         }
     }

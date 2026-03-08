@@ -20,22 +20,22 @@ internal class BlockRedstoneOre : Block
 
     public override int getTickRate() => 30;
 
-    public override void onBlockBreakStart(OnBlockBreakStartEvt ctx)
+    public override void onBlockBreakStart(OnBlockBreakStartEvt evt)
     {
-        light(ctx.WorldWrite, ctx.WorldRead, ctx.Broadcaster, ctx.X, ctx.Y, ctx.Z);
-        base.onBlockBreakStart(ctx);
+        light(evt.WorldWrite, evt.WorldRead, evt.Broadcaster, evt.X, evt.Y, evt.Z);
+        base.onBlockBreakStart(evt);
     }
 
-    public override void onSteppedOn(OnSteppedOnContext ctx)
+    public override void onSteppedOn(OnEntityStepEvt evt)
     {
-        light(ctx.WorldWrite, ctx.WorldRead, ctx.Broadcaster, ctx.X, ctx.Y, ctx.Z);
-        base.onSteppedOn(ctx);
+        light(evt.WorldWrite, evt.WorldRead, evt.Broadcaster, evt.X, evt.Y, evt.Z);
+        base.onSteppedOn(evt);
     }
 
-    public override bool onUse(OnUseEvt ctx)
+    public override bool onUse(OnUseEvt evt)
     {
-        light(ctx.WorldWrite, ctx.WorldRead, ctx.Broadcaster, ctx.X, ctx.Y, ctx.Z);
-        return base.onUse(ctx);
+        light(evt.WorldWrite, evt.WorldRead, evt.Broadcaster, evt.X, evt.Y, evt.Z);
+        return base.onUse(evt);
     }
 
     private void light(IBlockWrite worldWrite, IBlockReader worldRead, WorldEventBroadcaster broadcaster, int x, int y, int z)
@@ -47,17 +47,17 @@ internal class BlockRedstoneOre : Block
         }
     }
 
-    public override void onTick(OnTickEvt ctx)
+    public override void onTick(OnTickEvt evt)
     {
         if (id == LitRedstoneOre.id)
         {
-            ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, RedstoneOre.id);
+            evt.WorldWrite.SetBlock(evt.X, evt.Y, evt.Z, RedstoneOre.id);
         }
     }
 
     public override int getDroppedItemId(int blockMeta) => Item.Redstone.id;
 
-    public override int getDroppedItemCount() => 4 + random.NextInt(2);
+    public override int getDroppedItemCount() => 4 + Random.Shared.Next(2);
 
     public override void randomDisplayTick(OnTickEvt ctx)
     {

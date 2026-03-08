@@ -42,17 +42,15 @@ internal class BlockPumpkin : Block
 
     public override int getTexture(int side) => side == 1 ? textureId : side == 0 ? textureId : side == 3 ? textureId + 1 + 16 : textureId + 16;
 
-    public override void onPlaced(World world, int x, int y, int z) => base.onPlaced(world, x, y, z);
-
-    public override bool canPlaceAt(WorldBlockView world, int x, int y, int z)
+    public override bool canPlaceAt(CanPlaceAtCtx evt)
     {
-        int blockId = world.GetBlockId(x, y, z);
-        return (blockId == 0 || Blocks[blockId].material.IsReplaceable) && world.shouldSuffocate(x, y - 1, z);
+        int blockId = evt.WorldRead.GetBlockId(evt.X, evt.Y, evt.Z);
+        return (blockId == 0 || Blocks[blockId].material.IsReplaceable) && evt.WorldRead.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z);
     }
 
-    public override void onPlaced(World world, int x, int y, int z, EntityLiving placer)
+    public override void onPlaced(OnPlacedEvt evt)
     {
-        int direction = MathHelper.Floor(placer.yaw * 4.0F / 360.0F + 2.5D) & 3;
-        world.setBlockMeta(x, y, z, direction);
+        int direction = MathHelper.Floor(evt.Placer.yaw * 4.0F / 360.0F + 2.5D) & 3;
+        evt.WorldWrite.SetBlockMeta(evt.X, evt.Y, evt.Z, direction);
     }
 }

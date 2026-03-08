@@ -16,13 +16,13 @@ internal class BlockIce : BlockBreakable
 
     public override bool isSideVisible(IBlockReader iBlockReader, int x, int y, int z, int side) => base.isSideVisible(iBlockReader, x, y, z, 1 - side);
 
-    public override void afterBreak(World world, EntityPlayer player, int x, int y, int z, int meta)
+    public override void afterBreak(OnAfterBreakEvt evt)
     {
-        base.afterBreak(world, player, x, y, z, meta);
-        Material materialBelow = world.getMaterial(x, y - 1, z);
+        base.afterBreak(evt);
+        Material materialBelow = evt.WorldRead.GetMaterial(evt.X, evt.Y - 1, evt.Z);
         if (materialBelow.BlocksMovement || materialBelow.IsFluid)
         {
-            world.setBlock(x, y, z, FlowingWater.id);
+            evt.WorldWrite.SetBlock(evt.X, evt.Y, evt.Z, FlowingWater.id);
         }
     }
 
@@ -32,7 +32,8 @@ internal class BlockIce : BlockBreakable
     {
         if (ctx.Lighting.GetBrightness(LightType.Block, ctx.X, ctx.Y, ctx.Z) > 11 - BlockLightOpacity[id])
         {
-            dropStacks(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z, ctx.WorldRead.getBlockMeta(ctx.X, ctx.Y, ctx.Z));
+            // TODO: Implement this
+            //dropStacks(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z, ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z));
             ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, Water.id);
         }
     }

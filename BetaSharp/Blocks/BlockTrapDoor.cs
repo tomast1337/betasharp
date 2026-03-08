@@ -26,9 +26,9 @@ internal class BlockTrapDoor : Block
 
     public override BlockRendererType getRenderType() => BlockRendererType.Standard;
 
-    public override Box getBoundingBox(World world, int x, int y, int z)
+    public override Box getBoundingBox(IBlockReader world, int x, int y, int z)
     {
-        updateBoundingBox(world.BlocksReader, x, y, z);
+        updateBoundingBox(world, x, y, z);
         return base.getBoundingBox(world, x, y, z);
     }
 
@@ -133,7 +133,8 @@ internal class BlockTrapDoor : Block
             if (!ctx.WorldRead.ShouldSuffocate(xPos, ctx.Y, zPos))
             {
                 ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
-                dropStacks(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z, meta);
+                // TODO: Implement this
+                // dropStacks(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z, meta);
             }
 
             if (id > 0 && Blocks[id].canEmitRedstonePower())
@@ -176,34 +177,34 @@ internal class BlockTrapDoor : Block
         ctx.WorldWrite.SetBlockMeta(ctx.X, ctx.Y, ctx.Z, meta);
     }
 
-    public override bool canPlaceAt(OnPlacedEvt ctx)
+    public override bool canPlaceAt(CanPlaceAtCtx ctx)
     {
-        if (ctx.Side == 0)
+        if (ctx.Direction == 0)
         {
             return false;
         }
 
-        if (ctx.Side == 1)
+        if (ctx.Direction == 1)
         {
             return false;
         }
 
-        if (ctx.Side == 2)
+        if (ctx.Direction == 2)
         {
             ++ctx.Z;
         }
 
-        if (ctx.Side == 3)
+        if (ctx.Direction == 3)
         {
             --ctx.Z;
         }
 
-        if (ctx.Side == 4)
+        if (ctx.Direction == 4)
         {
             ++ctx.X;
         }
 
-        if (ctx.Side == 5)
+        if (ctx.Direction == 5)
         {
             --ctx.X;
         }

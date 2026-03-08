@@ -12,14 +12,14 @@ internal class BlockDetectorRail : BlockRail
 
     public override bool canEmitRedstonePower() => true;
 
-    public override void onEntityCollision(World world, int x, int y, int z, Entity entity)
+    public override void onEntityCollision(OnEntityCollisionEvt ctx)
     {
-        if (!world.isRemote)
+        if (!ctx.IsRemote)
         {
-            int meta = world.getBlockMeta(x, y, z);
+            int meta = ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z);
             if ((meta & 8) == 0)
             {
-                updatePoweredStatus(world, x, y, z, meta);
+                updatePoweredStatus(ctx.Entities, ctx.WorldWrite, ctx.Broadcaster, ctx.X, ctx.Y, ctx.Z, id, meta);
             }
         }
     }
@@ -28,24 +28,24 @@ internal class BlockDetectorRail : BlockRail
     {
         if (!ctx.IsRemote)
         {
-            int meta = ctx.WorldRead.getBlockMeta(ctx.X, ctx.Y, ctx.Z);
+            int meta = ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z);
             if ((meta & 8) != 0)
             {
-                updatePoweredStatus(ctx, meta);
+                updatePoweredStatus(ctx.Entities, ctx.WorldWrite, ctx.Broadcaster, ctx.X, ctx.Y, ctx.Z, id, meta);
             }
         }
     }
 
-    public override bool isPoweringSide(IBlockReader iBlockReader, int x, int y, int z, int side) => (iBlockReader.getBlockMeta(x, y, z) & 8) != 0;
+    public override bool isPoweringSide(IBlockReader iBlockReader, int x, int y, int z, int side) => (iBlockReader.GetBlockMeta(x, y, z) & 8) != 0;
 
-    public override bool isStrongPoweringSide(IBlockReader world, int x, int y, int z, int side) => (world.getBlockMeta(x, y, z) & 8) == 0 ? false : side == 1;
+    public override bool isStrongPoweringSide(IBlockReader world, int x, int y, int z, int side) => (world.GetBlockMeta(x, y, z) & 8) == 0 ? false : side == 1;
 
-    private void updatePoweredStatus(OnTickEvt ctx, int meta)
+    private void updatePoweredStatus(        EntityManager entities,        IBlockWrite worldWrite,  WorldEventBroadcaster broadcaster,      int x,        int y,        int z,        int id        , int meta)
     {
         bool isPowered = (meta & 8) != 0;
         bool hasMinecart = false;
         float detectionInset = 2.0F / 16.0F;
-        List<EntityMinecart> minecartsOnRail = ctx.Entities.CollectEntitiesOfType<EntityMinecart>(new Box(ctx.X + detectionInset, ctx.Y, ctx.Z + detectionInset, ctx.X + 1 - detectionInset, ctx.Y + 0.25D, ctx.Z + 1 - detectionInset));
+        List<EntityMinecart> minecartsOnRail = entities.CollectEntitiesOfType<EntityMinecart>(new Box(x + detectionInset, y, z + detectionInset, x + 1 - detectionInset, y + 0.25D, z + 1 - detectionInset));
         if (minecartsOnRail.Count > 0)
         {
             hasMinecart = true;
@@ -53,23 +53,24 @@ internal class BlockDetectorRail : BlockRail
 
         if (hasMinecart && !isPowered)
         {
-            ctx.WorldWrite.SetBlockMeta(ctx.X, ctx.Y, ctx.Z, meta | 8);
-            ctx.WorldRead.NotifyNeighbors(ctx.X, ctx.Y, ctx.Z, id);
-            ctx.WorldRead.NotifyNeighbors(ctx.X, ctx.Y - 1, ctx.Z, id);
-            ctx.WorldWrite.SetBlocksDirty(ctx.X, ctx.Y, ctx.Z, ctx.X, ctx.Y, ctx.Z);
+            worldWrite.SetBlockMeta(x, y, z, meta | 8);
+            broadcaster.NotifyNeighbors(x, y, z, id);
+            broadcaster.NotifyNeighbors(x, y - 1, z, id);
+            worldWrite.SetBlocksDirty(x, y, z, x, y, z);
         }
 
         if (!hasMinecart && isPowered)
         {
-            ctx.WorldWrite.SetBlockMeta(ctx.X, ctx.Y, ctx.Z, meta & 7);
-            ctx.WorldRead.NotifyNeighbors(ctx.X, ctx.Y, ctx.Z, id);
-            ctx.WorldRead.NotifyNeighbors(ctx.X, ctx.Y - 1, ctx.Z, id);
-            ctx.WorldWrite.SetBlocksDirty(ctx.X, ctx.Y, ctx.Z, ctx.X, ctx.Y, ctx.Z);
+            worldWrite.SetBlockMeta(x, y, z, meta & 7);
+            broadcaster.NotifyNeighbors(x, y, z, id);
+            broadcaster.NotifyNeighbors(x, y - 1, z, id);
+            worldWrite.SetBlocksDirty(x, y, z, x, y, z);
         }
 
         if (hasMinecart)
         {
-            ctx.WorldRead.ScheduleBlockUpdate(ctx.X, ctx.Y, ctx.Z, id, getTickRate());
+            // TODO: Implement this
+            //broadcaster.ScheduleBlockUpdate(x, y, z, id, getTickRate());
         }
     }
 }

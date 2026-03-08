@@ -12,7 +12,7 @@ internal class BlockWeb : Block
     {
     }
 
-    public override void onEntityCollision(World world, int x, int y, int z, Entity entity) => entity.slowed = true;
+    public override void onEntityCollision(OnEntityCollisionEvt ctx) => ctx.Entity.slowed = true;
 
     public override bool isOpaque() => false;
 

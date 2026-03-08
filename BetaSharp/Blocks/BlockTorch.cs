@@ -19,12 +19,12 @@ internal class BlockTorch : Block
 
     private bool canPlaceOn(IBlockReader world, int x, int y, int z) => world.ShouldSuffocate(x, y, z) || world.GetBlockId(x, y, z) == Fence.id;
 
-    public override bool canPlaceAt(IBlockReader world, int x, int y, int z) =>
-        world.ShouldSuffocate(x - 1, y, z) ||
-        world.ShouldSuffocate(x + 1, y, z) ||
-        world.ShouldSuffocate(x, y, z - 1) ||
-        world.ShouldSuffocate(x, y, z + 1) ||
-        canPlaceOn(world, x, y - 1, z);
+    public override bool canPlaceAt(CanPlaceAtCtx ctx) =>
+        ctx.WorldRead.ShouldSuffocate(ctx.X - 1, ctx.Y, ctx.Z) ||
+        ctx.WorldRead.ShouldSuffocate(ctx.X + 1, ctx.Y, ctx.Z) ||
+        ctx.WorldRead.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z - 1) ||
+        ctx.WorldRead.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z + 1) ||
+        canPlaceOn(ctx.WorldRead, ctx.X, ctx.Y - 1, ctx.Z);
 
     public override void onPlaced(OnPlacedEvt ctx)
     {
@@ -126,7 +126,8 @@ internal class BlockTorch : Block
 
             if (shouldDrop)
             {
-                dropStacks(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z, ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z));
+                // TODO: Implement this
+                //dropStacks(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z, ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z));
                 ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
             }
         }
@@ -134,9 +135,10 @@ internal class BlockTorch : Block
 
     private bool breakIfCannotPlaceAt(IBlockReader worldRead, IBlockWrite worldWrite, int x, int y, int z)
     {
-        if (!canPlaceAt(worldRead, x, y, z))
+        if (!canPlaceAt(new CanPlaceAtCtx(worldRead, worldWrite, 0, x, y, z)))
         {
-            dropStacks(worldRead, x, y, z, worldRead.GetBlockMeta(x, y, z));
+            // TODO: Implement this
+            // dropStacks(worldRead, x, y, z, worldRead.GetBlockMeta(x, y, z));
             worldWrite.SetBlock(x, y, z, 0);
             return false;
         }

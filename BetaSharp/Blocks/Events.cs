@@ -59,10 +59,11 @@ public struct OnPlacedEvt(WorldBlockView worldRead, WorldBlockWrite worldWrite, 
     public int Z = z;
 }
 
-public struct CanPlaceAtCtx(IBlockReader worldRead, IBlockWrite worldWrite, int x, int y, int z)
+public struct CanPlaceAtCtx(IBlockReader worldRead, IBlockWrite worldWrite, int direction, int x, int y, int z)
 {
     public IBlockReader WorldRead = worldRead;
     public IBlockWrite WorldWrite = worldWrite;
+    public int Direction = direction;
     public int X = x;
     public int Y = y;
     public int Z = z;
@@ -96,11 +97,12 @@ public struct OnBreakEvt(WorldBlockView worldRead, WorldBlockWrite worldWrite, W
     public int Z = z;
 }
 
-public struct OnBlockBreakStartEvt(IBlockReader worldRead, IBlockWrite worldWrite, WorldEventBroadcaster broadcaster, int x, int y, int z)
+public struct OnBlockBreakStartEvt(IBlockReader worldRead, IBlockWrite worldWrite, WorldEventBroadcaster broadcaster, EntityPlayer player, int x, int y, int z)
 {
     public IBlockReader WorldRead = worldRead;
     public IBlockWrite WorldWrite = worldWrite;
     public WorldEventBroadcaster Broadcaster = broadcaster;
+    public EntityPlayer Player = player;
     public int X = x;
     public int Y = y;
     public int Z = z;
@@ -119,10 +121,11 @@ public struct OnDropEvt(IBlockReader worldRead, IBlockWorldContext context, Rule
     public float Luck = luck;
 }
 
-public struct OnMetadataChangeEvt(IBlockReader read, IBlockWrite write, int x, int y, int z, int meta)
+public struct OnMetadataChangeEvt(IBlockReader read, IBlockWrite write, bool isRemote, int x, int y, int z, int meta)
 {
     public IBlockReader WorldRead = read;
     public IBlockWrite WorldWrite = write;
+    public bool IsRemote = isRemote;
     public int X = x;
     public int Y = y;
     public int Z = z;

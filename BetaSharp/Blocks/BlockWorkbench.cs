@@ -10,14 +10,14 @@ internal class BlockWorkbench : Block
 
     public override int getTexture(int side) => side == 1 ? textureId - 16 : side == 0 ? Planks.getTexture(0) : side != 2 && side != 4 ? textureId : textureId + 1;
 
-    public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
+    public override bool onUse(OnUseEvt ctx)
     {
-        if (world.isRemote)
+        if (ctx.IsRemote)
         {
             return true;
         }
 
-        player.openCraftingScreen(x, y, z);
+        ctx.Player.openCraftingScreen(ctx.X, ctx.Y, ctx.Z);
         return true;
     }
 }

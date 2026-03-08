@@ -33,9 +33,9 @@ internal class BlockCake : Block
         return new Box(x + minX, y, z + edgeInset, x + 1 - edgeInset, y + height - edgeInset, z + 1 - edgeInset);
     }
 
-    public override Box getBoundingBox(World world, int x, int y, int z)
+    public override Box getBoundingBox(IBlockReader world, int x, int y, int z)
     {
-        int slicesEaten = world.getBlockMeta(x, y, z);
+        int slicesEaten = world.GetBlockMeta(x, y, z);
         float edgeInset = 1.0F / 16.0F;
         float minX = (1 + slicesEaten * 2) / 16.0F;
         float height = 0.5F;
@@ -88,13 +88,22 @@ internal class BlockCake : Block
         }
     }
 
-    public override bool canPlaceAt(OnPlacedEvt ctx) => !base.canPlaceAt(ctx) ? false : canGrow(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z);
+    public override bool canPlaceAt(CanPlaceAtCtx ctx) => !base.canPlaceAt(ctx) ? false : canGrow(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z);
 
     public override void neighborUpdate(OnTickEvt ctx)
     {
         if (!canGrow(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z))
         {
-            dropStacks(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z, ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z));
+            // Implement this
+            // dropStacks(new OnDropEvt(
+            //     ctx.WorldRead,
+            //     ctx.Rules,
+            //     ctx.IsRemote,
+            //     ctx.X,
+            //     ctx.Y,
+            //     ctx.Z,
+            //     ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z)
+            // ));
             ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
         }
     }

@@ -25,22 +25,22 @@ internal class BlockSlab : Block
 
     public override bool isOpaque() => doubleSlab;
 
-    public override void onPlaced(World world, int x, int y, int z)
+    public override void onPlaced(OnPlacedEvt ctx)
     {
         if (this != Slab)
         {
-            base.onPlaced(world, x, y, z);
+            base.onPlaced(ctx);
         }
 
-        int blockBelowId = world.getBlockId(x, y - 1, z);
-        int slabMeta = world.getBlockMeta(x, y, z);
-        int blockBelowMeta = world.getBlockMeta(x, y - 1, z);
+        int blockBelowId = ctx.WorldRead.GetBlockId(ctx.X, ctx.Y - 1, ctx.Z);
+        int slabMeta = ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z);
+        int blockBelowMeta = ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y - 1, ctx.Z);
         if (slabMeta == blockBelowMeta)
         {
             if (blockBelowId == Slab.id)
             {
-                world.setBlock(x, y, z, 0);
-                world.setBlock(x, y - 1, z, DoubleSlab.id, slabMeta);
+                ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
+                ctx.WorldWrite.SetBlock(ctx.X, ctx.Y - 1, ctx.Z, DoubleSlab.id, slabMeta);
             }
         }
     }

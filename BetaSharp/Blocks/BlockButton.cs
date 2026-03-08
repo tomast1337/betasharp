@@ -26,7 +26,7 @@ internal class BlockButton : Block
         return read.ShouldSuffocate(x - 1, y, z) ? true : read.ShouldSuffocate(x + 1, y, z) ? true : read.ShouldSuffocate(x, y, z - 1) ? true : read.ShouldSuffocate(x, y, z + 1);
     }
 
-    public override bool canPlaceAt(OnPlacedEvt ctx) => IsValidPlacementSide(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z, ctx.Side);
+    public override bool canPlaceAt(CanPlaceAtCtx ctx) => IsValidPlacementSide(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z, ctx.Side);
 
     public override void onPlaced(OnPlacedEvt ctx)
     {

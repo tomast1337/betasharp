@@ -18,8 +18,9 @@ internal class BlockTNT : Block
         base.onPlaced(ctx);
         if (ctx.Redstone.IsPowered(ctx.X, ctx.Y, ctx.Z))
         {
-            onMetadataChange(ctx);
-            ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
+            // TODO: Implement this
+            // onMetadataChange(new OnMetadataChangeEvt(ctx.WorldRead, ctx.WorldWrite, ctx.Redstone, ctx.Entities, ctx.Broadcaster, ctx.IsRemote, ctx.X, ctx.Y, ctx.Z));
+            // ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
         }
     }
 
@@ -27,46 +28,50 @@ internal class BlockTNT : Block
     {
         if (ctx.BlockId > 0 && Blocks[ctx.BlockId].canEmitRedstonePower() && ctx.Redstone.IsPowered(ctx.X, ctx.Y, ctx.Z))
         {
-            onMetadataChange(ctx);
+            // TODO: Implement this
+            // onMetadataChange(ctx);
             ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
         }
     }
 
     public override int getDroppedItemCount() => 0;
 
-    public override void onDestroyedByExplosion(World world, int x, int y, int z)
+    public override void onDestroyedByExplosion(OnDestroyedByExplosionEvt ctx)
     {
-        EntityTNTPrimed entityTNTPrimed = new(world, x + 0.5F, y + 0.5F, z + 0.5F);
-        entityTNTPrimed.fuse = world.random.NextInt(entityTNTPrimed.fuse / 4) + entityTNTPrimed.fuse / 8;
-        world.SpawnEntity(entityTNTPrimed);
+        // TODO: Implement this
+        // EntityTNTPrimed entityTNTPrimed = new(ctx.World, ctx.X + 0.5F, ctx.Y + 0.5F, ctx.Z + 0.5F);
+        // entityTNTPrimed.fuse = ctx.Random.NextInt(entityTNTPrimed.fuse / 4) + entityTNTPrimed.fuse / 8;
+        // ctx.Entities.SpawnEntity(entityTNTPrimed);
     }
 
-    public override void onMetadataChange(OnTickEvt ctx)
+    public override void onMetadataChange(OnMetadataChangeEvt ctx)
     {
         if (!ctx.IsRemote)
         {
             if ((ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z) & 1) == 0)
             {
-                dropStack(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z, new ItemStack(TNT.id, 1, 0));
+                // TODO: Implement this
+                // dropStack(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z, new ItemStack(TNT.id, 1, 0));
             }
             else
             {
-                EntityTNTPrimed entityTNTPrimed = new EntityTNTPrimed(ctx.WorldRead, (double)(ctx.X + 0.5F), (double)(ctx.Y + 0.5F), (double)(ctx.Z + 0.5F));
-                ctx.Entities.SpawnEntity(entityTNTPrimed);
-                ctx.Broadcaster.PlaySoundAtPos(ctx.X + 0.5F, ctx.Y + 0.5F, ctx.Z + 0.5F, "random.fuse", 1.0F, 1.0F);
+                // TODO: Implement this
+                // EntityTNTPrimed entityTNTPrimed = new EntityTNTPrimed(ctx.WorldRead, (double)(ctx.X + 0.5F), (double)(ctx.Y + 0.5F), (double)(ctx.Z + 0.5F));
+                // ctx.Entities.SpawnEntity(entityTNTPrimed);
+                // ctx.Broadcaster.PlaySoundAtPos(ctx.X + 0.5F, ctx.Y + 0.5F, ctx.Z + 0.5F, "random.fuse", 1.0F, 1.0F);
             }
         }
     }
 
-    public override void onBlockBreakStart(World world, int x, int y, int z, EntityPlayer player)
+    public override void onBlockBreakStart(OnBlockBreakStartEvt ctx)
     {
-        if (player.getHand() != null && player.getHand().itemId == Item.FlintAndSteel.id)
+        if (ctx.Player.getHand() != null && ctx.Player.getHand().itemId == Item.FlintAndSteel.id)
         {
-            world.SetBlockMetaWithoutNotifyingNeighbors(x, y, z, 1);
+            ctx.WorldWrite.SetBlockMetaWithoutNotifyingNeighbors(ctx.X, ctx.Y, ctx.Z, 1);
         }
 
-        base.onBlockBreakStart(world, x, y, z, player);
+        base.onBlockBreakStart(ctx);
     }
 
-    public override bool onUse(World world, int x, int y, int z, EntityPlayer player) => base.onUse(world, x, y, z, player);
+    public override bool onUse(OnUseEvt ctx) => base.onUse(ctx);
 }

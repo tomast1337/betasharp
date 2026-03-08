@@ -44,45 +44,45 @@ internal class BlockRedstoneTorch : BlockTorch
 
     public override int getTickRate() => 2;
 
-    public override void onPlaced(World world, int x, int y, int z)
+    public override void onPlaced(OnPlacedEvt ctx)
     {
-        if (world.getBlockMeta(x, y, z) == 0)
+        if (ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z) == 0)
         {
-            base.onPlaced(world, x, y, z);
+            base.onPlaced(ctx);
         }
 
         if (_lit)
         {
-            world.notifyNeighbors(x, y - 1, z, id);
-            world.notifyNeighbors(x, y + 1, z, id);
-            world.notifyNeighbors(x - 1, y, z, id);
-            world.notifyNeighbors(x + 1, y, z, id);
-            world.notifyNeighbors(x, y, z - 1, id);
-            world.notifyNeighbors(x, y, z + 1, id);
+            ctx.Broadcaster.NotifyNeighbors(ctx.X, ctx.Y - 1, ctx.Z, id);
+            ctx.Broadcaster.NotifyNeighbors(ctx.X, ctx.Y + 1, ctx.Z, id);
+            ctx.Broadcaster.NotifyNeighbors(ctx.X - 1, ctx.Y, ctx.Z, id);
+            ctx.Broadcaster.NotifyNeighbors(ctx.X + 1, ctx.Y, ctx.Z, id);
+            ctx.Broadcaster.NotifyNeighbors(ctx.X, ctx.Y, ctx.Z - 1, id);
+            ctx.Broadcaster.NotifyNeighbors(ctx.X, ctx.Y, ctx.Z + 1, id);
         }
     }
 
-    public override void onBreak(World world, int x, int y, int z)
+    public override void onBreak(OnBreakEvt ctx)
     {
         if (_lit)
         {
-            world.notifyNeighbors(x, y - 1, z, id);
-            world.notifyNeighbors(x, y + 1, z, id);
-            world.notifyNeighbors(x - 1, y, z, id);
-            world.notifyNeighbors(x + 1, y, z, id);
-            world.notifyNeighbors(x, y, z - 1, id);
-            world.notifyNeighbors(x, y, z + 1, id);
+            ctx.Broadcaster.NotifyNeighbors(ctx.X, ctx.Y - 1, ctx.Z, id);
+            ctx.Broadcaster.NotifyNeighbors(ctx.X, ctx.Y + 1, ctx.Z, id);
+            ctx.Broadcaster.NotifyNeighbors(ctx.X - 1, ctx.Y, ctx.Z, id);
+            ctx.Broadcaster.NotifyNeighbors(ctx.X + 1, ctx.Y, ctx.Z, id);
+            ctx.Broadcaster.NotifyNeighbors(ctx.X, ctx.Y, ctx.Z - 1, id);
+            ctx.Broadcaster.NotifyNeighbors(ctx.X, ctx.Y, ctx.Z + 1, id);
         }
     }
 
-    public override bool isPoweringSide(IBlockReader iBlockReader, int x, int y, int z, int side)
+    public override bool isPoweringSide(IBlockReader world, int x, int y, int z, int side)
     {
         if (!_lit)
         {
             return false;
         }
 
-        int meta = iBlockReader.getBlockMeta(x, y, z);
+        int meta = world.GetBlockMeta(x, y, z);
         return (meta != 5 || side != 1) && (meta != 3 || side != 3) && (meta != 4 || side != 2) && (meta != 1 || side != 5) && (meta != 2 || side != 4);
     }
 
@@ -92,7 +92,7 @@ internal class BlockRedstoneTorch : BlockTorch
         int y = ctx.Y;
         int z = ctx.Z;
         RedstoneEngine redstoneEngine = ctx.Redstone;
-        int meta = ctx.WorldRead.getBlockMeta(x, y, z);
+        int meta = ctx.WorldRead.GetBlockMeta(x, y, z);
         return (meta == 5 && redstoneEngine.IsPoweringSide(x, y - 1, z, 0)) || (meta == 3 && redstoneEngine.IsPoweringSide(x, y, z - 1, 2)) ||
                (meta == 4 && redstoneEngine.IsPoweringSide(x, y, z + 1, 3)) || (meta == 1 && redstoneEngine.IsPoweringSide(x - 1, y, z, 4)) || (meta == 2 && redstoneEngine.IsPoweringSide(x + 1, y, z, 5));
     }
@@ -114,7 +114,7 @@ internal class BlockRedstoneTorch : BlockTorch
         {
             if (shouldTurnOff)
             {
-                ctx.WorldWrite.SetBlock(x, y, z, RedstoneTorch.id, ctx.WorldRead.getBlockMeta(x, y, z));
+                ctx.WorldWrite.SetBlock(x, y, z, RedstoneTorch.id, ctx.WorldRead.GetBlockMeta(x, y, z));
                 if (isBurnedOut(ctx, true))
                 {
                     ctx.Broadcaster.PlaySoundAtPos(x + 0.5F, y + 0.5F, z + 0.5F, "random.fizz", 0.5F, 2.6F + (ctx.Random.NextFloat() - ctx.Random.NextFloat()) * 0.8F);
@@ -131,14 +131,15 @@ internal class BlockRedstoneTorch : BlockTorch
         }
         else if (!shouldTurnOff && !isBurnedOut(ctx, false))
         {
-            ctx.WorldRead.setBlock(x, y, z, LitRedstoneTorch.id, ctx.WorldRead.getBlockMeta(x, y, z));
+            ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, LitRedstoneTorch.id, ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z));
         }
     }
 
-    public override void neighborUpdate(WorldBlockView world, int x, int y, int z, int id)
+    public override void neighborUpdate(OnTickEvt ctx)
     {
-        base.neighborUpdate(world, x, y, z, id);
-        world.ScheduleBlockUpdate(x, y, z, this.id, getTickRate());
+        base.neighborUpdate(ctx);
+        // TODO: Implement this
+        // ctx.WorldWrite.ScheduleBlockUpdate(ctx.X, ctx.Y, ctx.Z, id, getTickRate());
     }
 
     public override bool isStrongPoweringSide(IBlockReader world, int x, int y, int z, int side) => side == 0 && isPoweringSide(world, x, y, z, side);
@@ -147,35 +148,35 @@ internal class BlockRedstoneTorch : BlockTorch
 
     public override bool canEmitRedstonePower() => true;
 
-    public override void randomDisplayTick(World world, int x, int y, int z, JavaRandom random)
+    public override void randomDisplayTick(OnTickEvt ctx)
     {
         if (_lit)
         {
-            int meta = world.getBlockMeta(x, y, z);
-            double particleX = x + 0.5F + (random.NextFloat() - 0.5F) * 0.2D;
-            double particleY = y + 0.7F + (random.NextFloat() - 0.5F) * 0.2D;
-            double particleZ = z + 0.5F + (random.NextFloat() - 0.5F) * 0.2D;
+            int meta = ctx.WorldRead.GetBlockMeta(ctx.X, ctx.Y, ctx.Z);
+            double particleX = ctx.X + 0.5F + (ctx.Random.NextFloat() - 0.5F) * 0.2D;
+            double particleY = ctx.Y + 0.7F + (ctx.Random.NextFloat() - 0.5F) * 0.2D;
+            double particleZ = ctx.Z + 0.5F + (ctx.Random.NextFloat() - 0.5F) * 0.2D;
             double verticalOffset = 0.22F;
             double horizontalOffset = 0.27F;
             if (meta == 1)
             {
-                world.addParticle("reddust", particleX - horizontalOffset, particleY + verticalOffset, particleZ, 0.0D, 0.0D, 0.0D);
+                ctx.Broadcaster.AddParticle("reddust", particleX - horizontalOffset, particleY + verticalOffset, particleZ, 0.0D, 0.0D, 0.0D);
             }
             else if (meta == 2)
             {
-                world.addParticle("reddust", particleX + horizontalOffset, particleY + verticalOffset, particleZ, 0.0D, 0.0D, 0.0D);
+                ctx.Broadcaster.AddParticle("reddust", particleX + horizontalOffset, particleY + verticalOffset, particleZ, 0.0D, 0.0D, 0.0D);
             }
             else if (meta == 3)
             {
-                world.addParticle("reddust", particleX, particleY + verticalOffset, particleZ - horizontalOffset, 0.0D, 0.0D, 0.0D);
+                ctx.Broadcaster.AddParticle("reddust", particleX, particleY + verticalOffset, particleZ - horizontalOffset, 0.0D, 0.0D, 0.0D);
             }
             else if (meta == 4)
             {
-                world.addParticle("reddust", particleX, particleY + verticalOffset, particleZ + horizontalOffset, 0.0D, 0.0D, 0.0D);
+                ctx.Broadcaster.AddParticle("reddust", particleX, particleY + verticalOffset, particleZ + horizontalOffset, 0.0D, 0.0D, 0.0D);
             }
             else
             {
-                world.addParticle("reddust", particleX, particleY, particleZ, 0.0D, 0.0D, 0.0D);
+                ctx.Broadcaster.AddParticle("reddust", particleX, particleY, particleZ, 0.0D, 0.0D, 0.0D);
             }
         }
     }

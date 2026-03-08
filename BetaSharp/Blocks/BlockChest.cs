@@ -129,7 +129,7 @@ internal class BlockChest : BlockWithEntity
 
     public override int getTexture(int side) => side == 1 ? textureId - 1 : side == 0 ? textureId - 1 : side == 3 ? textureId + 1 : textureId;
 
-    public override bool canPlaceAt(OnPlacedEvt ctx)
+    public override bool canPlaceAt(CanPlaceAtCtx ctx)
     {
         int adjacentChestCount = 0;
         if (ctx.WorldRead.GetBlockId(ctx.X - 1, ctx.Y, ctx.Z) == id)
@@ -155,7 +155,7 @@ internal class BlockChest : BlockWithEntity
         return adjacentChestCount > 1 ? false : hasNeighbor(ctx) ? false : hasNeighbor(ctx) ? false : hasNeighbor(ctx) ? false : !hasNeighbor(ctx);
     }
 
-    private bool hasNeighbor(OnPlacedEvt ctx) => ctx.WorldRead.GetBlockId(ctx.X, ctx.Y, ctx.Z) != id ? false :
+    private bool hasNeighbor(CanPlaceAtCtx ctx) => ctx.WorldRead.GetBlockId(ctx.X, ctx.Y, ctx.Z) != id ? false :
         ctx.WorldRead.GetBlockId(ctx.X - 1, ctx.Y, ctx.Z) == id ? true :
         ctx.WorldRead.GetBlockId(ctx.X + 1, ctx.Y, ctx.Z) == id ? true :
         ctx.WorldRead.GetBlockId(ctx.X, ctx.Y, ctx.Z - 1) == id ? true : ctx.WorldRead.GetBlockId(ctx.X, ctx.Y, ctx.Z + 1) == id;
@@ -182,12 +182,13 @@ internal class BlockChest : BlockWithEntity
                     }
 
                     stack.count -= amount;
-                    EntityItem entityItem = new(ctx.World, ctx.X + offsetX, ctx.Y + offsetY, ctx.Z + offsetZ, new ItemStack(stack.itemId, amount, stack.getDamage()));
-                    float var13 = 0.05F;
-                    entityItem.velocityX = random.NextGaussian() * var13;
-                    entityItem.velocityY = random.NextGaussian() * var13 + 0.2F;
-                    entityItem.velocityZ = random.NextGaussian() * var13;
-                    ctx.Entities.SpawnEntity(entityItem);
+                    // TODO: Implement this
+                    // EntityItem entityItem = new(ctx.World, ctx.X + offsetX, ctx.Y + offsetY, ctx.Z + offsetZ, new ItemStack(stack.itemId, amount, stack.getDamage()));
+                    // float var13 = 0.05F;
+                    // entityItem.velocityX = random.NextGaussian() * var13;
+                    // entityItem.velocityY = random.NextGaussian() * var13 + 0.2F;
+                    // entityItem.velocityZ = random.NextGaussian() * var13;
+                    // ctx.Entities.SpawnEntity(entityItem);
                 }
             }
         }

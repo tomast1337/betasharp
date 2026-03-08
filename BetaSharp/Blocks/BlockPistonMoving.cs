@@ -29,9 +29,7 @@ public class BlockPistonMoving : BlockWithEntity
         }
     }
 
-    public override bool canPlaceAt(WorldBlockView world, int x, int y, int z) => false;
-
-    public override bool canPlaceAt(WorldBlockView world, int x, int y, int z, int side) => false;
+    public override bool canPlaceAt(CanPlaceAtCtx ctx) => false;
 
     public override BlockRendererType getRenderType() => BlockRendererType.Entity;
 
@@ -39,11 +37,11 @@ public class BlockPistonMoving : BlockWithEntity
 
     public override bool isFullCube() => false;
 
-    public override bool onUse(World world, int x, int y, int z, EntityPlayer player)
+    public override bool onUse(OnUseEvt ctx)
     {
-        if (!world.isRemote && world.getBlockEntity(x, y, z) == null)
+        if (!ctx.IsRemote && ctx.WorldRead.GetBlockEntity(ctx.X, ctx.Y, ctx.Z) == null)
         {
-            world.setBlock(x, y, z, 0);
+            ctx.WorldWrite.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
             return true;
         }
 
@@ -52,21 +50,22 @@ public class BlockPistonMoving : BlockWithEntity
 
     public override int getDroppedItemId(int blockMeta) => 0;
 
-    public override void dropStacks(WorldBlockView world, int x, int y, int z, int meta, float luck)
+    public override void dropStacks(OnDropEvt ctx)
     {
-        if (!world.isRemote)
+        if (!ctx.IsRemote)
         {
-            BlockEntityPiston var7 = getPistonBlockEntity(world, x, y, z);
-            if (var7 != null)
+            BlockEntityPiston? piston = getPistonBlockEntity(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z);
+            if (piston != null)
             {
-                Blocks[var7.getPushedBlockId()].dropStacks(world, x, y, z, var7.getPushedBlockData());
+                // TODO: Implement this
+                // Blocks[piston.getPushedBlockId()].dropStacks(ctx.WorldRead, ctx.X, ctx.Y, ctx.Z, piston.getPushedBlockData());
             }
         }
     }
 
-    public override void neighborUpdate(WorldBlockView world, int x, int y, int z, int id)
+    public override void neighborUpdate(OnTickEvt ctx)
     {
-        if (!world.isRemote && world.getBlockEntity(x, y, z) == null)
+        if (!ctx.IsRemote && ctx.WorldRead.GetBlockEntity(ctx.X, ctx.Y, ctx.Z) == null)
         {
         }
     }
@@ -113,7 +112,7 @@ public class BlockPistonMoving : BlockWithEntity
         }
     }
 
-    public Box? getPushedBlockCollisionShape(World world, int x, int y, int z, int blockId, float sizeMultiplier, int facing)
+    public Box? getPushedBlockCollisionShape(IBlockReader world, int x, int y, int z, int blockId, float sizeMultiplier, int facing)
     {
         if (blockId != 0 && blockId != id)
         {
@@ -136,9 +135,9 @@ public class BlockPistonMoving : BlockWithEntity
         return null;
     }
 
-    private BlockEntityPiston getPistonBlockEntity(IBlockReader iBlockReader, int x, int y, int z)
+    private BlockEntityPiston? getPistonBlockEntity(IBlockReader iBlockReader, int x, int y, int z)
     {
-        BlockEntity? var5 = iBlockReader.GetBlockEntity(x, y, z);
-        return var5 != null && var5 is BlockEntityPiston ? (BlockEntityPiston)var5 : null;
+        BlockEntity? piston = iBlockReader.GetBlockEntity(x, y, z);
+        return piston != null && piston is BlockEntityPiston ? (BlockEntityPiston)piston : null;
     }
 }
