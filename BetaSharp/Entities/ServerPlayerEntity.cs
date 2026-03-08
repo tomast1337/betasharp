@@ -9,9 +9,11 @@ using BetaSharp.Screens.Slots;
 using BetaSharp.Server;
 using BetaSharp.Server.Entities;
 using BetaSharp.Server.Network;
+using BetaSharp.Server.Worlds;
 using BetaSharp.Stats;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds;
+using BetaSharp.Worlds.Chunks;
 using java.util;
 using Microsoft.Extensions.Logging;
 
@@ -163,10 +165,36 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
 
         if (shouldSendChunkUpdates)
         {
-            while (CanSendMoreChunkData() && PendingChunkUpdates.TryDequeue(out ChunkPos chunkPos))
+            int chunksToProcess = PendingChunkUpdates.Count;
+
+            while (CanSendMoreChunkData() && chunksToProcess > 0 && PendingChunkUpdates.TryDequeue(out ChunkPos chunkPos))
             {
+                chunksToProcess--;
+
                 ServerWorld world = server.getWorld(dimensionId);
                 if (!activeChunks.Contains(chunkPos)) continue;
+
+                Chunk chunk = world.GetChunk(chunkPos.X, chunkPos.Z);
+
+                if (chunk == null || chunk.Empty || !chunk.ReadyForNetwork)
+                {
+                    PendingChunkUpdates.Enqueue(chunkPos);
+                    continue;
+                }
+
+                ServerChunkCache cache = (ServerChunkCache)world.GetChunkSource();
+
+                bool isFullyDecorated =
+                    cache.IsChunkLoaded(chunkPos.X - 1, chunkPos.Z) && cache.GetChunk(chunkPos.X - 1, chunkPos.Z).TerrainPopulated &&
+                    cache.IsChunkLoaded(chunkPos.X, chunkPos.Z - 1) && cache.GetChunk(chunkPos.X, chunkPos.Z - 1).TerrainPopulated &&
+                    cache.IsChunkLoaded(chunkPos.X - 1, chunkPos.Z - 1) && cache.GetChunk(chunkPos.X - 1, chunkPos.Z - 1).TerrainPopulated;
+
+                if (!isFullyDecorated)
+                {
+                    PendingChunkUpdates.Enqueue(chunkPos);
+                    continue;
+                }
+
                 SendChunkData(world, chunkPos);
                 SendBlockEntityUpdates(world, chunkPos);
             }
