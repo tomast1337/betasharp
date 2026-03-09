@@ -278,9 +278,6 @@ internal class PortalForcer
         // Phase 4: Construct the Obsidian Frame and spawn portal blocks
         for (int pass = 0; pass < 4; ++pass)
         {
-            // TODO: Need to check this PauseTicking stuff
-            //world.PauseTicking = true;
-
             for (int wDepth = 0; wDepth < 4; ++wDepth)
             {
                 for (int h = -1; h < 4; ++h)
@@ -290,11 +287,9 @@ internal class PortalForcer
                     int buildZ = finalZ + (wDepth - 1) * finalDirZ;
 
                     bool isFrameEdge = wDepth == 0 || wDepth == 3 || h == -1 || h == 3;
-                    world.BlockWriter.SetBlock(buildX, buildY, buildZ, isFrameEdge ? Block.Obsidian.id : Block.NetherPortal.id);
+                    world.BlockWriter.SetBlockInternal(buildX, buildY, buildZ, isFrameEdge ? Block.Obsidian.id : Block.NetherPortal.id);
                 }
             }
-
-            //world.PauseTicking = false;
 
             // Block updates (lighting, neighbor checks)
             for (int wDepth = 0; wDepth < 4; ++wDepth)

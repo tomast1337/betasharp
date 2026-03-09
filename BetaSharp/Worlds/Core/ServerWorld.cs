@@ -4,7 +4,6 @@ using BetaSharp.Network.Packets.S2CPlay;
 using BetaSharp.Server;
 using BetaSharp.Server.Internal;
 using BetaSharp.Server.Worlds;
-using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Chunks;
 using BetaSharp.Worlds.Dimensions;
 using BetaSharp.Worlds.Mechanics;

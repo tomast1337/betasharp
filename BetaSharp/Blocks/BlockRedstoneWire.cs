@@ -108,11 +108,8 @@ public class BlockRedstoneWire : Block
 
         if (var8 != var9)
         {
-            // TODO: Implement this
-            // write.PauseTicking = true;
-            level.BlockWriter.SetBlockMeta(var2, var3, var4, var9);
+            level.BlockWriter.SetBlockMetaInternal(var2, var3, var4, var9);
             level.Broadcaster.SetBlocksDirty(var2, var3, var4, var2, var3, var4);
-            // level.BlockWriter.PauseTicking = false;
 
             for (var11 = 0; var11 < 4; ++var11)
             {

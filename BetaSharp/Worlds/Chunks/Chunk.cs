@@ -382,10 +382,11 @@ public class Chunk
 
     public virtual int GetBlockMeta(int x, int y, int z) => Meta.GetNibble(x, y, z);
 
-    public virtual void SetBlockMeta(int x, int y, int z, int meta)
+    public virtual bool SetBlockMeta(int x, int y, int z, int meta)
     {
         Dirty = true;
         Meta.SetNibble(x, y, z, meta);
+        return true;
     }
 
     public virtual int GetLight(LightType lightType, int x, int y, int z) => lightType == LightType.Sky ? SkyLight.GetNibble(x, y, z) : lightType == LightType.Block ? BlockLight.GetNibble(x, y, z) : 0;

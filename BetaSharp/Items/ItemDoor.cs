@@ -87,9 +87,8 @@ internal class ItemDoor : Item
                 }
 
 
-                // TODO: Need to check this PauseTicking stuff
-                world.BlockWriter.SetBlock(x, y, z, block.id, direction);
-                world.BlockWriter.SetBlock(x, y + 1, z, block.id, direction + 8);
+                world.BlockWriter.SetBlockInternal(x, y, z, block.id, direction);
+                world.BlockWriter.SetBlockInternal(x, y + 1, z, block.id, direction + 8);
                 world.Broadcaster.NotifyNeighbors(x, y, z, block.id);
                 world.Broadcaster.NotifyNeighbors(x, y + 1, z, block.id);
                 --itemStack.count;

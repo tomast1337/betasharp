@@ -74,11 +74,7 @@ internal class SpringFeature : Feature
         if (stoneNeighbors == 3 && airNeighbors == 1)
         {
             level.BlockWriter.SetBlock(x, y, z, _liquidBlockId);
-
-            // TODO: Investigate this InstantBlockUpdateEnabled further
-            //level.Properties.InstantBlockUpdateEnabled = true;
-            Block.Blocks[_liquidBlockId].onTick(new OnTickEvt(level, x, y, z, level.BlocksReader.GetMeta(x, y, z), level.BlocksReader.GetBlockId(x, y, z)));
-            //level.Properties.InstantBlockUpdateEnabled = false;
+            level.TickScheduler.TriggerInstantTick(x, y, z, _liquidBlockId);
         }
 
         return true;

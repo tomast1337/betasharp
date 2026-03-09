@@ -38,9 +38,7 @@ public class EmptyChunk : Chunk
 
     public override int GetBlockMeta(int x, int y, int z) => 0;
 
-    public override void SetBlockMeta(int x, int y, int z, int meta)
-    {
-    }
+    public override bool SetBlockMeta(int x, int y, int z, int meta) => true;
 
     public override int GetLight(LightType type, int x, int y, int z) => 0;
 

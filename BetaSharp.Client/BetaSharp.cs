@@ -27,10 +27,8 @@ using BetaSharp.Stats;
 using BetaSharp.Util;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.ClientData.Colors;
 using BetaSharp.Worlds.Core;
-using BetaSharp.Worlds.Core.Systems;
 using BetaSharp.Worlds.Storage;
 using ImGuiNET;
 using Microsoft.Extensions.Logging;
@@ -1215,7 +1213,7 @@ public partial class BetaSharp
     {
         if (objectMouseOver.Type != HitResultType.MISS)
         {
-            int blockId = world.getBlockId(objectMouseOver.BlockX, objectMouseOver.BlockY, objectMouseOver.BlockZ);
+            int blockId = world.BlocksReader.GetBlockId(objectMouseOver.BlockX, objectMouseOver.BlockY, objectMouseOver.BlockZ);
             if (blockId == Block.GrassBlock.id)
             {
                 blockId = Block.Dirt.id;
@@ -1334,7 +1332,7 @@ public partial class BetaSharp
                 }
             }
 
-            world.Difficulty = options.Difficulty;
+            world.SetDifficulty(options.Difficulty);
             if (internalServer != null)
             {
                 internalServer.SetDifficulty(options.Difficulty);
@@ -1342,7 +1340,7 @@ public partial class BetaSharp
 
             if (world.IsRemote)
             {
-                world.Difficulty = 3;
+                world.SetDifficulty(3);
             }
 
             Profiler.Start("entityRendererUpdate");
@@ -1742,7 +1740,7 @@ public partial class BetaSharp
         int loadedChunkCount = 0;
         int totalChunksToLoad = loadingRadius * 2 / 16 + 1;
         totalChunksToLoad *= totalChunksToLoad;
-        Vec3i centerPos = world.GetSpawnPos();
+        Vec3i centerPos = world.Properties.GetSpawnPos();
         if (player != null)
         {
             centerPos.X = (int)player.x;
@@ -1754,7 +1752,7 @@ public partial class BetaSharp
             for (int zOffset = -loadingRadius; zOffset <= loadingRadius; zOffset += 16)
             {
                 loadingScreen.setLoadingProgress(loadedChunkCount++ * 100 / totalChunksToLoad);
-                world.getBlockId(centerPos.X + xOffset, 64, centerPos.Z + zOffset);
+                world.BlocksReader.GetBlockId(centerPos.X + xOffset, 64, centerPos.Z + zOffset);
 
                 while (world.Lighting.DoLightingUpdates())
                 {
@@ -1846,7 +1844,7 @@ public partial class BetaSharp
         }
 
         bool useBedSpawn = respawnPos is not null;
-        Vec3i finalRespawnPos = respawnPos ?? world.GetSpawnPos();
+        Vec3i finalRespawnPos = respawnPos ?? world.Properties.GetSpawnPos();
 
         world.UpdateSpawnPosition();
         world.Entities.UpdateEntityLists();

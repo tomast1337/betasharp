@@ -1,5 +1,4 @@
 using BetaSharp.Blocks;
-using BetaSharp.Util.Maths;
 
 namespace BetaSharp.Worlds.Core.Systems;
 
@@ -19,7 +18,7 @@ public class WorldTickScheduler
         ProcessScheduledTicks(forceFlush);
     }
 
-    public virtual void ScheduleBlockUpdate(int x, int y, int z, int blockId, int tickRate,bool instantBlockUpdateEnabled = false)
+    public virtual void ScheduleBlockUpdate(int x, int y, int z, int blockId, int tickRate, bool instantBlockUpdateEnabled = false)
     {
         const byte loadRadius = 8;
         if (_context.BlockHost.IsPosLoaded(x - loadRadius, y - loadRadius, z - loadRadius) && _context.BlockHost.IsPosLoaded(x + loadRadius, y + loadRadius, z + loadRadius))
@@ -74,5 +73,11 @@ public class WorldTickScheduler
                 }
             }
         }
+    }
+    
+    public void TriggerInstantTick(int x, int y, int z, int blockId)
+    {
+        int meta = _context.BlocksReader.GetMeta(x, y, z);
+        Block.Blocks[blockId].onTick(new OnTickEvt(_context, x, y, z, meta, blockId));
     }
 }

@@ -367,7 +367,7 @@ public class GameRenderer
         double var7 = var4.lastTickX + (var4.x - var4.lastTickX) * (double)tickDelta;
         double var9 = var4.lastTickY + (var4.y - var4.lastTickY) * (double)tickDelta;
         double var11 = var4.lastTickZ + (var4.z - var4.lastTickZ) * (double)tickDelta;
-        IChunkSource var13 = _client.world._blockHost.ChunkSource;
+        IChunkSource var13 = _client.world.BlockHost.ChunkSource;
 
         Profiler.Start("updateFog");
         GLManager.GL.Viewport(0, 0, (uint)_client.displayWidth, (uint)_client.displayHeight);

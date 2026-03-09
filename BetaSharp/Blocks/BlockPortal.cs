@@ -84,19 +84,13 @@ public class BlockPortal : BlockBreakable
             }
         }
 
-        // TODO: Need to check this PauseTicking stuff
-        //ctx.Level.PauseTicking = true;
-
         for (horizontalOffset = 0; horizontalOffset < 2; ++horizontalOffset)
         {
             for (verticalOffset = 0; verticalOffset < 3; ++verticalOffset)
             {
-                writer.SetBlock(x + extendsInZ * horizontalOffset, y + verticalOffset, z + extendsInX * horizontalOffset, NetherPortal.id);
+                writer.SetBlockInternal(x + extendsInZ * horizontalOffset, y + verticalOffset, z + extendsInX * horizontalOffset, NetherPortal.id);
             }
         }
-
-        // TODO: Need to check this PauseTicking stuff
-        //ctx.Level.PauseTicking = false;
         return true;
     }
 

@@ -12,8 +12,6 @@ public class WorldEventBroadcaster
     private readonly IBlockReader _reader;
     private readonly World _worldContext;
 
-    public bool PauseTicking = false;
-
     public WorldEventBroadcaster(List<IWorldEventListener> eventListeners, IBlockReader reader, World worldContext)
     {
         _eventListeners = eventListeners;
@@ -87,7 +85,7 @@ public class WorldEventBroadcaster
 
     private void NotifyUpdate(int x, int y, int z, int blockId)
     {
-        if (!PauseTicking && !isRemote)
+        if (!isRemote)
         {
             int targetBlockId = _reader.GetBlockId(x, y, z);
             Block? block = Block.Blocks[targetBlockId];

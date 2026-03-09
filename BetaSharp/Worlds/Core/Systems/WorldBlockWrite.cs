@@ -88,4 +88,14 @@ public sealed class WorldBlockWrite : IBlockWrite
 
         return false;
     }
+
+    public bool SetBlockInternal(int x, int y, int z, int id, int meta = 0)
+    {
+        return _host.GetChunk(x, z).SetBlock(x, y, z, id, meta);
+    }
+
+    public bool SetBlockMetaInternal(int x, int y, int z, int meta)
+    {
+        return _host.GetChunk(x, z).SetBlockMeta(x, y, z, meta);
+    }
 }

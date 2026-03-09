@@ -373,7 +373,7 @@ public class ClientNetworkHandler : NetHandler
 
     public override void onChunkDeltaUpdate(ChunkDeltaUpdateS2CPacket packet)
     {
-        Chunk chunk = worldClient.GetChunk(packet.x, packet.z);
+        Chunk chunk = worldClient.BlockHost.GetChunk(packet.x, packet.z);
         int x = packet.x * 16;
         int y = packet.z * 16;
 
@@ -445,7 +445,7 @@ public class ClientNetworkHandler : NetHandler
 
         if (ent != null && collector != null)
         {
-            worldClient.playSound(ent, "random.pop", 0.2F, ((rand.NextFloat() - rand.NextFloat()) * 0.7F + 1.0F) * 2.0F);
+            worldClient.Broadcaster.PlaySoundAtEntity(ent, "random.pop", 0.2F, ((rand.NextFloat() - rand.NextFloat()) * 0.7F + 1.0F) * 2.0F);
             _game.particleManager.addEffect(new EntityPickupFX(_game.world, ent, collector, -0.5F));
             worldClient.RemoveEntityFromWorld(packet.entityId);
         }
@@ -731,9 +731,9 @@ public class ClientNetworkHandler : NetHandler
 
     public override void handleUpdateSign(UpdateSignPacket packet)
     {
-        if (_game.world.isPosLoaded(packet.x, packet.y, packet.z))
+        if (_game.world.BlockHost.IsPosLoaded(packet.x, packet.y, packet.z))
         {
-            BlockEntity blockEnt = _game.world.getBlockEntity(packet.x, packet.y, packet.z);
+            BlockEntity? blockEnt = _game.world.Entities.GetBlockEntity(packet.x, packet.y, packet.z);
             if (blockEnt is BlockEntitySign)
             {
                 BlockEntitySign signEntity = (BlockEntitySign)blockEnt;
@@ -776,7 +776,7 @@ public class ClientNetworkHandler : NetHandler
 
     public override void onPlayNoteSound(PlayNoteSoundS2CPacket packet)
     {
-        _game.world.playNoteBlockActionAt(packet.xLocation, packet.yLocation, packet.zLocation, packet.instrumentType, packet.pitch);
+        _game.world.Broadcaster.PlayNote(packet.xLocation, packet.yLocation, packet.zLocation, packet.instrumentType, packet.pitch);
     }
 
     public override void onGameStateChange(GameStateChangeS2CPacket packet)
@@ -824,7 +824,7 @@ public class ClientNetworkHandler : NetHandler
 
     public override void onWorldEvent(WorldEventS2CPacket packet)
     {
-        _game.world.worldEvent(packet.eventId, packet.x, packet.y, packet.z, packet.data);
+        _game.world.Broadcaster.WorldEvent(packet.eventId, packet.x, packet.y, packet.z, packet.data);
     }
 
     public override void onIncreaseStat(IncreaseStatS2CPacket packet)
@@ -844,7 +844,7 @@ public class ClientNetworkHandler : NetHandler
     {
         if (packet.type == PlayerConnectionUpdateS2CPacket.ConnectionUpdateType.Leave)
         {
-            Entity ent = worldClient.GetEntity(packet.entityId);
+            Entity? ent = worldClient.GetEntity(packet.entityId);
             EntityRenderDispatcher.instance.skinManager?.Release(packet.name);
         }
     }

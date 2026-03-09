@@ -14,6 +14,7 @@ namespace BetaSharp.Worlds.Core;
 /// </summary>
 public sealed class NullBlockReader : IBlockReader
 {
+
     public static readonly NullBlockReader Instance = new();
 
     private NullBlockReader()

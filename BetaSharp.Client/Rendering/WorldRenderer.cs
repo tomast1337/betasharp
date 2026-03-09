@@ -150,14 +150,14 @@ public class WorldRenderer : IWorldEventListener
 
     public void changeWorld(World world)
     {
-        this.world?.RemoveWorldAccess(this);
+        this.world?.EventListeners.Remove(this);
 
         EntityRenderDispatcher.instance.func_852_a(world);
         this.world = world;
         globalRenderBlocks = new BlockRenderer();
         if (world != null)
         {
-            world.AddWorldAccess(this);
+            world.EventListeners.Add(this);
             loadRenderers();
         }
 
@@ -260,7 +260,7 @@ public class WorldRenderer : IWorldEventListener
                         var8 = 127;
                     }
 
-                    if (world.isPosLoaded(MathHelper.Floor(var7.x), var8, MathHelper.Floor(var7.z)))
+                    if (world.BlocksReader.IsPosLoaded(MathHelper.Floor(var7.x), var8, MathHelper.Floor(var7.z)))
                     {
                         ++countEntitiesRendered;
                         EntityRenderDispatcher.instance.renderEntity(var7, var3);
@@ -648,7 +648,7 @@ public class WorldRenderer : IWorldEventListener
                 renderEngine.BindTexture(renderEngine.GetTextureId("/terrain.png"));
                 GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 0.5F);
                 GLManager.GL.PushMatrix();
-                var8 = world.getBlockId(var2.BlockX, var2.BlockY, var2.BlockZ);
+                var8 = world.BlocksReader.GetBlockId(var2.BlockX, var2.BlockY, var2.BlockZ);
                 Block var9 = var8 > 0 ? Block.Blocks[var8] : null;
                 GLManager.GL.Disable(GLEnum.AlphaTest);
                 GLManager.GL.PolygonOffset(-3.0F, -3.0F);
@@ -662,7 +662,7 @@ public class WorldRenderer : IWorldEventListener
                 var6.startDrawingQuads();
                 var6.setTranslationD(-var10, -var12, -var14);
                 var6.disableColor();
-                BlockRenderer.RenderBlockByRenderType(world.BlocksReader, var9, new BlockPos(var2.BlockX, var2.BlockY, var2.BlockZ), var6, 240 + (int)(damagePartialTime * 10.0F), true);
+                BlockRenderer.RenderBlockByRenderType(world.BlocksReader, world.Lighting, var9, new BlockPos(var2.BlockX, var2.BlockY, var2.BlockZ), var6, 240 + (int)(damagePartialTime * 10.0F), true);
                 var6.draw();
                 var6.setTranslationD(0.0D, 0.0D, 0.0D);
                 GLManager.GL.Disable(GLEnum.AlphaTest);
@@ -730,7 +730,7 @@ public class WorldRenderer : IWorldEventListener
             GLManager.GL.Disable(GLEnum.Texture2D);
             GLManager.GL.DepthMask(false);
             float var6 = 0.002F;
-            int var7 = world.getBlockId(var2.BlockX, var2.BlockY, var2.BlockZ);
+            int var7 = world.BlocksReader.GetBlockId(var2.BlockX, var2.BlockY, var2.BlockZ);
             if (var7 > 0)
             {
                 Block.Blocks[var7].updateBoundingBox(world.BlocksReader, var2.BlockX, var2.BlockY, var2.BlockZ);
@@ -933,35 +933,35 @@ public class WorldRenderer : IWorldEventListener
         switch (var2)
         {
             case 1000:
-                world.playSound(var3, var4, var5, "random.click", 1.0F, 1.0F);
+                _game.sndManager.PlaySound("random.click", var3, var4, var5, 1.0F, 1.0F);
                 break;
             case 1001:
-                world.playSound(var3, var4, var5, "random.click", 1.0F, 1.2F);
+                _game.sndManager.PlaySound("random.click", var3, var4, var5, 1.0F, 1.2F);
                 break;
             case 1002:
-                world.playSound(var3, var4, var5, "random.bow", 1.0F, 1.2F);
+                _game.sndManager.PlaySound("random.bow", var3, var4, var5, 1.0F, 1.2F);
                 break;
             case 1003:
                 if (Random.Shared.NextDouble() < 0.5D)
                 {
-                    world.playSound(var3 + 0.5D, var4 + 0.5D, var5 + 0.5D, "random.door_open", 1.0F, world.random.NextFloat() * 0.1F + 0.9F);
+                    _game.sndManager.PlaySound("random.door_open", var3 + 0.5F, var4 + 0.5F, var5 + 0.5F, 1.0F, world.random.NextFloat() * 0.1F + 0.9F);
                 }
                 else
                 {
-                    world.playSound(var3 + 0.5D, var4 + 0.5D, var5 + 0.5D, "random.door_close", 1.0F, world.random.NextFloat() * 0.1F + 0.9F);
+                    _game.sndManager.PlaySound("random.door_close", var3 + 0.5F, var4 + 0.5F, var5 + 0.5F, 1.0F, world.random.NextFloat() * 0.1F + 0.9F);
                 }
                 break;
             case 1004:
-                world.playSound((double)(var3 + 0.5F), (double)(var4 + 0.5F), (double)(var5 + 0.5F), "random.fizz", 0.5F, 2.6F + (var7.NextFloat() - var7.NextFloat()) * 0.8F);
+                _game.sndManager.PlaySound("random.fizz", var3 + 0.5F, var4 + 0.5F, var5 + 0.5F, 0.5F, 2.6F + (var7.NextFloat() - var7.NextFloat()) * 0.8F);
                 break;
             case 1005:
                 if (Item.ITEMS[var6] is ItemRecord)
                 {
-                    world.playStreaming(((ItemRecord)Item.ITEMS[var6]).recordName, var3, var4, var5);
+                    _game.sndManager.PlayStreaming(((ItemRecord)Item.ITEMS[var6]).recordName, var3, var4, var5, 1.0F, 1.0F);
                 }
                 else
                 {
-                    world.playStreaming(null, var3, var4, var5);
+                    _game.sndManager.PlayStreaming(null, var3, var4, var5, 1.0F, 1.0F);
                 }
                 break;
             case 2000:
