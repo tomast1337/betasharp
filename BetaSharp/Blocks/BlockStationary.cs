@@ -19,7 +19,7 @@ internal class BlockStationary : BlockFluid
         base.neighborUpdate(evt);
         if (evt.Level.BlocksReader.GetBlockId(evt.X, evt.Y, evt.Z) == id)
         {
-            convertToFlowing(evt);
+            evt.Level.TickScheduler.ScheduleBlockUpdate(evt.X, evt.Y, evt.Z, id, getTickRate());
         }
     }
 
@@ -33,6 +33,11 @@ internal class BlockStationary : BlockFluid
 
     public override void onTick(OnTickEvt evt)
     {
+        if (evt.Level.BlocksReader.GetBlockId(evt.X, evt.Y, evt.Z) == id)
+        {
+            convertToFlowing(evt);
+        }
+
         if (material == Material.Lava)
         {
             int attempts = evt.Level.random.NextInt(3);

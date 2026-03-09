@@ -3,14 +3,13 @@ using BetaSharp.Blocks;
 using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
-using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Client.Rendering.Blocks;
 
 public ref struct BlockRenderContext
 {
     public readonly IBlockReader BlockReader;
-    public readonly LightingEngine Lighting;
+    public readonly ILightProvider Lighting;
     public readonly Tessellator Tess;
 
     public int OverrideTexture;
@@ -33,7 +32,7 @@ public ref struct BlockRenderContext
 
     public BlockRenderContext(
         IBlockReader blockReader, Tessellator tess,
-        LightingEngine lighting,
+        ILightProvider lighting,
         int overrideTexture = -1, bool renderAllFaces = false,
         bool flipTexture = false, Box? bounds = null,
         int uvTop = 0, int uvBottom = 0,

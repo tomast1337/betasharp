@@ -192,7 +192,7 @@ public abstract class BlockFluid : Block
 
     public override int getTickRate() => material == Material.Water ? 5 : material == Material.Lava ? 30 : 0;
 
-    public override float getLuminance(LightingEngine lighting, int x, int y, int z)
+    public override float getLuminance(ILightProvider lighting, int x, int y, int z)
     {
         float luminance = lighting.GetLuminance(x, y, z);
         float luminanceAbove = lighting.GetLuminance(x, y + 1, z);

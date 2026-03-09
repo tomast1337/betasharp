@@ -1,4 +1,4 @@
-﻿using BetaSharp.Blocks;
+using BetaSharp.Blocks;
 using BetaSharp.Blocks.Entities;
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Entities;
@@ -10,7 +10,7 @@ using BetaSharp.Worlds.Generation.Biomes.Source;
 
 namespace BetaSharp.Worlds.Core;
 
-public class WorldRegionSnapshot : IBlockReader, IDisposable
+public class WorldRegionSnapshot : IBlockReader, ILightProvider, IDisposable
 {
     private readonly BiomeSource _biomeSource;
     private readonly ChunkSnapshot[][] _chunks;
@@ -127,10 +127,10 @@ public class WorldRegionSnapshot : IBlockReader, IDisposable
         return block != null && block.isOpaque();
     }
 
-    public int GetMeta(int x, int y, int z) => throw new NotImplementedException();
-    public Material GetMaterial(int x, int y, int z) => throw new NotImplementedException();
-    public bool IsAir(int x, int y, int z) => throw new NotImplementedException();
-    public int GetBrightness(int x, int y, int z) => throw new NotImplementedException();
+    public int GetMeta(int x, int y, int z) => getBlockMeta(x, y, z);
+    public Material GetMaterial(int x, int y, int z) => getMaterial(x, y, z);
+    public bool IsAir(int x, int y, int z) => GetBlockId(x, y, z) == 0;
+    public int GetBrightness(int x, int y, int z) => getLightValue(x, y, z);
     public bool IsTopY(int x, int y, int z) => throw new NotImplementedException();
     public int GetTopY(int x, int z) => throw new NotImplementedException();
     public int GetTopSolidBlockY(int x, int z) => throw new NotImplementedException();

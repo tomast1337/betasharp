@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BetaSharp.Worlds.Core.Systems;
 
-public class LightingEngine
+public class LightingEngine : ILightProvider
 {
     private readonly WorldBlockReader _blocks;
     private readonly Dimension _dimension;

@@ -164,9 +164,11 @@ internal class BlockChest : BlockWithEntity
     {
         BlockEntityChest? chest = (BlockEntityChest?)evt.Level.BlocksReader.GetBlockEntity(evt.X, evt.Y, evt.Z);
 
-        for (int slot = 0; slot < chest!.size(); ++slot)
+        if (chest == null) return;
+
+        for (int slot = 0; slot < chest.size(); ++slot)
         {
-            ItemStack stack = chest!.getStack(slot);
+            ItemStack stack = chest.getStack(slot);
             if (stack != null)
             {
                 float offsetX = random.NextFloat() * 0.8F + 0.1F;

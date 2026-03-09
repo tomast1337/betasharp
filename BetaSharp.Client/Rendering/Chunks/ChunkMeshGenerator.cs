@@ -4,7 +4,7 @@ using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Util;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
-using BetaSharp.Worlds.Core.Systems;
+using Microsoft.Extensions.Logging;
 using Silk.NET.Maths;
 
 namespace BetaSharp.Client.Rendering.Chunks;
@@ -75,8 +75,6 @@ internal class ChunkMeshGenerator : IDisposable
             pos.Z + SubChunkRenderer.Size + 1
         );
 
-        LightingEngine lighting = world.Lighting;
-
         Task.Run(async () =>
         {
             if (concurrencySemaphore != null)
@@ -84,9 +82,13 @@ internal class ChunkMeshGenerator : IDisposable
 
             try
             {
-                MeshBuildResult mesh = GenerateMesh(pos, version, cache, lighting);
+                MeshBuildResult mesh = GenerateMesh(pos, version, cache);
                 lock (results)
                     results.Enqueue(mesh);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.For<ChunkMeshGenerator>().LogError(ex, "Chunk mesh generation failed at {Pos}", pos);
             }
             finally
             {
@@ -96,7 +98,7 @@ internal class ChunkMeshGenerator : IDisposable
         });
     }
 
-    private MeshBuildResult GenerateMesh(Vector3D<int> pos, long version, WorldRegionSnapshot cache, LightingEngine lighting)
+    private MeshBuildResult GenerateMesh(Vector3D<int> pos, long version, WorldRegionSnapshot cache)
     {
         int minX = pos.X;
         int minY = pos.Y;
@@ -136,7 +138,7 @@ internal class ChunkMeshGenerator : IDisposable
                         if (blockPass != pass)
                             hasNextPass = true;
                         else
-                            BlockRenderer.RenderBlockByRenderType(cache, lighting, b, new BlockPos(x, y, z), tess);
+                            BlockRenderer.RenderBlockByRenderType(cache, cache, b, new BlockPos(x, y, z), tess);
                     }
                 }
             }

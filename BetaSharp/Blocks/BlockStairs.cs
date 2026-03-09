@@ -74,7 +74,7 @@ internal class BlockStairs : Block
 
     public override void onMetadataChange(OnMetadataChangeEvt evt) => baseBlock.onMetadataChange(evt);
 
-    public override float getLuminance(LightingEngine lighting, int x, int y, int z) => baseBlock.getLuminance(lighting, x, y, z);
+    public override float getLuminance(ILightProvider lighting, int x, int y, int z) => baseBlock.getLuminance(lighting, x, y, z);
 
     public override float getBlastResistance(Entity entity) => baseBlock.getBlastResistance(entity);
 
