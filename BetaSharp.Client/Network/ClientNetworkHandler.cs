@@ -304,7 +304,7 @@ public class ClientNetworkHandler : NetHandler
             double posZ = ent.trackedPosZ / 32.0D;
             float yaw = packet.yaw * 360 / 256.0F;
             float pitch = packet.pitch * 360 / 256.0F;
-            ent.setPositionAndAnglesAvoidEntities(posX, posY, posZ, yaw, pitch, 3);
+            ent.setPositionAndAnglesAvoidEntities(posX, posY, posZ, yaw, pitch, 5);
         }
     }
 
@@ -321,7 +321,7 @@ public class ClientNetworkHandler : NetHandler
             double posZ = ent.trackedPosZ / 32.0D;
             float yaw = packet.rotate ? packet.yaw * 360 / 256.0F : ent.yaw;
             float pitch = packet.rotate ? packet.pitch * 360 / 256.0F : ent.pitch;
-            ent.setPositionAndAnglesAvoidEntities(posX, posY, posZ, yaw, pitch, 3);
+            ent.setPositionAndAnglesAvoidEntities(posX, posY, posZ, yaw, pitch, 5);
         }
     }
 
