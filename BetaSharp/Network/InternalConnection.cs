@@ -47,7 +47,8 @@ public class InternalConnection : Connection
 
             if (clonedPacket != null)
             {
-                RemoteConnection.ReceivePacket(clonedPacket);
+                Interlocked.Increment(ref packet.UseCount);
+                RemoteConnection.ReceivePacket(packet);
             }
         }
     }

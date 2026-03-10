@@ -89,7 +89,7 @@ public class ClientNetworkHandler : NetHandler
         }
         else
         {
-            packet.ReturnNoCount();
+            packet.Return();
         }
     }
 
