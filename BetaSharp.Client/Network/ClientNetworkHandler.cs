@@ -551,6 +551,9 @@ public class ClientNetworkHandler : NetHandler
         ent.trackedPosZ = packet.zPosition;
         ent.id = packet.entityId;
         ent.setPositionAndAngles(x, y, z, yaw, pitch);
+        ent.lastTickX = ent.x;
+        ent.lastTickY = ent.y;
+        ent.lastTickZ = ent.z;
         ent.interpolateOnly = true;
         worldClient.ForceEntity(packet.entityId, ent);
         List<WatchableObject> metaData = packet.GetMetadata();

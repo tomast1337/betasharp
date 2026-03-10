@@ -684,6 +684,24 @@ public class EntityLiving : Entity
             --newPosRotationIncrements;
             setPosition(newX, newY, newZ);
             setRotation(yaw, pitch);
+
+            if (interpolateOnly)
+            {
+                lastWalkAnimationSpeed = walkAnimationSpeed;
+                double animDx = x - prevX;
+                double animDz = z - prevZ;
+                float distanceMoved = MathHelper.Sqrt(animDx * animDx + animDz * animDz) * 4.0F;
+                if (distanceMoved > 1.0F)
+                {
+                    distanceMoved = 1.0F;
+                }
+                walkAnimationSpeed += (distanceMoved - walkAnimationSpeed) * 0.25F;
+                if (walkAnimationSpeed > 1.0F)
+                {
+                    walkAnimationSpeed = 1.0F;
+                }
+                animationPhase += walkAnimationSpeed;
+            }
         }
 
         if (isMovementBlocked())

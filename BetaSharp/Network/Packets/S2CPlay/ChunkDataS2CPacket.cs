@@ -39,7 +39,7 @@ public class ChunkDataS2CPacket() : Packet(PacketId.ChunkDataS2C)
         return p;
     }
 
-    public override void Read(NetworkStream stream)
+    public override void Read(Stream stream)
     {
         x = stream.ReadInt();
         y = stream.ReadShort();
@@ -60,7 +60,7 @@ public class ChunkDataS2CPacket() : Packet(PacketId.ChunkDataS2C)
         chunkData = output.GetBuffer();
     }
 
-    public override void Write(NetworkStream stream)
+    public override void Write(Stream stream)
     {
         stream.WriteInt(x);
         stream.WriteShort((short)y);
@@ -86,4 +86,9 @@ public class ChunkDataS2CPacket() : Packet(PacketId.ChunkDataS2C)
     {
         chunkData = rawData;
     }
+
+    /// <summary>
+    /// Not round-trippable: ProcessForInternal() replaces compressed payload with raw, so serialize/deserialize would fail on Read (expects zlib).
+    /// </summary>
+    public override bool SkipCloneForInternal => true;
 }

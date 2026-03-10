@@ -48,7 +48,11 @@ public class BlockPistonBase : Block
 
     public override void onPlaced(OnPlacedEvt evt)
     {
-        int facing = getFacingForPlacement(evt.Level, evt.X, evt.Y, evt.Z, (EntityPlayer)evt.Placer);
+        if (evt.Placer is not EntityPlayer player)
+        {
+            return;
+        }
+        int facing = getFacingForPlacement(evt.Level, evt.X, evt.Y, evt.Z, player);
         evt.Level.BlockWriter.SetBlockMeta(evt.X, evt.Y, evt.Z, facing);
 
         if (!evt.Level.IsRemote)
