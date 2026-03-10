@@ -703,6 +703,12 @@ public class EntityLiving : Entity
                 animationPhase += walkAnimationSpeed;
             }
         }
+        else if (interpolateOnly)
+        {
+            lastWalkAnimationSpeed = walkAnimationSpeed;
+            float distanceMoved = 0.0F;
+            walkAnimationSpeed += (distanceMoved - walkAnimationSpeed) * 0.25F;
+        }
 
         if (isMovementBlocked())
         {

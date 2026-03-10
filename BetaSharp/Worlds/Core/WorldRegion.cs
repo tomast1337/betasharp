@@ -85,7 +85,7 @@ internal class WorldRegion : IBlockReader
     public bool ShouldSuffocate(int x, int y, int z)
     {
         Block block = Block.Blocks[GetBlockId(x, y, z)];
-        return block != null && block.material.BlocksMovement && block.isFullCube();
+        return block != null && block.material.Suffocates && block.isFullCube();
     }
 
     public int GetMeta(int x, int y, int z) => throw new NotImplementedException();
