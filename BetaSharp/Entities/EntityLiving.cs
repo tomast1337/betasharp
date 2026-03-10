@@ -759,6 +759,14 @@ public class EntityLiving : Entity
                 }
             }
         }
+
+        // FIX: Prevent ghost velocity from accumulating indefinitely on client-side interpolated mobs
+        if (interpolateOnly)
+        {
+            velocityX = 0.0D;
+            velocityY = 0.0D;
+            velocityZ = 0.0D;
+        }
     }
 
     protected virtual bool isMovementBlocked() => health <= 0;
