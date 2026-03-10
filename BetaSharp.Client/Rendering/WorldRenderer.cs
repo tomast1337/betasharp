@@ -804,6 +804,12 @@ public class WorldRenderer : IWorldEventListener
 
     public void setBlocksDirty(int var1, int var2, int var3, int var4, int var5, int var6)
     {
+        if (!world.BlockHost.IsRegionLoaded(var1, var2, var3, var4, var5, var6))
+        {
+            chunkRenderer.RemoveChunksInRegion(var1, var2, var3, var4, var5, var6);
+            return;
+        }
+
         MarkBlocksDirty(var1 - 1, var2 - 1, var3 - 1, var4 + 1, var5 + 1, var6 + 1);
     }
 

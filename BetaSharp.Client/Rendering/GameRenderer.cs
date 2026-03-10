@@ -11,10 +11,8 @@ using BetaSharp.Entities;
 using BetaSharp.Profiling;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.Chunks;
 using BetaSharp.Worlds.Core;
-using BetaSharp.Worlds.Core.Systems;
 using BetaSharp.Worlds.Generation.Biomes;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
@@ -24,6 +22,7 @@ namespace BetaSharp.Client.Rendering;
 
 public class GameRenderer
 {
+    private const bool EnablePostProcessing = false;
     private readonly bool _cloudFog = false;
     private readonly BetaSharp _client;
     private float _viewDistance;
@@ -287,7 +286,10 @@ public class GameRenderer
                 Display.setVSyncEnabled(false);
             }
 
-            _client.PostProcessManager.Begin();
+            if (EnablePostProcessing)
+            {
+                _client.PostProcessManager.Begin();
+            }
 
             if (_client.world != null)
             {
@@ -327,7 +329,10 @@ public class GameRenderer
                 }
             }
 
-            _client.PostProcessManager.End();
+            if (EnablePostProcessing)
+            {
+                _client.PostProcessManager.End();
+            }
 
             if (var7 < 240)
             {
