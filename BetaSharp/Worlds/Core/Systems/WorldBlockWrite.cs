@@ -102,11 +102,22 @@ public sealed class WorldBlockWrite : IBlockWrite
 
     public bool SetBlockInternal(int x, int y, int z, int id, int meta = 0)
     {
-        return _host.GetChunk(x, z).SetBlock(x, y, z, id, meta);
+        if (x >= -32000000 && z >= -32000000 && x < 32000000 && z <= 32000000 && y is >= 0 and < 128)
+        {
+            return _host.GetChunk(x >> 4, z >> 4).SetBlock(x & 15, y, z & 15, id, meta);
+        }
+
+        return false;
     }
 
     public bool SetBlockMetaInternal(int x, int y, int z, int meta)
     {
-        return _host.GetChunk(x, z).SetBlockMeta(x, y, z, meta);
+        if (x >= -32000000 && z >= -32000000 && x < 32000000 && z <= 32000000 && y is >= 0 and < 128)
+        {
+            _host.GetChunk(x >> 4, z >> 4).SetBlockMeta(x & 15, y, z & 15, meta);
+            return true;
+        }
+
+        return false;
     }
 }

@@ -61,7 +61,7 @@ public class BlockRedstoneRepeater : Block
         }
 
         int facing = reader.GetMeta(x, y, z) & 3;
-        return facing == 0 && side == 3 ? true : facing == 1 && side == 4 ? true : facing == 2 && side == 2 ? true : facing == 3 && side == 5;
+        return facing == 0 && side == 2 ? true : facing == 1 && side == 5 ? true : facing == 2 && side == 3 ? true : facing == 3 && side == 4;
     }
 
     public override void neighborUpdate(OnTickEvt evt)
@@ -114,11 +114,12 @@ public class BlockRedstoneRepeater : Block
         return true;
     }
 
-    public override bool canEmitRedstonePower() => false;
+    public override bool canEmitRedstonePower() => true;
 
     public override void onPlaced(OnPlacedEvt evt)
     {
-        int facing = ((MathHelper.Floor(evt.Placer.yaw * 4.0F / 360.0F + 0.5D) & 3) + 2) % 4;
+        float yaw = evt.Placer?.yaw ?? 0.0F;
+        int facing = ((MathHelper.Floor(yaw * 4.0F / 360.0F + 0.5D) & 3) + 2) % 4;
         evt.Level.BlockWriter.SetBlockMeta(evt.X, evt.Y, evt.Z, facing);
         bool powered = isPowered(evt.Level.BlocksReader, evt.Level.Redstone, evt.X, evt.Y, evt.Z, facing);
         if (powered)

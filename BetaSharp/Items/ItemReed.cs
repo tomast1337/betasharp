@@ -64,8 +64,7 @@ internal class ItemReed : Item
                 Block block = Block.Blocks[field_320_a];
                 if (world.BlockWriter.SetBlock(x, y, z, field_320_a))
                 {
-                    Block.Blocks[field_320_a].onPlaced(new OnPlacedEvt(world, null, 0, 0, x, y, z));
-                    Block.Blocks[field_320_a].onPlaced(new OnPlacedEvt(world, null, 0, 0, x, y, z));
+                    Block.Blocks[field_320_a].onPlaced(new OnPlacedEvt(world, entityPlayer, meta, meta, x, y, z));
                     world.Broadcaster.PlaySoundAtEntity(entityPlayer, block.soundGroup.StepSound, (block.soundGroup.Volume + 1.0F) / 2.0F, block.soundGroup.Pitch * 0.8F);
                     --itemStack.count;
                 }
