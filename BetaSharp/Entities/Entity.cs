@@ -689,7 +689,7 @@ public abstract class Entity
 
         if (_level.BlockHost.IsRegionLoaded(minX, minY, minZ, maxX, maxY, maxZ))
         {
-            float var7 = _level.BlocksReader.GetBrightness(var2, var5, var6);
+            float var7 = _level.Lighting.GetLuminance(var2, var5, var6);
             if (var7 < minBrightness)
             {
                 var7 = minBrightness;
