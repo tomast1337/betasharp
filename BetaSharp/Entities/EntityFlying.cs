@@ -6,7 +6,7 @@ namespace BetaSharp.Entities;
 
 public class EntityFlying : EntityLiving
 {
-    public EntityFlying(IBlockWorldContext world) : base(world)
+    public EntityFlying(IWorldContext world) : base(world)
     {
     }
 

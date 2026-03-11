@@ -7,7 +7,7 @@ public class EntityFlameFX : EntityFX
 {
     private readonly float baseScale;
 
-    public EntityFlameFX(IBlockWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : base(world, x, y, z, velocityX, velocityY, velocityZ)
+    public EntityFlameFX(IWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : base(world, x, y, z, velocityX, velocityY, velocityZ)
     {
         this.velocityX = this.velocityX * 0.01 + velocityX;
         this.velocityY = this.velocityY * 0.01 + velocityY;

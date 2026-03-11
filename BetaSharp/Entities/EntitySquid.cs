@@ -23,7 +23,7 @@ public class EntitySquid : EntityWaterMob
     public float tentacleSpread;
     public float tiltAngle;
 
-    public EntitySquid(IBlockWorldContext world) : base(world)
+    public EntitySquid(IWorldContext world) : base(world)
     {
         texture = "/mob/squid.png";
         setBoundingBoxSpacing(0.95F, 0.95F);

@@ -13,7 +13,7 @@ internal class BlockFlowing : BlockFluid
     {
     }
 
-    private void convertToSource(IBlockWorldContext world, int x, int y, int z)
+    private void convertToSource(IWorldContext world, int x, int y, int z)
     {
         int meta = world.BlocksReader.GetMeta(x, y, z);
         world.BlockWriter.SetBlockWithoutNotifyingNeighbors(x, y, z, id + 1, meta);
@@ -148,7 +148,7 @@ internal class BlockFlowing : BlockFluid
         }
     }
 
-    private void spreadTo(IBlockWorldContext world, int x, int y, int z, int depth)
+    private void spreadTo(IWorldContext world, int x, int y, int z, int depth)
     {
         if (canSpreadTo(world.BlocksReader, x, y, z))
         {

@@ -7,7 +7,7 @@ namespace BetaSharp.Entities;
 
 public abstract class EntityAnimal : EntityCreature, SpawnableEntity
 {
-    public EntityAnimal(IBlockWorldContext level) : base(level)
+    public EntityAnimal(IWorldContext level) : base(level)
     {
     }
 

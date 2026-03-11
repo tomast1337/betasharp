@@ -10,7 +10,7 @@ public class EntityDiggingFX : EntityFX
 
     private readonly Block targetedBlock;
 
-    public EntityDiggingFX(IBlockWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Block targetedBlock, int hitFace, int meta) : base(world, x, y, z, velocityX, velocityY, velocityZ)
+    public EntityDiggingFX(IWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Block targetedBlock, int hitFace, int meta) : base(world, x, y, z, velocityX, velocityY, velocityZ)
     {
         this.targetedBlock = targetedBlock;
         particleTextureIndex = targetedBlock.getTexture(0, meta);

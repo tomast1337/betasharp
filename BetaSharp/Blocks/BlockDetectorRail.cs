@@ -40,7 +40,7 @@ internal class BlockDetectorRail : BlockRail
 
     public override bool isStrongPoweringSide(IBlockReader world, int x, int y, int z, int side) => (world.GetMeta(x, y, z) & 8) == 0 ? false : side == 1;
 
-    private void updatePoweredStatus(IBlockWorldContext context, int x, int y, int z, int id, int meta)
+    private void updatePoweredStatus(IWorldContext context, int x, int y, int z, int id, int meta)
     {
         bool isPowered = (meta & 8) != 0;
         bool hasMinecart = false;

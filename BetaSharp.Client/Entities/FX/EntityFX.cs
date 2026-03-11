@@ -23,7 +23,7 @@ public class EntityFX : Entity
     protected float particleTextureJitterX;
     protected float particleTextureJitterY;
 
-    public EntityFX(IBlockWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : base(world)
+    public EntityFX(IWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : base(world)
     {
         setBoundingBoxSpacing(0.2F, 0.2F);
         standingEyeHeight = height / 2.0F;

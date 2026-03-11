@@ -35,7 +35,7 @@ internal class BlockCrops : BlockPlant
         }
     }
 
-    public void applyFullGrowth(IBlockWorldContext world, int x, int y, int z) => world.BlockWriter.SetBlockMeta(x, y, z, 7);
+    public void applyFullGrowth(IWorldContext world, int x, int y, int z) => world.BlockWriter.SetBlockMeta(x, y, z, 7);
 
     private float getAvailableMoisture(IBlockReader read, int x, int y, int z)
     {

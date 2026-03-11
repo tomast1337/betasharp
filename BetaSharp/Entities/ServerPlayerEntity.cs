@@ -35,7 +35,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
     public BetaSharpServer server;
     public bool skipPacketSlotUpdates;
 
-    public ServerPlayerEntity(BetaSharpServer server, IBlockWorldContext world, string name, ServerPlayerInteractionManager interactionManager) : base(world)
+    public ServerPlayerEntity(BetaSharpServer server, IWorldContext world, string name, ServerPlayerInteractionManager interactionManager) : base(world)
     {
         interactionManager.player = this;
         this.interactionManager = interactionManager;
@@ -79,7 +79,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
     public void onPropertyUpdate(ScreenHandler handler, int syncId, int trackedValue) => networkHandler.sendPacket(ScreenHandlerPropertyUpdateS2CPacket.Get(handler.SyncId, syncId, trackedValue));
 
 
-    public override void setWorld(IBlockWorldContext world)
+    public override void setWorld(IWorldContext world)
     {
         base.setWorld(world);
         interactionManager = new ServerPlayerInteractionManager((ServerWorld)world);
@@ -230,14 +230,14 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
 
     private bool CanSendMoreChunkData() => networkHandler.getBlockDataSendQueueSize() < MaxChunkPackets;
 
-    private void SendChunkData(IBlockWorldContext world, ChunkPos chunkPos)
+    private void SendChunkData(IWorldContext world, ChunkPos chunkPos)
     {
         int worldX = chunkPos.X * 16;
         int worldZ = chunkPos.Z * 16;
         networkHandler.sendPacket(ChunkDataS2CPacket.Get(worldX, 0, worldZ, 16, 128, 16, world));
     }
 
-    private void SendBlockEntityUpdates(IBlockWorldContext world, ChunkPos chunkPos)
+    private void SendBlockEntityUpdates(IWorldContext world, ChunkPos chunkPos)
     {
         int startX = chunkPos.X * 16;
         int startZ = chunkPos.Z * 16;

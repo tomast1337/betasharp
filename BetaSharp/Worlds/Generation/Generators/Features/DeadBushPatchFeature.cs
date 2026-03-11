@@ -9,7 +9,7 @@ internal class DeadBushPatchFeature : Feature
 
     public DeadBushPatchFeature(int deadBushBlockId) => _deadBushBlockId = deadBushBlockId;
 
-    public override bool Generate(IBlockWorldContext level, int x, int y, int z)
+    public override bool Generate(IWorldContext level, int x, int y, int z)
     {
         while (true)
         {

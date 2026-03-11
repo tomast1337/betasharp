@@ -13,11 +13,11 @@ namespace BetaSharp.Worlds.Core;
 
 public class WorldBlockReader : IBlockReader
 {
-    private readonly IBlockWorldContext _context;
+    private readonly IWorldContext _context;
     private readonly Dimension _dimension;
     public int AmbientDarkness => _context.Environment?.AmbientDarkness ?? 0;
 
-    public WorldBlockReader(IBlockWorldContext context, Dimension dimension, WorldBlockWrite writer)
+    public WorldBlockReader(IWorldContext context, Dimension dimension, WorldBlockWrite writer)
     {
         _dimension = dimension;
         _context = context;

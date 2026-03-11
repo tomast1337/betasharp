@@ -14,9 +14,9 @@ internal class WorldRegion : IBlockReader
     private readonly Chunk[][] _chunks;
     private readonly int _chunkX;
     private readonly int _chunkZ;
-    private readonly IBlockWorldContext _level;
+    private readonly IWorldContext _level;
 
-    public WorldRegion(IBlockWorldContext level, int minX, int minY, int minZ, int maxX, int maxY, int maxZ)
+    public WorldRegion(IWorldContext level, int minX, int minY, int minZ, int maxX, int maxY, int maxZ)
     {
         _level = level;
         _chunkX = minX >> 4;

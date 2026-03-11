@@ -14,7 +14,7 @@ public class EntitySlime : EntityLiving, Monster
     private int slimeJumpDelay;
     public float squishAmount;
 
-    public EntitySlime(IBlockWorldContext world) : base(world)
+    public EntitySlime(IWorldContext world) : base(world)
     {
         texture = "/mob/slime.png";
         SlimeSize = DataSynchronizer.MakeProperty<byte>(16, 1);

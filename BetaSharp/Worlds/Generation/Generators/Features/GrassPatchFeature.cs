@@ -14,7 +14,7 @@ internal class GrassPatchFeature : Feature
         _tallGrassBlockMeta = tallGrassBlockMeta;
     }
 
-    public override bool Generate(IBlockWorldContext level, int x, int y, int z)
+    public override bool Generate(IWorldContext level, int x, int y, int z)
     {
         while (true)
         {

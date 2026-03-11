@@ -23,7 +23,7 @@ internal class ItemFishingRod : Item
         return true;
     }
 
-    public override ItemStack use(ItemStack itemStack, IBlockWorldContext world, EntityPlayer entityPlayer)
+    public override ItemStack use(ItemStack itemStack, IWorldContext world, EntityPlayer entityPlayer)
     {
         if (entityPlayer.fishHook != null)
         {

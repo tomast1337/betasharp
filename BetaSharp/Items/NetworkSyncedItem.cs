@@ -15,7 +15,7 @@ public class NetworkSyncedItem : Item
         return true;
     }
 
-    public virtual Packet? getUpdatePacket(ItemStack stack, IBlockWorldContext world, EntityPlayer player)
+    public virtual Packet? getUpdatePacket(ItemStack stack, IWorldContext world, EntityPlayer player)
     {
         return null;
     }

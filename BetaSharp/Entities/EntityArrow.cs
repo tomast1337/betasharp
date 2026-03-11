@@ -21,16 +21,16 @@ public class EntityArrow : Entity
     private int yTile = -1;
     private int zTile = -1;
 
-    public EntityArrow(IBlockWorldContext world) : base(world) => setBoundingBoxSpacing(0.5F, 0.5F);
+    public EntityArrow(IWorldContext world) : base(world) => setBoundingBoxSpacing(0.5F, 0.5F);
 
-    public EntityArrow(IBlockWorldContext world, double x, double y, double z) : base(world)
+    public EntityArrow(IWorldContext world, double x, double y, double z) : base(world)
     {
         setBoundingBoxSpacing(0.5F, 0.5F);
         setPosition(x, y, z);
         standingEyeHeight = 0.0F;
     }
 
-    public EntityArrow(IBlockWorldContext world, EntityLiving owner) : base(world)
+    public EntityArrow(IWorldContext world, EntityLiving owner) : base(world)
     {
         this.owner = owner;
         doesArrowBelongToPlayer = owner is EntityPlayer;

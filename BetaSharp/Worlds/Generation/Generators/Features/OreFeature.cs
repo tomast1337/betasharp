@@ -15,7 +15,7 @@ internal class OreFeature : Feature
         _numberOfBlocks = numberOfBlocks;
     }
 
-    public override bool Generate(IBlockWorldContext ctx, int x, int y, int z)
+    public override bool Generate(IWorldContext ctx, int x, int y, int z)
     {
         float angle = ctx.random.NextFloat() * (float)Math.PI;
         double spread = _numberOfBlocks / 8.0;

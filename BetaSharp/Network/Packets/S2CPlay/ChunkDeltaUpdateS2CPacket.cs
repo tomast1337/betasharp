@@ -15,7 +15,7 @@ public class ChunkDeltaUpdateS2CPacket() : Packet(PacketId.ChunkDeltaUpdateS2C)
     public byte[] blockMetadata;
     public int _size;
 
-    public static ChunkDeltaUpdateS2CPacket Get(int x, int z, short[] positions, int size, IBlockWorldContext world)
+    public static ChunkDeltaUpdateS2CPacket Get(int x, int z, short[] positions, int size, IWorldContext world)
     {
         var p = Get<ChunkDeltaUpdateS2CPacket>(PacketId.ChunkDeltaUpdateS2C);
         p.x = x;

@@ -9,7 +9,7 @@ public class EntityPig : EntityAnimal
 {
     public readonly SyncedProperty<bool> Saddled;
 
-    public EntityPig(IBlockWorldContext world) : base(world)
+    public EntityPig(IWorldContext world) : base(world)
     {
         texture = "/mob/pig.png";
         setBoundingBoxSpacing(0.9F, 0.9F);

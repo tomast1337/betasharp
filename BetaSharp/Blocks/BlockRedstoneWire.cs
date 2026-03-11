@@ -25,7 +25,7 @@ public class BlockRedstoneWire : Block
 
     public override bool canPlaceAt(CanPlaceAtCtx ctx) => ctx.Level.BlocksReader.ShouldSuffocate(ctx.X, ctx.Y - 1, ctx.Z);
 
-    private void updateAndPropagateCurrentStrength(IBlockWorldContext level, int x, int y, int z)
+    private void updateAndPropagateCurrentStrength(IWorldContext level, int x, int y, int z)
     {
         HashSet<BlockPos> neighbors = [];
         CalculateCurrentChanges(level, x, y, z, x, y, z, neighbors);
@@ -39,7 +39,7 @@ public class BlockRedstoneWire : Block
         }
     }
 
-    private void CalculateCurrentChanges(IBlockWorldContext level, int x, int y, int z, int srcX, int srcY, int srcZ, HashSet<BlockPos> neighbors)
+    private void CalculateCurrentChanges(IWorldContext level, int x, int y, int z, int srcX, int srcY, int srcZ, HashSet<BlockPos> neighbors)
     {
         int oldMeta = level.BlocksReader.GetMeta(x, y, z);
         int newMeta = 0;
@@ -156,7 +156,7 @@ public class BlockRedstoneWire : Block
         }
     }
 
-    private void NotifyWireNeighborsOfNeighborChange(IBlockWorldContext level, int var2, int var3, int var4)
+    private void NotifyWireNeighborsOfNeighborChange(IWorldContext level, int var2, int var3, int var4)
     {
         if (level.BlocksReader.GetBlockId(var2, var3, var4) == id)
         {

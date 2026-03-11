@@ -15,7 +15,7 @@ public class EntityPainting : Entity
     public int YPosition;
     public int ZPosition;
 
-    public EntityPainting(IBlockWorldContext world) : base(world)
+    public EntityPainting(IWorldContext world) : base(world)
     {
         _tickCounter = 0;
         Direction = 0;
@@ -23,7 +23,7 @@ public class EntityPainting : Entity
         setBoundingBoxSpacing(0.5F, 0.5F);
     }
 
-    public EntityPainting(IBlockWorldContext world, int xPosition, int yPosition, int zPosition, int direction) : this(world)
+    public EntityPainting(IWorldContext world, int xPosition, int yPosition, int zPosition, int direction) : this(world)
     {
         XPosition = xPosition;
         YPosition = yPosition;
@@ -49,7 +49,7 @@ public class EntityPainting : Entity
         SetFacing(direction);
     }
 
-    public EntityPainting(IBlockWorldContext world, int x, int y, int z, int direction, string title) : this(world)
+    public EntityPainting(IWorldContext world, int x, int y, int z, int direction, string title) : this(world)
     {
         XPosition = x;
         YPosition = y;

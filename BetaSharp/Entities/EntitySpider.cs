@@ -7,7 +7,7 @@ namespace BetaSharp.Entities;
 
 public class EntitySpider : EntityMonster
 {
-    public EntitySpider(IBlockWorldContext world) : base(world)
+    public EntitySpider(IWorldContext world) : base(world)
     {
         texture = "/mob/spider.png";
         setBoundingBoxSpacing(1.4F, 0.9F);

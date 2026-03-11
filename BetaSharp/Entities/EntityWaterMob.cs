@@ -4,7 +4,7 @@ namespace BetaSharp.Entities;
 
 public class EntityWaterMob : EntityCreature, SpawnableEntity
 {
-    public EntityWaterMob(IBlockWorldContext world) : base(world)
+    public EntityWaterMob(IWorldContext world) : base(world)
     {
     }
 

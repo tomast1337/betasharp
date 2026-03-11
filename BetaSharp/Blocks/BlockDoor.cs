@@ -92,7 +92,7 @@ internal class BlockDoor : Block
 
     public override void onBlockBreakStart(OnBlockBreakStartEvt evt) => updateDorState(evt.Level, evt.X, evt.Y, evt.Z);
 
-    private bool updateDorState(IBlockWorldContext world, int x, int y, int z)
+    private bool updateDorState(IWorldContext world, int x, int y, int z)
     {
         if (material == Material.Metal)
         {
@@ -124,7 +124,7 @@ internal class BlockDoor : Block
 
     public override bool onUse(OnUseEvt evt) => updateDorState(evt.Level, evt.X, evt.Y, evt.Z);
 
-    public void setOpen(IBlockWorldContext world, int x, int y, int z, bool open)
+    public void setOpen(IWorldContext world, int x, int y, int z, bool open)
     {
         int meta = world.BlocksReader.GetMeta(x, y, z);
         if ((meta & 8) != 0)

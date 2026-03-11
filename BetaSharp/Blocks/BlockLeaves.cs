@@ -177,7 +177,7 @@ public class BlockLeaves : BlockLeavesBase
         }
     }
 
-    private void breakLeaves(IBlockWorldContext level, int x, int y, int z)
+    private void breakLeaves(IWorldContext level, int x, int y, int z)
     {
         dropStacks(new OnDropEvt(level, x, y, z, level.BlocksReader.GetMeta(x, y, z)));
         level.BlockWriter.SetBlock(x, y, z, 0);

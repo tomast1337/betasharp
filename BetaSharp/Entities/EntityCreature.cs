@@ -10,7 +10,7 @@ public class EntityCreature : EntityLiving
     private PathEntity? pathToEntity;
     protected Entity? playerToAttack;
 
-    public EntityCreature(IBlockWorldContext level) : base(level)
+    public EntityCreature(IWorldContext level) : base(level)
     {
     }
 

@@ -5,7 +5,7 @@ namespace BetaSharp.Worlds.Generation.Generators.Features;
 
 internal class SpruceTreeFeature : Feature
 {
-    public override bool Generate(IBlockWorldContext level, int x, int y, int z)
+    public override bool Generate(IWorldContext level, int x, int y, int z)
     {
         int totalHeight = level.random.NextInt(4) + 6;
         int topTrunkNoLeaves = 1 + level.random.NextInt(2);

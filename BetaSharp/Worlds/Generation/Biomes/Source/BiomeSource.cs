@@ -14,7 +14,7 @@ public class BiomeSource
     public double[] TemperatureMap;
     public double[] WeirdnessMap;
 
-    public BiomeSource(IBlockWorldContext level)
+    public BiomeSource(IWorldContext level)
     {
         _temperatureSampler = new OctaveSimplexNoiseSampler(new JavaRandom(level.Seed * 9871L), 4);
         _downfallSampler = new OctaveSimplexNoiseSampler(new JavaRandom(level.Seed * 39811L), 4);

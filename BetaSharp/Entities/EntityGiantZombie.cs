@@ -4,7 +4,7 @@ namespace BetaSharp.Entities;
 
 public class EntityGiantZombie : EntityMonster
 {
-    public EntityGiantZombie(IBlockWorldContext world) : base(world)
+    public EntityGiantZombie(IWorldContext world) : base(world)
     {
         texture = "/mob/zombie.png";
         movementSpeed = 0.5F;

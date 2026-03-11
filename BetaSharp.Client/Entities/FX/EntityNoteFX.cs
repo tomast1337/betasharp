@@ -9,11 +9,11 @@ public class EntityNoteFX : EntityFX
     private readonly float baseScale;
 
 
-    public EntityNoteFX(IBlockWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : this(world, x, y, z, velocityX, velocityY, velocityZ, 2.0F)
+    public EntityNoteFX(IWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : this(world, x, y, z, velocityX, velocityY, velocityZ, 2.0F)
     {
     }
 
-    public EntityNoteFX(IBlockWorldContext world, double x, double y, double z, double notePitch, double _, double __, float scaleMultiplier) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
+    public EntityNoteFX(IWorldContext world, double x, double y, double z, double notePitch, double _, double __, float scaleMultiplier) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
     {
         velocityX *= 0.01F;
         velocityY *= 0.01F;

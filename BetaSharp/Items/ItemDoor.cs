@@ -18,7 +18,7 @@ internal class ItemDoor : Item
         maxCount = 1;
     }
 
-    public override bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IBlockWorldContext world, int x, int y, int z, int side)
+    public override bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IWorldContext world, int x, int y, int z, int side)
     {
         if (side != 1) return false; // Only allow placing on top of blocks
         y++;

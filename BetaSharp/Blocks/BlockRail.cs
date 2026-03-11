@@ -15,7 +15,7 @@ public class BlockRail : Block
         setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 2.0F / 16.0F, 1.0F);
     }
 
-    public static bool IsRail(IBlockWorldContext level, int x, int y, int z)
+    public static bool IsRail(IWorldContext level, int x, int y, int z)
     {
         int blockId = level.BlocksReader.GetBlockId(x, y, z);
         return blockId == Rail.id || blockId == PoweredRail.id || blockId == DetectorRail.id;
@@ -153,7 +153,7 @@ public class BlockRail : Block
         }
     }
 
-    private void updateShape(IBlockWorldContext level, int x, int y, int z, bool force)
+    private void updateShape(IWorldContext level, int x, int y, int z, bool force)
     {
         if (!level.IsRemote)
         {
@@ -161,7 +161,7 @@ public class BlockRail : Block
         }
     }
 
-    private bool isPoweredByConnectedRails(IBlockWorldContext level, int x, int y, int z, int meta, bool towardsNegative, int depth)
+    private bool isPoweredByConnectedRails(IWorldContext level, int x, int y, int z, int meta, bool towardsNegative, int depth)
     {
         if (depth >= 8)
         {
@@ -255,7 +255,7 @@ public class BlockRail : Block
         return isPoweredByRail(level, x, y, z, towardsNegative, depth, shape) ? true : isSameY && isPoweredByRail(level, x, y - 1, z, towardsNegative, depth, shape);
     }
 
-    private bool isPoweredByRail(IBlockWorldContext level, int x, int y, int z, bool towardsNegative, int depth, int shape)
+    private bool isPoweredByRail(IWorldContext level, int x, int y, int z, bool towardsNegative, int depth, int shape)
     {
         int blockId = level.BlocksReader.GetBlockId(x, y, z);
         if (blockId == PoweredRail.id)

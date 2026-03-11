@@ -10,7 +10,7 @@ internal class LargeOakTreeFeature : Feature
     private readonly int[] origin = [0, 0, 0];
     private readonly double trunkScale = 0.618D;
     private readonly int trunkWidth = 1;
-    private IBlockWorldContext _level;
+    private IWorldContext _level;
     private int[][] branches;
     private double branchLengthScale = 1.0D;
     private int foliageClusterHeight = 4;
@@ -386,7 +386,7 @@ internal class LargeOakTreeFeature : Feature
         foliageDensity = d2;
     }
 
-    public override bool Generate(IBlockWorldContext level, int x, int y, int z)
+    public override bool Generate(IWorldContext level, int x, int y, int z)
     {
         _level = level;
         long var6 = _level.random.NextLong();

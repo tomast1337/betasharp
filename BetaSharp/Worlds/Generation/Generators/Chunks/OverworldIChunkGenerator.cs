@@ -19,7 +19,7 @@ internal class OverworldIChunkGenerator : IChunkSource
     private readonly OctavePerlinNoiseSampler _floatingIslandNoise;
     private readonly OctavePerlinNoiseSampler _floatingIslandScale;
     private readonly OctavePerlinNoiseSampler _forestNoise;
-    private readonly IBlockWorldContext _level;
+    private readonly IWorldContext _level;
     private readonly OctavePerlinNoiseSampler _maxLimitPerlinNoise;
     private readonly OctavePerlinNoiseSampler _minLimitPerlinNoise;
     private readonly JavaRandom _random;
@@ -83,7 +83,7 @@ internal class OverworldIChunkGenerator : IChunkSource
         InitFeatures();
     }
 
-    private OverworldIChunkGenerator(IBlockWorldContext level, long seed, BiomeSource biomeSource)
+    private OverworldIChunkGenerator(IWorldContext level, long seed, BiomeSource biomeSource)
     {
         _level = level;
         _seed = seed;

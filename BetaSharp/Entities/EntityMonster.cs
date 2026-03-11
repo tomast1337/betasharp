@@ -8,7 +8,7 @@ public class EntityMonster : EntityCreature, Monster
 {
     protected int attackStrength = 2;
 
-    public EntityMonster(IBlockWorldContext world) : base(world) => health = 20;
+    public EntityMonster(IWorldContext world) : base(world) => health = 20;
 
     public override void tickMovement()
     {

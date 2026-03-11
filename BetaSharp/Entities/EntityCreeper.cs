@@ -12,7 +12,7 @@ public class EntityCreeper : EntityMonster
     private int timeSinceIgnited;
     private int lastActiveTime;
 
-    public EntityCreeper(IBlockWorldContext world) : base(world)
+    public EntityCreeper(IWorldContext world) : base(world)
     {
         texture = "/mob/creeper.png";
         CreeperState = DataSynchronizer.MakeProperty<byte>(16, 255); // -1

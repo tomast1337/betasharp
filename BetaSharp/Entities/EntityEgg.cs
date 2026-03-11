@@ -18,9 +18,9 @@ public class EntityEgg : Entity
     private int field_20056_b = -1;
     public int field_20057_a;
 
-    public EntityEgg(IBlockWorldContext world) : base(world) => setBoundingBoxSpacing(0.25F, 0.25F);
+    public EntityEgg(IWorldContext world) : base(world) => setBoundingBoxSpacing(0.25F, 0.25F);
 
-    public EntityEgg(IBlockWorldContext world, EntityLiving var2) : base(world)
+    public EntityEgg(IWorldContext world, EntityLiving var2) : base(world)
     {
         field_20051_g = var2;
         setBoundingBoxSpacing(0.25F, 0.25F);
@@ -37,7 +37,7 @@ public class EntityEgg : Entity
         setEggHeading(velocityX, velocityY, velocityZ, 1.5F, 1.0F);
     }
 
-    public EntityEgg(IBlockWorldContext world, double x, double y, double z) : base(world)
+    public EntityEgg(IWorldContext world, double x, double y, double z) : base(world)
     {
         field_20050_h = 0;
         setBoundingBoxSpacing(0.25F, 0.25F);

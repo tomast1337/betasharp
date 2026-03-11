@@ -3,4 +3,4 @@ using BetaSharp.Worlds.Core;
 
 namespace BetaSharp;
 
-public record SpawnListEntry(Func<IBlockWorldContext, EntityLiving> Factory);
+public record SpawnListEntry(Func<IWorldContext, EntityLiving> Factory);

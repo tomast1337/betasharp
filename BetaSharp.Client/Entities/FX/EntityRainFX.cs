@@ -8,7 +8,7 @@ namespace BetaSharp.Client.Entities.FX;
 
 public class EntityRainFX : EntityFX
 {
-    public EntityRainFX(IBlockWorldContext world, double x, double y, double z) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
+    public EntityRainFX(IWorldContext world, double x, double y, double z) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
     {
         velocityX *= 0.3F;
         velocityY = Random.Shared.NextDouble() * 0.2F + 0.1F;

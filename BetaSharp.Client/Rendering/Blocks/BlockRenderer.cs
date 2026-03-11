@@ -171,7 +171,7 @@ public class BlockRenderer
         }
     }
 
-    public static void RenderBlockFallingSand(Block block, IBlockWorldContext world, int x, int y, int z, Tessellator tess)
+    public static void RenderBlockFallingSand(Block block, IWorldContext world, int x, int y, int z, Tessellator tess)
     {
         // Directional shading multipliers for fake 3D depth
         float lightBottom = 0.5F;

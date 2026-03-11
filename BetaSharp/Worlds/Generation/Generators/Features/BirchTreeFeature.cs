@@ -5,7 +5,7 @@ namespace BetaSharp.Worlds.Generation.Generators.Features;
 
 internal class BirchTreeFeature : Feature
 {
-    public override bool Generate(IBlockWorldContext level, int x, int y, int z)
+    public override bool Generate(IWorldContext level, int x, int y, int z)
     {
         int treeHeight = level.random.NextInt(3) + 5;
         bool canPlace = true;

@@ -14,7 +14,7 @@ public class EntityChicken : EntityAnimal
     public float field_757_d;
     public int timeUntilNextEgg;
 
-    public EntityChicken(IBlockWorldContext level) : base(level)
+    public EntityChicken(IWorldContext level) : base(level)
     {
         texture = "/mob/chicken.png";
         setBoundingBoxSpacing(0.3F, 0.4F);

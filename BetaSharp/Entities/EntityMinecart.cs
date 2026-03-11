@@ -46,7 +46,7 @@ public class EntityMinecart : Entity, IInventory
     public int type;
     private bool yawFlipped;
 
-    public EntityMinecart(IBlockWorldContext world) : base(world)
+    public EntityMinecart(IWorldContext world) : base(world)
     {
         cargoItems = new ItemStack[36];
         minecartCurrentDamage = 0;
@@ -58,7 +58,7 @@ public class EntityMinecart : Entity, IInventory
         standingEyeHeight = height / 2.0F;
     }
 
-    public EntityMinecart(IBlockWorldContext world, double x, double y, double z, int type) : this(world)
+    public EntityMinecart(IWorldContext world, double x, double y, double z, int type) : this(world)
     {
         setPosition(x, y + standingEyeHeight, z);
         velocityX = 0.0D;

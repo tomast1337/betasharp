@@ -27,7 +27,7 @@ internal struct LightUpdate
         MaxZ = maxZ;
     }
 
-    public void UpdateLight(IBlockReader reader, BlockHost host, LightingEngine lighting)
+    public void UpdateLight(IBlockReader reader, ChunkHost host, LightingEngine lighting)
     {
         int sizeX = MaxX - MinX + 1;
         int sizeY = MaxY - MinY + 1;

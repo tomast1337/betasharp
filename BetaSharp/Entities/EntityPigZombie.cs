@@ -10,7 +10,7 @@ internal class EntityPigZombie : EntityZombie
     private int angerLevel;
     private int randomSoundDelay;
 
-    public EntityPigZombie(IBlockWorldContext world) : base(world)
+    public EntityPigZombie(IWorldContext world) : base(world)
     {
         texture = "/mob/pigzombie.png";
         movementSpeed = 0.5F;

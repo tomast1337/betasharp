@@ -37,7 +37,7 @@ internal class BlockSapling : BlockPlant
         return meta == 1 ? 63 : meta == 2 ? 79 : base.getTexture(side, meta);
     }
 
-    public void generate(IBlockWorldContext world, int x, int y, int z)
+    public void generate(IWorldContext world, int x, int y, int z)
     {
         int saplingType = world.BlocksReader.GetMeta(x, y, z) & 3;
         world.BlockWriter.SetBlock(x, y, z, 0);

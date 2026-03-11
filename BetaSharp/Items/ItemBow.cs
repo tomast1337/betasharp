@@ -12,7 +12,7 @@ internal class ItemBow : Item
         maxCount = 1;
     }
 
-    public override ItemStack use(ItemStack itemStack, IBlockWorldContext world, EntityPlayer entityPlayer)
+    public override ItemStack use(ItemStack itemStack, IWorldContext world, EntityPlayer entityPlayer)
     {
         if (entityPlayer.inventory.consumeInventoryItem(Item.ARROW.id))
         {

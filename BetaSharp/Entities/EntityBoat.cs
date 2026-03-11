@@ -22,7 +22,7 @@ public class EntityBoat : Entity
     private double targetYaw;
     private double targetZ;
 
-    public EntityBoat(IBlockWorldContext world) : base(world)
+    public EntityBoat(IWorldContext world) : base(world)
     {
         boatCurrentDamage = 0;
         boatTimeSinceHit = 0;
@@ -32,7 +32,7 @@ public class EntityBoat : Entity
         standingEyeHeight = height / 2.0F;
     }
 
-    public EntityBoat(IBlockWorldContext world, double x, double y, double z) : this(world)
+    public EntityBoat(IWorldContext world, double x, double y, double z) : this(world)
     {
         setPosition(x, y + standingEyeHeight, z);
         velocityX = 0.0D;

@@ -47,7 +47,7 @@ public abstract class EntityPlayer : EntityLiving
     public float stepBobbingAmount;
     public byte unused = 0;
 
-    public EntityPlayer(IBlockWorldContext world) : base(world)
+    public EntityPlayer(IWorldContext world) : base(world)
     {
         inventory = new InventoryPlayer(this);
         playerScreenHandler = new PlayerScreenHandler(inventory, !world.IsRemote);
@@ -749,7 +749,7 @@ public abstract class EntityPlayer : EntityLiving
 
     private bool isSleepingInBed() => _level.BlocksReader.GetBlockId(sleepingPos.X, sleepingPos.Y, sleepingPos.Z) == Block.Bed.id;
 
-    public static Vec3i? findRespawnPosition(IBlockWorldContext world, Vec3i? spawnPos)
+    public static Vec3i? findRespawnPosition(IWorldContext world, Vec3i? spawnPos)
     {
         if (spawnPos is not (int x, int y, int z))
         {

@@ -17,7 +17,7 @@ public class EntityGhast : EntityFlying, Monster
     public double waypointY;
     public double waypointZ;
 
-    public EntityGhast(IBlockWorldContext world) : base(world)
+    public EntityGhast(IWorldContext world) : base(world)
     {
         texture = "/mob/ghast.png";
         setBoundingBoxSpacing(4.0F, 4.0F);

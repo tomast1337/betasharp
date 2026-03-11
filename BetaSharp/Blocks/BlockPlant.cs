@@ -26,7 +26,7 @@ public class BlockPlant : Block
 
     public override void onTick(OnTickEvt evt) => breakIfCannotGrow(evt.Level, evt.X, evt.Y, evt.Z);
 
-    protected void breakIfCannotGrow(IBlockWorldContext level, int x, int y, int z)
+    protected void breakIfCannotGrow(IWorldContext level, int x, int y, int z)
     {
         if (!canGrow(new OnTickEvt(level, x, y, z, level.BlocksReader.GetMeta(x, y, z), level.BlocksReader.GetBlockId(x, y, z))))
         {

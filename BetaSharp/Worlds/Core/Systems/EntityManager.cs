@@ -18,7 +18,7 @@ public class EntityManager
     private readonly WorldBlockReader _blocks;
     private readonly Dictionary<int, Entity> _entitiesById = new();
     private readonly List<Entity> _entitiesToUnload = [];
-    private readonly BlockHost _host;
+    private readonly ChunkHost _host;
     private readonly RuleSet _rules;
     private bool _processingDeferred;
 
@@ -28,7 +28,7 @@ public class EntityManager
 
     public List<EntityPlayer> Players = [];
 
-    public EntityManager(WorldBlockReader blocks, RuleSet rules, BlockHost host)
+    public EntityManager(WorldBlockReader blocks, RuleSet rules, ChunkHost host)
     {
         _blocks = blocks;
         _rules = rules;

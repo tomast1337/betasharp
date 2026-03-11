@@ -173,7 +173,7 @@ public class Item
         return getTextureId(stack.getDamage());
     }
 
-    public virtual bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IBlockWorldContext world, int x, int y, int z, int meta)
+    public virtual bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IWorldContext world, int x, int y, int z, int meta)
     {
         return false;
     }
@@ -183,7 +183,7 @@ public class Item
         return 1.0F;
     }
 
-    public virtual ItemStack use(ItemStack itemStack, IBlockWorldContext world, EntityPlayer entityPlayer)
+    public virtual ItemStack use(ItemStack itemStack, IWorldContext world, EntityPlayer entityPlayer)
     {
         return itemStack;
     }
@@ -314,11 +314,11 @@ public class Item
         return 0xFFFFFF;
     }
 
-    public virtual void inventoryTick(ItemStack itemStack, IBlockWorldContext world, Entity entity, int slotIndex, bool shouldUpdate)
+    public virtual void inventoryTick(ItemStack itemStack, IWorldContext world, Entity entity, int slotIndex, bool shouldUpdate)
     {
     }
 
-    public virtual void onCraft(ItemStack itemStack, IBlockWorldContext world, EntityPlayer entityPlayer)
+    public virtual void onCraft(ItemStack itemStack, IWorldContext world, EntityPlayer entityPlayer)
     {
     }
 

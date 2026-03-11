@@ -16,7 +16,7 @@ public class ChunkDataS2CPacket() : Packet(PacketId.ChunkDataS2C)
     private int chunkDataSize;
     public byte[] rawData;
 
-    public static ChunkDataS2CPacket Get(int x, int y, int z, int sizeX, int sizeY, int sizeZ, IBlockWorldContext world)
+    public static ChunkDataS2CPacket Get(int x, int y, int z, int sizeX, int sizeY, int sizeZ, IWorldContext world)
     {
         var p = Get<ChunkDataS2CPacket>(PacketId.ChunkDataS2C);
         p.x = x;

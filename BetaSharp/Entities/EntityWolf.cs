@@ -21,7 +21,7 @@ public class EntityWolf : EntityAnimal
     public readonly SyncedProperty<string> WolfOwner;
     public readonly SyncedProperty<int> WolfHealth;
 
-    public EntityWolf(IBlockWorldContext world) : base(world)
+    public EntityWolf(IWorldContext world) : base(world)
     {
         texture = "/mob/wolf.png";
         setBoundingBoxSpacing(0.8F, 0.8F);

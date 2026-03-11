@@ -12,7 +12,7 @@ internal class ClayOreFeature : Feature
 
     public ClayOreFeature(int numberOfBlocks) => _numberOfBlocks = numberOfBlocks;
 
-    public override bool Generate(IBlockWorldContext level, int x, int y, int z)
+    public override bool Generate(IWorldContext level, int x, int y, int z)
     {
         if (level.BlocksReader.GetMaterial(x, y, z) != Material.Water)
         {

@@ -36,7 +36,7 @@ internal class BlockEntityNote : BlockEntity
         markDirty();
     }
 
-    public void playNote(IBlockWorldContext level, int x, int y, int z)
+    public void playNote(IWorldContext level, int x, int y, int z)
     {
         if (level.BlocksReader.GetMaterial(x, y + 1, z) == Material.Air)
         {

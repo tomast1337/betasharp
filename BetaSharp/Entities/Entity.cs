@@ -11,7 +11,7 @@ namespace BetaSharp.Entities;
 public abstract class Entity
 {
     private static int nextEntityID;
-    public IBlockWorldContext _level;
+    public IWorldContext _level;
     public int age;
     public int air = 300;
     public Box boundingBox = new(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
@@ -78,7 +78,7 @@ public abstract class Entity
     public DataSynchronizer DataSynchronizer = new();
     private readonly SyncedProperty<byte> Flags;
 
-    public Entity(IBlockWorldContext level)
+    public Entity(IWorldContext level)
     {
         _level = level;
         setPosition(0.0D, 0.0D, 0.0D);
@@ -694,7 +694,7 @@ public abstract class Entity
         return minBrightness;
     }
 
-    public virtual void setWorld(IBlockWorldContext world) => _level = world;
+    public virtual void setWorld(IWorldContext world) => _level = world;
 
     public void setPositionAndAngles(double x, double y, double z, float yaw, float pitch)
     {

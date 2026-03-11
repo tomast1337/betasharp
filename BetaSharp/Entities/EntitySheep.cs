@@ -17,7 +17,7 @@ public class EntitySheep : EntityAnimal
 
     public readonly SyncedProperty<byte> SheepData;
 
-    public EntitySheep(IBlockWorldContext world) : base(world)
+    public EntitySheep(IWorldContext world) : base(world)
     {
         texture = "/mob/sheep.png";
         setBoundingBoxSpacing(0.9F, 1.3F);

@@ -137,7 +137,7 @@ internal class BlockFire : Block
         }
     }
 
-    private void trySpreadingFire(IBlockWorldContext level, int x, int y, int z, int spreadFactor, JavaRandom random, int currentAge)
+    private void trySpreadingFire(IWorldContext level, int x, int y, int z, int spreadFactor, JavaRandom random, int currentAge)
     {
         int targetSpreadChance = _spreadChances[level.BlocksReader.GetBlockId(x, y, z)];
         if (random.NextInt(spreadFactor) < targetSpreadChance)

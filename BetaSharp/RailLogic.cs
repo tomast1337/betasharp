@@ -6,13 +6,13 @@ namespace BetaSharp;
 
 internal class RailLogic
 {
-    private IBlockWorldContext _level;
+    private IWorldContext _level;
     private Vec3i _trackPos;
     private readonly bool _isPoweredRail;
     private readonly List<Vec3i> _connectedTracks = [];
     readonly BlockRail _rail;
 
-    public RailLogic(BlockRail railBlock, IBlockWorldContext level, Vec3i pos)
+    public RailLogic(BlockRail railBlock, IWorldContext level, Vec3i pos)
     {
         _rail = railBlock;
         _level = level;

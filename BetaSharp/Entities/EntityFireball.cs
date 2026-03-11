@@ -20,9 +20,9 @@ public class EntityFireball : Entity
     private int removalTimer;
     public int shake;
 
-    public EntityFireball(IBlockWorldContext world) : base(world) => setBoundingBoxSpacing(1.0F, 1.0F);
+    public EntityFireball(IWorldContext world) : base(world) => setBoundingBoxSpacing(1.0F, 1.0F);
 
-    public EntityFireball(IBlockWorldContext world, double x, double y, double z, double var8, double var10, double var12) : base(world)
+    public EntityFireball(IWorldContext world, double x, double y, double z, double var8, double var10, double var12) : base(world)
     {
         setBoundingBoxSpacing(1.0F, 1.0F);
         setPositionAndAnglesKeepPrevAngles(x, y, z, yaw, pitch);
@@ -33,7 +33,7 @@ public class EntityFireball : Entity
         powerZ = var12 / var14 * 0.1D;
     }
 
-    public EntityFireball(IBlockWorldContext world, EntityLiving var2, double var3, double var5, double var7) : base(world)
+    public EntityFireball(IWorldContext world, EntityLiving var2, double var3, double var5, double var7) : base(world)
     {
         owner = var2;
         setBoundingBoxSpacing(1.0F, 1.0F);

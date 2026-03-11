@@ -14,12 +14,12 @@ public class CraftingScreenHandler : ScreenHandler
 
     public InventoryCrafting input;
     public IInventory result = new InventoryCraftResult();
-    private IBlockWorldContext world;
+    private IWorldContext world;
     private int x;
     private int y;
     private int z;
 
-    public CraftingScreenHandler(InventoryPlayer playerInventory, IBlockWorldContext world, int x, int y, int z)
+    public CraftingScreenHandler(InventoryPlayer playerInventory, IWorldContext world, int x, int y, int z)
     {
         input = new InventoryCrafting(this, 3, 3);
         this.world = world;

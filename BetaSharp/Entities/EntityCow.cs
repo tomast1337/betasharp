@@ -5,7 +5,7 @@ namespace BetaSharp.Entities;
 
 public class EntityCow : EntityAnimal
 {
-    public EntityCow(IBlockWorldContext world) : base(world)
+    public EntityCow(IWorldContext world) : base(world)
     {
         texture = "/mob/cow.png";
         setBoundingBoxSpacing(0.9F, 1.3F);

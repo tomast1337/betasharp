@@ -28,7 +28,7 @@ internal class BlockJukeBox : BlockWithEntity
         return true;
     }
 
-    public void insertRecord(IBlockWorldContext world, int x, int y, int z, int id)
+    public void insertRecord(IWorldContext world, int x, int y, int z, int id)
     {
         if (!world.IsRemote)
         {
@@ -45,7 +45,7 @@ internal class BlockJukeBox : BlockWithEntity
         }
     }
 
-    public void tryEjectRecord(IBlockWorldContext level, int x, int y, int z)
+    public void tryEjectRecord(IWorldContext level, int x, int y, int z)
     {
         if (!level.IsRemote)
         {

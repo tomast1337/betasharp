@@ -178,7 +178,7 @@ internal class BlockLever : Block
         return true;
     }
 
-    private void toggleLever(IBlockWorldContext world, int x, int y, int z)
+    private void toggleLever(IWorldContext world, int x, int y, int z)
     {
         int meta = world.BlocksReader.GetMeta(x, y, z);
         int direction = meta & 7;

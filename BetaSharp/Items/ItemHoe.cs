@@ -13,7 +13,7 @@ internal class ItemHoe : Item
         setMaxDamage(enumToolMaterial.getMaxUses());
     }
 
-    public override bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IBlockWorldContext world, int x, int y, int z, int meta)
+    public override bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IWorldContext world, int x, int y, int z, int meta)
     {
         int targetBlockId = world.BlocksReader.GetBlockId(x, y, z);
         int blockAbove = world.BlocksReader.GetBlockId(x, y + 1, z);

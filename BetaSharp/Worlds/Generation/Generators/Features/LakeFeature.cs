@@ -10,7 +10,7 @@ internal class LakeFeature : Feature
 
     public LakeFeature(int waterBlockId) => _waterBlockId = waterBlockId;
 
-    public override bool Generate(IBlockWorldContext level, int x, int y, int z)
+    public override bool Generate(IWorldContext level, int x, int y, int z)
     {
         x -= 8;
 

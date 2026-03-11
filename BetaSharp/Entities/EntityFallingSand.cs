@@ -10,11 +10,11 @@ public class EntityFallingSand : Entity
     public int blockId;
     public int fallTime;
 
-    public EntityFallingSand(IBlockWorldContext world) : base(world)
+    public EntityFallingSand(IWorldContext world) : base(world)
     {
     }
 
-    public EntityFallingSand(IBlockWorldContext world, double x, double y, double z, int blockId) : base(world)
+    public EntityFallingSand(IWorldContext world, double x, double y, double z, int blockId) : base(world)
     {
         this.blockId = blockId;
         preventEntitySpawning = true;
@@ -84,5 +84,5 @@ public class EntityFallingSand : Entity
 
     public override float getShadowRadius() => 0.0F;
 
-    public IBlockWorldContext getWorld() => _level;
+    public IWorldContext getWorld() => _level;
 }

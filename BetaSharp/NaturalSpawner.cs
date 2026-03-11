@@ -15,14 +15,14 @@ internal static class NaturalSpawner
 
     private static readonly HashSet<ChunkPos> ChunksForSpawning = [];
 
-    private static readonly Func<IBlockWorldContext, EntityLiving>[] Monsters =
+    private static readonly Func<IWorldContext, EntityLiving>[] Monsters =
     [
         w => new EntitySpider(w),
         w => new EntityZombie(w),
         w => new EntitySkeleton(w),
     ];
 
-    private static BlockPos GetRandomSpawningPointInChunk(IBlockWorldContext world, PathFinder pathFinder, int centerX, int centerZ)
+    private static BlockPos GetRandomSpawningPointInChunk(IWorldContext world, PathFinder pathFinder, int centerX, int centerZ)
     {
         pathFinder.SetWorld(world.BlocksReader);
         int x = centerX + world.random.NextInt(16);
@@ -31,7 +31,7 @@ internal static class NaturalSpawner
         return new BlockPos(x, y, z);
     }
 
-    internal static void DoSpawning(IBlockWorldContext world, PathFinder pathFinder, bool spawnHostile, bool spawnPeaceful)
+    internal static void DoSpawning(IWorldContext world, PathFinder pathFinder, bool spawnHostile, bool spawnPeaceful)
     {
         pathFinder.SetWorld(world.BlocksReader);
         if (!spawnHostile && !spawnPeaceful) return;
@@ -117,7 +117,7 @@ internal static class NaturalSpawner
         }
     }
 
-    internal static bool SpawnMonstersAndWakePlayers(IBlockWorldContext world, List<EntityPlayer> players)
+    internal static bool SpawnMonstersAndWakePlayers(IWorldContext world, List<EntityPlayer> players)
     {
         world.Pathing.SetWorld(world.BlocksReader);
         bool monstersSpawned = false;

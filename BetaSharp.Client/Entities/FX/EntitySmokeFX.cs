@@ -8,11 +8,11 @@ public class EntitySmokeFX : EntityFX
     private readonly float baseScale;
 
 
-    public EntitySmokeFX(IBlockWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : this(world, x, y, z, velocityX, velocityY, velocityZ, 1.0F)
+    public EntitySmokeFX(IWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : this(world, x, y, z, velocityX, velocityY, velocityZ, 1.0F)
     {
     }
 
-    public EntitySmokeFX(IBlockWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, float particleScale) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
+    public EntitySmokeFX(IWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, float particleScale) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
     {
         this.velocityX *= 0.1F;
         this.velocityY *= 0.1F;

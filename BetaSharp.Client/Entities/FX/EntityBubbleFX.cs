@@ -6,7 +6,7 @@ namespace BetaSharp.Client.Entities.FX;
 
 public class EntityBubbleFX : EntityFX
 {
-    public EntityBubbleFX(IBlockWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : base(world, x, y, z, velocityX, velocityY, velocityZ)
+    public EntityBubbleFX(IWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : base(world, x, y, z, velocityX, velocityY, velocityZ)
     {
         particleRed = 1.0F;
         particleGreen = 1.0F;

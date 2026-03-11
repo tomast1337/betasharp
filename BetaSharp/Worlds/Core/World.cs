@@ -17,7 +17,7 @@ using Silk.NET.Maths;
 
 namespace BetaSharp.Worlds.Core;
 
-public abstract class World : IBlockWorldContext
+public abstract class World : IWorldContext
 {
     private static readonly int s_autosavePeriod = 40;
 
@@ -26,7 +26,7 @@ public abstract class World : IBlockWorldContext
     private readonly PriorityQueue<BlockUpdate, (long, long)> _scheduledUpdates = new();
 
     private readonly long _worldTimeMask = 0xFFFFFFL;
-    public BlockHost BlockHost { get; }
+    public ChunkHost BlockHost { get; }
     public WorldBlockReader BlocksReader { get; }
     public WorldBlockWrite BlockWriter { get; }
     public WorldEventBroadcaster Broadcaster { get; }
@@ -70,7 +70,7 @@ public abstract class World : IBlockWorldContext
             ? RuleSet.FromNBT(RuleRegistry.Instance, Properties.RulesTag)
             : new RuleSet(RuleRegistry.Instance);
 
-        BlockHost = new BlockHost(chunkSource);
+        BlockHost = new ChunkHost(chunkSource);
         BlocksReader = new WorldBlockReader(this, dim, null);
         BlockWriter = new WorldBlockWrite(BlockHost, BlocksReader);
         BlockWriter.OnBlockChanged += BlockUpdate;
@@ -136,7 +136,7 @@ public abstract class World : IBlockWorldContext
             ? RuleSet.FromNBT(RuleRegistry.Instance, Properties.RulesTag)
             : new RuleSet(RuleRegistry.Instance);
 
-        BlockHost = new BlockHost(chunkSource);
+        BlockHost = new ChunkHost(chunkSource);
         BlocksReader = new WorldBlockReader(this, dimension, null);
         BlockWriter = new WorldBlockWrite(BlockHost, BlocksReader);
         BlockWriter.OnBlockChanged += BlockUpdate;
@@ -185,17 +185,17 @@ public abstract class World : IBlockWorldContext
     public bool IsRemote { set; get; } = false;
     public JavaRandom random { get; } = new();
 
-    BlockHost IBlockWorldContext.BlockHost => BlockHost;
-    WorldBlockReader IBlockWorldContext.BlocksReader => BlocksReader;
-    WorldBlockWrite IBlockWorldContext.BlockWriter => BlockWriter;
-    WorldEventBroadcaster IBlockWorldContext.Broadcaster => Broadcaster;
-    RedstoneEngine IBlockWorldContext.Redstone => Redstone;
-    EntityManager IBlockWorldContext.Entities => Entities;
-    LightingEngine IBlockWorldContext.Lighting => Lighting;
-    EnvironmentManager IBlockWorldContext.Environment => Environment;
-    Dimension IBlockWorldContext.dimension => dimension;
-    long IBlockWorldContext.Seed => Properties.RandomSeed;
-    PathFinder IBlockWorldContext.Pathing => Pathing;
+    ChunkHost IWorldContext.BlockHost => BlockHost;
+    WorldBlockReader IWorldContext.BlocksReader => BlocksReader;
+    WorldBlockWrite IWorldContext.BlockWriter => BlockWriter;
+    WorldEventBroadcaster IWorldContext.Broadcaster => Broadcaster;
+    RedstoneEngine IWorldContext.Redstone => Redstone;
+    EntityManager IWorldContext.Entities => Entities;
+    LightingEngine IWorldContext.Lighting => Lighting;
+    EnvironmentManager IWorldContext.Environment => Environment;
+    Dimension IWorldContext.dimension => dimension;
+    long IWorldContext.Seed => Properties.RandomSeed;
+    PathFinder IWorldContext.Pathing => Pathing;
 
     public RuleSet Rules { get; protected set; }
 

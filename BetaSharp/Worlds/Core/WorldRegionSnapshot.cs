@@ -21,7 +21,7 @@ public class WorldRegionSnapshot : IBlockReader, ILightProvider, IDisposable
     private readonly Dictionary<BlockPos, BlockEntity> _tileEntityCache = [];
     private bool _isLit;
 
-    public WorldRegionSnapshot(IBlockWorldContext level, int minX, int var3, int minZ, int maxX, int var6, int maxZ)
+    public WorldRegionSnapshot(IWorldContext level, int minX, int var3, int minZ, int maxX, int var6, int maxZ)
     {
         //TODO: OPTIMIZE THIS
         _biomeSource = new BiomeSource(level);

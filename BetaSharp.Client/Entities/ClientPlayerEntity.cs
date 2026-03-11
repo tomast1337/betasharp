@@ -19,7 +19,7 @@ public class ClientPlayerEntity : EntityPlayer
     protected BetaSharp Game;
     public MovementInput movementInput;
 
-    public ClientPlayerEntity(BetaSharp game, IBlockWorldContext world, Session session, int dimensionId) : base(world)
+    public ClientPlayerEntity(BetaSharp game, IWorldContext world, Session session, int dimensionId) : base(world)
     {
         Game = game;
         this.dimensionId = dimensionId;

@@ -7,7 +7,7 @@ namespace BetaSharp.Worlds.Mechanics;
 
 public class Explosion
 {
-    private readonly IBlockWorldContext _level;
+    private readonly IWorldContext _level;
     private readonly JavaRandom ExplosionRNG = new();
     public HashSet<BlockPos> destroyedBlockPositions = new();
     public Entity? exploder;
@@ -17,7 +17,7 @@ public class Explosion
     public double explosionZ;
     public bool isFlaming = false;
 
-    public Explosion(IBlockWorldContext level, Entity? var2, double var3, double var5, double var7, float var9)
+    public Explosion(IWorldContext level, Entity? var2, double var3, double var5, double var7, float var9)
     {
         _level = level;
         exploder = var2;

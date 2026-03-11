@@ -16,7 +16,7 @@ internal class ItemBlock : Item
         setTextureId(Block.Blocks[id + 256].getTexture(2));
     }
 
-    public override bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IBlockWorldContext world, int x, int y, int z, int meta)
+    public override bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IWorldContext world, int x, int y, int z, int meta)
     {
         if (world.BlocksReader.GetBlockId(x, y, z) == Block.Snow.id)
         {

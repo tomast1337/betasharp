@@ -13,7 +13,7 @@ public class EntityFootStepFX : EntityFX
 
     private int localAge;
 
-    public EntityFootStepFX(TextureManager textureManager, IBlockWorldContext world, double x, double y, double z) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
+    public EntityFootStepFX(TextureManager textureManager, IWorldContext world, double x, double y, double z) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
     {
         this.textureManager = textureManager;
         velocityX = velocityY = velocityZ = 0.0;

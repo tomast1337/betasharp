@@ -11,7 +11,7 @@ internal class ItemSnowball : Item
         maxCount = 16;
     }
 
-    public override ItemStack use(ItemStack itemStack, IBlockWorldContext world, EntityPlayer entityPlayer)
+    public override ItemStack use(ItemStack itemStack, IWorldContext world, EntityPlayer entityPlayer)
     {
         --itemStack.count;
         world.Broadcaster.PlaySoundAtEntity(entityPlayer, "random.bow", 0.5F, 0.4F / (itemRand.NextFloat() * 0.4F + 0.8F));

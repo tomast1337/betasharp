@@ -69,7 +69,7 @@ public class BlockPistonBase : Block
         }
     }
 
-    private void checkExtended(IBlockWorldContext ctx, int x, int y, int z)
+    private void checkExtended(IWorldContext ctx, int x, int y, int z)
     {
         int meta = ctx.BlocksReader.GetMeta(x, y, z);
         int facing = getFacing(meta);
@@ -93,7 +93,7 @@ public class BlockPistonBase : Block
         }
     }
 
-    private bool shouldExtend(IBlockWorldContext ctx, int x, int y, int z, int facing) =>
+    private bool shouldExtend(IWorldContext ctx, int x, int y, int z, int facing) =>
         facing != 0 && ctx.Redstone.IsPoweringSide(x, y - 1, z, 0)
             ? true
             : facing != 1 && ctx.Redstone.IsPoweringSide(x, y + 1, z, 1)
@@ -243,7 +243,7 @@ public class BlockPistonBase : Block
 
     public static bool isExtended(int meta) => (meta & 8) != 0;
 
-    private static int getFacingForPlacement(IBlockWorldContext world, int x, int y, int z, EntityPlayer player)
+    private static int getFacingForPlacement(IWorldContext world, int x, int y, int z, EntityPlayer player)
     {
         if (MathF.Abs((float)player.x - x) < 2.0F && MathF.Abs((float)player.z - z) < 2.0F)
         {
@@ -263,7 +263,7 @@ public class BlockPistonBase : Block
         return playerYaw == 0 ? 2 : playerYaw == 1 ? 5 : playerYaw == 2 ? 3 : playerYaw == 3 ? 4 : 0;
     }
 
-    private static bool canMoveBlock(int id, IBlockWorldContext ctx, int x, int y, int z, bool allowBreaking)
+    private static bool canMoveBlock(int id, IWorldContext ctx, int x, int y, int z, bool allowBreaking)
     {
         if (id == Obsidian.id)
         {
@@ -296,7 +296,7 @@ public class BlockPistonBase : Block
         return targetEntity == null;
     }
 
-    private static bool canExtend(IBlockWorldContext ctx, int x, int y, int z, int dir)
+    private static bool canExtend(IWorldContext ctx, int x, int y, int z, int dir)
     {
         int checkX = x + PistonConstants.HEAD_OFFSET_X[dir];
         int checkY = y + PistonConstants.HEAD_OFFSET_Y[dir];
@@ -340,7 +340,7 @@ public class BlockPistonBase : Block
         }
     }
 
-    private bool push(IBlockWorldContext ctx, int x, int y, int z, int dir)
+    private bool push(IWorldContext ctx, int x, int y, int z, int dir)
     {
         int nextX = x + PistonConstants.HEAD_OFFSET_X[dir];
         int nextY = y + PistonConstants.HEAD_OFFSET_Y[dir];

@@ -10,7 +10,7 @@ internal class FixedBiomeSource : BiomeSource
     private readonly double _downfall;
     private readonly double _temperature;
 
-    public FixedBiomeSource(IBlockWorldContext level, Biome biome, double temperature, double downfall): base(level)
+    public FixedBiomeSource(IWorldContext level, Biome biome, double temperature, double downfall): base(level)
     {
         _biome = biome;
         _temperature = temperature;

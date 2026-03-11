@@ -9,7 +9,7 @@ public class EntitySkeleton : EntityMonster
 {
     private static readonly ItemStack defaultHeldItem = new(Item.BOW, 1);
 
-    public EntitySkeleton(IBlockWorldContext world) : base(world) => texture = "/mob/skeleton.png";
+    public EntitySkeleton(IWorldContext world) : base(world) => texture = "/mob/skeleton.png";
 
     protected override string getLivingSound() => "mob.skeleton";
 

@@ -10,7 +10,7 @@ public class EntityPortalFX : EntityFX
     private readonly double spawnY;
     private readonly double spawnZ;
 
-    public EntityPortalFX(IBlockWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : base(world, x, y, z, velocityX, velocityY, velocityZ)
+    public EntityPortalFX(IWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : base(world, x, y, z, velocityX, velocityY, velocityZ)
     {
         this.velocityX = velocityX;
         this.velocityY = velocityY;

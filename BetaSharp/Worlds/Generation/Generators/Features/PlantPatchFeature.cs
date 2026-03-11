@@ -9,7 +9,7 @@ internal class PlantPatchFeature : Feature
 
     public PlantPatchFeature(int plantBlockId) => this.plantBlockId = plantBlockId;
 
-    public override bool Generate(IBlockWorldContext level, int x, int y, int z)
+    public override bool Generate(IWorldContext level, int x, int y, int z)
     {
         for (int i = 0; i < 64; ++i)
         {

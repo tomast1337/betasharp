@@ -5,7 +5,7 @@ namespace BetaSharp.Client.Entities.FX;
 
 public class EntityExplodeFX : EntityFX
 {
-    public EntityExplodeFX(IBlockWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : base(world, x, y, z, velocityX, velocityY, velocityZ)
+    public EntityExplodeFX(IWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : base(world, x, y, z, velocityX, velocityY, velocityZ)
     {
         this.velocityX = velocityX + (Random.Shared.NextDouble() * 2.0D - 1.0D) * 0.05F;
         this.velocityY = velocityY + (Random.Shared.NextDouble() * 2.0D - 1.0D) * 0.05F;

@@ -8,9 +8,9 @@ namespace BetaSharp.Entities;
 public static class EntityRegistry
 {
     private static readonly ILogger s_logger = Log.Instance.For(nameof(EntityRegistry));
-    private static readonly Dictionary<string, Func<IBlockWorldContext, Entity>> idToFactory = new();
+    private static readonly Dictionary<string, Func<IWorldContext, Entity>> idToFactory = new();
     private static readonly Dictionary<Type, string> typeToId = new();
-    private static readonly Dictionary<int, Func<IBlockWorldContext, Entity>> rawIdToFactory = new();
+    private static readonly Dictionary<int, Func<IWorldContext, Entity>> rawIdToFactory = new();
     private static readonly Dictionary<Type, int> typeToRawId = new();
 
     public static readonly Dictionary<string, int> namesToId = new();
@@ -43,7 +43,7 @@ public static class EntityRegistry
         Register(world => new EntityBoat(world), "Boat", 41);
     }
 
-    private static void Register<T>(Func<IBlockWorldContext, T> factory, string id, int rawId) where T : Entity
+    private static void Register<T>(Func<IWorldContext, T> factory, string id, int rawId) where T : Entity
     {
         idToFactory.Add(id, factory);
         typeToId.Add(typeof(T), id);
@@ -52,15 +52,15 @@ public static class EntityRegistry
         namesToId.TryAdd(id.ToLower(), rawId);
     }
 
-    public static Entity? Create(string id, IBlockWorldContext world)
+    public static Entity? Create(string id, IWorldContext world)
     {
         TryCreate(id, world, out Entity? entity);
         return entity;
     }
 
-    private static bool TryCreate(string id, IBlockWorldContext world, [MaybeNullWhen(false)] out Entity entity)
+    private static bool TryCreate(string id, IWorldContext world, [MaybeNullWhen(false)] out Entity entity)
     {
-        if (idToFactory.TryGetValue(id, out Func<IBlockWorldContext, Entity>? factory))
+        if (idToFactory.TryGetValue(id, out Func<IWorldContext, Entity>? factory))
         {
             entity = factory.Invoke(world);
             return true;
@@ -114,7 +114,7 @@ public static class EntityRegistry
         return false;
     }
 
-    public static Entity? getEntityFromNbt(NBTTagCompound nbt, IBlockWorldContext world)
+    public static Entity? getEntityFromNbt(NBTTagCompound nbt, IWorldContext world)
     {
         string id = nbt.GetString("id");
         if (TryCreate(id, world, out Entity? entity))
@@ -125,7 +125,7 @@ public static class EntityRegistry
         return entity;
     }
 
-    public static Entity? createEntityAt(string name, IBlockWorldContext world, float x, float y, float z)
+    public static Entity? createEntityAt(string name, IWorldContext world, float x, float y, float z)
     {
         name = name.ToLower();
         try
@@ -159,15 +159,15 @@ public static class EntityRegistry
         return null;
     }
 
-    public static Entity? Create(int rawId, IBlockWorldContext world)
+    public static Entity? Create(int rawId, IWorldContext world)
     {
         TryCreate(rawId, world, out Entity? entity);
         return entity;
     }
 
-    private static bool TryCreate(int rawId, IBlockWorldContext world, [MaybeNullWhen(false)] out Entity entity)
+    private static bool TryCreate(int rawId, IWorldContext world, [MaybeNullWhen(false)] out Entity entity)
     {
-        if (rawIdToFactory.TryGetValue(rawId, out Func<IBlockWorldContext, Entity>? factory))
+        if (rawIdToFactory.TryGetValue(rawId, out Func<IWorldContext, Entity>? factory))
         {
             entity = factory.Invoke(world);
             return true;

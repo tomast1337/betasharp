@@ -8,11 +8,11 @@ public class EntitySnowShovelFX : EntityFX
     private readonly float baseScale;
 
 
-    public EntitySnowShovelFX(IBlockWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : this(world, x, y, z, velocityX, velocityY, velocityZ, 1.0F)
+    public EntitySnowShovelFX(IWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : this(world, x, y, z, velocityX, velocityY, velocityZ, 1.0F)
     {
     }
 
-    public EntitySnowShovelFX(IBlockWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, float scaleMultiplier) : base(world, x, y, z, velocityX, velocityY, velocityZ)
+    public EntitySnowShovelFX(IWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, float scaleMultiplier) : base(world, x, y, z, velocityX, velocityY, velocityZ)
     {
         this.velocityX *= 0.1F;
         this.velocityY *= 0.1F;

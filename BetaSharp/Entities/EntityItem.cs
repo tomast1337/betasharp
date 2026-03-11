@@ -15,7 +15,7 @@ public class EntityItem : Entity
     public int itemAge;
     public ItemStack stack;
 
-    public EntityItem(IBlockWorldContext ctx, double x, double y, double z, ItemStack stack) : base(ctx)
+    public EntityItem(IWorldContext ctx, double x, double y, double z, ItemStack stack) : base(ctx)
     {
         setBoundingBoxSpacing(0.25F, 0.25F);
         standingEyeHeight = height / 2.0F;
@@ -27,7 +27,7 @@ public class EntityItem : Entity
         velocityZ = Random.Shared.NextDouble() * 0.2f - 0.1f;
     }
 
-    public EntityItem(IBlockWorldContext world) : base(world)
+    public EntityItem(IWorldContext world) : base(world)
     {
         setBoundingBoxSpacing(0.25F, 0.25F);
         standingEyeHeight = height / 2.0F;

@@ -68,7 +68,7 @@ internal class BlockPressurePlate : Block
         }
     }
 
-    private void updatePlateState(IBlockWorldContext ctx, int x, int y, int z)
+    private void updatePlateState(IWorldContext ctx, int x, int y, int z)
     {
         bool wasPressed = ctx.BlocksReader.GetMeta(x, y, z) == 1;
         bool shouldBePressed = false;

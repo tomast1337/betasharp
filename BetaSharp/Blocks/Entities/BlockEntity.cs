@@ -10,7 +10,7 @@ public class BlockEntity
     private static readonly Dictionary<string, Type> s_idToClass = new();
     private static readonly Dictionary<Type, string> s_classToId = new();
     private static readonly ILogger<BlockEntity> s_logger = Log.Instance.For<BlockEntity>();
-    public IBlockWorldContext Level;
+    public IWorldContext Level;
     protected bool Removed;
     public int X;
     public int Y;

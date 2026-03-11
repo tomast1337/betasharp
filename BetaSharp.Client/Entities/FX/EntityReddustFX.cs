@@ -8,11 +8,11 @@ public class EntityReddustFX : EntityFX
     private readonly float baseScale;
 
 
-    public EntityReddustFX(IBlockWorldContext world, double x, double y, double z, float red, float green, float blue) : this(world, x, y, z, 1.0F, red, green, blue)
+    public EntityReddustFX(IWorldContext world, double x, double y, double z, float red, float green, float blue) : this(world, x, y, z, 1.0F, red, green, blue)
     {
     }
 
-    public EntityReddustFX(IBlockWorldContext world, double x, double y, double z, float particleScale, float red, float green, float blue) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
+    public EntityReddustFX(IWorldContext world, double x, double y, double z, float particleScale, float red, float green, float blue) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
     {
         velocityX *= 0.1F;
         velocityY *= 0.1F;

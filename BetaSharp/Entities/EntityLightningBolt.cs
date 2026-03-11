@@ -11,7 +11,7 @@ public class EntityLightningBolt : EntityWeatherEffect
     private int flashTimer;
     public long renderSeed;
 
-    public EntityLightningBolt(IBlockWorldContext level, double x, double y, double z) : base(level)
+    public EntityLightningBolt(IWorldContext level, double x, double y, double z) : base(level)
     {
         setPositionAndAnglesKeepPrevAngles(x, y, z, 0.0F, 0.0F);
         flashTimer = 2;

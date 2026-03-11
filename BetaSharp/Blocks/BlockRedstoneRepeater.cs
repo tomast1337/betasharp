@@ -203,7 +203,7 @@ public class BlockRedstoneRepeater : Block
         ctx.Level.Broadcaster.AddParticle("reddust", particleX + offsetX, particleY, particleZ + offsetY, 0.0D, 0.0D, 0.0D);
     }
 
-    private void NotifyOutputNeighbor(IBlockWorldContext level, int x, int y, int z, int meta)
+    private void NotifyOutputNeighbor(IWorldContext level, int x, int y, int z, int meta)
     {
         int facing = meta & 3;
         switch (facing)

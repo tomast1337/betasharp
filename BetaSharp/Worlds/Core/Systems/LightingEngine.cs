@@ -11,14 +11,14 @@ public class LightingEngine : ILightProvider
 {
     private readonly WorldBlockReader _blocks;
     private readonly Dimension _dimension;
-    private readonly BlockHost _host;
+    private readonly ChunkHost _host;
 
     private readonly List<LightUpdate> _lightingQueue = [];
     private readonly ILogger<LightingEngine> _logger = Log.Instance.For<LightingEngine>();
     private int _lightingUpdatesCounter;
     private int _lightingUpdatesScheduled;
 
-    public LightingEngine(WorldBlockReader blocks, Dimension dimension, BlockHost host)
+    public LightingEngine(WorldBlockReader blocks, Dimension dimension, ChunkHost host)
     {
         _blocks = blocks;
         _dimension = dimension;

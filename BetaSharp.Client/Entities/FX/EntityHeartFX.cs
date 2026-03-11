@@ -8,11 +8,11 @@ public class EntityHeartFX : EntityFX
     private readonly float baseScale;
 
 
-    public EntityHeartFX(IBlockWorldContext world, double x, double y, double z, double motionX, double motionY, double motionZ) : this(world, x, y, z, motionX, motionY, motionZ, 2.0F)
+    public EntityHeartFX(IWorldContext world, double x, double y, double z, double motionX, double motionY, double motionZ) : this(world, x, y, z, motionX, motionY, motionZ, 2.0F)
     {
     }
 
-    public EntityHeartFX(IBlockWorldContext world, double x, double y, double z, double motionX, double motionY, double motionZ, float particleScale) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
+    public EntityHeartFX(IWorldContext world, double x, double y, double z, double motionX, double motionY, double motionZ, float particleScale) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
     {
         velocityX *= 0.01;
         velocityY *= 0.01;

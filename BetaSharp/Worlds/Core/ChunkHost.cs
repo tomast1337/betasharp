@@ -2,7 +2,7 @@ using BetaSharp.Worlds.Chunks;
 
 namespace BetaSharp.Worlds.Core;
 
-public sealed class BlockHost(IChunkSource chunkSource)
+public sealed class ChunkHost(IChunkSource chunkSource)
 {
     public IChunkSource ChunkSource => chunkSource;
 

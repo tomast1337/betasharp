@@ -141,7 +141,7 @@ internal class BlockButton : Block
     }
 
 
-    private bool updateState(IBlockWorldContext level, int x, int y, int z)
+    private bool updateState(IWorldContext level, int x, int y, int z)
     {
         int meta = level.BlocksReader.GetMeta(x, y, z);
         int facing = meta & 7;

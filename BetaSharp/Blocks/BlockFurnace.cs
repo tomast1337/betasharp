@@ -159,7 +159,7 @@ internal class BlockFurnace : BlockWithEntity
         return true;
     }
 
-    public static void updateLitState(bool lit, IBlockWorldContext world, int x, int y, int z)
+    public static void updateLitState(bool lit, IWorldContext world, int x, int y, int z)
     {
         int meta = world.BlocksReader.GetMeta(x, y, z);
         BlockEntity? furnace = world.BlocksReader.GetBlockEntity(x, y, z);

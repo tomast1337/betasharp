@@ -7,7 +7,7 @@ public class EntityLavaFX : EntityFX
 {
     private readonly float baseScale;
 
-    public EntityLavaFX(IBlockWorldContext world, double x, double y, double z) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
+    public EntityLavaFX(IWorldContext world, double x, double y, double z) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
     {
         velocityX *= 0.8F;
         velocityY *= 0.8F;

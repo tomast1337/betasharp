@@ -9,7 +9,7 @@ public class EntityTNTPrimed : Entity
 {
     public int fuse;
 
-    public EntityTNTPrimed(IBlockWorldContext world) : base(world)
+    public EntityTNTPrimed(IWorldContext world) : base(world)
     {
         fuse = 0;
         preventEntitySpawning = true;
@@ -17,7 +17,7 @@ public class EntityTNTPrimed : Entity
         standingEyeHeight = height / 2.0F;
     }
 
-    public EntityTNTPrimed(IBlockWorldContext world, double x, double y, double z) : base(world)
+    public EntityTNTPrimed(IWorldContext world, double x, double y, double z) : base(world)
     {
         setPosition(x, y, z);
         float randomAngle = (float)(Random.Shared.NextSingle() * Math.PI * 2.0D);

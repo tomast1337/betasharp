@@ -16,7 +16,7 @@ internal class ItemMinecart : Item
         this.minecartType = minecartType;
     }
 
-    public override bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IBlockWorldContext world, int x, int y, int z, int meta)
+    public override bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IWorldContext world, int x, int y, int z, int meta)
     {
         int blockId = world.BlocksReader.GetBlockId(x, y, z);
         if (BlockRail.IsRail(blockId))

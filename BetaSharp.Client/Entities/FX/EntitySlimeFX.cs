@@ -7,7 +7,7 @@ namespace BetaSharp.Client.Entities.FX;
 
 public class EntitySlimeFX : EntityFX
 {
-    public EntitySlimeFX(IBlockWorldContext world, double x, double y, double z, Item item) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
+    public EntitySlimeFX(IWorldContext world, double x, double y, double z, Item item) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
     {
         particleTextureIndex = item.getTextureId(0);
         particleRed = particleGreen = particleBlue = 1.0F;

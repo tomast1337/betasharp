@@ -10,11 +10,11 @@ using BetaSharp.Worlds.Storage;
 
 namespace BetaSharp.Worlds.Core;
 
-public interface IBlockWorldContext
+public interface IWorldContext
 {
     public WorldBlockReader BlocksReader { get; }
     public WorldBlockWrite BlockWriter { get; }
-    public BlockHost BlockHost { get; }
+    public ChunkHost BlockHost { get; }
     public WorldEventBroadcaster Broadcaster { get; }
     public RedstoneEngine Redstone { get; }
     public EntityManager Entities { get; }

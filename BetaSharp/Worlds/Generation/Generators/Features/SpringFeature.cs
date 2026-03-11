@@ -9,7 +9,7 @@ internal class SpringFeature : Feature
 
     public SpringFeature(int liquidBlockId) => _liquidBlockId = liquidBlockId;
 
-    public override bool Generate(IBlockWorldContext level, int x, int y, int z)
+    public override bool Generate(IWorldContext level, int x, int y, int z)
     {
         if (level.BlocksReader.GetBlockId(x, y + 1, z) != Block.Stone.id)
         {

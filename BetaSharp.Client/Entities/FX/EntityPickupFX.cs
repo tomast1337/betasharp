@@ -15,7 +15,7 @@ public class EntityPickupFX : EntityFX
     private readonly float yOffset;
     private int currentAge;
 
-    public EntityPickupFX(IBlockWorldContext world, Entity target, Entity source, float yOffset) : base(world, target.x, target.y, target.z, target.velocityX, target.velocityY, target.velocityZ)
+    public EntityPickupFX(IWorldContext world, Entity target, Entity source, float yOffset) : base(world, target.x, target.y, target.z, target.velocityX, target.velocityY, target.velocityZ)
     {
         this.target = target;
         this.source = source;

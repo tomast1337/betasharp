@@ -6,7 +6,7 @@ namespace BetaSharp.Worlds.Generation.Generators.Features;
 
 internal class SugarCanePatchFeature : Feature
 {
-    public override bool Generate(IBlockWorldContext level, int x, int y, int z)
+    public override bool Generate(IWorldContext level, int x, int y, int z)
     {
         for (int i = 0; i < 20; ++i)
         {

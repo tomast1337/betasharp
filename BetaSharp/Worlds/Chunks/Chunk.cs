@@ -25,7 +25,7 @@ public class Chunk
     public byte[] HeightMap;
     public bool LastSaveHadEntities;
     public long LastSaveTime;
-    public IBlockWorldContext Level;
+    public IWorldContext Level;
 
     public bool Loaded;
 
@@ -40,7 +40,7 @@ public class Chunk
     public ChunkNibbleArray SkyLight;
     public bool TerrainPopulated;
 
-    public Chunk(IBlockWorldContext level, int x, int z)
+    public Chunk(IWorldContext level, int x, int z)
     {
         BlockEntities = [];
         Entities = new List<Entity>[8];
@@ -59,7 +59,7 @@ public class Chunk
         }
     }
 
-    public Chunk(IBlockWorldContext level, byte[] blocks, int x, int z) : this(level, x, z)
+    public Chunk(IWorldContext level, byte[] blocks, int x, int z) : this(level, x, z)
     {
         Blocks = blocks;
         Meta = new ChunkNibbleArray(blocks.Length);

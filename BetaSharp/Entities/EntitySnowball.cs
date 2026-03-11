@@ -18,9 +18,9 @@ public class EntitySnowball : Entity
     private int yTileSnowball = -1;
     private int zTileSnowball = -1;
 
-    public EntitySnowball(IBlockWorldContext world) : base(world) => setBoundingBoxSpacing(0.25F, 0.25F);
+    public EntitySnowball(IWorldContext world) : base(world) => setBoundingBoxSpacing(0.25F, 0.25F);
 
-    public EntitySnowball(IBlockWorldContext world, EntityLiving var2) : base(world)
+    public EntitySnowball(IWorldContext world, EntityLiving var2) : base(world)
     {
         thrower = var2;
         setBoundingBoxSpacing(0.25F, 0.25F);
@@ -37,7 +37,7 @@ public class EntitySnowball : Entity
         setSnowballHeading(velocityX, velocityY, velocityZ, 1.5F, 1.0F);
     }
 
-    public EntitySnowball(IBlockWorldContext world, double x, double y, double z) : base(world)
+    public EntitySnowball(IWorldContext world, double x, double y, double z) : base(world)
     {
         ticksInGroundSnowball = 0;
         setBoundingBoxSpacing(0.25F, 0.25F);

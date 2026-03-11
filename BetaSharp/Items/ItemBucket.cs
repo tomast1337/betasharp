@@ -18,7 +18,7 @@ internal class ItemBucket : Item
         this.isFull = isFull;
     }
 
-    public override ItemStack use(ItemStack itemStack, IBlockWorldContext world, EntityPlayer entityPlayer)
+    public override ItemStack use(ItemStack itemStack, IWorldContext world, EntityPlayer entityPlayer)
     {
         float partialTick = 1.0F;
         float pitch = entityPlayer.prevPitch + (entityPlayer.pitch - entityPlayer.prevPitch) * partialTick;

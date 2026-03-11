@@ -8,7 +8,7 @@ namespace BetaSharp.Client.Guis;
 public class GuiCrafting : GuiContainer
 {
 
-    public GuiCrafting(InventoryPlayer player, IBlockWorldContext world, int posX, int posY, int posZ) : base(new CraftingScreenHandler(player, world, posX, posY, posZ))
+    public GuiCrafting(InventoryPlayer player, IWorldContext world, int posX, int posY, int posZ) : base(new CraftingScreenHandler(player, world, posX, posY, posZ))
     {
     }
 

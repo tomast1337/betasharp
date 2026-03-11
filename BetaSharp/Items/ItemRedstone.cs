@@ -11,7 +11,7 @@ internal class ItemRedstone : Item
     {
     }
 
-    public override bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IBlockWorldContext world, int x, int y, int z, int meta)
+    public override bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IWorldContext world, int x, int y, int z, int meta)
     {
         if (world.BlocksReader.GetBlockId(x, y, z) != Block.Snow.id)
         {

@@ -9,7 +9,7 @@ namespace BetaSharp.Worlds.Generation.Generators.Features;
 
 internal class DungeonFeature : Feature
 {
-    public override bool Generate(IBlockWorldContext level, int x, int y, int z)
+    public override bool Generate(IWorldContext level, int x, int y, int z)
     {
         byte height = 3;
         int radiusX = level.random.NextInt(2) + 2;

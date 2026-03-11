@@ -63,7 +63,7 @@ public class EntityLiving : Entity
     public float walkAnimationSpeed;
     protected float walkProgress;
 
-    public EntityLiving(IBlockWorldContext level) : base(level)
+    public EntityLiving(IWorldContext level) : base(level)
     {
         preventEntitySpawning = true;
         limbSwingScale = (Random.Shared.NextSingle() + 1.0f) * 0.01f;

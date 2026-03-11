@@ -30,7 +30,7 @@ public class EntityFish : Entity
     private int yTile;
     private int zTile;
 
-    public EntityFish(IBlockWorldContext world) : base(world)
+    public EntityFish(IWorldContext world) : base(world)
     {
         xTile = -1;
         yTile = -1;
@@ -45,13 +45,13 @@ public class EntityFish : Entity
         ignoreFrustumCheck = true;
     }
 
-    public EntityFish(IBlockWorldContext world, double var2, double var4, double var6) : this(world)
+    public EntityFish(IWorldContext world, double var2, double var4, double var6) : this(world)
     {
         setPosition(var2, var4, var6);
         ignoreFrustumCheck = true;
     }
 
-    public EntityFish(IBlockWorldContext world, EntityPlayer player) : base(world)
+    public EntityFish(IWorldContext world, EntityPlayer player) : base(world)
     {
         xTile = -1;
         yTile = -1;

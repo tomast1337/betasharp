@@ -17,7 +17,7 @@ public class ItemMap : NetworkSyncedItem
         setMaxCount(1);
     }
 
-    public static MapState getMapState(int mapId, IBlockWorldContext world)
+    public static MapState getMapState(int mapId, IWorldContext world)
     {
         string mapName = "map_" + mapId;
         MapState? mapState = (MapState?)world.StateManager.LoadData(typeof(MapState), mapName);
@@ -30,7 +30,7 @@ public class ItemMap : NetworkSyncedItem
         return mapState;
     }
 
-    public MapState getSavedMapState(ItemStack stack, IBlockWorldContext world)
+    public MapState getSavedMapState(ItemStack stack, IWorldContext world)
     {
         string mapName = "map_" + stack.getDamage();
         MapState? mapState = (MapState?)world.StateManager.LoadData(typeof(MapState), mapName);
@@ -49,7 +49,7 @@ public class ItemMap : NetworkSyncedItem
         return mapState;
     }
 
-    public void update(IBlockWorldContext world, Entity entity, MapState map)
+    public void update(IWorldContext world, Entity entity, MapState map)
     {
         if (world.dimension.Id == map.Dimension)
         {
@@ -265,7 +265,7 @@ public class ItemMap : NetworkSyncedItem
         }
     }
 
-    public override void inventoryTick(ItemStack itemStack, IBlockWorldContext world, Entity entity, int slotIndex, bool shouldUpdate)
+    public override void inventoryTick(ItemStack itemStack, IWorldContext world, Entity entity, int slotIndex, bool shouldUpdate)
     {
         if (!world.IsRemote)
         {
@@ -284,7 +284,7 @@ public class ItemMap : NetworkSyncedItem
         }
     }
 
-    public override void onCraft(ItemStack itemStack, IBlockWorldContext world, EntityPlayer entityPlayer)
+    public override void onCraft(ItemStack itemStack, IWorldContext world, EntityPlayer entityPlayer)
     {
         itemStack.setDamage(world.StateManager.GetUniqueDataId("map"));
         string mapName = "map_" + itemStack.getDamage();
@@ -297,7 +297,7 @@ public class ItemMap : NetworkSyncedItem
         mapState.MarkDirty();
     }
 
-    public override Packet? getUpdatePacket(ItemStack stack, IBlockWorldContext world, EntityPlayer player)
+    public override Packet? getUpdatePacket(ItemStack stack, IWorldContext world, EntityPlayer player)
     {
         byte[] updateData = getMapState(stack.getDamage(), world).GetPlayerMarkerPacket(player);
         return updateData == null ? null : MapUpdateS2CPacket.Get((short)Item.Map.id, (short)stack.getDamage(), updateData);

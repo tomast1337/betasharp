@@ -4,10 +4,10 @@ namespace BetaSharp.Worlds.Core.Systems;
 
 public class WorldTickScheduler
 {
-    private readonly IBlockWorldContext _context;
+    private readonly IWorldContext _context;
     private readonly PriorityQueue<BlockUpdate, (long, long)> _scheduledUpdates = new();
 
-    public WorldTickScheduler(IBlockWorldContext context) => _context = context;
+    public WorldTickScheduler(IWorldContext context) => _context = context;
     public void Tick(bool forceFlush = false) => ProcessScheduledTicks(forceFlush);
 
     /// <summary>
