@@ -813,7 +813,7 @@ public class ClientNetworkHandler : NetHandler
     {
         if (packet.itemRawId == Item.Map.id)
         {
-            ItemMap.getMapState(packet.id, _game.world).updateData(packet.updateData);
+            ItemMap.getMapState(packet.id, _game.world).UpdateData(packet.updateData);
         }
         else
         {

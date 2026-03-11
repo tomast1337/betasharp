@@ -5,6 +5,7 @@ using BetaSharp.Network.Packets.S2CPlay;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Chunks;
+using BetaSharp.Worlds.Maps;
 
 namespace BetaSharp.Items;
 
@@ -16,13 +17,12 @@ public class ItemMap : NetworkSyncedItem
         setMaxCount(1);
     }
 
-    public static MapState getMapState(short mapId, IBlockWorldContext world)
+    public static MapState getMapState(int mapId, IBlockWorldContext world)
     {
-        MapState? mapState = (MapState?)world.StateManager.LoadData(typeof(MapState), $"map_{mapId}");
+        string mapName = "map_" + mapId;
+        MapState? mapState = (MapState?)world.StateManager.LoadData(typeof(MapState), mapName);
         if (mapState == null)
         {
-            int mapIdCount = world.StateManager.GetUniqueDataId("map");
-            string mapName = "map_" + mapIdCount;
             mapState = new MapState(mapName);
             world.StateManager.SetData(mapName, mapState);
         }
@@ -38,11 +38,11 @@ public class ItemMap : NetworkSyncedItem
         {
             stack.setDamage(world.StateManager.GetUniqueDataId("map"));
             mapState = new MapState(mapName);
-            mapState.centerX = world.Properties.SpawnX;
-            mapState.centerZ = world.Properties.SpawnZ;
-            mapState.scale = 3;
-            mapState.dimension = (sbyte)world.dimension.Id;
-            mapState.markDirty();
+            mapState.CenterX = world.Properties.SpawnX;
+            mapState.CenterZ = world.Properties.SpawnZ;
+            mapState.Scale = 3;
+            mapState.Dimension = (sbyte)world.dimension.Id;
+            mapState.MarkDirty();
             world.StateManager.SetData(mapName, mapState);
         }
 
@@ -51,13 +51,13 @@ public class ItemMap : NetworkSyncedItem
 
     public void update(IBlockWorldContext world, Entity entity, MapState map)
     {
-        if (world.dimension.Id == map.dimension)
+        if (world.dimension.Id == map.Dimension)
         {
             short mapWidth = 128;
             short mapHeight = 128;
-            int blocksPerPixel = 1 << map.scale;
-            int centerX = map.centerX;
-            int centerZ = map.centerZ;
+            int blocksPerPixel = 1 << map.Scale;
+            int centerX = map.CenterX;
+            int centerZ = map.CenterZ;
             int entityPosX = MathHelper.Floor(entity.x - (double)centerX) / blocksPerPixel + mapWidth / 2;
             int entityPosZ = MathHelper.Floor(entity.z - (double)centerZ) / blocksPerPixel + mapHeight / 2;
             int scanRadius = 128 / blocksPerPixel;
@@ -66,11 +66,11 @@ public class ItemMap : NetworkSyncedItem
                 scanRadius /= 2;
             }
 
-            ++map.inventoryTicks;
+            ++map.InventoryTicks;
 
             for (int pixelX = entityPosX - scanRadius + 1; pixelX < entityPosX + scanRadius; ++pixelX)
             {
-                if ((pixelX & 15) == (map.inventoryTicks & 15))
+                if ((pixelX & 15) == (map.InventoryTicks & 15))
                 {
                     int minDirtyZ = 255;
                     int maxDirtyZ = 0;
@@ -164,7 +164,7 @@ public class ItemMap : NetworkSyncedItem
                             if (sampleZ > 0)
                             {
                                 MapColor mapColor = Block.Blocks[sampleZ].material.MapColor;
-                                if (mapColor == MapColor.waterColor)
+                                if (mapColor == MapColor.Water)
                                 {
                                     shadeFactor = (double)fluidDepth * 0.1D + (double)(pixelX + pixelZ & 1) * 0.2D;
                                     brightness = 1;
@@ -179,13 +179,13 @@ public class ItemMap : NetworkSyncedItem
                                     }
                                 }
 
-                                colorIndex = mapColor.colorIndex;
+                                colorIndex = mapColor.Id;
                             }
 
                             lastHeight = avgHeight;
                             if (pixelZ >= 0 && dx * dx + dy * dy < scanRadius * scanRadius && (!IsOutside || (pixelX + pixelZ & 1) != 0))
                             {
-                                byte currentColor = map.colors[pixelX + pixelZ * mapWidth];
+                                byte currentColor = map.Colors[pixelX + pixelZ * mapWidth];
                                 byte pixelColor = (byte)(colorIndex * 4 + brightness);
                                 if (currentColor != pixelColor)
                                 {
@@ -199,7 +199,7 @@ public class ItemMap : NetworkSyncedItem
                                         maxDirtyZ = pixelZ;
                                     }
 
-                                    map.colors[pixelX + pixelZ * mapWidth] = pixelColor;
+                                    map.Colors[pixelX + pixelZ * mapWidth] = pixelColor;
                                 }
                             }
                         }
@@ -207,7 +207,7 @@ public class ItemMap : NetworkSyncedItem
 
                     if (minDirtyZ <= maxDirtyZ)
                     {
-                        map.markDirty(pixelX, minDirtyZ, maxDirtyZ);
+                        map.MarkDirty(pixelX, minDirtyZ, maxDirtyZ);
                     }
                 }
             }
@@ -229,7 +229,7 @@ public class ItemMap : NetworkSyncedItem
             {
                 foundSurface = false;
             }
-            else if (scanY > 0 && blockId > 0 && Block.Blocks[blockId].material.MapColor == MapColor.airColor)
+            else if (scanY > 0 && blockId > 0 && Block.Blocks[blockId].material.MapColor == MapColor.Air)
             {
                 foundSurface = false;
             }
@@ -269,11 +269,11 @@ public class ItemMap : NetworkSyncedItem
     {
         if (!world.IsRemote)
         {
-            MapState mapState = getSavedMapState(itemStack, world);
+            MapState mapState = getMapState(itemStack.getDamage(), world);
             if (entity is EntityPlayer)
             {
                 EntityPlayer entityPlayer = (EntityPlayer)entity;
-                mapState.update(entityPlayer, itemStack);
+                mapState.Update(entityPlayer, itemStack);
             }
 
             if (shouldUpdate)
@@ -290,16 +290,16 @@ public class ItemMap : NetworkSyncedItem
         string mapName = "map_" + itemStack.getDamage();
         MapState mapState = new MapState(mapName);
         world.StateManager.SetData(mapName, mapState);
-        mapState.centerX = MathHelper.Floor(entityPlayer.x);
-        mapState.centerZ = MathHelper.Floor(entityPlayer.z);
-        mapState.scale = 3;
-        mapState.dimension = (sbyte)world.dimension.Id;
-        mapState.markDirty();
+        mapState.CenterX = MathHelper.Floor(entityPlayer.x);
+        mapState.CenterZ = MathHelper.Floor(entityPlayer.z);
+        mapState.Scale = 3;
+        mapState.Dimension = (sbyte)world.dimension.Id;
+        mapState.MarkDirty();
     }
 
     public override Packet? getUpdatePacket(ItemStack stack, IBlockWorldContext world, EntityPlayer player)
     {
-        byte[] updateData = getSavedMapState(stack, world).getPlayerMarkerPacket(player);
+        byte[] updateData = getMapState(stack.getDamage(), world).GetPlayerMarkerPacket(player);
         return updateData == null ? null : MapUpdateS2CPacket.Get((short)Item.Map.id, (short)stack.getDamage(), updateData);
     }
 }

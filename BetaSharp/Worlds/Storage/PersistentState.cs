@@ -4,18 +4,18 @@ namespace BetaSharp.Worlds.Storage;
 
 public abstract class PersistentState
 {
-    public readonly string id;
-    private bool dirty;
+    public readonly string Id;
+    private bool _dirty;
 
-    public PersistentState(string var1) => id = var1;
+    public PersistentState(string id) => Id = id;
 
-    public abstract void readNBT(NBTTagCompound var1);
+    public abstract void ReadNBT(NBTTagCompound nbt);
 
-    public abstract void writeNBT(NBTTagCompound var1);
+    public abstract void WriteNBT(NBTTagCompound nbt);
 
-    public void markDirty() => setDirty(true);
+    public void MarkDirty() => SetDirty(true);
 
-    public void setDirty(bool var1) => dirty = var1;
+    public void SetDirty(bool dirty) => _dirty = dirty;
 
-    public bool isDirty() => dirty;
+    public bool IsDirty() => _dirty;
 }
