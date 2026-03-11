@@ -18,44 +18,38 @@ internal class ItemBed : Item
         {
             return false;
         }
-        else
+
+        ++y;
+
+        int dir = MathHelper.Floor((double)(entityPlayer.yaw * 4.0F / 360.0F) + 0.5D) & 3;
+        int offsetX = 0;
+        int offsetZ = 0;
+        if (dir == 0) offsetZ = 1;
+        if (dir == 1) offsetX = -1;
+        if (dir == 2) offsetZ = -1;
+        if (dir == 3) offsetX = 1;
+
+        bool footReplaceable = isReplaceable(world, x, y, z);
+        bool headReplaceable = isReplaceable(world, x + offsetX, y, z + offsetZ);
+        bool footSupported = world.BlocksReader.ShouldSuffocate(x, y - 1, z);
+        bool headSupported = world.BlocksReader.ShouldSuffocate(x + offsetX, y - 1, z + offsetZ);
+
+        if (!footReplaceable || !headReplaceable || !footSupported || !headSupported)
         {
-            ++y;
-            BlockBed blockBed = (BlockBed)Block.Bed;
-            int direction = MathHelper.Floor((double)(entityPlayer.yaw * 4.0F / 360.0F) + 0.5D) & 3;
-            sbyte headOffsetX = 0;
-            sbyte headOffsetZ = 0;
-            if (direction == 0)
-            {
-                headOffsetZ = 1;
-            }
-
-            if (direction == 1)
-            {
-                headOffsetX = -1;
-            }
-
-            if (direction == 2)
-            {
-                headOffsetZ = -1;
-            }
-
-            if (direction == 3)
-            {
-                headOffsetX = 1;
-            }
-
-            if (world.BlocksReader.IsAir(x, y, z) && world.BlocksReader.IsAir(x + headOffsetX, y, z + headOffsetZ) && world.BlocksReader.ShouldSuffocate(x, y - 1, z) && world.BlocksReader.ShouldSuffocate(x + headOffsetX, y - 1, z + headOffsetZ))
-            {
-                world.BlockWriter.SetBlock(x, y, z, blockBed.id, direction);
-                world.BlockWriter.SetBlock(x + headOffsetX, y, z + headOffsetZ, blockBed.id, direction + 8);
-                --itemStack.count;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return false;
         }
+
+        world.BlockWriter.SetBlock(x, y, z, Block.Bed.id, dir);
+        world.BlockWriter.SetBlock(x + offsetX, y, z + offsetZ, Block.Bed.id, dir + 8);
+        world.Broadcaster.NotifyNeighbors(x, y, z, Block.Bed.id);
+        world.Broadcaster.NotifyNeighbors(x + offsetX, y, z + offsetZ, Block.Bed.id);
+        --itemStack.count;
+        return true;
+    }
+
+    private static bool isReplaceable(IWorldContext world, int x, int y, int z)
+    {
+        int blockId = world.BlocksReader.GetBlockId(x, y, z);
+        return blockId == 0 || Block.Blocks[blockId].material.IsReplaceable;
     }
 }
