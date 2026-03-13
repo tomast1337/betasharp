@@ -3,6 +3,7 @@ using BetaSharp.Blocks.Materials;
 using BetaSharp.Entities;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -71,7 +72,7 @@ public class BlockPistonBase : Block
 
     private void checkExtended(IWorldContext ctx, int x, int y, int z)
     {
-        int meta = ctx.BlocksReader.GetMeta(x, y, z);
+        int meta = ctx.Reader.GetMeta(x, y, z);
         int facing = getFacing(meta);
         bool needsExtension = shouldExtend(ctx, x, y, z, facing);
 
@@ -153,8 +154,8 @@ public class BlockPistonBase : Block
                 int targetY = evt.Y + PistonConstants.HEAD_OFFSET_Y[facing] * 2;
                 int targetZ = evt.Z + PistonConstants.HEAD_OFFSET_Z[facing] * 2;
 
-                int targetId = evt.Level.BlocksReader.GetBlockId(targetX, targetY, targetZ);
-                int targetMeta = evt.Level.BlocksReader.GetMeta(targetX, targetY, targetZ);
+                int targetId = evt.Level.Reader.GetBlockId(targetX, targetY, targetZ);
+                int targetMeta = evt.Level.Reader.GetMeta(targetX, targetY, targetZ);
                 bool wasRetractingMovingBlock = false;
 
                 if (targetId == MovingPiston.id)
@@ -287,7 +288,7 @@ public class BlockPistonBase : Block
                 return false;
             }
         }
-        else if (isExtended(ctx.BlocksReader.GetMeta(x, y, z)))
+        else if (isExtended(ctx.Reader.GetMeta(x, y, z)))
         {
             return false;
         }
@@ -312,7 +313,7 @@ public class BlockPistonBase : Block
                     return false;
                 }
 
-                int blockId = ctx.BlocksReader.GetBlockId(checkX, checkY, checkZ);
+                int blockId = ctx.Reader.GetBlockId(checkX, checkY, checkZ);
                 if (blockId != 0)
                 {
                     if (!canMoveBlock(blockId, ctx, checkX, checkY, checkZ, true))
@@ -357,7 +358,7 @@ public class BlockPistonBase : Block
                     return false;
                 }
 
-                blockId = ctx.BlocksReader.GetBlockId(nextX, nextY, nextZ);
+                blockId = ctx.Reader.GetBlockId(nextX, nextY, nextZ);
                 if (blockId != 0)
                 {
                     if (!canMoveBlock(blockId, ctx, nextX, nextY, nextZ, true))
@@ -379,7 +380,7 @@ public class BlockPistonBase : Block
                         continue;
                     }
 
-                    Blocks[blockId].dropStacks(new OnDropEvt(ctx, nextX, nextY, nextZ, ctx.BlocksReader.GetMeta(nextX, nextY, nextZ)));
+                    Blocks[blockId].dropStacks(new OnDropEvt(ctx, nextX, nextY, nextZ, ctx.Reader.GetMeta(nextX, nextY, nextZ)));
                     ctx.BlockWriter.SetBlock(nextX, nextY, nextZ, 0);
                 }
             }
@@ -390,8 +391,8 @@ public class BlockPistonBase : Block
                 int prevY = nextY - PistonConstants.HEAD_OFFSET_Y[dir];
                 int prevZ = nextZ - PistonConstants.HEAD_OFFSET_Z[dir];
 
-                int prevBlockId = ctx.BlocksReader.GetBlockId(prevX, prevY, prevZ);
-                int prevMeta = ctx.BlocksReader.GetMeta(prevX, prevY, prevZ);
+                int prevBlockId = ctx.Reader.GetBlockId(prevX, prevY, prevZ);
+                int prevMeta = ctx.Reader.GetMeta(prevX, prevY, prevZ);
 
                 if (prevBlockId == id && prevX == x && prevY == y && prevZ == z)
                 {

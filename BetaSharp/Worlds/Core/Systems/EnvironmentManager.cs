@@ -8,18 +8,18 @@ namespace BetaSharp.Worlds.Core.Systems;
 
 public class EnvironmentManager
 {
-    private readonly WorldBlockReader _blockView;
     private readonly Dimension _dimension;
     private readonly WorldProperties _props;
     private readonly JavaRandom _random;
+    private readonly WorldReader _view;
     private readonly long _worldTimeMask = 0xFFFFFFL;
 
-    public EnvironmentManager(WorldProperties props, Dimension dimension, WorldBlockReader blockView, JavaRandom random)
+    public EnvironmentManager(WorldProperties props, Dimension dimension, WorldReader view, JavaRandom random)
     {
         _props = props;
         _dimension = dimension;
         _random = random;
-        _blockView = blockView;
+        _view = view;
     }
 
     public float PrevRainingStrength { get; private set; }
@@ -150,7 +150,7 @@ public class EnvironmentManager
 
     public bool IsRainingAt(int x, int y, int z)
     {
-        if (!IsRaining || y < _blockView.GetTopSolidBlockY(x, z))
+        if (!IsRaining || y < _view.GetTopSolidBlockY(x, z))
         {
             return false;
         }

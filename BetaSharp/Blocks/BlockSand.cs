@@ -55,7 +55,7 @@ internal class BlockSand : Block
 
     public static bool canFallThrough(OnTickEvt ctx)
     {
-        int blockId = ctx.Level.BlocksReader.GetBlockId(ctx.X, ctx.Y, ctx.Z);
+        int blockId = ctx.Level.Reader.GetBlockId(ctx.X, ctx.Y, ctx.Z);
         if (blockId == 0)
         {
             return true;

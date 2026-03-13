@@ -10,16 +10,28 @@ public class BlockEntityMobSpawner : BlockEntity
     private readonly ILogger<BlockEntityMobSpawner> _logger = Log.Instance.For<BlockEntityMobSpawner>();
     private string _spawnedEntityId = "Pig";
 
-    public BlockEntityMobSpawner() => SpawnDelay = 20;
+    public BlockEntityMobSpawner()
+    {
+        SpawnDelay = 20;
+    }
     public int SpawnDelay { get; set; } = -1;
     public double Rotation { get; set; }
     public double LastRotation { get; set; }
 
-    public string GetSpawnedEntityId() => _spawnedEntityId;
+    public string GetSpawnedEntityId()
+    {
+        return _spawnedEntityId;
+    }
 
-    public void SetSpawnedEntityId(string spawnedEntityId) => _spawnedEntityId = spawnedEntityId;
+    public void SetSpawnedEntityId(string spawnedEntityId)
+    {
+        _spawnedEntityId = spawnedEntityId;
+    }
 
-    public bool IsPlayerInRange() => World.Entities.GetClosestPlayer(X + 0.5D, Y + 0.5D, Z + 0.5D, 16.0D) != null;
+    public bool IsPlayerInRange()
+    {
+        return World.Entities.GetClosestPlayer(X + 0.5D, Y + 0.5D, Z + 0.5D, 16.0D) != null;
+    }
 
     public override void tick()
     {

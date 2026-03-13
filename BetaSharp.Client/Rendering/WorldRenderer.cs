@@ -260,7 +260,7 @@ public class WorldRenderer : IWorldEventListener
                         var8 = 127;
                     }
 
-                    if (world.BlocksReader.IsPosLoaded(MathHelper.Floor(var7.x), var8, MathHelper.Floor(var7.z)))
+                    if (world.Reader.IsPosLoaded(MathHelper.Floor(var7.x), var8, MathHelper.Floor(var7.z)))
                     {
                         ++countEntitiesRendered;
                         EntityRenderDispatcher.instance.renderEntity(var7, var3);
@@ -648,7 +648,7 @@ public class WorldRenderer : IWorldEventListener
                 renderEngine.BindTexture(renderEngine.GetTextureId("/terrain.png"));
                 GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 0.5F);
                 GLManager.GL.PushMatrix();
-                var8 = world.BlocksReader.GetBlockId(var2.BlockX, var2.BlockY, var2.BlockZ);
+                var8 = world.Reader.GetBlockId(var2.BlockX, var2.BlockY, var2.BlockZ);
                 Block var9 = var8 > 0 ? Block.Blocks[var8] : null;
                 GLManager.GL.Disable(GLEnum.AlphaTest);
                 GLManager.GL.PolygonOffset(-3.0F, -3.0F);
@@ -662,7 +662,7 @@ public class WorldRenderer : IWorldEventListener
                 var6.startDrawingQuads();
                 var6.setTranslationD(-var10, -var12, -var14);
                 var6.disableColor();
-                BlockRenderer.RenderBlockByRenderType(world.BlocksReader, world.Lighting, var9, new BlockPos(var2.BlockX, var2.BlockY, var2.BlockZ), var6, 240 + (int)(damagePartialTime * 10.0F), true);
+                BlockRenderer.RenderBlockByRenderType(world.Reader, world.Lighting, var9, new BlockPos(var2.BlockX, var2.BlockY, var2.BlockZ), var6, 240 + (int)(damagePartialTime * 10.0F), true);
                 var6.draw();
                 var6.setTranslationD(0.0D, 0.0D, 0.0D);
                 GLManager.GL.Disable(GLEnum.AlphaTest);
@@ -730,14 +730,14 @@ public class WorldRenderer : IWorldEventListener
             GLManager.GL.Disable(GLEnum.Texture2D);
             GLManager.GL.DepthMask(false);
             float var6 = 0.002F;
-            int var7 = world.BlocksReader.GetBlockId(var2.BlockX, var2.BlockY, var2.BlockZ);
+            int var7 = world.Reader.GetBlockId(var2.BlockX, var2.BlockY, var2.BlockZ);
             if (var7 > 0)
             {
-                Block.Blocks[var7].updateBoundingBox(world.BlocksReader, var2.BlockX, var2.BlockY, var2.BlockZ);
+                Block.Blocks[var7].updateBoundingBox(world.Reader, var2.BlockX, var2.BlockY, var2.BlockZ);
                 double var8 = var1.lastTickX + (var1.x - var1.lastTickX) * (double)var5;
                 double var10 = var1.lastTickY + (var1.y - var1.lastTickY) * (double)var5;
                 double var12 = var1.lastTickZ + (var1.z - var1.lastTickZ) * (double)var5;
-                drawOutlinedBoundingBox(Block.Blocks[var7].getBoundingBox(world.BlocksReader, var2.BlockX, var2.BlockY, var2.BlockZ).Expand((double)var6, (double)var6, (double)var6).Offset(-var8, -var10, -var12));
+                drawOutlinedBoundingBox(Block.Blocks[var7].getBoundingBox(world.Reader, var2.BlockX, var2.BlockY, var2.BlockZ).Expand((double)var6, (double)var6, (double)var6).Offset(-var8, -var10, -var12));
             }
 
             GLManager.GL.DepthMask(true);

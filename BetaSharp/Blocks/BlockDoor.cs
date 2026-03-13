@@ -3,6 +3,7 @@ using BetaSharp.Items;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -45,11 +46,20 @@ internal class BlockDoor : Block
         return textureId;
     }
 
-    public override bool isOpaque() => false;
+    public override bool isOpaque()
+    {
+        return false;
+    }
 
-    public override bool isFullCube() => false;
+    public override bool isFullCube()
+    {
+        return false;
+    }
 
-    public override BlockRendererType getRenderType() => BlockRendererType.Door;
+    public override BlockRendererType getRenderType()
+    {
+        return BlockRendererType.Door;
+    }
 
     public override Box getBoundingBox(IBlockReader world, int x, int y, int z)
     {
@@ -99,10 +109,10 @@ internal class BlockDoor : Block
             return true;
         }
 
-        int meta = world.BlocksReader.GetMeta(x, y, z);
+        int meta = world.Reader.GetMeta(x, y, z);
         if ((meta & 8) != 0)
         {
-            if (world.BlocksReader.GetBlockId(x, y - 1, z) == id)
+            if (world.Reader.GetBlockId(x, y - 1, z) == id)
             {
                 updateDorState(world, x, y - 1, z);
             }
@@ -110,7 +120,7 @@ internal class BlockDoor : Block
             return true;
         }
 
-        if (world.BlocksReader.GetBlockId(x, y + 1, z) == id)
+        if (world.Reader.GetBlockId(x, y + 1, z) == id)
         {
             world.BlockWriter.SetBlockMeta(x, y + 1, z, (meta ^ 4) + 8);
         }
@@ -126,20 +136,20 @@ internal class BlockDoor : Block
 
     public void setOpen(IWorldContext world, int x, int y, int z, bool open)
     {
-        int meta = world.BlocksReader.GetMeta(x, y, z);
+        int meta = world.Reader.GetMeta(x, y, z);
         if ((meta & 8) != 0)
         {
-            if (world.BlocksReader.GetBlockId(x, y - 1, z) == id)
+            if (world.Reader.GetBlockId(x, y - 1, z) == id)
             {
                 setOpen(world, x, y - 1, z, open);
             }
         }
         else
         {
-            bool isOpen = (world.BlocksReader.GetMeta(x, y, z) & 4) > 0;
+            bool isOpen = (world.Reader.GetMeta(x, y, z) & 4) > 0;
             if (isOpen != open)
             {
-                if (world.BlocksReader.GetBlockId(x, y + 1, z) == id)
+                if (world.Reader.GetBlockId(x, y + 1, z) == id)
                 {
                     world.BlockWriter.SetBlockMeta(x, y + 1, z, (meta ^ 4) + 8);
                 }
@@ -153,10 +163,10 @@ internal class BlockDoor : Block
 
     public override void neighborUpdate(OnTickEvt evt)
     {
-        int meta = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+        int meta = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
         if ((meta & 8) != 0)
         {
-            if (evt.Level.BlocksReader.GetBlockId(evt.X, evt.Y - 1, evt.Z) != id)
+            if (evt.Level.Reader.GetBlockId(evt.X, evt.Y - 1, evt.Z) != id)
             {
                 evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
             }
@@ -169,17 +179,17 @@ internal class BlockDoor : Block
         else
         {
             bool wasBroken = false;
-            if (evt.Level.BlocksReader.GetBlockId(evt.X, evt.Y + 1, evt.Z) != id)
+            if (evt.Level.Reader.GetBlockId(evt.X, evt.Y + 1, evt.Z) != id)
             {
                 evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
                 wasBroken = true;
             }
 
-            if (!evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z))
+            if (!evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z))
             {
                 evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
                 wasBroken = true;
-                if (evt.Level.BlocksReader.GetBlockId(evt.X, evt.Y + 1, evt.Z) == id)
+                if (evt.Level.Reader.GetBlockId(evt.X, evt.Y + 1, evt.Z) == id)
                 {
                     evt.Level.BlockWriter.SetBlock(evt.X, evt.Y + 1, evt.Z, 0);
                 }
@@ -200,7 +210,10 @@ internal class BlockDoor : Block
         }
     }
 
-    public override int getDroppedItemId(int blockMeta) => (blockMeta & 8) != 0 ? 0 : material == Material.Metal ? Item.IronDoor.id : Item.WoodenDoor.id;
+    public override int getDroppedItemId(int blockMeta)
+    {
+        return (blockMeta & 8) != 0 ? 0 : material == Material.Metal ? Item.IronDoor.id : Item.WoodenDoor.id;
+    }
 
     public override HitResult raycast(IBlockReader world, int x, int y, int z, Vec3D startPos, Vec3D endPos)
     {
@@ -208,11 +221,23 @@ internal class BlockDoor : Block
         return base.raycast(world, x, y, z, startPos, endPos);
     }
 
-    public int setOpen(int meta) => (meta & 4) == 0 ? (meta - 1) & 3 : meta & 3;
+    public int setOpen(int meta)
+    {
+        return (meta & 4) == 0 ? (meta - 1) & 3 : meta & 3;
+    }
 
-    public override bool canPlaceAt(CanPlaceAtCtx evt) => evt.Y >= 127 ? false : evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z) && base.canPlaceAt(evt) && base.canPlaceAt(evt);
+    public override bool canPlaceAt(CanPlaceAtCtx evt)
+    {
+        return evt.Y >= 127 ? false : evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z) && base.canPlaceAt(evt) && base.canPlaceAt(evt);
+    }
 
-    public static bool isOpen(int meta) => (meta & 4) != 0;
+    public static bool isOpen(int meta)
+    {
+        return (meta & 4) != 0;
+    }
 
-    public override int getPistonBehavior() => 1;
+    public override int getPistonBehavior()
+    {
+        return 1;
+    }
 }

@@ -4,6 +4,7 @@ using BetaSharp.NBT;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -95,11 +96,11 @@ public class EntityArrow : Entity
             prevPitch = pitch = (float)(Math.Atan2(velocityY, length) * 180.0D / (float)Math.PI);
         }
 
-        int blockId = _level.BlocksReader.GetBlockId(xTile, yTile, zTile);
+        int blockId = world.Reader.GetBlockId(xTile, yTile, zTile);
         if (blockId > 0)
         {
-            Block.Blocks[blockId].updateBoundingBox(_level.BlocksReader, xTile, yTile, zTile);
-            Box? box = Block.Blocks[blockId].getCollisionShape(_level.BlocksReader, xTile, yTile, zTile);
+            Block.Blocks[blockId].updateBoundingBox(world.Reader, xTile, yTile, zTile);
+            Box? box = Block.Blocks[blockId].getCollisionShape(world.Reader, xTile, yTile, zTile);
             if (box != null && box.Value.Contains(new Vec3D(x, y, z)))
             {
                 inGround = true;
@@ -113,8 +114,8 @@ public class EntityArrow : Entity
 
         if (inGround)
         {
-            blockId = _level.BlocksReader.GetBlockId(xTile, yTile, zTile);
-            int blockMeta = _level.BlocksReader.GetMeta(xTile, yTile, zTile);
+            blockId = world.Reader.GetBlockId(xTile, yTile, zTile);
+            int blockMeta = world.Reader.GetMeta(xTile, yTile, zTile);
             if (blockId == inTile && blockMeta == inData)
             {
                 ++ticksInGround;
@@ -138,14 +139,14 @@ public class EntityArrow : Entity
             ++ticksInAir;
             Vec3D rayStart = new(x, y, z);
             Vec3D rayEnd = new(x + velocityX, y + velocityY, z + velocityZ);
-            HitResult hit = _level.BlocksReader.Raycast(rayStart, rayEnd, false, true);
+            HitResult hit = world.Reader.Raycast(rayStart, rayEnd, false, true);
             if (hit.Type != HitResultType.MISS)
             {
                 rayEnd = new Vec3D(hit.Pos.x, hit.Pos.y, hit.Pos.z);
             }
 
             Entity hitEntity = null;
-            List<Entity> candidates = _level.Entities.GetEntities(this, boundingBox.Stretch(velocityX, velocityY, velocityZ).Expand(1.0D, 1.0D, 1.0D));
+            List<Entity> candidates = world.Entities.GetEntities(this, boundingBox.Stretch(velocityX, velocityY, velocityZ).Expand(1.0D, 1.0D, 1.0D));
             double minHitDistance = 0.0D;
 
             float expandAmount;
@@ -181,7 +182,7 @@ public class EntityArrow : Entity
                 {
                     if (hit.Entity.damage(owner, 4))
                     {
-                        _level.Broadcaster.PlaySoundAtPos(x, y, z, "random.drr", 1.0F, 1.2F / (random.NextFloat() * 0.2F + 0.9F));
+                        world.Broadcaster.PlaySoundAtPos(x, y, z, "random.drr", 1.0F, 1.2F / (random.NextFloat() * 0.2F + 0.9F));
                         markDead();
                     }
                     else
@@ -199,8 +200,8 @@ public class EntityArrow : Entity
                     xTile = hit.BlockX;
                     yTile = hit.BlockY;
                     zTile = hit.BlockZ;
-                    inTile = _level.BlocksReader.GetBlockId(xTile, yTile, zTile);
-                    inData = _level.BlocksReader.GetMeta(xTile, yTile, zTile);
+                    inTile = world.Reader.GetBlockId(xTile, yTile, zTile);
+                    inData = world.Reader.GetMeta(xTile, yTile, zTile);
                     velocityX = hit.Pos.x - x;
                     velocityY = hit.Pos.y - y;
                     velocityZ = hit.Pos.z - z;
@@ -208,7 +209,7 @@ public class EntityArrow : Entity
                     x -= velocityX / horizontalSpeed * 0.05F;
                     y -= velocityY / horizontalSpeed * 0.05F;
                     z -= velocityZ / horizontalSpeed * 0.05F;
-                    _level.Broadcaster.PlaySoundAtPos(x, y, z, "random.drr", 1.0F, 1.2F / (random.NextFloat() * 0.2F + 0.9F));
+                    world.Broadcaster.PlaySoundAtPos(x, y, z, "random.drr", 1.0F, 1.2F / (random.NextFloat() * 0.2F + 0.9F));
                     inGround = true;
                     arrowShake = 7;
                 }
@@ -248,7 +249,7 @@ public class EntityArrow : Entity
                 for (int _ = 0; _ < 4; ++_)
                 {
                     float bubbleOffset = 0.25F;
-                    _level.Broadcaster.AddParticle("bubble", x - velocityX * bubbleOffset, y - velocityY * bubbleOffset, z - velocityZ * bubbleOffset, velocityX, velocityY, velocityZ);
+                    world.Broadcaster.AddParticle("bubble", x - velocityX * bubbleOffset, y - velocityY * bubbleOffset, z - velocityZ * bubbleOffset, velocityX, velocityY, velocityZ);
                 }
 
                 drag = 0.8F;
@@ -288,11 +289,11 @@ public class EntityArrow : Entity
 
     public override void onPlayerInteraction(EntityPlayer player)
     {
-        if (!_level.IsRemote)
+        if (!world.IsRemote)
         {
             if (inGround && doesArrowBelongToPlayer && arrowShake <= 0 && player.inventory.addItemStackToInventory(new ItemStack(Item.ARROW, 1)))
             {
-                _level.Broadcaster.PlaySoundAtPos(x, y, z, "random.pop", 0.2F, ((random.NextFloat() - random.NextFloat()) * 0.7F + 1.0F) * 2.0F);
+                world.Broadcaster.PlaySoundAtPos(x, y, z, "random.pop", 0.2F, ((random.NextFloat() - random.NextFloat()) * 0.7F + 1.0F) * 2.0F);
                 player.sendPickup(this, 1);
                 markDead();
             }

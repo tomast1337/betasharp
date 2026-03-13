@@ -3,6 +3,7 @@ using BetaSharp.Blocks.Entities;
 using BetaSharp.Entities;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Items;
 
@@ -20,7 +21,7 @@ internal class ItemSign : Item
         {
             return false;
         }
-        else if (!world.BlocksReader.GetMaterial(x, y, z).IsSolid)
+        else if (!world.Reader.GetMaterial(x, y, z).IsSolid)
         {
             return false;
         }
@@ -67,7 +68,7 @@ internal class ItemSign : Item
                 }
 
                 --itemStack.count;
-                BlockEntitySign? blockEntitySign = (BlockEntitySign?)world.BlocksReader.GetBlockEntity(x, y, z);
+                BlockEntitySign? blockEntitySign = (BlockEntitySign?)world.Reader.GetBlockEntity(x, y, z);
                 if (blockEntitySign != null)
                 {
                     entityPlayer.openEditSignScreen(blockEntitySign);

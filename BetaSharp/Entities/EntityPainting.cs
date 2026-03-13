@@ -3,6 +3,7 @@ using BetaSharp.Items;
 using BetaSharp.NBT;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -125,7 +126,7 @@ public class EntityPainting : Entity
 
     public override void tick()
     {
-        if (_tickCounter++ == 100 && !_level.IsRemote)
+        if (_tickCounter++ == 100 && !world.IsRemote)
         {
             _tickCounter = 0;
             if (!CanHangOnWall())
@@ -137,7 +138,7 @@ public class EntityPainting : Entity
 
     public bool CanHangOnWall()
     {
-        if (_level.Entities.GetEntityCollisionsScratch(this, boundingBox).Count > 0)
+        if (world.Entities.GetEntityCollisionsScratch(this, boundingBox).Count > 0)
         {
             return false;
         }
@@ -168,11 +169,11 @@ public class EntityPainting : Entity
                 Material material;
                 if (Direction != 0 && Direction != 2)
                 {
-                    material = _level.BlocksReader.GetMaterial(XPosition, startY + dy, startZ + dx);
+                    material = world.Reader.GetMaterial(XPosition, startY + dy, startZ + dx);
                 }
                 else
                 {
-                    material = _level.BlocksReader.GetMaterial(startX + dx, startY + dy, ZPosition);
+                    material = world.Reader.GetMaterial(startX + dx, startY + dy, ZPosition);
                 }
 
                 if (!material.IsSolid)
@@ -182,7 +183,7 @@ public class EntityPainting : Entity
             }
         }
 
-        var entitiesInBox = _level.Entities.GetEntities(this, boundingBox);
+        var entitiesInBox = world.Entities.GetEntities(this, boundingBox);
 
         foreach (var entity in entitiesInBox)
         {
@@ -199,7 +200,7 @@ public class EntityPainting : Entity
 
     public override bool damage(Entity entity, int amount)
     {
-        if (!dead && !_level.IsRemote)
+        if (!dead && !world.IsRemote)
         {
             scheduleVelocityUpdate();
             DropAsItem();
@@ -232,7 +233,7 @@ public class EntityPainting : Entity
 
     public override void move(double dx, double dy, double dz)
     {
-        if (!_level.IsRemote && dx * dx + dy * dy + dz * dz > 0.0D)
+        if (!world.IsRemote && dx * dx + dy * dy + dz * dz > 0.0D)
         {
             DropAsItem();
         }
@@ -240,7 +241,7 @@ public class EntityPainting : Entity
 
     public override void addVelocity(double dx, double dy, double dz)
     {
-        if (!_level.IsRemote && dx * dx + dy * dy + dz * dz > 0.0D)
+        if (!world.IsRemote && dx * dx + dy * dy + dz * dz > 0.0D)
         {
             DropAsItem();
         }
@@ -248,12 +249,12 @@ public class EntityPainting : Entity
 
     private void DropAsItem()
     {
-        if (dead || _level.IsRemote)
+        if (dead || world.IsRemote)
         {
             return;
         }
 
         markDead();
-        _level.SpawnEntity(new EntityItem(_level, x, y, z, new ItemStack(Item.Painting)));
+        world.SpawnEntity(new EntityItem(world, x, y, z, new ItemStack(Item.Painting)));
     }
 }

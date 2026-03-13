@@ -1,6 +1,7 @@
 using BetaSharp.Blocks;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Worlds.Generation.Generators.Features;
 
@@ -14,7 +15,7 @@ internal class DeadBushPatchFeature : Feature
     {
         while (true)
         {
-            int blockId = level.BlocksReader.GetBlockId(x, y, z);
+            int blockId = level.Reader.GetBlockId(x, y, z);
             if ((blockId != 0 && blockId != Block.Leaves.id) || y <= 0)
             {
                 for (int i = 0; i < 4; ++i)
@@ -22,8 +23,8 @@ internal class DeadBushPatchFeature : Feature
                     int genX = x + rand.NextInt(8) - rand.NextInt(8);
                     int genY = y + rand.NextInt(4) - rand.NextInt(4);
                     int genZ = z + rand.NextInt(8) - rand.NextInt(8);
-                    if (level.BlocksReader.IsAir(genX, genY, genZ) &&
-                        ((BlockPlant)Block.Blocks[_deadBushBlockId]).canGrow(new OnTickEvt(level, genX, genY, genZ, level.BlocksReader.GetMeta(genX, genY, genZ), level.BlocksReader.GetBlockId(genX, genY, genZ))))
+                    if (level.Reader.IsAir(genX, genY, genZ) &&
+                        ((BlockPlant)Block.Blocks[_deadBushBlockId]).canGrow(new OnTickEvt(level, genX, genY, genZ, level.Reader.GetMeta(genX, genY, genZ), level.Reader.GetBlockId(genX, genY, genZ))))
                     {
                         level.BlockWriter.SetBlockWithoutNotifyingNeighbors(genX, genY, genZ, _deadBushBlockId, 0, notifyBlockPlaced: false);
                     }

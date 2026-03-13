@@ -11,7 +11,10 @@ public class BlockBed : Block
 {
     public static readonly int[][] BED_OFFSETS = [[0, 1], [-1, 0], [0, -1], [1, 0]];
 
-    public BlockBed(int id) : base(id, 134, Material.Wool) => setDefaultShape();
+    public BlockBed(int id) : base(id, 134, Material.Wool)
+    {
+        setDefaultShape();
+    }
 
     public override bool onUse(OnUseEvt evt)
     {
@@ -25,19 +28,19 @@ public class BlockBed : Block
         int y = evt.Y;
         int z = evt.Z;
 
-        int meta = evt.Level.BlocksReader.GetMeta(x, y, z);
+        int meta = evt.Level.Reader.GetMeta(x, y, z);
         if (!isHeadOfBed(meta))
         {
             int direction = getDirection(meta);
             x += BED_OFFSETS[direction][0];
             z += BED_OFFSETS[direction][1];
 
-            if (evt.Level.BlocksReader.GetBlockId(x, y, z) != id)
+            if (evt.Level.Reader.GetBlockId(x, y, z) != id)
             {
                 return true;
             }
 
-            meta = evt.Level.BlocksReader.GetMeta(x, y, z);
+            meta = evt.Level.Reader.GetMeta(x, y, z);
         }
 
         if (!evt.Level.dimension.HasWorldSpawn)
@@ -51,7 +54,7 @@ public class BlockBed : Block
             x += BED_OFFSETS[direction][0];
             z += BED_OFFSETS[direction][1];
 
-            if (evt.Level.BlocksReader.GetBlockId(x, y, z) == id)
+            if (evt.Level.Reader.GetBlockId(x, y, z) == id)
             {
                 evt.Level.BlockWriter.SetBlock(x, y, z, 0);
                 posX = (posX + x + 0.5D) / 2.0D;
@@ -116,27 +119,39 @@ public class BlockBed : Block
             sideFacing != 5 && sideFacing != 4 ? textureId : textureId + 16;
     }
 
-    public override BlockRendererType getRenderType() => BlockRendererType.Bed;
+    public override BlockRendererType getRenderType()
+    {
+        return BlockRendererType.Bed;
+    }
 
-    public override bool isFullCube() => false;
+    public override bool isFullCube()
+    {
+        return false;
+    }
 
-    public override bool isOpaque() => false;
+    public override bool isOpaque()
+    {
+        return false;
+    }
 
-    public override void updateBoundingBox(IBlockReader iBlockReader, int x, int y, int z) => setDefaultShape();
+    public override void updateBoundingBox(IBlockReader iBlockReader, int x, int y, int z)
+    {
+        setDefaultShape();
+    }
 
     public override void neighborUpdate(OnTickEvt ctx)
     {
-        int blockMeta = ctx.Level.BlocksReader.GetMeta(ctx.X, ctx.Y, ctx.Z);
+        int blockMeta = ctx.Level.Reader.GetMeta(ctx.X, ctx.Y, ctx.Z);
         int direction = getDirection(blockMeta);
 
         if (isHeadOfBed(blockMeta))
         {
-            if (ctx.Level.BlocksReader.GetBlockId(ctx.X - BED_OFFSETS[direction][0], ctx.Y, ctx.Z - BED_OFFSETS[direction][1]) != id)
+            if (ctx.Level.Reader.GetBlockId(ctx.X - BED_OFFSETS[direction][0], ctx.Y, ctx.Z - BED_OFFSETS[direction][1]) != id)
             {
                 ctx.Level.BlockWriter.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
             }
         }
-        else if (ctx.Level.BlocksReader.GetBlockId(ctx.X + BED_OFFSETS[direction][0], ctx.Y, ctx.Z + BED_OFFSETS[direction][1]) != id)
+        else if (ctx.Level.Reader.GetBlockId(ctx.X + BED_OFFSETS[direction][0], ctx.Y, ctx.Z + BED_OFFSETS[direction][1]) != id)
         {
             ctx.Level.BlockWriter.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
             if (!ctx.Level.IsRemote)
@@ -146,17 +161,32 @@ public class BlockBed : Block
         }
     }
 
-    public override int getDroppedItemId(int blockMeta) => isHeadOfBed(blockMeta) ? 0 : Item.Bed.id;
+    public override int getDroppedItemId(int blockMeta)
+    {
+        return isHeadOfBed(blockMeta) ? 0 : Item.Bed.id;
+    }
 
-    private void setDefaultShape() => setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 9.0F / 16.0F, 1.0F);
+    private void setDefaultShape()
+    {
+        setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 9.0F / 16.0F, 1.0F);
+    }
 
-    public static int getDirection(int meta) => meta & 3;
+    public static int getDirection(int meta)
+    {
+        return meta & 3;
+    }
 
-    public static bool isHeadOfBed(int meta) => (meta & 8) != 0;
+    public static bool isHeadOfBed(int meta)
+    {
+        return (meta & 8) != 0;
+    }
 
-    public static bool isBedOccupied(int meta) => (meta & 4) != 0;
+    public static bool isBedOccupied(int meta)
+    {
+        return (meta & 4) != 0;
+    }
 
-    public static void updateState(WorldBlockWrite worldWrite, int x, int y, int z, int meta, bool occupied)
+    public static void updateState(WorldWriter worldWrite, int x, int y, int z, int meta, bool occupied)
     {
         if (occupied)
         {
@@ -211,5 +241,8 @@ public class BlockBed : Block
         }
     }
 
-    public override int getPistonBehavior() => 1;
+    public override int getPistonBehavior()
+    {
+        return 1;
+    }
 }

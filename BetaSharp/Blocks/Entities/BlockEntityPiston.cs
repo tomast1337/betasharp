@@ -28,15 +28,30 @@ public class BlockEntityPiston : BlockEntity
         _source = source;
     }
 
-    public int getPushedBlockId() => _pushedBlockId;
+    public int getPushedBlockId()
+    {
+        return _pushedBlockId;
+    }
 
-    public override int getPushedBlockData() => _pushedBlockData;
+    public override int getPushedBlockData()
+    {
+        return _pushedBlockData;
+    }
 
-    public bool isExtending() => _extending;
+    public bool isExtending()
+    {
+        return _extending;
+    }
 
-    public int getFacing() => _facing;
+    public int getFacing()
+    {
+        return _facing;
+    }
 
-    public bool isSource() => _source;
+    public bool isSource()
+    {
+        return _source;
+    }
 
     public float getProgress(float tickDelta)
     {
@@ -65,7 +80,7 @@ public class BlockEntityPiston : BlockEntity
             collisionShapeSizeMultiplier = 1.0F - collisionShapeSizeMultiplier;
         }
 
-        Box? pushCollisionBox = Block.MovingPiston.getPushedBlockCollisionShape(World.BlocksReader, X, Y, Z, _pushedBlockId, collisionShapeSizeMultiplier, _facing);
+        Box? pushCollisionBox = Block.MovingPiston.getPushedBlockCollisionShape(World.Reader, X, Y, Z, _pushedBlockId, collisionShapeSizeMultiplier, _facing);
         if (pushCollisionBox != null)
         {
             List<Entity> entitiesToPush = World.Entities.GetEntities(null!, pushCollisionBox.Value);
@@ -94,7 +109,7 @@ public class BlockEntityPiston : BlockEntity
             _progress = _lastProgess = 1.0F;
             World.Entities.RemoveBlockEntity(X, Y, Z);
             markRemoved();
-            if (World.BlocksReader.GetBlockId(X, Y, Z) == Block.MovingPiston.id)
+            if (World.Reader.GetBlockId(X, Y, Z) == Block.MovingPiston.id)
             {
                 World.BlockWriter.SetBlock(X, Y, Z, _pushedBlockId, _pushedBlockData);
             }
@@ -109,7 +124,7 @@ public class BlockEntityPiston : BlockEntity
             pushEntities(1.0F, 0.25F);
             World.Entities.RemoveBlockEntity(X, Y, Z);
             markRemoved();
-            if (World.BlocksReader.GetBlockId(X, Y, Z) == Block.MovingPiston.id)
+            if (World.Reader.GetBlockId(X, Y, Z) == Block.MovingPiston.id)
             {
                 World.BlockWriter.SetBlock(X, Y, Z, _pushedBlockId, _pushedBlockData);
             }

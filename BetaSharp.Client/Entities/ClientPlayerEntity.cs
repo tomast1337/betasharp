@@ -8,6 +8,7 @@ using BetaSharp.NBT;
 using BetaSharp.Stats;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Client.Entities;
 
@@ -26,7 +27,10 @@ public class ClientPlayerEntity : EntityPlayer
         name = session.username;
     }
 
-    public override void move(double x, double y, double z) => base.move(x, y, z);
+    public override void move(double x, double y, double z)
+    {
+        base.move(x, y, z);
+    }
 
     public override void tickLiving()
     {
@@ -46,7 +50,7 @@ public class ClientPlayerEntity : EntityPlayer
         lastScreenDistortion = changeDimensionCooldown;
         if (inTeleportationState)
         {
-            if (!_level.IsRemote && vehicle != null)
+            if (!world.IsRemote && vehicle != null)
             {
                 setVehicle(null);
             }
@@ -100,9 +104,15 @@ public class ClientPlayerEntity : EntityPlayer
         base.tickMovement();
     }
 
-    public void resetPlayerKeyState() => movementInput.resetKeyState();
+    public void resetPlayerKeyState()
+    {
+        movementInput.resetKeyState();
+    }
 
-    public void handleKeyPress(int key, bool isPressed) => movementInput.checkKeyForMovementInput(key, isPressed);
+    public void handleKeyPress(int key, bool isPressed)
+    {
+        movementInput.checkKeyForMovementInput(key, isPressed);
+    }
 
     public override void writeNbt(NBTTagCompound nbt)
     {
@@ -122,23 +132,50 @@ public class ClientPlayerEntity : EntityPlayer
         Game.displayGuiScreen(null);
     }
 
-    public override void openEditSignScreen(BlockEntitySign sign) => Game.displayGuiScreen(new GuiEditSign(sign));
+    public override void openEditSignScreen(BlockEntitySign sign)
+    {
+        Game.displayGuiScreen(new GuiEditSign(sign));
+    }
 
-    public override void openChestScreen(IInventory inventory) => Game.displayGuiScreen(new GuiChest(this.inventory, inventory));
+    public override void openChestScreen(IInventory inventory)
+    {
+        Game.displayGuiScreen(new GuiChest(this.inventory, inventory));
+    }
 
-    public override void openCraftingScreen(int x, int y, int z) => Game.displayGuiScreen(new GuiCrafting(inventory, _level, x, y, z));
+    public override void openCraftingScreen(int x, int y, int z)
+    {
+        Game.displayGuiScreen(new GuiCrafting(inventory, world, x, y, z));
+    }
 
-    public override void openFurnaceScreen(BlockEntityFurnace furnace) => Game.displayGuiScreen(new GuiFurnace(inventory, furnace));
+    public override void openFurnaceScreen(BlockEntityFurnace furnace)
+    {
+        Game.displayGuiScreen(new GuiFurnace(inventory, furnace));
+    }
 
-    public override void openDispenserScreen(BlockEntityDispenser dispenser) => Game.displayGuiScreen(new GuiDispenser(inventory, dispenser));
+    public override void openDispenserScreen(BlockEntityDispenser dispenser)
+    {
+        Game.displayGuiScreen(new GuiDispenser(inventory, dispenser));
+    }
 
-    public override void sendPickup(Entity entity, int count) => Game.particleManager.addEffect(new EntityPickupFX(Game.world, entity, this, -0.5F));
+    public override void sendPickup(Entity entity, int count)
+    {
+        Game.particleManager.addEffect(new EntityPickupFX(Game.world, entity, this, -0.5F));
+    }
 
-    public int getPlayerArmorValue() => inventory.getTotalArmorValue();
+    public int getPlayerArmorValue()
+    {
+        return inventory.getTotalArmorValue();
+    }
 
-    public virtual void sendChatMessage(string message) => Game.ingameGUI.addChatMessage($"<{name}> {message}");
+    public virtual void sendChatMessage(string message)
+    {
+        Game.ingameGUI.addChatMessage($"<{name}> {message}");
+    }
 
-    public override bool isSneaking() => movementInput.sneak && !sleeping;
+    public override bool isSneaking()
+    {
+        return movementInput.sneak && !sleeping;
+    }
 
     public virtual void setHealth(int newHealth)
     {
@@ -160,13 +197,19 @@ public class ClientPlayerEntity : EntityPlayer
         }
     }
 
-    public override void respawn() => Game.respawn(false, 0);
+    public override void respawn()
+    {
+        Game.respawn(false, 0);
+    }
 
     public override void spawn()
     {
     }
 
-    public override void sendMessage(string message) => Game.ingameGUI.addChatMessageTranslate(message);
+    public override void sendMessage(string message)
+    {
+        Game.ingameGUI.addChatMessageTranslate(message);
+    }
 
     public override void increaseStat(StatBase stat, int value)
     {
@@ -195,7 +238,10 @@ public class ClientPlayerEntity : EntityPlayer
         }
     }
 
-    private bool isBlockTranslucent(int x, int y, int z) => _level.BlocksReader.ShouldSuffocate(x, y, z);
+    private bool isBlockTranslucent(int x, int y, int z)
+    {
+        return world.Reader.ShouldSuffocate(x, y, z);
+    }
 
     protected override bool pushOutOfBlocks(double posX, double posY, double posZ)
     {
@@ -239,22 +285,22 @@ public class ClientPlayerEntity : EntityPlayer
             float pushStrength = 0.1F;
             if (pushDirection == 0)
             {
-                velocityX = -pushStrength;
+                velocityX = (double)(-pushStrength);
             }
 
             if (pushDirection == 1)
             {
-                velocityX = pushStrength;
+                velocityX = (double)pushStrength;
             }
 
             if (pushDirection == 4)
             {
-                velocityZ = -pushStrength;
+                velocityZ = (double)(-pushStrength);
             }
 
             if (pushDirection == 5)
             {
-                velocityZ = pushStrength;
+                velocityZ = (double)pushStrength;
             }
         }
 

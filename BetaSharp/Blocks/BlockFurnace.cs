@@ -4,6 +4,7 @@ using BetaSharp.Entities;
 using BetaSharp.Items;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 using Microsoft.Extensions.Logging;
 
 namespace BetaSharp.Blocks;
@@ -22,7 +23,10 @@ internal class BlockFurnace : BlockWithEntity
         textureId = 45;
     }
 
-    public override int getDroppedItemId(int blockMeta) => Furnace.id;
+    public override int getDroppedItemId(int blockMeta)
+    {
+        return Furnace.id;
+    }
 
     public override void onPlaced(OnPlacedEvt evt)
     {
@@ -61,10 +65,10 @@ internal class BlockFurnace : BlockWithEntity
             return;
         }
 
-        int blockNorth = evt.Level.BlocksReader.GetBlockId(evt.X, evt.Y, evt.Z - 1);
-        int blockSouth = evt.Level.BlocksReader.GetBlockId(evt.X, evt.Y, evt.Z + 1);
-        int westBlockId = evt.Level.BlocksReader.GetBlockId(evt.X - 1, evt.Y, evt.Z);
-        int eastBlockId = evt.Level.BlocksReader.GetBlockId(evt.X + 1, evt.Y, evt.Z);
+        int blockNorth = evt.Level.Reader.GetBlockId(evt.X, evt.Y, evt.Z - 1);
+        int blockSouth = evt.Level.Reader.GetBlockId(evt.X, evt.Y, evt.Z + 1);
+        int westBlockId = evt.Level.Reader.GetBlockId(evt.X - 1, evt.Y, evt.Z);
+        int eastBlockId = evt.Level.Reader.GetBlockId(evt.X + 1, evt.Y, evt.Z);
         sbyte direction = 3;
         if (BlocksOpaque[blockNorth] && !BlocksOpaque[blockSouth])
         {
@@ -112,7 +116,7 @@ internal class BlockFurnace : BlockWithEntity
             return;
         }
 
-        int var6 = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+        int var6 = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
         float particleX = evt.X + 0.5F;
         float particleY = evt.Y + 0.0F + Random.Shared.NextSingle() * 6.0F / 16.0F;
         float particleZ = evt.Z + 0.5F;
@@ -140,7 +144,10 @@ internal class BlockFurnace : BlockWithEntity
         }
     }
 
-    public override int getTexture(int side) => side == 1 ? textureId + 17 : side == 0 ? textureId + 17 : side == 3 ? textureId - 1 : textureId;
+    public override int getTexture(int side)
+    {
+        return side == 1 ? textureId + 17 : side == 0 ? textureId + 17 : side == 3 ? textureId - 1 : textureId;
+    }
 
     public override bool onUse(OnUseEvt evt)
     {
@@ -149,7 +156,7 @@ internal class BlockFurnace : BlockWithEntity
             return true;
         }
 
-        BlockEntityFurnace? furnace = (BlockEntityFurnace?)evt.Level.BlocksReader.GetBlockEntity(evt.X, evt.Y, evt.Z);
+        BlockEntityFurnace? furnace = (BlockEntityFurnace?)evt.Level.Reader.GetBlockEntity(evt.X, evt.Y, evt.Z);
         if (furnace == null)
         {
             return false;
@@ -161,8 +168,8 @@ internal class BlockFurnace : BlockWithEntity
 
     public static void updateLitState(bool lit, IWorldContext world, int x, int y, int z)
     {
-        int meta = world.BlocksReader.GetMeta(x, y, z);
-        BlockEntity? furnace = world.BlocksReader.GetBlockEntity(x, y, z);
+        int meta = world.Reader.GetMeta(x, y, z);
+        BlockEntity? furnace = world.Reader.GetBlockEntity(x, y, z);
         s_ignoreBlockRemoval.Value = true;
         if (lit)
         {
@@ -179,13 +186,16 @@ internal class BlockFurnace : BlockWithEntity
         world.Entities.SetBlockEntity(x, y, z, furnace!);
     }
 
-    protected override BlockEntity getBlockEntity() => new BlockEntityFurnace();
+    protected override BlockEntity getBlockEntity()
+    {
+        return new BlockEntityFurnace();
+    }
 
     public override void onBreak(OnBreakEvt evt)
     {
         if (!s_ignoreBlockRemoval.Value)
         {
-            BlockEntityFurnace? furnace = (BlockEntityFurnace?)evt.Level.BlocksReader.GetBlockEntity(evt.X, evt.Y, evt.Z);
+            BlockEntityFurnace? furnace = (BlockEntityFurnace?)evt.Level.Reader.GetBlockEntity(evt.X, evt.Y, evt.Z);
             if (furnace == null)
             {
                 s_logger.LogWarning("BlockEntityFurnace not found at {X}, {Y}, {Z}", evt.X, evt.Y, evt.Z);

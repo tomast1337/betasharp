@@ -2,6 +2,7 @@ using BetaSharp.Blocks;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Chunks;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 using BetaSharp.Worlds.Generation.Biomes.Source;
 using BetaSharp.Worlds.Generation.Generators.Chunks;
 using Silk.NET.Maths;
@@ -47,8 +48,8 @@ public abstract class Dimension
     public virtual IChunkSource CreateChunkGenerator() => new OverworldIChunkGenerator(World, World.Seed);
 
     public virtual bool IsValidSpawnPoint(int x, int z) {
-        int y = World.BlocksReader.GetTopY(x, z);
-        int topBlockId = World.BlocksReader.GetBlockId(x, y, z);
+        int y = World.Reader.GetTopY(x, z);
+        int topBlockId = World.Reader.GetBlockId(x, y, z);
 
         return topBlockId != 0 && Block.Blocks[topBlockId] != null && Block.Blocks[topBlockId].material.BlocksMovement;
     }

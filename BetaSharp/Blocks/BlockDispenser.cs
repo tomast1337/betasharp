@@ -12,11 +12,20 @@ internal class BlockDispenser : BlockWithEntity
 {
     private static readonly ThreadLocal<JavaRandom> s_random = new(() => new JavaRandom());
 
-    public BlockDispenser(int id) : base(id, Material.Stone) => textureId = 45;
+    public BlockDispenser(int id) : base(id, Material.Stone)
+    {
+        textureId = 45;
+    }
 
-    public override int getTickRate() => 4;
+    public override int getTickRate()
+    {
+        return 4;
+    }
 
-    public override int getDroppedItemId(int blockMeta) => Dispenser.id;
+    public override int getDroppedItemId(int blockMeta)
+    {
+        return Dispenser.id;
+    }
 
     public override void onPlaced(OnPlacedEvt evt)
     {
@@ -49,11 +58,11 @@ internal class BlockDispenser : BlockWithEntity
         }
         else
         {
-            updateDirection(evt.Level.BlocksReader, evt.Level.BlockWriter, evt.Level.IsRemote, evt.X, evt.Y, evt.Z);
+            updateDirection(evt.Level.Reader, evt.Level.BlockWriter, evt.Level.IsRemote, evt.X, evt.Y, evt.Z);
         }
     }
 
-    private void updateDirection(WorldBlockReader worldRead, WorldBlockWrite worldWrite, bool isRemote, int x, int y, int z)
+    private void updateDirection(WorldReader worldRead, WorldWriter worldWrite, bool isRemote, int x, int y, int z)
     {
         if (!isRemote)
         {
@@ -107,7 +116,7 @@ internal class BlockDispenser : BlockWithEntity
             return true;
         }
 
-        BlockEntityDispenser? dispenser = (BlockEntityDispenser?)evt.Level.BlocksReader.GetBlockEntity(evt.X, evt.Y, evt.Z);
+        BlockEntityDispenser? dispenser = (BlockEntityDispenser?)evt.Level.Reader.GetBlockEntity(evt.X, evt.Y, evt.Z);
         if (dispenser != null)
         {
             evt.Player.openDispenserScreen(dispenser);
@@ -118,7 +127,7 @@ internal class BlockDispenser : BlockWithEntity
 
     private void dispense(OnTickEvt evt)
     {
-        int meta = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+        int meta = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
         int dirX = 0;
         int dirZ = 0;
 
@@ -139,7 +148,7 @@ internal class BlockDispenser : BlockWithEntity
             dirX = -1;
         }
 
-        BlockEntityDispenser? dispenser = (BlockEntityDispenser?)evt.Level.BlocksReader.GetBlockEntity(evt.X, evt.Y, evt.Z);
+        BlockEntityDispenser? dispenser = (BlockEntityDispenser?)evt.Level.Reader.GetBlockEntity(evt.X, evt.Y, evt.Z);
         if (dispenser == null)
         {
             return;
@@ -223,7 +232,7 @@ internal class BlockDispenser : BlockWithEntity
 
     public override void onBreak(OnBreakEvt evt)
     {
-        BlockEntityDispenser? dispenser = (BlockEntityDispenser?)evt.Level.BlocksReader.GetBlockEntity(evt.X, evt.Y, evt.Z);
+        BlockEntityDispenser? dispenser = (BlockEntityDispenser?)evt.Level.Reader.GetBlockEntity(evt.X, evt.Y, evt.Z);
 
         if (dispenser != null)
         {

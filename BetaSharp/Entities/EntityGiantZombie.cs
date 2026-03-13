@@ -1,4 +1,5 @@
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -14,5 +15,5 @@ public class EntityGiantZombie : EntityMonster
         setBoundingBoxSpacing(width * 6.0F, height * 6.0F);
     }
 
-    protected override float getBlockPathWeight(int x, int y, int z) => _level.Lighting.GetLuminance(x, y, z) - 0.5F;
+    protected override float getBlockPathWeight(int x, int y, int z) => world.Lighting.GetLuminance(x, y, z) - 0.5F;
 }

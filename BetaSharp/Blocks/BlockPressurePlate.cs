@@ -2,6 +2,7 @@ using BetaSharp.Blocks.Materials;
 using BetaSharp.Entities;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -25,7 +26,7 @@ internal class BlockPressurePlate : Block
 
     public override bool isFullCube() => false;
 
-    public override bool canPlaceAt(CanPlaceAtCtx ctx) => ctx.Level.BlocksReader.ShouldSuffocate(ctx.X, ctx.Y - 1, ctx.Z);
+    public override bool canPlaceAt(CanPlaceAtCtx ctx) => ctx.Level.Reader.ShouldSuffocate(ctx.X, ctx.Y - 1, ctx.Z);
 
     public override void onPlaced(OnPlacedEvt evt)
     {
@@ -34,14 +35,14 @@ internal class BlockPressurePlate : Block
     public override void neighborUpdate(OnTickEvt evt)
     {
         bool shouldBreak = false;
-        if (!evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z))
+        if (!evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z))
         {
             shouldBreak = true;
         }
 
         if (shouldBreak)
         {
-            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z)));
+            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z)));
             evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
         }
     }
@@ -50,7 +51,7 @@ internal class BlockPressurePlate : Block
     {
         if (!evt.Level.IsRemote)
         {
-            if (evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z) != 0)
+            if (evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z) != 0)
             {
                 updatePlateState(evt.Level, evt.X, evt.Y, evt.Z);
             }
@@ -61,7 +62,7 @@ internal class BlockPressurePlate : Block
     {
         if (!evt.Level.IsRemote)
         {
-            if (evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z) != 1)
+            if (evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z) != 1)
             {
                 updatePlateState(evt.Level, evt.X, evt.Y, evt.Z);
             }
@@ -70,7 +71,7 @@ internal class BlockPressurePlate : Block
 
     private void updatePlateState(IWorldContext ctx, int x, int y, int z)
     {
-        bool wasPressed = ctx.BlocksReader.GetMeta(x, y, z) == 1;
+        bool wasPressed = ctx.Reader.GetMeta(x, y, z) == 1;
         bool shouldBePressed = false;
         float detectionInset = 2.0F / 16.0F;
         List<Entity>? entitiesInBox = null;
@@ -120,7 +121,7 @@ internal class BlockPressurePlate : Block
 
     public override void onBreak(OnBreakEvt evt)
     {
-        int plateState = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+        int plateState = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
         if (plateState > 0)
         {
             evt.Level.Broadcaster.NotifyNeighbors(evt.X, evt.Y, evt.Z, id);

@@ -13,6 +13,7 @@ using BetaSharp.Server.Network;
 using BetaSharp.Stats;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 using Microsoft.Extensions.Logging;
 
 namespace BetaSharp.Entities;
@@ -46,7 +47,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         if (!world.dimension.HasCeiling)
         {
             x += random.NextInt(20) - 10;
-            z = world.BlocksReader.GetSpawnPositionValidityY(x, y);
+            z = world.Reader.GetSpawnPositionValidityY(x, y);
             y += random.NextInt(20) - 10;
         }
 
@@ -153,7 +154,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
             ItemStack itemStack = inventory.getStack(slotIndex);
             if (itemStack != null && Item.ITEMS[itemStack.itemId].isNetworkSynced() && networkHandler.getBlockDataSendQueueSize() <= 2)
             {
-                Packet packet = ((NetworkSyncedItem)Item.ITEMS[itemStack.itemId]).getUpdatePacket(itemStack, _level, this);
+                Packet packet = ((NetworkSyncedItem)Item.ITEMS[itemStack.itemId]).getUpdatePacket(itemStack, world, this);
                 if (packet != null)
                 {
                     networkHandler.sendPacket(packet);
@@ -345,7 +346,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
     {
         incrementScreenHandlerSyncId();
         networkHandler.sendPacket(OpenScreenS2CPacket.Get(screenHandlerSyncId, 1, "Crafting", 9));
-        currentScreenHandler = new CraftingScreenHandler(inventory, _level, x, y, z);
+        currentScreenHandler = new CraftingScreenHandler(inventory, world, x, y, z);
         currentScreenHandler.SyncId = screenHandlerSyncId;
         currentScreenHandler.AddListener(this);
     }

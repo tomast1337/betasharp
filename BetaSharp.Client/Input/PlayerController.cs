@@ -30,9 +30,9 @@ public class PlayerController
     public virtual bool sendBlockRemoved(int var1, int var2, int var3, int var4)
     {
         World var5 = Game.world;
-        Block var6 = Block.Blocks[var5.BlocksReader.GetBlockId(var1, var2, var3)];
-        var5.Broadcaster.NotifyNeighbors(var1, var2, var3, var5.BlocksReader.GetBlockId(var1, var2, var3));
-        int var7 = var5.BlocksReader.GetMeta(var1, var2, var3);
+        Block var6 = Block.Blocks[var5.Reader.GetBlockId(var1, var2, var3)];
+        var5.Broadcaster.NotifyNeighbors(var1, var2, var3, var5.Reader.GetBlockId(var1, var2, var3));
+        int var7 = var5.Reader.GetMeta(var1, var2, var3);
         bool var8 = var5.BlockWriter.SetBlock(var1, var2, var3, 0);
         if (var6 != null && var8)
         {
@@ -98,7 +98,7 @@ public class PlayerController
 
     public virtual bool sendPlaceBlock(EntityPlayer var1, World var2, ItemStack var3, int var4, int var5, int var6, int var7)
     {
-        int var8 = var2.BlocksReader.GetBlockId(var4, var5, var6);
+        int var8 = var2.Reader.GetBlockId(var4, var5, var6);
         return var8 > 0 && Block.Blocks[var8].onUse(new OnUseEvt(var2, var1, var4, var5, var6)) ? true : (var3 == null ? false : var3.useOnBlock(var1, var2, var4, var5, var6, var7));
     }
 

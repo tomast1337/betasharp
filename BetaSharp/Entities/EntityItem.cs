@@ -4,6 +4,7 @@ using BetaSharp.Items;
 using BetaSharp.NBT;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -47,12 +48,12 @@ public class EntityItem : Entity
         prevY = y;
         prevZ = z;
         velocityY -= 0.04F;
-        if (_level.BlocksReader.GetMaterial(MathHelper.Floor(x), MathHelper.Floor(y), MathHelper.Floor(z)) == Material.Lava)
+        if (world.Reader.GetMaterial(MathHelper.Floor(x), MathHelper.Floor(y), MathHelper.Floor(z)) == Material.Lava)
         {
             velocityY = 0.2F;
             velocityX = (random.NextFloat() - random.NextFloat()) * 0.2F;
             velocityZ = (random.NextFloat() - random.NextFloat()) * 0.2F;
-            _level.Broadcaster.PlaySoundAtEntity(this, "random.fizz", 0.4F, 2.0F + random.NextFloat() * 0.4F);
+            world.Broadcaster.PlaySoundAtEntity(this, "random.fizz", 0.4F, 2.0F + random.NextFloat() * 0.4F);
         }
 
         pushOutOfBlocks(x, (boundingBox.MinY + boundingBox.MaxY) / 2.0D, z);
@@ -61,7 +62,7 @@ public class EntityItem : Entity
         if (onGround)
         {
             friction = 0.1F * 0.1F * 58.8F;
-            int groundBlockId = _level.BlocksReader.GetBlockId(MathHelper.Floor(x), MathHelper.Floor(boundingBox.MinY) - 1, MathHelper.Floor(z));
+            int groundBlockId = world.Reader.GetBlockId(MathHelper.Floor(x), MathHelper.Floor(boundingBox.MinY) - 1, MathHelper.Floor(z));
             if (groundBlockId > 0)
             {
                 friction = Block.Blocks[groundBlockId].slipperiness * 0.98F;
@@ -83,7 +84,7 @@ public class EntityItem : Entity
         }
     }
 
-    public override bool checkWaterCollisions() => _level.BlocksReader.UpdateMovementInFluid(boundingBox, Material.Water, this);
+    public override bool checkWaterCollisions() => world.Reader.UpdateMovementInFluid(boundingBox, Material.Water, this);
 
     protected override void damage(int amount) => damage(null, amount);
 
@@ -116,7 +117,7 @@ public class EntityItem : Entity
 
     public override void onPlayerInteraction(EntityPlayer player)
     {
-        if (!_level.IsRemote)
+        if (!world.IsRemote)
         {
             int pickedUpCount = stack.count;
             if (delayBeforeCanPickup == 0 && player.inventory.addItemStackToInventory(stack))
@@ -131,7 +132,7 @@ public class EntityItem : Entity
                     player.incrementStat(Achievements.KillCow);
                 }
 
-                _level.Broadcaster.PlaySoundAtEntity(this, "random.pop", 0.2F, ((Random.Shared.NextSingle() - Random.Shared.NextSingle()) * 0.7F + 1.0F) * 2.0F);
+                world.Broadcaster.PlaySoundAtEntity(this, "random.pop", 0.2F, ((Random.Shared.NextSingle() - Random.Shared.NextSingle()) * 0.7F + 1.0F) * 2.0F);
                 player.sendPickup(this, pickedUpCount);
                 if (stack.count <= 0)
                 {

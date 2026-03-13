@@ -23,19 +23,19 @@ internal class BlockRedstoneOre : Block
 
     public override void onBlockBreakStart(OnBlockBreakStartEvt evt)
     {
-        light(evt.Level.BlockWriter, evt.Level.BlocksReader, evt.Level.Broadcaster, evt.X, evt.Y, evt.Z);
+        light(evt.Level.BlockWriter, evt.Level.Reader, evt.Level.Broadcaster, evt.X, evt.Y, evt.Z);
         base.onBlockBreakStart(evt);
     }
 
     public override void onSteppedOn(OnEntityStepEvt evt)
     {
-        light(evt.Level.BlockWriter, evt.Level.BlocksReader, evt.Level.Broadcaster, evt.X, evt.Y, evt.Z);
+        light(evt.Level.BlockWriter, evt.Level.Reader, evt.Level.Broadcaster, evt.X, evt.Y, evt.Z);
         base.onSteppedOn(evt);
     }
 
     public override bool onUse(OnUseEvt evt)
     {
-        light(evt.Level.BlockWriter, evt.Level.BlocksReader, evt.Level.Broadcaster, evt.X, evt.Y, evt.Z);
+        light(evt.Level.BlockWriter, evt.Level.Reader, evt.Level.Broadcaster, evt.X, evt.Y, evt.Z);
         return base.onUse(evt);
     }
 
@@ -64,7 +64,7 @@ internal class BlockRedstoneOre : Block
     {
         if (lit)
         {
-            spawnParticles(ctx.Level.BlocksReader, ctx.Level.Broadcaster, ctx.X, ctx.Y, ctx.Z);
+            spawnParticles(ctx.Level.Reader, ctx.Level.Broadcaster, ctx.X, ctx.Y, ctx.Z);
         }
     }
 

@@ -1,6 +1,7 @@
 using BetaSharp.Blocks;
 using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Client.Entities.FX;
 
@@ -28,7 +29,7 @@ public class EntityDiggingFX : EntityFX
         }
         else
         {
-            int color = targetedBlock.getColorMultiplier(_level.BlocksReader, x, y, z);
+            int color = targetedBlock.getColorMultiplier(world.Reader, x, y, z);
             particleRed *= (float)(color >> 16 & 255) / 255.0F;
             particleGreen *= (float)(color >> 8 & 255) / 255.0F;
             particleBlue *= (float)(color & 255) / 255.0F;

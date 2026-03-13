@@ -2,6 +2,7 @@ using BetaSharp.Blocks;
 using BetaSharp.NBT;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -54,9 +55,9 @@ public class EntityFallingSand : Entity
             int floorX = MathHelper.Floor(x);
             int floorY = MathHelper.Floor(y);
             int floorZ = MathHelper.Floor(z);
-            if (_level.BlocksReader.GetBlockId(floorX, floorY, floorZ) == blockId)
+            if (world.Reader.GetBlockId(floorX, floorY, floorZ) == blockId)
             {
-                _level.BlockWriter.SetBlock(floorX, floorY, floorZ, 0);
+                world.BlockWriter.SetBlock(floorX, floorY, floorZ, 0);
             }
 
             if (onGround)
@@ -65,12 +66,12 @@ public class EntityFallingSand : Entity
                 velocityZ *= 0.7F;
                 velocityY *= -0.5D;
                 markDead();
-                if ((!Block.Blocks[blockId].canPlaceAt(new CanPlaceAtCtx(_level, 0, floorX, floorY, floorZ)) || BlockSand.canFallThrough(new OnTickEvt(_level, floorX, floorY - 1, floorZ, 0, blockId)) || !_level.BlockWriter.SetBlock(floorX, floorY, floorZ, blockId)) && !_level.IsRemote)
+                if ((!Block.Blocks[blockId].canPlaceAt(new CanPlaceAtCtx(world, 0, floorX, floorY, floorZ)) || BlockSand.canFallThrough(new OnTickEvt(world, floorX, floorY - 1, floorZ, 0, blockId)) || !world.BlockWriter.SetBlock(floorX, floorY, floorZ, blockId)) && !world.IsRemote)
                 {
                     dropItem(blockId, 1);
                 }
             }
-            else if (fallTime > 100 && !_level.IsRemote)
+            else if (fallTime > 100 && !world.IsRemote)
             {
                 dropItem(blockId, 1);
                 markDead();
@@ -84,5 +85,5 @@ public class EntityFallingSand : Entity
 
     public override float getShadowRadius() => 0.0F;
 
-    public IWorldContext getWorld() => _level;
+    public IWorldContext getWorld() => world;
 }

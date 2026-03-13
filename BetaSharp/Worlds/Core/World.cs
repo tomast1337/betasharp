@@ -26,22 +26,7 @@ public abstract class World : IWorldContext
     private readonly PriorityQueue<BlockUpdate, (long, long)> _scheduledUpdates = new();
 
     private readonly long _worldTimeMask = 0xFFFFFFL;
-    public ChunkHost BlockHost { get; }
-    public WorldBlockReader BlocksReader { get; }
-    public WorldBlockWrite BlockWriter { get; }
-    public WorldEventBroadcaster Broadcaster { get; }
     public readonly Dimension dimension;
-
-    public EntityManager Entities { get; }
-    public EnvironmentManager Environment { get; }
-
-    public List<IWorldEventListener> EventListeners { get; } = [];
-    public LightingEngine Lighting { get; }
-
-    internal PathFinder Pathing { get; }
-    public RedstoneEngine Redstone { get; }
-    public IWorldStorage Storage { get; }
-    public WorldTickScheduler TickScheduler { get; }
 
     private int _lcgBlockSeed = Random.Shared.Next();
     private int _soundCounter = Random.Shared.Next(12000);
@@ -49,11 +34,8 @@ public abstract class World : IWorldContext
     private bool _spawnPeacefulMobs = true;
 
     protected int AutosavePeriod = s_autosavePeriod;
-    public int Difficulty { get; protected set; }
     public bool EventProcessingEnabled;
     public bool IsNewWorld;
-
-    public PersistentStateManager StateManager { get; protected set; }
 
     protected World(IWorldStorage worldStorage, string levelName, WorldSettings settings, Dimension dim)
     {
@@ -71,22 +53,22 @@ public abstract class World : IWorldContext
             : new RuleSet(RuleRegistry.Instance);
 
         BlockHost = new ChunkHost(chunkSource);
-        BlocksReader = new WorldBlockReader(this, dim);
-        BlockWriter = new WorldBlockWrite(BlockHost, BlocksReader);
+        Reader = new WorldReader(this, dim);
+        BlockWriter = new WorldWriter(BlockHost, Reader);
         BlockWriter.OnBlockChanged += BlockUpdate;
 
-        Broadcaster = new WorldEventBroadcaster(EventListeners, BlocksReader, this);
+        Broadcaster = new WorldEventBroadcaster(EventListeners, Reader, this);
 
         BlockWriter.OnNeighborsShouldUpdate += (x, y, z, id) => Broadcaster.NotifyNeighbors(x, y, z, id);
 
-        Redstone = new RedstoneEngine(BlocksReader);
-        Lighting = new LightingEngine(BlocksReader, dim, BlockHost);
+        Redstone = new RedstoneEngine(Reader);
+        Lighting = new LightingEngine(Reader, dim, BlockHost);
         Lighting.OnLightUpdated += (x, y, z) => Broadcaster.BlockUpdateEvent(x, y, z);
 
         TickScheduler = new WorldTickScheduler(this);
 
-        Environment = new EnvironmentManager(Properties, dim, BlocksReader, random);
-        Entities = new EntityManager(BlocksReader, Rules, BlockHost);
+        Environment = new EnvironmentManager(Properties, dim, Reader, random);
+        Entities = new EntityManager(Reader, Rules, BlockHost);
 
         Entities.OnBlockUpdateRequired += (x, y, z) => Broadcaster.BlockUpdateEvent(x, y, z);
 
@@ -109,14 +91,33 @@ public abstract class World : IWorldContext
         };
     }
 
-    public WorldProperties Properties { get; protected set; }
+    public ChunkHost BlockHost { get; }
+    public WorldReader Reader { get; }
+    public WorldWriter BlockWriter { get; }
+    public WorldEventBroadcaster Broadcaster { get; }
+
+    public EntityManager Entities { get; }
+    public EnvironmentManager Environment { get; }
+
+    public List<IWorldEventListener> EventListeners { get; } = [];
+    public LightingEngine Lighting { get; }
+
+    internal PathFinder Pathing { get; }
+    public RedstoneEngine Redstone { get; }
+    public IWorldStorage Storage { get; }
     public long Seed => Properties.RandomSeed;
+    public WorldTickScheduler TickScheduler { get; }
+    public int Difficulty { get; protected set; }
+
+    public PersistentStateManager StateManager { get; protected set; }
+
+    public WorldProperties Properties { get; protected set; }
     public bool IsRemote { set; get; } = false;
     public JavaRandom random { get; } = new();
 
     ChunkHost IWorldContext.BlockHost => BlockHost;
-    WorldBlockReader IWorldContext.BlocksReader => BlocksReader;
-    WorldBlockWrite IWorldContext.BlockWriter => BlockWriter;
+    WorldReader IWorldContext.Reader => Reader;
+    WorldWriter IWorldContext.BlockWriter => BlockWriter;
     WorldEventBroadcaster IWorldContext.Broadcaster => Broadcaster;
     RedstoneEngine IWorldContext.Redstone => Redstone;
     EntityManager IWorldContext.Entities => Entities;
@@ -155,6 +156,8 @@ public abstract class World : IWorldContext
     public long GetTime() => Properties.WorldTime;
 
     public void SetDifficulty(int difficulty) => Difficulty = difficulty;
+
+    public virtual bool CanInteract(EntityPlayer player, int x, int y, int z) => true;
 
     public BiomeSource GetBiomeSource() => dimension.BiomeSource;
 
@@ -211,11 +214,11 @@ public abstract class World : IWorldContext
     public int GetSpawnBlockId(int x, int z)
     {
         int y;
-        for (y = 63; !BlocksReader.IsAir(x, y + 1, z); ++y)
+        for (y = 63; !Reader.IsAir(x, y + 1, z); ++y)
         {
         }
 
-        return BlocksReader.GetBlockId(x, y, z);
+        return Reader.GetBlockId(x, y, z);
     }
 
     public void AddPlayer(EntityPlayer player)
@@ -345,7 +348,7 @@ public abstract class World : IWorldContext
             {
                 for (int z = minZ; z < maxZ; z++)
                 {
-                    if (BlocksReader.GetBlockId(x, y, z) > 0)
+                    if (Reader.GetBlockId(x, y, z) > 0)
                     {
                         return true;
                     }
@@ -388,7 +391,7 @@ public abstract class World : IWorldContext
             ++x;
         }
 
-        if (BlocksReader.GetBlockId(x, y, z) == Block.Fire.id)
+        if (Reader.GetBlockId(x, y, z) == Block.Fire.id)
         {
             Broadcaster.WorldEvent(player, 1004, x, y, z, 0);
             BlockWriter.SetBlock(x, y, z, 0);
@@ -511,7 +514,7 @@ public abstract class World : IWorldContext
                 int blockId = currentChunk.GetBlockId(localX, localY, localZ);
                 int worldX = localX + worldXBase;
                 int worldZ = localZ + worldZBase;
-                if (blockId == 0 && BlocksReader.GetBrightness(worldX, localY, worldZ) <= random.NextInt(8) &&
+                if (blockId == 0 && Reader.GetBrightness(worldX, localY, worldZ) <= random.NextInt(8) &&
                     Lighting.GetBrightness(LightType.Sky, worldX, localY, worldZ) <= 0)
                 {
                     EntityPlayer closest = Entities.GetClosestPlayer(worldX + 0.5D, localY + 0.5D, worldZ + 0.5D, 8.0D);
@@ -531,7 +534,7 @@ public abstract class World : IWorldContext
                 int randomVal = _lcgBlockSeed >> 2;
                 int worldX = worldXBase + (randomVal & 15);
                 int worldZ = worldZBase + ((randomVal >> 8) & 15);
-                int worldY = BlocksReader.GetTopSolidBlockY(worldX, worldZ);
+                int worldY = Reader.GetTopSolidBlockY(worldX, worldZ);
 
                 if (Environment.IsRainingAt(worldX, worldY, worldZ))
                 {
@@ -548,7 +551,7 @@ public abstract class World : IWorldContext
                 int localZ = (randomVal >> 8) & 15;
                 int worldX = localX + worldXBase;
                 int worldZ = localZ + worldZBase;
-                int worldY = BlocksReader.GetTopSolidBlockY(worldX, worldZ);
+                int worldY = Reader.GetTopSolidBlockY(worldX, worldZ);
 
                 if (GetBiomeSource().GetBiome(worldX, worldZ).GetEnableSnow() && worldY >= 0 && worldY < 128 &&
                     currentChunk.GetLight(LightType.Block, localX, worldY, localZ) < 10)
@@ -597,10 +600,10 @@ public abstract class World : IWorldContext
             int targetY = centerY + random.NextInt(searchRadius) - random.NextInt(searchRadius);
             int targetZ = centerZ + random.NextInt(searchRadius) - random.NextInt(searchRadius);
 
-            int blockId = BlocksReader.GetBlockId(targetX, targetY, targetZ);
+            int blockId = Reader.GetBlockId(targetX, targetY, targetZ);
             if (blockId > 0)
             {
-                Block.Blocks[blockId].randomDisplayTick(new OnTickEvt(this, targetX, targetY, targetZ, BlocksReader.GetMeta(targetX, targetY, targetZ), blockId));
+                Block.Blocks[blockId].randomDisplayTick(new OnTickEvt(this, targetX, targetY, targetZ, Reader.GetMeta(targetX, targetY, targetZ), blockId));
             }
         }
     }
@@ -656,8 +659,6 @@ public abstract class World : IWorldContext
     public long GetSeed() => Properties.RandomSeed;
 
     public void SetSpawnPos(Vec3i pos) => Properties.SetSpawn(pos.X, pos.Y, pos.Z);
-
-    public virtual bool CanInteract(EntityPlayer player, int x, int y, int z) => true;
 
     public void setBlocksDirty(int minX, int minY, int minZ, int maxX, int maxY, int maxZ)
     {

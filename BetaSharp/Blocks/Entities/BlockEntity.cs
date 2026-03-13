@@ -1,6 +1,7 @@
 using BetaSharp.NBT;
 using BetaSharp.Network.Packets;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 using Microsoft.Extensions.Logging;
 
 namespace BetaSharp.Blocks.Entities;
@@ -84,7 +85,7 @@ public class BlockEntity
         return blockEntity;
     }
 
-    public virtual int getPushedBlockData() => World.BlocksReader.GetMeta(X, Y, Z);
+    public virtual int getPushedBlockData() => World.Reader.GetMeta(X, Y, Z);
 
     public void markDirty()
     {
@@ -102,7 +103,7 @@ public class BlockEntity
         return dx * dx + dy * dy + dz * dz;
     }
 
-    public Block getBlock() => Block.Blocks[World.BlocksReader.GetBlockId(X, Y, Z)];
+    public Block getBlock() => Block.Blocks[World.Reader.GetBlockId(X, Y, Z)];
 
     public virtual Packet createUpdatePacket() => null;
 
@@ -115,7 +116,7 @@ public class BlockEntity
 
         if (World != null)
         {
-            int id = World.BlocksReader.GetBlockId(X, Y, Z);
+            int id = World.Reader.GetBlockId(X, Y, Z);
             if (id == 0 || !Block.BlocksWithEntity[id])
             {
                 return true;

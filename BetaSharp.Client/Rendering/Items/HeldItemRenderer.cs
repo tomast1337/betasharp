@@ -321,8 +321,8 @@ public class HeldItemRenderer
             int var3 = MathHelper.Floor(_game.player.y);
             int var4 = MathHelper.Floor(_game.player.z);
             _game.textureManager.BindTexture(_game.textureManager.GetTextureId("/terrain.png"));
-            int var6 = _game.world.BlocksReader.GetBlockId(var2, var3, var4);
-            if (_game.world.BlocksReader.ShouldSuffocate(var2, var3, var4))
+            int var6 = _game.world.Reader.GetBlockId(var2, var3, var4);
+            if (_game.world.Reader.ShouldSuffocate(var2, var3, var4))
             {
                 renderInsideOfBlock(var1, Block.Blocks[var6].getTexture(2));
             }
@@ -336,9 +336,9 @@ public class HeldItemRenderer
                     int var11 = MathHelper.Floor(var2 + var8);
                     int var12 = MathHelper.Floor(var3 + var9);
                     int var13 = MathHelper.Floor(var4 + var10);
-                    if (_game.world.BlocksReader.ShouldSuffocate(var11, var12, var13))
+                    if (_game.world.Reader.ShouldSuffocate(var11, var12, var13))
                     {
-                        var6 = _game.world.BlocksReader.GetBlockId(var11, var12, var13);
+                        var6 = _game.world.Reader.GetBlockId(var11, var12, var13);
                     }
                 }
             }

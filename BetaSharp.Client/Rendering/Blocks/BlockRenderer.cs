@@ -3,6 +3,7 @@ using BetaSharp.Client.Rendering.Blocks.Renderers;
 using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Client.Rendering.Blocks;
 
@@ -180,7 +181,7 @@ public class BlockRenderer
         float lightX = 0.6F; // North/South faces
 
         var entityCtx = new BlockRenderContext(
-            blockReader: world.BlocksReader,
+            blockReader: world.Reader,
             lighting:world.Lighting,
             tess: tess,
             renderAllFaces: true,

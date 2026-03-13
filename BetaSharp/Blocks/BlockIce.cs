@@ -1,5 +1,6 @@
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -18,7 +19,7 @@ internal class BlockIce : BlockBreakable
     public override void onAfterBreak(OnAfterBreakEvt evt)
     {
         base.onAfterBreak(evt);
-        Material materialBelow = evt.Level.BlocksReader.GetMaterial(evt.X, evt.Y - 1, evt.Z);
+        Material materialBelow = evt.Level.Reader.GetMaterial(evt.X, evt.Y - 1, evt.Z);
         if (materialBelow.BlocksMovement || materialBelow.IsFluid)
         {
             evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, FlowingWater.id);
@@ -31,7 +32,7 @@ internal class BlockIce : BlockBreakable
     {
         if (evt.Level.Lighting.GetBrightness(LightType.Block, evt.X, evt.Y, evt.Z) > 11 - BlockLightOpacity[id])
         {
-            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z)));
+            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z)));
             evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, Water.id);
         }
     }

@@ -1,6 +1,7 @@
 using BetaSharp.Items;
 using BetaSharp.NBT;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -23,13 +24,13 @@ internal class EntityPigZombie : EntityZombie
         movementSpeed = playerToAttack != null ? 0.95F : 0.5F;
         if (randomSoundDelay > 0 && --randomSoundDelay == 0)
         {
-            _level.Broadcaster.PlaySoundAtEntity(this, "mob.zombiepig.zpigangry", getSoundVolume() * 2.0F, ((random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F) * 1.8F);
+            world.Broadcaster.PlaySoundAtEntity(this, "mob.zombiepig.zpigangry", getSoundVolume() * 2.0F, ((random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F) * 1.8F);
         }
 
         base.tick();
     }
 
-    public override bool canSpawn() => _level.Difficulty > 0 && _level.Entities.GetEntityCollisionsScratch(this, boundingBox).Count == 0 && !_level.BlocksReader.IsBoxSubmergedInFluid(boundingBox);
+    public override bool canSpawn() => world.Difficulty > 0 && world.Entities.GetEntityCollisionsScratch(this, boundingBox).Count == 0 && !world.Reader.IsBoxSubmergedInFluid(boundingBox);
 
     public override void writeNbt(NBTTagCompound nbt)
     {
@@ -51,7 +52,7 @@ internal class EntityPigZombie : EntityZombie
     {
         if (entity is EntityPlayer)
         {
-            List<Entity> entities = _level.Entities.GetEntities(this, boundingBox.Expand(32.0D, 32.0D, 32.0D));
+            List<Entity> entities = world.Entities.GetEntities(this, boundingBox.Expand(32.0D, 32.0D, 32.0D));
 
             for (int i = 0; i < entities.Count; ++i)
             {

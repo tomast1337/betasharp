@@ -4,6 +4,7 @@ using BetaSharp.Util.Maths;
 using BetaSharp.Util.Maths.Noise;
 using BetaSharp.Worlds.Chunks;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 using BetaSharp.Worlds.Generation.Biomes;
 using BetaSharp.Worlds.Generation.Biomes.Source;
 using BetaSharp.Worlds.Generation.Generators.Carvers;
@@ -78,7 +79,7 @@ internal class SkyChunkGenerator : IChunkSource
     {
         _world = world;
         _seed = seed;
-        _biomeSource = world.BlocksReader.GetBiomeSource();
+        _biomeSource = world.Reader.GetBiomeSource();
         _random = new JavaRandom(seed);
         _minLimitPerlinNoise = new OctavePerlinNoiseSampler(_random, 16);
         _maxLimitPerlinNoise = new OctavePerlinNoiseSampler(_random, 16);
@@ -467,7 +468,7 @@ internal class SkyChunkGenerator : IChunkSource
             featureZ = blockZ + _random.NextInt(16) + 8;
             Feature treeFeature = chunkBiome.GetRandomWorldGenForTrees(_random);
             treeFeature.prepare(1.0D, 1.0D, 1.0D);
-                treeFeature.Generate(_world, _random, featureX, _world.BlocksReader.GetTopSolidBlockY(featureX, featureZ), featureZ);
+                treeFeature.Generate(_world, _random, featureX, _world.Reader.GetTopSolidBlockY(featureX, featureZ), featureZ);
         }
 
         for (int i = 0; i < 2; ++i)
@@ -556,10 +557,10 @@ internal class SkyChunkGenerator : IChunkSource
             {
                 int offsetX = x - (blockX + 8);
                 int offsetZ = z - (blockZ + 8);
-                int topBlockY = _world.BlocksReader.GetTopSolidBlockY(x, z);
+                int topBlockY = _world.Reader.GetTopSolidBlockY(x, z);
                 double temperatureSample = _temperatures[offsetX * 16 + offsetZ] - (topBlockY - 64) / 64.0D * 0.3D;
 
-                if (temperatureSample < 0.5D && topBlockY > 0 && topBlockY < 128 && _world.BlocksReader.IsAir(x, topBlockY, z) && _world.BlocksReader.GetMaterial(x, topBlockY - 1, z).BlocksMovement && _world.BlocksReader.GetMaterial(x, topBlockY - 1, z) != Material.Ice)
+                if (temperatureSample < 0.5D && topBlockY > 0 && topBlockY < 128 && _world.Reader.IsAir(x, topBlockY, z) && _world.Reader.GetMaterial(x, topBlockY - 1, z).BlocksMovement && _world.Reader.GetMaterial(x, topBlockY - 1, z) != Material.Ice)
                 {
                     _world.BlockWriter.SetBlock(x, topBlockY, z, Block.Snow.id);
                 }

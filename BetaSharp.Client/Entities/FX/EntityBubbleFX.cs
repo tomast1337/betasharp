@@ -1,6 +1,7 @@
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Client.Entities.FX;
 
@@ -30,7 +31,7 @@ public class EntityBubbleFX : EntityFX
         velocityX *= (double)0.85F;
         velocityY *= (double)0.85F;
         velocityZ *= (double)0.85F;
-        if (_level.BlocksReader.GetMaterial(MathHelper.Floor(x), MathHelper.Floor(y), MathHelper.Floor(z)) != Material.Water)
+        if (world.Reader.GetMaterial(MathHelper.Floor(x), MathHelper.Floor(y), MathHelper.Floor(z)) != Material.Water)
         {
             markDead();
         }

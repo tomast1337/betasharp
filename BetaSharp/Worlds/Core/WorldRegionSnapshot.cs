@@ -6,6 +6,7 @@ using BetaSharp.NBT;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Chunks;
+using BetaSharp.Worlds.Core.Systems;
 using BetaSharp.Worlds.Generation.Biomes.Source;
 
 namespace BetaSharp.Worlds.Core;
@@ -145,6 +146,7 @@ public class WorldRegionSnapshot : IBlockReader, ILightProvider, IDisposable
     public bool IsMaterialInBox(Box area, Material material) => throw new NotImplementedException();
     public bool IsFluidInBox(Box area, Material fluid) => throw new NotImplementedException();
     public bool UpdateMovementInFluid(Box entityBox, Material fluidMaterial, Entity entity) => throw new NotImplementedException();
+    public bool IsPosLoaded(int x, int y, int z) => throw new NotImplementedException();
 
     public void Dispose()
     {
@@ -164,6 +166,14 @@ public class WorldRegionSnapshot : IBlockReader, ILightProvider, IDisposable
         }
     }
 
+    public float GetNaturalBrightness(int x, int y, int z, int minLight)
+    {
+        int light = getLightValue(x, y, z);
+        return _lightTable[Math.Max(light, minLight)];
+    }
+
+    public float GetLuminance(int x, int y, int z) => _lightTable[getLightValue(x, y, z)];
+
     public Material getMaterial(int x, int y, int z)
     {
         int blockId = GetBlockId(x, y, z);
@@ -181,14 +191,6 @@ public class WorldRegionSnapshot : IBlockReader, ILightProvider, IDisposable
         int chunkIdxZ = (z >> 4) - _chunkZ;
         return _chunks[chunkIdxX][chunkIdxZ].getBlockMetadata(x & 15, y, z & 15);
     }
-
-    public float GetNaturalBrightness(int x, int y, int z, int minLight)
-    {
-        int light = getLightValue(x, y, z);
-        return _lightTable[Math.Max(light, minLight)];
-    }
-
-    public float GetLuminance(int x, int y, int z) => _lightTable[getLightValue(x, y, z)];
 
     public int getLightValue(int x, int y, int z) => GetLightValueExt(x, y, z, true);
 
@@ -240,5 +242,4 @@ public class WorldRegionSnapshot : IBlockReader, ILightProvider, IDisposable
     }
 
     public bool getIsLit() => _isLit;
-    public bool IsPosLoaded(int x, int y, int z) => throw new NotImplementedException();
 }

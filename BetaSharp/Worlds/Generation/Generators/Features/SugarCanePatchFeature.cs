@@ -2,6 +2,7 @@ using BetaSharp.Blocks;
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Worlds.Generation.Generators.Features;
 
@@ -14,15 +15,15 @@ internal class SugarCanePatchFeature : Feature
             int genX = x + rand.NextInt(4) - rand.NextInt(4);
             int genZ = z + rand.NextInt(4) - rand.NextInt(4);
 
-            if (!level.BlocksReader.IsAir(genX, y, genZ))
+            if (!level.Reader.IsAir(genX, y, genZ))
             {
                 continue;
             }
 
-            bool hasWaterNearby = level.BlocksReader.GetMaterial(genX - 1, y - 1, genZ) == Material.Water ||
-                                  level.BlocksReader.GetMaterial(genX + 1, y - 1, genZ) == Material.Water ||
-                                  level.BlocksReader.GetMaterial(genX, y - 1, genZ - 1) == Material.Water ||
-                                  level.BlocksReader.GetMaterial(genX, y - 1, genZ + 1) == Material.Water;
+            bool hasWaterNearby = level.Reader.GetMaterial(genX - 1, y - 1, genZ) == Material.Water ||
+                                  level.Reader.GetMaterial(genX + 1, y - 1, genZ) == Material.Water ||
+                                  level.Reader.GetMaterial(genX, y - 1, genZ - 1) == Material.Water ||
+                                  level.Reader.GetMaterial(genX, y - 1, genZ + 1) == Material.Water;
 
             if (hasWaterNearby)
             {
@@ -30,7 +31,7 @@ internal class SugarCanePatchFeature : Feature
 
                 for (int h = 0; h < height; ++h)
                 {
-                    if (Block.SugarCane.canGrow(new OnTickEvt(level, genX, y + h, genZ, level.BlocksReader.GetMeta(genX, y + h, genZ), level.BlocksReader.GetBlockId(genX, y + h, genZ))))
+                    if (Block.SugarCane.canGrow(new OnTickEvt(level, genX, y + h, genZ, level.Reader.GetMeta(genX, y + h, genZ), level.Reader.GetBlockId(genX, y + h, genZ))))
                     {
                         level.BlockWriter.SetBlock(genX, y + h, genZ, Block.SugarCane.id, 0, doUpdate: false);
                     }

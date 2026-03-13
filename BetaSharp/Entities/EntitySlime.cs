@@ -4,6 +4,7 @@ using BetaSharp.Util;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Chunks;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -64,12 +65,12 @@ public class EntitySlime : EntityLiving, Monster
                 float spread = random.NextFloat() * 0.5F + 0.5F;
                 float offsetX = MathHelper.Sin(angle) * size * 0.5F * spread;
                 float offsetY = MathHelper.Cos(angle) * size * 0.5F * spread;
-                _level.Broadcaster.AddParticle("slime", x + offsetX, boundingBox.MinY, z + offsetY, 0.0D, 0.0D, 0.0D);
+                world.Broadcaster.AddParticle("slime", x + offsetX, boundingBox.MinY, z + offsetY, 0.0D, 0.0D, 0.0D);
             }
 
             if (size > 2)
             {
-                _level.Broadcaster.PlaySoundAtEntity(this, "mob.slime", getSoundVolume(), ((random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F) / 0.8F);
+                world.Broadcaster.PlaySoundAtEntity(this, "mob.slime", getSoundVolume(), ((random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F) / 0.8F);
             }
 
             squishAmount = -0.5F;
@@ -81,7 +82,7 @@ public class EntitySlime : EntityLiving, Monster
     public override void tickLiving()
     {
         func_27021_X();
-        EntityPlayer player = _level.Entities.GetClosestPlayer(x, y, z, 16.0D);
+        EntityPlayer player = world.Entities.GetClosestPlayer(x, y, z, 16.0D);
         if (player != null)
         {
             faceEntity(player, 10.0F, 20.0F);
@@ -98,7 +99,7 @@ public class EntitySlime : EntityLiving, Monster
             jumping = true;
             if (getSlimeSize() > 1)
             {
-                _level.Broadcaster.PlaySoundAtEntity(this, "mob.slime", getSoundVolume(), ((random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F) * 0.8F);
+                world.Broadcaster.PlaySoundAtEntity(this, "mob.slime", getSoundVolume(), ((random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F) * 0.8F);
             }
 
             squishAmount = 1.0F;
@@ -118,16 +119,16 @@ public class EntitySlime : EntityLiving, Monster
     public override void markDead()
     {
         int size = getSlimeSize();
-        if (!_level.IsRemote && size > 1 && health == 0)
+        if (!world.IsRemote && size > 1 && health == 0)
         {
             for (int i = 0; i < 4; ++i)
             {
                 float offsetX = (i % 2 - 0.5F) * size / 4.0F;
                 float offsetY = (i / 2 - 0.5F) * size / 4.0F;
-                EntitySlime slime = new(_level);
+                EntitySlime slime = new(world);
                 slime.setSlimeSize(size / 2);
                 slime.setPositionAndAnglesKeepPrevAngles(x + offsetX, y + 0.5D, z + offsetY, random.NextFloat() * 360.0F, 0.0F);
-                _level.SpawnEntity(slime);
+                world.SpawnEntity(slime);
             }
         }
 
@@ -139,7 +140,7 @@ public class EntitySlime : EntityLiving, Monster
         int size = getSlimeSize();
         if (size > 1 && canSee(player) && getDistance(player) < 0.6D * size && player.damage(this, size))
         {
-            _level.Broadcaster.PlaySoundAtEntity(this, "mob.slimeattack", 1.0F, (random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F);
+            world.Broadcaster.PlaySoundAtEntity(this, "mob.slimeattack", 1.0F, (random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F);
         }
     }
 
@@ -151,8 +152,8 @@ public class EntitySlime : EntityLiving, Monster
 
     public override bool canSpawn()
     {
-        Chunk chunk = _level.BlockHost.GetChunkFromPos(MathHelper.Floor(x), MathHelper.Floor(z));
-        return (getSlimeSize() == 1 || _level.Difficulty > 0) && random.NextInt(10) == 0 && chunk.GetSlimeRandom(987234911L).NextInt(10) == 0 && y < 16.0D;
+        Chunk chunk = world.BlockHost.GetChunkFromPos(MathHelper.Floor(x), MathHelper.Floor(z));
+        return (getSlimeSize() == 1 || world.Difficulty > 0) && random.NextInt(10) == 0 && chunk.GetSlimeRandom(987234911L).NextInt(10) == 0 && y < 16.0D;
     }
 
     protected override float getSoundVolume() => 0.6F;

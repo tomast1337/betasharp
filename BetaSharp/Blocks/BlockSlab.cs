@@ -1,5 +1,6 @@
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -32,9 +33,9 @@ internal class BlockSlab : Block
             base.onPlaced(etv);
         }
 
-        int blockBelowId = etv.Level.BlocksReader.GetBlockId(etv.X, etv.Y - 1, etv.Z);
-        int slabMeta = etv.Level.BlocksReader.GetMeta(etv.X, etv.Y, etv.Z);
-        int blockBelowMeta = etv.Level.BlocksReader.GetMeta(etv.X, etv.Y - 1, etv.Z);
+        int blockBelowId = etv.Level.Reader.GetBlockId(etv.X, etv.Y - 1, etv.Z);
+        int slabMeta = etv.Level.Reader.GetMeta(etv.X, etv.Y, etv.Z);
+        int blockBelowMeta = etv.Level.Reader.GetMeta(etv.X, etv.Y - 1, etv.Z);
         if (slabMeta == blockBelowMeta)
         {
             if (blockBelowId == Slab.id)

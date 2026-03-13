@@ -2,6 +2,7 @@ using BetaSharp.Items;
 using BetaSharp.NBT;
 using BetaSharp.Util;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -36,7 +37,7 @@ public class EntityPig : EntityAnimal
 
     public override bool interact(EntityPlayer player)
     {
-        if (!Saddled.Value || _level.IsRemote || (passenger != null && passenger != player))
+        if (!Saddled.Value || world.IsRemote || (passenger != null && passenger != player))
         {
             return false;
         }
@@ -48,11 +49,11 @@ public class EntityPig : EntityAnimal
     protected override int getDropItemId() => fireTicks > 0 ? Item.CookedPorkchop.id : Item.RawPorkchop.id;
     public override void onStruckByLightning(EntityLightningBolt bolt)
     {
-        if (!_level.IsRemote)
+        if (!world.IsRemote)
         {
-            EntityPigZombie pigZombie = new(_level);
+            EntityPigZombie pigZombie = new(world);
             pigZombie.setPositionAndAnglesKeepPrevAngles(x, y, z, yaw, pitch);
-            _level.SpawnEntity(pigZombie);
+            world.SpawnEntity(pigZombie);
             markDead();
         }
     }

@@ -2,6 +2,7 @@ using BetaSharp.Blocks;
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Worlds.Generation.Generators.Features;
 
@@ -14,7 +15,7 @@ internal class ClayOreFeature : Feature
 
     public override bool Generate(IWorldContext level, JavaRandom rand, int x, int y, int z)
     {
-        if (level.BlocksReader.GetMaterial(x, y, z) != Material.Water)
+        if (level.Reader.GetMaterial(x, y, z) != Material.Water)
         {
             return false;
         }
@@ -60,7 +61,7 @@ internal class ClayOreFeature : Feature
                         double dz = (blockZ + 0.5D - centerZ) / (radiusH / 2.0D);
                         if (dx * dx + dy * dy + dz * dz < 1.0D)
                         {
-                            int var47 = level.BlocksReader.GetBlockId(blockX, blockY, blockZ);
+                            int var47 = level.Reader.GetBlockId(blockX, blockY, blockZ);
                             if (var47 == Block.Sand.id)
                             {
                                 level.BlockWriter.SetBlockWithoutNotifyingNeighbors(blockX, blockY, blockZ, _clayBlockId, 0, notifyBlockPlaced: false);

@@ -2,6 +2,7 @@ using BetaSharp.Blocks.Materials;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -17,7 +18,7 @@ public class BlockRail : Block
 
     public static bool IsRail(IWorldContext level, int x, int y, int z)
     {
-        int blockId = level.BlocksReader.GetBlockId(x, y, z);
+        int blockId = level.Reader.GetBlockId(x, y, z);
         return blockId == Rail.id || blockId == PoweredRail.id || blockId == DetectorRail.id;
     }
 
@@ -69,7 +70,7 @@ public class BlockRail : Block
 
     public override BlockRendererType getRenderType() => BlockRendererType.MinecartTrack;
 
-    public override bool canPlaceAt(CanPlaceAtCtx evt) => evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z);
+    public override bool canPlaceAt(CanPlaceAtCtx evt) => evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z);
 
     public override void onPlaced(OnPlacedEvt evt)
     {
@@ -83,7 +84,7 @@ public class BlockRail : Block
     {
         if (!evt.Level.IsRemote)
         {
-            int meta = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+            int meta = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
             int railMeta = meta;
             if (alwaysStraight)
             {
@@ -91,34 +92,34 @@ public class BlockRail : Block
             }
 
             bool shouldBreak = false;
-            if (!evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z))
+            if (!evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z))
             {
                 shouldBreak = true;
             }
 
-            if (railMeta == 2 && !evt.Level.BlocksReader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z))
+            if (railMeta == 2 && !evt.Level.Reader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z))
             {
                 shouldBreak = true;
             }
 
-            if (railMeta == 3 && !evt.Level.BlocksReader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z))
+            if (railMeta == 3 && !evt.Level.Reader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z))
             {
                 shouldBreak = true;
             }
 
-            if (railMeta == 4 && !evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1))
+            if (railMeta == 4 && !evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1))
             {
                 shouldBreak = true;
             }
 
-            if (railMeta == 5 && !evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y, evt.Z + 1))
+            if (railMeta == 5 && !evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z + 1))
             {
                 shouldBreak = true;
             }
 
             if (shouldBreak)
             {
-                dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z)));
+                dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z)));
                 evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
             }
             else if (id == PoweredRail.id)
@@ -257,10 +258,10 @@ public class BlockRail : Block
 
     private bool isPoweredByRail(IWorldContext level, int x, int y, int z, bool towardsNegative, int depth, int shape)
     {
-        int blockId = level.BlocksReader.GetBlockId(x, y, z);
+        int blockId = level.Reader.GetBlockId(x, y, z);
         if (blockId == PoweredRail.id)
         {
-            int meta = level.BlocksReader.GetMeta(x, y, z);
+            int meta = level.Reader.GetMeta(x, y, z);
             int railMeta = meta & 7;
             if (shape == 1 && (railMeta == 0 || railMeta == 4 || railMeta == 5))
             {

@@ -3,6 +3,7 @@ using BetaSharp.Blocks.Materials;
 using BetaSharp.Entities;
 using BetaSharp.Items;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 using Microsoft.Extensions.Logging;
 
 namespace BetaSharp.Blocks;
@@ -19,7 +20,7 @@ internal class BlockJukeBox : BlockWithEntity
 
     public override bool onUse(OnUseEvt evt)
     {
-        if (evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z) == 0)
+        if (evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z) == 0)
         {
             return false;
         }
@@ -32,7 +33,7 @@ internal class BlockJukeBox : BlockWithEntity
     {
         if (!world.IsRemote)
         {
-            BlockEntityRecordPlayer? jukebox = (BlockEntityRecordPlayer?)world.BlocksReader.GetBlockEntity(x, y, z);
+            BlockEntityRecordPlayer? jukebox = (BlockEntityRecordPlayer?)world.Reader.GetBlockEntity(x, y, z);
             if (jukebox == null)
             {
                 s_logger.LogWarning("Jukebox at {x}, {y}, {z} is missing a block entity", x, y, z);
@@ -49,7 +50,7 @@ internal class BlockJukeBox : BlockWithEntity
     {
         if (!level.IsRemote)
         {
-            BlockEntityRecordPlayer? jukebox = (BlockEntityRecordPlayer?)level.BlocksReader.GetBlockEntity(x, y, z);
+            BlockEntityRecordPlayer? jukebox = (BlockEntityRecordPlayer?)level.Reader.GetBlockEntity(x, y, z);
             int recordId = jukebox?.recordId ?? 0;
             if (recordId != 0)
             {

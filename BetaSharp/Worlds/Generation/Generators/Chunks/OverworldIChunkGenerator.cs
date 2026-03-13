@@ -4,6 +4,7 @@ using BetaSharp.Util.Maths;
 using BetaSharp.Util.Maths.Noise;
 using BetaSharp.Worlds.Chunks;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 using BetaSharp.Worlds.Generation.Biomes;
 using BetaSharp.Worlds.Generation.Biomes.Source;
 using BetaSharp.Worlds.Generation.Generators.Carvers;
@@ -313,7 +314,7 @@ internal class OverworldIChunkGenerator : IChunkSource
             featureZ = blockZ + _random.NextInt(16) + 8;
             Feature treeFeature = chunkBiome.GetRandomWorldGenForTrees(_random);
             treeFeature.prepare(1.0D, 1.0D, 1.0D);
-            treeFeature.Generate(_level, _random, featureX, _level.BlocksReader.GetTopY(featureX, featureZ), featureZ);
+            treeFeature.Generate(_level, _random, featureX, _level.Reader.GetTopY(featureX, featureZ), featureZ);
         }
 
         // Choose an appropriate amount of Dandelions
@@ -492,10 +493,10 @@ internal class OverworldIChunkGenerator : IChunkSource
             {
                 int offsetX = x - (blockX + 8);
                 int offsetZ = z - (blockZ + 8);
-                int var22 = _level.BlocksReader.GetTopSolidBlockY(x, z);
+                int var22 = _level.Reader.GetTopSolidBlockY(x, z);
                 double temperatureSample = _temperatures[offsetX * 16 + offsetZ] - (var22 - 64) / 64.0D * 0.3D;
-                if (temperatureSample < 0.5D && var22 > 0 && var22 < 128 && _level.BlocksReader.IsAir(x, var22, z) && _level.BlocksReader.GetMaterial(x, var22 - 1, z).BlocksMovement &&
-                    _level.BlocksReader.GetMaterial(x, var22 - 1, z) != Material.Ice)
+                if (temperatureSample < 0.5D && var22 > 0 && var22 < 128 && _level.Reader.IsAir(x, var22, z) && _level.Reader.GetMaterial(x, var22 - 1, z).BlocksMovement &&
+                    _level.Reader.GetMaterial(x, var22 - 1, z) != Material.Ice)
                 {
                     _level.BlockWriter.SetBlock(x, var22, z, Block.Snow.id, 0, doUpdate: false);
                 }

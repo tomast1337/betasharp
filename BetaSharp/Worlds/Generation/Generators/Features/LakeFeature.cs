@@ -2,6 +2,7 @@ using BetaSharp.Blocks;
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Worlds.Generation.Generators.Features;
 
@@ -15,7 +16,7 @@ internal class LakeFeature : Feature
     {
         x -= 8;
 
-        while (y > 0 && level.BlocksReader.IsAir(x, y, z))
+        while (y > 0 && level.Reader.IsAir(x, y, z))
         {
             y--;
         }
@@ -66,13 +67,13 @@ internal class LakeFeature : Feature
                                                                          (dz > 0 && lakeMask[(dx * 16 + (dz - 1)) * 8 + dy]) || (dy < 7 && lakeMask[(dx * 16 + dz) * 8 + dy + 1]) || (dy > 0 && lakeMask[(dx * 16 + dz) * 8 + (dy - 1)]));
                     if (isEdge)
                     {
-                        Material mat = level.BlocksReader.GetMaterial(x + dx, y + dy, z + dz);
+                        Material mat = level.Reader.GetMaterial(x + dx, y + dy, z + dz);
                         if (dy >= 4 && mat.IsFluid)
                         {
                             return false;
                         }
 
-                        if (dy < 4 && !mat.IsSolid && level.BlocksReader.GetBlockId(x + dx, y + dy, z + dz) != _waterBlockId)
+                        if (dy < 4 && !mat.IsSolid && level.Reader.GetBlockId(x + dx, y + dy, z + dz) != _waterBlockId)
                         {
                             return false;
                         }
@@ -103,7 +104,7 @@ internal class LakeFeature : Feature
                 for (int dz = 4; dz < 8; ++dz)
                 {
                     if (lakeMask[(dx * 16 + dy) * 8 + dz] &&
-                        level.BlocksReader.GetBlockId(x + dx, y + dz - 1, z + dy) == Block.Dirt.id &&
+                        level.Reader.GetBlockId(x + dx, y + dz - 1, z + dy) == Block.Dirt.id &&
                         level.Lighting.GetBrightness(LightType.Sky, x + dx, y + dz, z + dy) > 0)
                     {
                         level.BlockWriter.SetBlockWithoutNotifyingNeighbors(x + dx, y + dz - 1, z + dy, Block.GrassBlock.id, 0, notifyBlockPlaced: false);
@@ -129,7 +130,7 @@ internal class LakeFeature : Feature
                                           (dz < 7 && lakeMask[(dx * 16 + dy) * 8 + dz + 1]) ||
                                           (dz > 0 && lakeMask[(dx * 16 + dy) * 8 + (dz - 1)])
                                       );
-                        if (isEdge && (dz < 4 || rand.NextInt(2) != 0) && level.BlocksReader.GetMaterial(x + dx, y + dz, z + dy).IsSolid)
+                        if (isEdge && (dz < 4 || rand.NextInt(2) != 0) && level.Reader.GetMaterial(x + dx, y + dz, z + dy).IsSolid)
                         {
                             level.BlockWriter.SetBlockWithoutNotifyingNeighbors(x + dx, y + dz, z + dy, Block.Stone.id, 0, notifyBlockPlaced: false);
                         }

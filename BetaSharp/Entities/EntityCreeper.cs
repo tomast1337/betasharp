@@ -2,6 +2,7 @@ using BetaSharp.Items;
 using BetaSharp.NBT;
 using BetaSharp.Util;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -36,7 +37,7 @@ public class EntityCreeper : EntityMonster
 
     protected override void attackBlockedEntity(Entity entity, float distance)
     {
-        if (!_level.IsRemote && timeSinceIgnited > 0)
+        if (!world.IsRemote && timeSinceIgnited > 0)
         {
             CreeperState.Value = 255;
             --timeSinceIgnited;
@@ -50,12 +51,12 @@ public class EntityCreeper : EntityMonster
     public override void tick()
     {
         lastActiveTime = timeSinceIgnited;
-        if (_level.IsRemote)
+        if (world.IsRemote)
         {
             int state = CreeperState.Value;
             if (state > 0 && timeSinceIgnited == 0)
             {
-                _level.Broadcaster.PlaySoundAtEntity(this, "random.fuse", 1.0F, 0.5F);
+                world.Broadcaster.PlaySoundAtEntity(this, "random.fuse", 1.0F, 0.5F);
             }
 
             timeSinceIgnited += state;
@@ -97,14 +98,14 @@ public class EntityCreeper : EntityMonster
 
     protected override void attackEntity(Entity entity, float distance)
     {
-        if (!_level.IsRemote)
+        if (!world.IsRemote)
         {
             int state = CreeperState.Value;
             if ((state <= 0 && distance < 3.0F) || (state > 0 && distance < 7.0F))
             {
                 if (timeSinceIgnited == 0)
                 {
-                    _level.Broadcaster.PlaySoundAtEntity(this, "random.fuse", 1.0F, 0.5F);
+                    world.Broadcaster.PlaySoundAtEntity(this, "random.fuse", 1.0F, 0.5F);
                 }
 
                 CreeperState.Value = 1;
@@ -113,11 +114,11 @@ public class EntityCreeper : EntityMonster
                 {
                     if (Powered.Value)
                     {
-                        _level.CreateExplosion(this, x, y, z, 6.0F);
+                        world.CreateExplosion(this, x, y, z, 6.0F);
                     }
                     else
                     {
-                        _level.CreateExplosion(this, x, y, z, 3.0F);
+                        world.CreateExplosion(this, x, y, z, 3.0F);
                     }
 
                     markDead();

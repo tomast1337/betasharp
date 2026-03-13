@@ -9,9 +9,15 @@ internal class BlockEntityChest : BlockEntity, IInventory
 {
     private ItemStack[] inventory = new ItemStack[36];
 
-    public int size() => 27;
+    public int size()
+    {
+        return 27;
+    }
 
-    public ItemStack getStack(int stackIndex) => inventory[stackIndex];
+    public ItemStack getStack(int stackIndex)
+    {
+        return inventory[stackIndex];
+    }
 
     public ItemStack removeStack(int slot, int amount)
     {
@@ -50,11 +56,20 @@ internal class BlockEntityChest : BlockEntity, IInventory
         markDirty();
     }
 
-    public string getName() => "Chest";
+    public string getName()
+    {
+        return "Chest";
+    }
 
-    public int getMaxCountPerStack() => 64;
+    public int getMaxCountPerStack()
+    {
+        return 64;
+    }
 
-    public bool canPlayerUse(EntityPlayer player) => World.BlocksReader.GetBlockEntity(X, Y, Z) != this ? false : player.getSquaredDistance(X + 0.5D, Y + 0.5D, Z + 0.5D) <= 64.0D;
+    public bool canPlayerUse(EntityPlayer player)
+    {
+        return World.Reader.GetBlockEntity(X, Y, Z) != this ? false : player.getSquaredDistance(X + 0.5D, Y + 0.5D, Z + 0.5D) <= 64.0D;
+    }
 
     public override void readNbt(NBTTagCompound nbt)
     {

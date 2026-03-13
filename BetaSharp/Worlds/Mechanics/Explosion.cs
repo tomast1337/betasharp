@@ -2,6 +2,7 @@ using BetaSharp.Blocks;
 using BetaSharp.Entities;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Worlds.Mechanics;
 
@@ -63,7 +64,7 @@ public class Explosion
                             int var22 = MathHelper.Floor(var15);
                             int var23 = MathHelper.Floor(var17);
                             int var24 = MathHelper.Floor(var19);
-                            int var25 = _level.BlocksReader.GetBlockId(var22, var23, var24);
+                            int var25 = _level.Reader.GetBlockId(var22, var23, var24);
                             if (var25 > 0)
                             {
                                 var14 -= (Block.Blocks[var25].getBlastResistance(exploder) + 0.3F) * var21;
@@ -106,7 +107,7 @@ public class Explosion
                 var15 /= var39;
                 var17 /= var39;
                 var19 /= var39;
-                double var40 = _level.BlocksReader.GetVisibilityRatio(var31, var33.boundingBox);
+                double var40 = _level.Reader.GetVisibilityRatio(var31, var33.boundingBox);
                 double var41 = (1.0D - var13) * var40;
                 var33.damage(exploder, (int)((var41 * var41 + var41) / 2.0D * 8.0D * explosionSize + 1.0D));
                 var33.velocityX += var15 * var41;
@@ -125,8 +126,8 @@ public class Explosion
                 int var36 = var35.x;
                 int var37 = var35.y;
                 int var16 = var35.z;
-                int var38 = _level.BlocksReader.GetBlockId(var36, var37, var16);
-                int var18 = _level.BlocksReader.GetBlockId(var36, var37 - 1, var16);
+                int var38 = _level.Reader.GetBlockId(var36, var37, var16);
+                int var18 = _level.Reader.GetBlockId(var36, var37 - 1, var16);
                 if (var38 == 0 && Block.BlocksOpaque[var18] && ExplosionRNG.NextInt(3) == 0)
                 {
                     _level.BlockWriter.SetBlock(var36, var37, var16, Block.Fire.id);
@@ -146,7 +147,7 @@ public class Explosion
             int var5 = var4.x;
             int var6 = var4.y;
             int var7 = var4.z;
-            int var8 = _level.BlocksReader.GetBlockId(var5, var6, var7);
+            int var8 = _level.Reader.GetBlockId(var5, var6, var7);
             if (var1)
             {
                 double var9 = var5 + _level.random.NextFloat();
@@ -170,7 +171,7 @@ public class Explosion
 
             if (var8 > 0)
             {
-                Block.Blocks[var8].dropStacks(new OnDropEvt(_level, var5, var6, var7, _level.BlocksReader.GetMeta(var5, var6, var7), 0.3F));
+                Block.Blocks[var8].dropStacks(new OnDropEvt(_level, var5, var6, var7, _level.Reader.GetMeta(var5, var6, var7), 0.3F));
                 _level.BlockWriter.SetBlock(var5, var6, var7, 0);
                 Block.Blocks[var8].onDestroyedByExplosion(new OnDestroyedByExplosionEvt(_level, var5, var6, var7));
             }

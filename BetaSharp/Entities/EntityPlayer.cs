@@ -9,6 +9,7 @@ using BetaSharp.Stats;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Chunks;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -71,13 +72,13 @@ public abstract class EntityPlayer : EntityLiving
                 sleepTimer = 100;
             }
 
-            if (!_level.IsRemote)
+            if (!world.IsRemote)
             {
                 if (!isSleepingInBed())
                 {
                     wakeUp(true, true, false);
                 }
-                else if (_level.Environment.CanMonsterSpawn())
+                else if (world.Environment.CanMonsterSpawn())
                 {
                     wakeUp(false, true, true);
                 }
@@ -104,7 +105,7 @@ public abstract class EntityPlayer : EntityLiving
         TickSleep();
         GenericTick();
 
-        if (!_level.IsRemote && currentScreenHandler != null && !currentScreenHandler.canUse(this))
+        if (!world.IsRemote && currentScreenHandler != null && !currentScreenHandler.canUse(this))
         {
             closeHandledScreen();
             currentScreenHandler = playerScreenHandler;
@@ -221,7 +222,7 @@ public abstract class EntityPlayer : EntityLiving
 
     public override void tickMovement()
     {
-        if (_level.Difficulty == 0 && health < 20 && age % 20 * 12 == 0)
+        if (world.Difficulty == 0 && health < 20 && age % 20 * 12 == 0)
         {
             heal(1);
         }
@@ -250,7 +251,7 @@ public abstract class EntityPlayer : EntityLiving
         tilt += (var2 - tilt) * 0.8F;
         if (health > 0)
         {
-            var var3 = _level.Entities.GetEntities(this, boundingBox.Expand(1.0D, 0.0D, 1.0D));
+            var var3 = world.Entities.GetEntities(this, boundingBox.Expand(1.0D, 0.0D, 1.0D));
             if (var3 != null)
             {
                 for (int var4 = 0; var4 < var3.Count; ++var4)
@@ -316,7 +317,7 @@ public abstract class EntityPlayer : EntityLiving
     {
         if (stack != null)
         {
-            EntityItem var3 = new(_level, x, y - 0.3F + getEyeHeight(), z, stack);
+            EntityItem var3 = new(world, x, y - 0.3F + getEyeHeight(), z, stack);
             var3.delayBeforeCanPickup = 40;
             float var4 = 0.1F;
             float var5;
@@ -347,7 +348,7 @@ public abstract class EntityPlayer : EntityLiving
         }
     }
 
-    protected virtual void spawnItem(EntityItem itemEntity) => _level.SpawnEntity(itemEntity);
+    protected virtual void spawnItem(EntityItem itemEntity) => world.SpawnEntity(itemEntity);
 
     public float getBlockBreakingSpeed(Block block)
     {
@@ -426,14 +427,14 @@ public abstract class EntityPlayer : EntityLiving
             return false;
         }
 
-        if (isSleeping() && !_level.IsRemote)
+        if (isSleeping() && !world.IsRemote)
         {
             wakeUp(true, true, false);
         }
 
         if (damageSource is EntityMonster || damageSource is EntityArrow)
         {
-            switch (_level.Difficulty)
+            switch (world.Difficulty)
             {
                 case 0:
                     amount = 0;
@@ -481,7 +482,7 @@ public abstract class EntityPlayer : EntityLiving
 
             if (entity is not EntityPlayer || isPvpEnabled())
             {
-                var var7 = _level.Entities.CollectEntitiesOfType<EntityWolf>(new Box(x, y, z, x + 1.0D, y + 1.0D, z + 1.0D).Expand(16.0D, 4.0D, 16.0D));
+                var var7 = world.Entities.CollectEntitiesOfType<EntityWolf>(new Box(x, y, z, x + 1.0D, y + 1.0D, z + 1.0D).Expand(16.0D, 4.0D, 16.0D));
 
                 foreach (EntityWolf var6 in var7)
                 {
@@ -621,19 +622,19 @@ public abstract class EntityPlayer : EntityLiving
 
     public virtual SleepAttemptResult trySleep(int x, int y, int z)
     {
-        if (!_level.IsRemote)
+        if (!world.IsRemote)
         {
             if (isSleeping() || !isAlive())
             {
                 return SleepAttemptResult.OTHER_PROBLEM;
             }
 
-            if (_level.dimension.IsNether)
+            if (world.dimension.IsNether)
             {
                 return SleepAttemptResult.NOT_POSSIBLE_HERE;
             }
 
-            if (_level.Environment.CanMonsterSpawn())
+            if (world.Environment.CanMonsterSpawn())
             {
                 return SleepAttemptResult.NOT_POSSIBLE_NOW;
             }
@@ -646,9 +647,9 @@ public abstract class EntityPlayer : EntityLiving
 
         setBoundingBoxSpacing(0.2F, 0.2F);
         standingEyeHeight = 0.2F;
-        if (_level.BlocksReader.IsPosLoaded(x, y, z))
+        if (world.Reader.IsPosLoaded(x, y, z))
         {
-            int var4 = _level.BlocksReader.GetMeta(x, y, z);
+            int var4 = world.Reader.GetMeta(x, y, z);
             int var5 = BlockBed.getDirection(var4);
             float var6 = 0.5F;
             float var7 = 0.5F;
@@ -680,9 +681,9 @@ public abstract class EntityPlayer : EntityLiving
         sleepTimer = 0;
         sleepingPos = new Vec3i(x, y, z);
         velocityX = velocityZ = velocityY = 0.0D;
-        if (!_level.IsRemote)
+        if (!world.IsRemote)
         {
-            _level.Entities.UpdateSleepingPlayers();
+            world.Entities.UpdateSleepingPlayers();
         }
 
         return SleepAttemptResult.OK;
@@ -714,10 +715,10 @@ public abstract class EntityPlayer : EntityLiving
         setBoundingBoxSpacing(0.6F, 1.8F);
         resetEyeHeight();
         Vec3i? var4 = sleepingPos;
-        if (var4 is (int x, int y, int z) && _level.BlocksReader.GetBlockId(x, y, z) == Block.Bed.id)
+        if (var4 is (int x, int y, int z) && world.Reader.GetBlockId(x, y, z) == Block.Bed.id)
         {
-            BlockBed.updateState(_level.BlockWriter, x, y, z, 0, false);
-            Vec3i? var5 = BlockBed.findWakeUpPosition(_level.BlocksReader, x, y, z, 0);
+            BlockBed.updateState(world.BlockWriter, x, y, z, 0, false);
+            Vec3i? var5 = BlockBed.findWakeUpPosition(world.Reader, x, y, z, 0);
             if (var5 == null)
             {
                 var5 = new Vec3i(x, y + 1, z);
@@ -727,9 +728,9 @@ public abstract class EntityPlayer : EntityLiving
         }
 
         sleeping = false;
-        if (!_level.IsRemote && updateSleepingPlayers)
+        if (!world.IsRemote && updateSleepingPlayers)
         {
-            _level.Entities.UpdateSleepingPlayers();
+            world.Entities.UpdateSleepingPlayers();
         }
 
         if (resetSleepTimer)
@@ -747,7 +748,7 @@ public abstract class EntityPlayer : EntityLiving
         }
     }
 
-    private bool isSleepingInBed() => _level.BlocksReader.GetBlockId(sleepingPos.X, sleepingPos.Y, sleepingPos.Z) == Block.Bed.id;
+    private bool isSleepingInBed() => world.Reader.GetBlockId(sleepingPos.X, sleepingPos.Y, sleepingPos.Z) == Block.Bed.id;
 
     public static Vec3i? findRespawnPosition(IWorldContext world, Vec3i? spawnPos)
     {
@@ -763,19 +764,19 @@ public abstract class EntityPlayer : EntityLiving
         chunkSource.LoadChunk((x - 3) >> 4, (z + 3) >> 4);
         chunkSource.LoadChunk((x + 3) >> 4, (z + 3) >> 4);
 
-        if (world.BlocksReader.GetBlockId(x, y, z) != Block.Bed.id)
+        if (world.Reader.GetBlockId(x, y, z) != Block.Bed.id)
         {
             return null;
         }
 
-        return BlockBed.findWakeUpPosition(world.BlocksReader, x, y, z, 0);
+        return BlockBed.findWakeUpPosition(world.Reader, x, y, z, 0);
     }
 
     public float getSleepingRotation()
     {
         if (sleepingPos != null)
         {
-            int var1 = _level.BlocksReader.GetMeta(sleepingPos.X, sleepingPos.Y, sleepingPos.Z);
+            int var1 = world.Reader.GetMeta(sleepingPos.X, sleepingPos.Y, sleepingPos.Z);
             int var2 = BlockBed.getDirection(var1);
             switch (var2)
             {

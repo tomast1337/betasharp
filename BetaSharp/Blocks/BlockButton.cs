@@ -1,20 +1,36 @@
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
 internal class BlockButton : Block
 {
-    public BlockButton(int id, int textureId) : base(id, textureId, Material.PistonBreakable) => setTickRandomly(true);
+    public BlockButton(int id, int textureId) : base(id, textureId, Material.PistonBreakable)
+    {
+        setTickRandomly(true);
+    }
 
-    public override Box? getCollisionShape(IBlockReader world, int x, int y, int z) => null;
+    public override Box? getCollisionShape(IBlockReader world, int x, int y, int z)
+    {
+        return null;
+    }
 
-    public override int getTickRate() => 20;
+    public override int getTickRate()
+    {
+        return 20;
+    }
 
-    public override bool isOpaque() => false;
+    public override bool isOpaque()
+    {
+        return false;
+    }
 
-    public override bool isFullCube() => false;
+    public override bool isFullCube()
+    {
+        return false;
+    }
 
     private bool IsValidPlacementSide(IBlockReader read, int x, int y, int z, int side = 0)
     {
@@ -26,39 +42,44 @@ internal class BlockButton : Block
         return read.ShouldSuffocate(x - 1, y, z) ? true : read.ShouldSuffocate(x + 1, y, z) ? true : read.ShouldSuffocate(x, y, z - 1) ? true : read.ShouldSuffocate(x, y, z + 1);
     }
 
-    public override bool canPlaceAt(CanPlaceAtCtx ctx) => IsValidPlacementSide(ctx.Level.BlocksReader, ctx.X, ctx.Y, ctx.Z, ctx.Direction);
+    public override bool canPlaceAt(CanPlaceAtCtx ctx)
+    {
+        return IsValidPlacementSide(ctx.Level.Reader, ctx.X, ctx.Y, ctx.Z, ctx.Direction);
+    }
 
     public override void onPlaced(OnPlacedEvt evt)
     {
-        int facing = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+        int facing = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
         int pressedBit = facing & 8;
         facing &= 7;
-        if (evt.Direction == 2 && evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y, evt.Z + 1))
+        if (evt.Direction == 2 && evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z + 1))
         {
             facing = 4;
         }
-        else if (evt.Direction == 3 && evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1))
+        else if (evt.Direction == 3 && evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1))
         {
             facing = 3;
         }
-        else if (evt.Direction == 4 && evt.Level.BlocksReader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z))
+        else if (evt.Direction == 4 && evt.Level.Reader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z))
         {
             facing = 2;
         }
-        else if (evt.Direction == 5 && evt.Level.BlocksReader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z))
+        else if (evt.Direction == 5 && evt.Level.Reader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z))
         {
             facing = 1;
         }
         else
         {
-            facing = getPlacementSide(evt.Level.BlocksReader, evt.X, evt.Y, evt.Z);
+            facing = getPlacementSide(evt.Level.Reader, evt.X, evt.Y, evt.Z);
         }
 
         evt.Level.BlockWriter.SetBlockMeta(evt.X, evt.Y, evt.Z, facing + pressedBit);
     }
 
-    private int getPlacementSide(IBlockReader world, int x, int y, int z) =>
-        world.ShouldSuffocate(x - 1, y, z) ? 1 : world.ShouldSuffocate(x + 1, y, z) ? 2 : world.ShouldSuffocate(x, y, z - 1) ? 3 : world.ShouldSuffocate(x, y, z + 1) ? 4 : 1;
+    private int getPlacementSide(IBlockReader world, int x, int y, int z)
+    {
+        return world.ShouldSuffocate(x - 1, y, z) ? 1 : world.ShouldSuffocate(x + 1, y, z) ? 2 : world.ShouldSuffocate(x, y, z - 1) ? 3 : world.ShouldSuffocate(x, y, z + 1) ? 4 : 1;
+    }
 
     public override void neighborUpdate(OnTickEvt evt)
     {
@@ -67,40 +88,40 @@ internal class BlockButton : Block
             return;
         }
 
-        int facing = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z) & 7;
+        int facing = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z) & 7;
         bool shouldBreak = false;
-        if (!evt.Level.BlocksReader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z) && facing == 1)
+        if (!evt.Level.Reader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z) && facing == 1)
         {
             shouldBreak = true;
         }
 
-        if (!evt.Level.BlocksReader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z) && facing == 2)
+        if (!evt.Level.Reader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z) && facing == 2)
         {
             shouldBreak = true;
         }
 
-        if (!evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1) && facing == 3)
+        if (!evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1) && facing == 3)
         {
             shouldBreak = true;
         }
 
-        if (!evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y, evt.Z + 1) && facing == 4)
+        if (!evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z + 1) && facing == 4)
         {
             shouldBreak = true;
         }
 
         if (shouldBreak)
         {
-            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z)));
+            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z)));
             evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
         }
     }
 
     private bool breakIfCannotPlaceAt(OnTickEvt evt)
     {
-        if (!IsValidPlacementSide(evt.Level.BlocksReader, evt.X, evt.Y, evt.Z))
+        if (!IsValidPlacementSide(evt.Level.Reader, evt.X, evt.Y, evt.Z))
         {
-            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z)));
+            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z)));
             evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
             return false;
         }
@@ -143,7 +164,7 @@ internal class BlockButton : Block
 
     private bool updateState(IWorldContext level, int x, int y, int z)
     {
-        int meta = level.BlocksReader.GetMeta(x, y, z);
+        int meta = level.Reader.GetMeta(x, y, z);
         int facing = meta & 7;
         int pressToggle = 8 - (meta & 8);
         if (pressToggle == 0)
@@ -180,13 +201,19 @@ internal class BlockButton : Block
         return true;
     }
 
-    public override void onBlockBreakStart(OnBlockBreakStartEvt evt) => updateState(evt.Level, evt.X, evt.Y, evt.Z);
+    public override void onBlockBreakStart(OnBlockBreakStartEvt evt)
+    {
+        updateState(evt.Level, evt.X, evt.Y, evt.Z);
+    }
 
-    public override bool onUse(OnUseEvt evt) => updateState(evt.Level, evt.X, evt.Y, evt.Z);
+    public override bool onUse(OnUseEvt evt)
+    {
+        return updateState(evt.Level, evt.X, evt.Y, evt.Z);
+    }
 
     public override void onBreak(OnBreakEvt evt)
     {
-        int meta = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+        int meta = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
         if ((meta & 8) > 0)
         {
             evt.Level.Broadcaster.NotifyNeighbors(evt.X, evt.Y, evt.Z, id);
@@ -216,7 +243,10 @@ internal class BlockButton : Block
         base.onBreak(evt);
     }
 
-    public override bool isPoweringSide(IBlockReader reader, int x, int y, int z, int side) => (reader.GetMeta(x, y, z) & 8) > 0;
+    public override bool isPoweringSide(IBlockReader reader, int x, int y, int z, int side)
+    {
+        return (reader.GetMeta(x, y, z) & 8) > 0;
+    }
 
     public override bool isStrongPoweringSide(IBlockReader read, int x, int y, int z, int side)
     {
@@ -230,7 +260,10 @@ internal class BlockButton : Block
         return facing == 5 && side == 1 ? true : facing == 4 && side == 2 ? true : facing == 3 && side == 3 ? true : facing == 2 && side == 4 ? true : facing == 1 && side == 5;
     }
 
-    public override bool canEmitRedstonePower() => true;
+    public override bool canEmitRedstonePower()
+    {
+        return true;
+    }
 
     public override void onTick(OnTickEvt evt)
     {
@@ -239,7 +272,7 @@ internal class BlockButton : Block
             return;
         }
 
-        int meta = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+        int meta = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
         if ((meta & 8) != 0)
         {
             evt.Level.BlockWriter.SetBlockMeta(evt.X, evt.Y, evt.Z, meta & 7);

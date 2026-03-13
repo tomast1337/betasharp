@@ -1,6 +1,7 @@
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -27,51 +28,51 @@ internal class BlockLever : Block
         (side == 5 && world.ShouldSuffocate(x - 1, y, z));
 
     public override bool canPlaceAt(CanPlaceAtCtx ctx) =>
-        ctx.Level.BlocksReader.ShouldSuffocate(ctx.X - 1, ctx.Y, ctx.Z) ||
-        ctx.Level.BlocksReader.ShouldSuffocate(ctx.X + 1, ctx.Y, ctx.Z) ||
-        ctx.Level.BlocksReader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z - 1) ||
-        ctx.Level.BlocksReader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z + 1) ||
-        ctx.Level.BlocksReader.ShouldSuffocate(ctx.X, ctx.Y - 1, ctx.Z);
+        ctx.Level.Reader.ShouldSuffocate(ctx.X - 1, ctx.Y, ctx.Z) ||
+        ctx.Level.Reader.ShouldSuffocate(ctx.X + 1, ctx.Y, ctx.Z) ||
+        ctx.Level.Reader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z - 1) ||
+        ctx.Level.Reader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z + 1) ||
+        ctx.Level.Reader.ShouldSuffocate(ctx.X, ctx.Y - 1, ctx.Z);
 
     public override void onPlaced(OnPlacedEvt evt)
     {
-        int meta = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+        int meta = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
         int powered = meta & 8;
         meta &= 7;
         meta = -1;
 
-        if (evt.Direction == 1 && evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z))
+        if (evt.Direction == 1 && evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z))
         {
             meta = 5 + Random.Shared.Next(2);
         }
-        else if (evt.Direction == 2 && evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y, evt.Z + 1))
+        else if (evt.Direction == 2 && evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z + 1))
         {
             meta = 4;
         }
-        else if (evt.Direction == 3 && evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1))
+        else if (evt.Direction == 3 && evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1))
         {
             meta = 3;
         }
-        else if (evt.Direction == 4 && evt.Level.BlocksReader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z))
+        else if (evt.Direction == 4 && evt.Level.Reader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z))
         {
             meta = 2;
         }
-        else if (evt.Direction == 5 && evt.Level.BlocksReader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z))
+        else if (evt.Direction == 5 && evt.Level.Reader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z))
         {
             meta = 1;
         }
         else
         {
-            if (evt.Level.BlocksReader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z)) meta = 1;
-            else if (evt.Level.BlocksReader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z)) meta = 2;
-            else if (evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1)) meta = 3;
-            else if (evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y, evt.Z + 1)) meta = 4;
-            else if (evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z)) meta = 5 + Random.Shared.Next(2);
+            if (evt.Level.Reader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z)) meta = 1;
+            else if (evt.Level.Reader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z)) meta = 2;
+            else if (evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1)) meta = 3;
+            else if (evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z + 1)) meta = 4;
+            else if (evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z)) meta = 5 + Random.Shared.Next(2);
         }
 
         if (meta == -1)
         {
-            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z)));
+            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z)));
             evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
         }
         else
@@ -84,42 +85,42 @@ internal class BlockLever : Block
     {
         if (breakIfCannotPlaceAt(evt))
         {
-            int direction = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z) & 7;
+            int direction = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z) & 7;
             bool shouldDrop = false;
 
-            if (!evt.Level.BlocksReader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z) && direction == 1)
+            if (!evt.Level.Reader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z) && direction == 1)
             {
                 shouldDrop = true;
             }
 
-            if (!evt.Level.BlocksReader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z) && direction == 2)
+            if (!evt.Level.Reader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z) && direction == 2)
             {
                 shouldDrop = true;
             }
 
-            if (!evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1) && direction == 3)
+            if (!evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1) && direction == 3)
             {
                 shouldDrop = true;
             }
 
-            if (!evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y, evt.Z + 1) && direction == 4)
+            if (!evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z + 1) && direction == 4)
             {
                 shouldDrop = true;
             }
 
-            if (!evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z) && direction == 5)
+            if (!evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z) && direction == 5)
             {
                 shouldDrop = true;
             }
 
-            if (!evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z) && direction == 6)
+            if (!evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z) && direction == 6)
             {
                 shouldDrop = true;
             }
 
             if (shouldDrop)
             {
-                dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z)));
+                dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z)));
                 evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
             }
         }
@@ -129,7 +130,7 @@ internal class BlockLever : Block
     {
         if (!canPlaceAt(new CanPlaceAtCtx(ctx.Level, 0, ctx.X, ctx.Y, ctx.Z)))
         {
-            dropStacks(new OnDropEvt(ctx.Level, ctx.X, ctx.Y, ctx.Z, ctx.Level.BlocksReader.GetMeta(ctx.X, ctx.Y, ctx.Z)));
+            dropStacks(new OnDropEvt(ctx.Level, ctx.X, ctx.Y, ctx.Z, ctx.Level.Reader.GetMeta(ctx.X, ctx.Y, ctx.Z)));
             ctx.Level.BlockWriter.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
             return false;
         }
@@ -180,7 +181,7 @@ internal class BlockLever : Block
 
     private void toggleLever(IWorldContext world, int x, int y, int z)
     {
-        int meta = world.BlocksReader.GetMeta(x, y, z);
+        int meta = world.Reader.GetMeta(x, y, z);
         int direction = meta & 7;
         int powered = 8 - (meta & 8);
 
@@ -214,7 +215,7 @@ internal class BlockLever : Block
 
     public override void onBreak(OnBreakEvt ctx)
     {
-        int meta = ctx.Level.BlocksReader.GetMeta(ctx.X, ctx.Y, ctx.Z);
+        int meta = ctx.Level.Reader.GetMeta(ctx.X, ctx.Y, ctx.Z);
         if ((meta & 8) > 0)
         {
             ctx.Level.Broadcaster.NotifyNeighbors(ctx.X, ctx.Y, ctx.Z, id);

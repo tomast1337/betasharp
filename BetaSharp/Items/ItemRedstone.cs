@@ -1,6 +1,7 @@
 using BetaSharp.Blocks;
 using BetaSharp.Entities;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Items;
 
@@ -13,7 +14,7 @@ internal class ItemRedstone : Item
 
     public override bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IWorldContext world, int x, int y, int z, int meta)
     {
-        if (world.BlocksReader.GetBlockId(x, y, z) != Block.Snow.id)
+        if (world.Reader.GetBlockId(x, y, z) != Block.Snow.id)
         {
             if (meta == 0)
             {
@@ -45,7 +46,7 @@ internal class ItemRedstone : Item
                 ++x;
             }
 
-            if (!world.BlocksReader.IsAir(x, y, z))
+            if (!world.Reader.IsAir(x, y, z))
             {
                 return false;
             }

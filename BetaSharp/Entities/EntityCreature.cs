@@ -1,6 +1,7 @@
 using BetaSharp.PathFinding;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -10,7 +11,7 @@ public class EntityCreature : EntityLiving
     private PathEntity? pathToEntity;
     protected Entity? playerToAttack;
 
-    public EntityCreature(IWorldContext level) : base(level)
+    public EntityCreature(IWorldContext world) : base(world)
     {
     }
 
@@ -25,7 +26,7 @@ public class EntityCreature : EntityLiving
             playerToAttack = findPlayerToAttack();
             if (playerToAttack != null)
             {
-                pathToEntity = _level.Pathing.findPath(this, playerToAttack, range);
+                pathToEntity = world.Pathing.findPath(this, playerToAttack, range);
             }
         }
         else if (!playerToAttack.isAlive())
@@ -54,7 +55,7 @@ public class EntityCreature : EntityLiving
         }
         else
         {
-            pathToEntity = _level.Pathing.findPath(this, playerToAttack, range);
+            pathToEntity = world.Pathing.findPath(this, playerToAttack, range);
         }
 
         int floorY = MathHelper.Floor(boundingBox.MinY + 0.5D);
@@ -174,7 +175,7 @@ public class EntityCreature : EntityLiving
 
         if (foundWanderTarget)
         {
-            pathToEntity = _level.Pathing.findPath(this, bestX, bestY, bestZ, 10.0F);
+            pathToEntity = world.Pathing.findPath(this, bestX, bestY, bestZ, 10.0F);
         }
     }
 

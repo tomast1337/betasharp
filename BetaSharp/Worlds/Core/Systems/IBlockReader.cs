@@ -5,7 +5,7 @@ using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Generation.Biomes.Source;
 
-namespace BetaSharp.Worlds.Core;
+namespace BetaSharp.Worlds.Core.Systems;
 
 public interface IBlockReader
 {

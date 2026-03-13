@@ -1,6 +1,7 @@
 using BetaSharp.NBT;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -24,7 +25,7 @@ public class EntityMonster : EntityCreature, Monster
     public override void tick()
     {
         base.tick();
-        if (!_level.IsRemote && _level.Difficulty == 0)
+        if (!world.IsRemote && world.Difficulty == 0)
         {
             markDead();
         }
@@ -32,7 +33,7 @@ public class EntityMonster : EntityCreature, Monster
 
     protected override Entity? findPlayerToAttack()
     {
-        EntityPlayer? player = _level.Entities.GetClosestPlayer(x, y, z, 16.0D);
+        EntityPlayer? player = world.Entities.GetClosestPlayer(x, y, z, 16.0D);
         return player != null && canSee(player) ? player : null;
     }
 
@@ -65,7 +66,7 @@ public class EntityMonster : EntityCreature, Monster
         }
     }
 
-    protected override float getBlockPathWeight(int x, int y, int z) => 0.5F - _level.Lighting.GetLuminance(x, y, z);
+    protected override float getBlockPathWeight(int x, int y, int z) => 0.5F - world.Lighting.GetLuminance(x, y, z);
 
     public override void writeNbt(NBTTagCompound nbt) => base.writeNbt(nbt);
 
@@ -76,18 +77,18 @@ public class EntityMonster : EntityCreature, Monster
         int x = MathHelper.Floor(this.x);
         int y = MathHelper.Floor(boundingBox.MinY);
         int z = MathHelper.Floor(this.z);
-        if (_level.Lighting.GetBrightness(LightType.Sky, x, y, z) > random.NextInt(32))
+        if (world.Lighting.GetBrightness(LightType.Sky, x, y, z) > random.NextInt(32))
         {
             return false;
         }
 
-        int lightLevel = _level.Lighting.GetLightLevel(x, y, z);
-        if (_level.Environment.IsThundering())
+        int lightLevel = world.Lighting.GetLightLevel(x, y, z);
+        if (world.Environment.IsThundering())
         {
-            int ambientDarkness = _level.Environment.AmbientDarkness;
-            _level.Environment.AmbientDarkness = 10;
-            lightLevel = _level.Lighting.GetLightLevel(x, y, z);
-            _level.Environment.AmbientDarkness = ambientDarkness;
+            int ambientDarkness = world.Environment.AmbientDarkness;
+            world.Environment.AmbientDarkness = 10;
+            lightLevel = world.Lighting.GetLightLevel(x, y, z);
+            world.Environment.AmbientDarkness = ambientDarkness;
         }
 
         return lightLevel <= random.NextInt(8) && base.canSpawn();

@@ -155,7 +155,7 @@ public class WorldEventBroadcaster
 
     public void UpdateBlockEntity(int x, int y, int z, BlockEntity blockEntity)
     {
-        _worldContext.BlocksReader.MarkChunkDirty(x, z);
+        _worldContext.Reader.MarkChunkDirty(x, z);
         for (int i = 0; i < _eventListeners.Count; ++i)
         {
             _eventListeners[i].updateBlockEntity(x, y, z, blockEntity);

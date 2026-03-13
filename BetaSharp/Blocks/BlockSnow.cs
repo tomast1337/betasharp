@@ -3,6 +3,7 @@ using BetaSharp.Entities;
 using BetaSharp.Items;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -33,8 +34,8 @@ internal class BlockSnow : Block
 
     public override bool canPlaceAt(CanPlaceAtCtx evt)
     {
-        int blockBelowId = evt.Level.BlocksReader.GetBlockId(evt.X, evt.Y - 1, evt.Z);
-        return blockBelowId != 0 && Blocks[blockBelowId].isOpaque() ? evt.Level.BlocksReader.GetMaterial(evt.X, evt.Y - 1, evt.Z).BlocksMovement : false;
+        int blockBelowId = evt.Level.Reader.GetBlockId(evt.X, evt.Y - 1, evt.Z);
+        return blockBelowId != 0 && Blocks[blockBelowId].isOpaque() ? evt.Level.Reader.GetMaterial(evt.X, evt.Y - 1, evt.Z).BlocksMovement : false;
     }
 
     public override void neighborUpdate(OnTickEvt evt) => breakIfCannotPlace(evt);
@@ -43,7 +44,7 @@ internal class BlockSnow : Block
     {
         if (!canPlaceAt(new CanPlaceAtCtx(evt.Level, 0, evt.X, evt.Y, evt.Z)))
         {
-            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z)));
+            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z)));
             evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
             return false;
         }
@@ -73,7 +74,7 @@ internal class BlockSnow : Block
     {
         if (evt.Level.Lighting.GetBrightness(LightType.Block, evt.X, evt.Y, evt.Z) > 11)
         {
-            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z)));
+            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z)));
             evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
         }
     }

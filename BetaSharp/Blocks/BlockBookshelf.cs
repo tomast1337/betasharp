@@ -8,7 +8,13 @@ internal class BlockBookshelf : Block
     {
     }
 
-    public override int getTexture(int side) => side <= 1 ? 4 : textureId;
+    public override int getTexture(int side)
+    {
+        return side <= 1 ? 4 : textureId;
+    }
 
-    public override int getDroppedItemCount() => 0;
+    public override int getDroppedItemCount()
+    {
+        return 0;
+    }
 }

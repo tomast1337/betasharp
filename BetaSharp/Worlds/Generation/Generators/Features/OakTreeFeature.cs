@@ -1,6 +1,7 @@
 using BetaSharp.Blocks;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Worlds.Generation.Generators.Features;
 
@@ -35,7 +36,7 @@ internal class OakTreeFeature : Feature
                 {
                     if (cy >= 0 && cy < 128)
                     {
-                        int blockId = level.BlocksReader.GetBlockId(cx, cy, cz);
+                        int blockId = level.Reader.GetBlockId(cx, cy, cz);
                         if (blockId != 0 && blockId != Block.Leaves.id)
                         {
                             canPlace = false;
@@ -54,7 +55,7 @@ internal class OakTreeFeature : Feature
             return false;
         }
 
-        int groundId = level.BlocksReader.GetBlockId(x, y - 1, z);
+        int groundId = level.Reader.GetBlockId(x, y - 1, z);
         if ((groundId == Block.GrassBlock.id || groundId == Block.Dirt.id) && y < 128 - treeHeight - 1)
         {
             level.BlockWriter.SetBlockWithoutNotifyingNeighbors(x, y - 1, z, Block.Dirt.id, 0, notifyBlockPlaced: false);
@@ -71,7 +72,7 @@ internal class OakTreeFeature : Feature
                     for (int leafZ = z - leafRadius; leafZ <= z + leafRadius; ++leafZ)
                     {
                         int offsetZ = leafZ - z;
-                        if ((Math.Abs(offsetX) != leafRadius || Math.Abs(offsetZ) != leafRadius || (rand.NextInt(2) != 0 && relativeY != 0)) && !Block.BlocksOpaque[level.BlocksReader.GetBlockId(leafX, leafY, leafZ)])
+                        if ((Math.Abs(offsetX) != leafRadius || Math.Abs(offsetZ) != leafRadius || (rand.NextInt(2) != 0 && relativeY != 0)) && !Block.BlocksOpaque[level.Reader.GetBlockId(leafX, leafY, leafZ)])
                         {
                             level.BlockWriter.SetBlockWithoutNotifyingNeighbors(leafX, leafY, leafZ, Block.Leaves.id, 0, notifyBlockPlaced: false);
                         }
@@ -81,7 +82,7 @@ internal class OakTreeFeature : Feature
 
             for (int trunkY = 0; trunkY < treeHeight; ++trunkY)
             {
-                int blockAtTrunk = level.BlocksReader.GetBlockId(x, y + trunkY, z);
+                int blockAtTrunk = level.Reader.GetBlockId(x, y + trunkY, z);
                 if (blockAtTrunk == 0 || blockAtTrunk == Block.Leaves.id)
                 {
                     level.BlockWriter.SetBlockWithoutNotifyingNeighbors(x, y + trunkY, z, Block.Log.id, 0, notifyBlockPlaced: false);

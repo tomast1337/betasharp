@@ -1,6 +1,7 @@
 using BetaSharp.Items;
 using BetaSharp.NBT;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -14,7 +15,7 @@ public class EntityChicken : EntityAnimal
     public float field_757_d;
     public int timeUntilNextEgg;
 
-    public EntityChicken(IWorldContext level) : base(level)
+    public EntityChicken(IWorldContext world) : base(world)
     {
         texture = "/mob/chicken.png";
         setBoundingBoxSpacing(0.3F, 0.4F);
@@ -25,7 +26,7 @@ public class EntityChicken : EntityAnimal
     public override void tickMovement()
     {
         base.tickMovement();
-        if (_level.IsRemote)
+        if (world.IsRemote)
         {
             onGround = Math.Abs(y - prevY) < 0.02D;
         }
@@ -55,9 +56,9 @@ public class EntityChicken : EntityAnimal
         }
 
         field_752_b += field_755_h * 2.0F;
-        if (!_level.IsRemote && --timeUntilNextEgg <= 0)
+        if (!world.IsRemote && --timeUntilNextEgg <= 0)
         {
-            _level.Broadcaster.PlaySoundAtEntity(this, "mob.chickenplop", 1.0F, (random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F);
+            world.Broadcaster.PlaySoundAtEntity(this, "mob.chickenplop", 1.0F, (random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F);
             dropItem(Item.Egg.id, 1);
             timeUntilNextEgg = random.NextInt(6000) + 6000;
         }

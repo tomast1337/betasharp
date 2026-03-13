@@ -1,5 +1,6 @@
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Worlds.Generation.Generators.Features;
 
@@ -142,7 +143,7 @@ internal class LargeOakTreeFeature : Feature
                 }
 
                 var11[var9] = var10[var9] + var13;
-                int var14 = _level.BlocksReader.GetBlockId(var11[0], var11[1], var11[2]);
+                int var14 = _level.Reader.GetBlockId(var11[0], var11[1], var11[2]);
 
                 if (var14 != 0 && var14 != 18)
                 {
@@ -339,7 +340,7 @@ internal class LargeOakTreeFeature : Feature
             var13[var5] = var1[var5] + var14;
             var13[var6] = MathHelper.Floor(var1[var6] + var14 * var9);
             var13[var7] = MathHelper.Floor(var1[var7] + var14 * var11);
-            int var16 = _level.BlocksReader.GetBlockId(var13[0], var13[1], var13[2]);
+            int var16 = _level.Reader.GetBlockId(var13[0], var13[1], var13[2]);
             if (var16 != 0 && var16 != 18)
             {
                 break;
@@ -353,7 +354,7 @@ internal class LargeOakTreeFeature : Feature
     {
         int[] var1 = [origin[0], origin[1], origin[2]];
         int[] var2 = [origin[0], origin[1] + height - 1, origin[2]];
-        int var3 = _level.BlocksReader.GetBlockId(origin[0], origin[1] - 1, origin[2]);
+        int var3 = _level.Reader.GetBlockId(origin[0], origin[1] - 1, origin[2]);
         if (var3 != 2 && var3 != 3)
         {
             return false;

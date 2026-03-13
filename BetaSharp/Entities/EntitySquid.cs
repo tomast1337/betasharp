@@ -3,6 +3,7 @@ using BetaSharp.Items;
 using BetaSharp.NBT;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -56,7 +57,7 @@ public class EntitySquid : EntityWaterMob
 
     public override bool interact(EntityPlayer player) => false;
 
-    public override bool isInWater() => _level.BlocksReader.UpdateMovementInFluid(boundingBox.Expand(0.0D, -0.6F, 0.0D), Material.Water, this);
+    public override bool isInWater() => world.Reader.UpdateMovementInFluid(boundingBox.Expand(0.0D, -0.6F, 0.0D), Material.Water, this);
 
     public override void tickMovement()
     {

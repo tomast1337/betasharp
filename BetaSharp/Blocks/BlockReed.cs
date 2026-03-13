@@ -2,6 +2,7 @@ using BetaSharp.Blocks.Materials;
 using BetaSharp.Items;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -17,16 +18,16 @@ internal class BlockReed : Block
 
     public override void onTick(OnTickEvt evt)
     {
-        if (evt.Level.BlocksReader.IsAir(evt.X, evt.Y + 1, evt.Z))
+        if (evt.Level.Reader.IsAir(evt.X, evt.Y + 1, evt.Z))
         {
             int heightBelow;
-            for (heightBelow = 1; evt.Level.BlocksReader.GetBlockId(evt.X, evt.Y - heightBelow, evt.Z) == id; ++heightBelow)
+            for (heightBelow = 1; evt.Level.Reader.GetBlockId(evt.X, evt.Y - heightBelow, evt.Z) == id; ++heightBelow)
             {
             }
 
             if (heightBelow < 3)
             {
-                int meta = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+                int meta = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
                 if (meta == 15)
                 {
                     evt.Level.BlockWriter.SetBlock(evt.X, evt.Y + 1, evt.Z, id);
@@ -42,12 +43,12 @@ internal class BlockReed : Block
 
     public override bool canPlaceAt(CanPlaceAtCtx evt)
     {
-        int blockBelowId = evt.Level.BlocksReader.GetBlockId(evt.X, evt.Y - 1, evt.Z);
+        int blockBelowId = evt.Level.Reader.GetBlockId(evt.X, evt.Y - 1, evt.Z);
         return blockBelowId == id ? true :
             blockBelowId != GrassBlock.id && blockBelowId != Dirt.id ? false :
-            evt.Level.BlocksReader.GetMaterial(evt.X - 1, evt.Y - 1, evt.Z) == Material.Water ? true :
-            evt.Level.BlocksReader.GetMaterial(evt.X + 1, evt.Y - 1, evt.Z) == Material.Water ? true :
-            evt.Level.BlocksReader.GetMaterial(evt.X, evt.Y - 1, evt.Z - 1) == Material.Water ? true : evt.Level.BlocksReader.GetMaterial(evt.X, evt.Y - 1, evt.Z + 1) == Material.Water;
+            evt.Level.Reader.GetMaterial(evt.X - 1, evt.Y - 1, evt.Z) == Material.Water ? true :
+            evt.Level.Reader.GetMaterial(evt.X + 1, evt.Y - 1, evt.Z) == Material.Water ? true :
+            evt.Level.Reader.GetMaterial(evt.X, evt.Y - 1, evt.Z - 1) == Material.Water ? true : evt.Level.Reader.GetMaterial(evt.X, evt.Y - 1, evt.Z + 1) == Material.Water;
     }
 
     public override void neighborUpdate(OnTickEvt evt) => breakIfCannotGrow(evt);
@@ -57,7 +58,7 @@ internal class BlockReed : Block
         if (!canGrow(evt))
         {
             // TODO: Implement this
-            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z)));
+            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z)));
             evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
         }
     }

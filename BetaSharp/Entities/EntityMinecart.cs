@@ -4,6 +4,7 @@ using BetaSharp.Items;
 using BetaSharp.NBT;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 using Microsoft.Extensions.Logging;
 
 namespace BetaSharp.Entities;
@@ -129,7 +130,7 @@ public class EntityMinecart : Entity, IInventory
 
     public override bool damage(Entity entity, int amount)
     {
-        if (!_level.IsRemote && !dead)
+        if (!world.IsRemote && !dead)
         {
             minecartRockDirection = -minecartRockDirection;
             minecartTimeSinceHit = 10;
@@ -166,12 +167,12 @@ public class EntityMinecart : Entity, IInventory
                                 }
 
                                 itemStack.count -= dropCount;
-                                EntityItem entityItem = new(_level, x + offsetX, y + offsetY, z + offsetZ, new ItemStack(itemStack.itemId, dropCount, itemStack.getDamage()));
+                                EntityItem entityItem = new(world, x + offsetX, y + offsetY, z + offsetZ, new ItemStack(itemStack.itemId, dropCount, itemStack.getDamage()));
                                 float scatterSpeed = 0.05F;
                                 entityItem.velocityX = (float)random.NextGaussian() * scatterSpeed;
                                 entityItem.velocityY = (float)random.NextGaussian() * scatterSpeed + 0.2F;
                                 entityItem.velocityZ = (float)random.NextGaussian() * scatterSpeed;
-                                _level.SpawnEntity(entityItem);
+                                world.SpawnEntity(entityItem);
                             }
                         }
                     }
@@ -220,12 +221,12 @@ public class EntityMinecart : Entity, IInventory
                     }
 
                     itemStack.count -= dropCount;
-                    EntityItem entityItem = new(_level, x + offsetX, y + offsetY, z + offsetZ, new ItemStack(itemStack.itemId, dropCount, itemStack.getDamage()));
+                    EntityItem entityItem = new(world, x + offsetX, y + offsetY, z + offsetZ, new ItemStack(itemStack.itemId, dropCount, itemStack.getDamage()));
                     float scatterSpeed = 0.05F;
                     entityItem.velocityX = (float)random.NextGaussian() * scatterSpeed;
                     entityItem.velocityY = (float)random.NextGaussian() * scatterSpeed + 0.2F;
                     entityItem.velocityZ = (float)random.NextGaussian() * scatterSpeed;
-                    _level.SpawnEntity(entityItem);
+                    world.SpawnEntity(entityItem);
                 }
             }
         }
@@ -246,7 +247,7 @@ public class EntityMinecart : Entity, IInventory
         }
 
         double var7;
-        if (_level.IsRemote && field_9415_k > 0)
+        if (world.IsRemote && field_9415_k > 0)
         {
             if (field_9415_k > 0)
             {
@@ -284,7 +285,7 @@ public class EntityMinecart : Entity, IInventory
             int floorX = MathHelper.Floor(x);
             int floorY = MathHelper.Floor(y);
             int floorZ = MathHelper.Floor(z);
-            if (BlockRail.IsRail(_level, floorX, floorY - 1, floorZ))
+            if (BlockRail.IsRail(world, floorX, floorY - 1, floorZ))
             {
                 --floorY;
             }
@@ -292,11 +293,11 @@ public class EntityMinecart : Entity, IInventory
             double var4 = 0.4D;
             bool var6 = false;
             var7 = 1.0D / 128.0D;
-            int var9 = _level.BlocksReader.GetBlockId(floorX, floorY, floorZ);
+            int var9 = world.Reader.GetBlockId(floorX, floorY, floorZ);
             if (BlockRail.IsRail(var9))
             {
                 Vec3D? var10 = func_514_g(x, y, z);
-                int var11 = _level.BlocksReader.GetMeta(floorX, floorY, floorZ);
+                int var11 = world.Reader.GetMeta(floorX, floorY, floorZ);
                 y = floorY;
                 bool var12 = false;
                 bool var13 = false;
@@ -528,22 +529,22 @@ public class EntityMinecart : Entity, IInventory
                     }
                     else if (var11 == 1)
                     {
-                        if (_level.BlocksReader.ShouldSuffocate(floorX - 1, floorY, floorZ))
+                        if (world.Reader.ShouldSuffocate(floorX - 1, floorY, floorZ))
                         {
                             velocityX = 0.02D;
                         }
-                        else if (_level.BlocksReader.ShouldSuffocate(floorX + 1, floorY, floorZ))
+                        else if (world.Reader.ShouldSuffocate(floorX + 1, floorY, floorZ))
                         {
                             velocityX = -0.02D;
                         }
                     }
                     else if (var11 == 0)
                     {
-                        if (_level.BlocksReader.ShouldSuffocate(floorX, floorY, floorZ - 1))
+                        if (world.Reader.ShouldSuffocate(floorX, floorY, floorZ - 1))
                         {
                             velocityZ = 0.02D;
                         }
-                        else if (_level.BlocksReader.ShouldSuffocate(floorX, floorY, floorZ + 1))
+                        else if (world.Reader.ShouldSuffocate(floorX, floorY, floorZ + 1))
                         {
                             velocityZ = -0.02D;
                         }
@@ -617,7 +618,7 @@ public class EntityMinecart : Entity, IInventory
             }
 
             setRotation(yaw, pitch);
-            var var16 = _level.Entities.GetEntities(this, boundingBox.Expand(0.2F, 0.0D, 0.2F));
+            var var16 = world.Entities.GetEntities(this, boundingBox.Expand(0.2F, 0.0D, 0.2F));
             if (var16 != null && var16.Count > 0)
             {
                 for (int var51 = 0; var51 < var16.Count; ++var51)
@@ -643,7 +644,7 @@ public class EntityMinecart : Entity, IInventory
                     pushX = pushZ = 0.0D;
                 }
 
-                _level.Broadcaster.AddParticle("largesmoke", x, y + 0.8D, z, 0.0D, 0.0D, 0.0D);
+                world.Broadcaster.AddParticle("largesmoke", x, y + 0.8D, z, 0.0D, 0.0D, 0.0D);
             }
         }
     }
@@ -653,18 +654,18 @@ public class EntityMinecart : Entity, IInventory
         int var9 = MathHelper.Floor(x);
         int var10 = MathHelper.Floor(y);
         int var11 = MathHelper.Floor(z);
-        if (BlockRail.IsRail(_level, var9, var10 - 1, var11))
+        if (BlockRail.IsRail(world, var9, var10 - 1, var11))
         {
             --var10;
         }
 
-        int var12 = _level.BlocksReader.GetBlockId(var9, var10, var11);
+        int var12 = world.Reader.GetBlockId(var9, var10, var11);
         if (!BlockRail.IsRail(var12))
         {
             return null;
         }
 
-        int var13 = _level.BlocksReader.GetMeta(var9, var10, var11);
+        int var13 = world.Reader.GetMeta(var9, var10, var11);
         if (((BlockRail)Block.Blocks[var12]).isAlwaysStraight())
         {
             var13 &= 7;
@@ -701,15 +702,15 @@ public class EntityMinecart : Entity, IInventory
         int floorX = MathHelper.Floor(x);
         int floorY = MathHelper.Floor(y);
         int floorZ = MathHelper.Floor(z);
-        if (BlockRail.IsRail(_level, floorX, floorY - 1, floorZ))
+        if (BlockRail.IsRail(world, floorX, floorY - 1, floorZ))
         {
             --floorY;
         }
 
-        int blockId = _level.BlocksReader.GetBlockId(floorX, floorY, floorZ);
+        int blockId = world.Reader.GetBlockId(floorX, floorY, floorZ);
         if (BlockRail.IsRail(blockId))
         {
-            int meta = _level.BlocksReader.GetMeta(floorX, floorY, floorZ);
+            int meta = world.Reader.GetMeta(floorX, floorY, floorZ);
             y = floorY;
             if (((BlockRail)Block.Blocks[blockId]).isAlwaysStraight())
             {
@@ -827,7 +828,7 @@ public class EntityMinecart : Entity, IInventory
 
     public override void onCollision(Entity entity)
     {
-        if (!_level.IsRemote)
+        if (!world.IsRemote)
         {
             if (entity != passenger)
             {
@@ -918,14 +919,14 @@ public class EntityMinecart : Entity, IInventory
                 return true;
             }
 
-            if (!_level.IsRemote)
+            if (!world.IsRemote)
             {
                 player.setVehicle(this);
             }
         }
         else if (type == 1)
         {
-            if (!_level.IsRemote)
+            if (!world.IsRemote)
             {
                 player.openChestScreen(this);
             }

@@ -9,7 +9,7 @@ namespace BetaSharp.Worlds.Core.Systems;
 
 public class LightingEngine : ILightProvider
 {
-    private readonly WorldBlockReader _blocks;
+    private readonly WorldReader _blocks;
     private readonly Dimension _dimension;
     private readonly ChunkHost _host;
 
@@ -18,14 +18,12 @@ public class LightingEngine : ILightProvider
     private int _lightingUpdatesCounter;
     private int _lightingUpdatesScheduled;
 
-    public LightingEngine(WorldBlockReader blocks, Dimension dimension, ChunkHost host)
+    public LightingEngine(WorldReader blocks, Dimension dimension, ChunkHost host)
     {
         _blocks = blocks;
         _dimension = dimension;
         _host = host;
     }
-
-    public event Action<int, int, int>? OnLightUpdated;
 
     public float GetNaturalBrightness(int x, int y, int z, int blockLight)
     {
@@ -39,6 +37,8 @@ public class LightingEngine : ILightProvider
     }
 
     public float GetLuminance(int x, int y, int z) => _dimension.LightLevelToLuminance[GetLightLevel(x, y, z)];
+
+    public event Action<int, int, int>? OnLightUpdated;
 
     public bool HasSkyLight(int x, int y, int z) => _host.GetChunk(x >> 4, z >> 4).IsAboveMaxHeight(x & 15, y, z & 15);
 

@@ -320,7 +320,7 @@ public class ServerPlayNetworkHandler : NetHandler, CommandOutput
             else if (packet.action == 2)
             {
                 player.interactionManager.continueMining(var5, var6, var7);
-                if (var2.BlocksReader.GetBlockId(var5, var6, var7) != 0)
+                if (var2.Reader.GetBlockId(var5, var6, var7) != 0)
                 {
                     player.networkHandler.sendPacket(BlockUpdateS2CPacket.Get(var5, var6, var7, var2));
                 }
@@ -648,7 +648,7 @@ public class ServerPlayNetworkHandler : NetHandler, CommandOutput
     public override void handleUpdateSign(UpdateSignPacket packet)
     {
         ServerWorld var2 = server.getWorld(player.dimensionId);
-        if (var2.BlocksReader.IsPosLoaded(packet.x, packet.y, packet.z))
+        if (var2.Reader.IsPosLoaded(packet.x, packet.y, packet.z))
         {
             BlockEntity? var3 = var2.Entities.GetBlockEntity(packet.x, packet.y, packet.z);
             if (var3 is BlockEntitySign var4)

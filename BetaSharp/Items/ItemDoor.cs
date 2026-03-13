@@ -36,14 +36,14 @@ internal class ItemDoor : Item
         if (facing == 3) offsetX = 1;
 
         // 2. Check neighbors for mirroring (double doors)
-        int leftSolid = (world.BlocksReader.ShouldSuffocate(x - offsetX, y, z - offsetZ) ? 1 : 0) +
-                        (world.BlocksReader.ShouldSuffocate(x - offsetX, y + 1, z - offsetZ) ? 1 : 0);
-        int rightSolid = (world.BlocksReader.ShouldSuffocate(x + offsetX, y, z + offsetZ) ? 1 : 0) +
-                         (world.BlocksReader.ShouldSuffocate(x + offsetX, y + 1, z + offsetZ) ? 1 : 0);
-        bool leftHasDoor = world.BlocksReader.GetBlockId(x - offsetX, y, z - offsetZ) == blockId ||
-                           world.BlocksReader.GetBlockId(x - offsetX, y + 1, z - offsetZ) == blockId;
-        bool rightHasDoor = world.BlocksReader.GetBlockId(x + offsetX, y, z + offsetZ) == blockId ||
-                            world.BlocksReader.GetBlockId(x + offsetX, y + 1, z + offsetZ) == blockId;
+        int leftSolid = (world.Reader.ShouldSuffocate(x - offsetX, y, z - offsetZ) ? 1 : 0) +
+                        (world.Reader.ShouldSuffocate(x - offsetX, y + 1, z - offsetZ) ? 1 : 0);
+        int rightSolid = (world.Reader.ShouldSuffocate(x + offsetX, y, z + offsetZ) ? 1 : 0) +
+                         (world.Reader.ShouldSuffocate(x + offsetX, y + 1, z + offsetZ) ? 1 : 0);
+        bool leftHasDoor = world.Reader.GetBlockId(x - offsetX, y, z - offsetZ) == blockId ||
+                           world.Reader.GetBlockId(x - offsetX, y + 1, z - offsetZ) == blockId;
+        bool rightHasDoor = world.Reader.GetBlockId(x + offsetX, y, z + offsetZ) == blockId ||
+                            world.Reader.GetBlockId(x + offsetX, y + 1, z + offsetZ) == blockId;
         bool mirror = (leftHasDoor && !rightHasDoor) || (rightSolid > leftSolid);
 
         // 3. Apply the hinge flip bit (+4) if mirrored

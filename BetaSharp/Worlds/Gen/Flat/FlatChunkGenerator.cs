@@ -2,6 +2,7 @@ using BetaSharp.Blocks;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Chunks;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 using BetaSharp.Worlds.Generation.Biomes;
 using BetaSharp.Worlds.Generation.Generators.Features;
 
@@ -226,7 +227,7 @@ internal class FlatChunkGenerator : IChunkSource
                 featureZ = blockZ + _random.NextInt(16) + 8;
                 Feature treeFeature = chunkBiome.GetRandomWorldGenForTrees(_random);
                 treeFeature.prepare(1.0D, 1.0D, 1.0D);
-                treeFeature.Generate(_world, _random, featureX, _world.BlocksReader.GetTopY(featureX, featureZ), featureZ);
+                treeFeature.Generate(_world, _random, featureX, _world.Reader.GetTopY(featureX, featureZ), featureZ);
             }
 
             // Flowers and Mushrooms
@@ -286,7 +287,7 @@ internal class FlatChunkGenerator : IChunkSource
                 featureZ = blockZ + _random.NextInt(16) + 8;
                 _featureGrass.Generate(_world, _random, featureX, featureY, featureZ);
             }
- 
+
             for (int i = 0; i < 2; ++i)
             {
                 featureX = blockX + _random.NextInt(16) + 8;
@@ -294,7 +295,7 @@ internal class FlatChunkGenerator : IChunkSource
                 featureZ = blockZ + _random.NextInt(16) + 8;
                 _featureDeadBush.Generate(_world, _random, featureX, featureY, featureZ);
             }
- 
+
             for (int i = 0; i < 10; ++i)
             {
                 featureX = blockX + _random.NextInt(16) + 8;
@@ -302,7 +303,7 @@ internal class FlatChunkGenerator : IChunkSource
                 featureZ = blockZ + _random.NextInt(16) + 8;
                 _featureCactus.Generate(_world, _random, featureX, featureY, featureZ);
             }
- 
+
             // Spring Features
             for (int i = 0; i < 50; ++i)
             {

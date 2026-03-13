@@ -1,7 +1,8 @@
-using BetaSharp.Blocks.Entities;
+﻿using BetaSharp.Blocks.Entities;
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -53,7 +54,7 @@ public class BlockPistonMoving : BlockWithEntity
     {
         if (!evt.Level.IsRemote)
         {
-            BlockEntityPiston? piston = getPistonBlockEntity(evt.Level.BlocksReader, evt.X, evt.Y, evt.Z);
+            BlockEntityPiston? piston = getPistonBlockEntity(evt.Level.Reader, evt.X, evt.Y, evt.Z);
             if (piston != null)
             {
                 Blocks[piston.getPushedBlockId()].dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, piston.getPushedBlockData()));

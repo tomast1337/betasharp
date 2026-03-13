@@ -15,7 +15,7 @@ public class EntityManager
     [ThreadStatic] private static List<Entity>? _tempCollisionEntitiesResult;
     private readonly List<BlockEntity> _blockEntityUpdateQueue = [];
 
-    private readonly WorldBlockReader _blocks;
+    private readonly WorldReader _blocks;
     private readonly Dictionary<int, Entity> _entitiesById = new();
     private readonly List<Entity> _entitiesToUnload = [];
     private readonly ChunkHost _host;
@@ -28,7 +28,7 @@ public class EntityManager
 
     public List<EntityPlayer> Players = [];
 
-    public EntityManager(WorldBlockReader blocks, RuleSet rules, ChunkHost host)
+    public EntityManager(WorldReader blocks, RuleSet rules, ChunkHost host)
     {
         _blocks = blocks;
         _rules = rules;
@@ -70,7 +70,10 @@ public class EntityManager
             }
 
             if (_entitiesById.TryGetValue(entity.id, out Entity? current) && ReferenceEquals(current, entity))
+            {
                 _entitiesById.Remove(entity.id);
+            }
+
             NotifyEntityRemoved(entity);
         }
 
@@ -104,7 +107,10 @@ public class EntityManager
 
                 Entities.RemoveAt(i--);
                 if (_entitiesById.TryGetValue(entity.id, out Entity? current2) && ReferenceEquals(current2, entity))
+                {
                     _entitiesById.Remove(entity.id);
+                }
+
                 NotifyEntityRemoved(entity);
             }
         }
@@ -283,7 +289,10 @@ public class EntityManager
 
                 Entities.RemoveAt(i--);
                 if (_entitiesById.TryGetValue(entity.id, out Entity? current) && ReferenceEquals(current, entity))
+                {
                     _entitiesById.Remove(entity.id);
+                }
+
                 NotifyEntityRemoved(entity);
             }
         }

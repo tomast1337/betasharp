@@ -1,6 +1,6 @@
 using BetaSharp.Worlds.Chunks;
 
-namespace BetaSharp.Worlds.Core;
+namespace BetaSharp.Worlds.Core.Systems;
 
 public sealed class ChunkHost(IChunkSource chunkSource)
 {

@@ -14,9 +14,15 @@ public class BlockEntityFurnace : BlockEntity, IInventory
     public int fuelTime;
     private ItemStack[] inventory = new ItemStack[3];
 
-    public int size() => inventory.Length;
+    public int size()
+    {
+        return inventory.Length;
+    }
 
-    public ItemStack getStack(int slot) => inventory[slot];
+    public ItemStack getStack(int slot)
+    {
+        return inventory[slot];
+    }
 
     public ItemStack removeStack(int slot, int stack)
     {
@@ -51,11 +57,20 @@ public class BlockEntityFurnace : BlockEntity, IInventory
         }
     }
 
-    public string getName() => "Furnace";
+    public string getName()
+    {
+        return "Furnace";
+    }
 
-    public int getMaxCountPerStack() => 64;
+    public int getMaxCountPerStack()
+    {
+        return 64;
+    }
 
-    public bool canPlayerUse(EntityPlayer player) => World.BlocksReader.GetBlockEntity(X, Y, Z) != this ? false : player.getSquaredDistance(X + 0.5D, Y + 0.5D, Z + 0.5D) <= 64.0D;
+    public bool canPlayerUse(EntityPlayer player)
+    {
+        return World.Reader.GetBlockEntity(X, Y, Z) != this ? false : player.getSquaredDistance(X + 0.5D, Y + 0.5D, Z + 0.5D) <= 64.0D;
+    }
 
     public override void readNbt(NBTTagCompound nbt)
     {
@@ -99,7 +114,10 @@ public class BlockEntityFurnace : BlockEntity, IInventory
         nbt.SetTag("Items", itemList);
     }
 
-    public int getCookTimeDelta(int multiplier) => cookTime * multiplier / 200;
+    public int getCookTimeDelta(int multiplier)
+    {
+        return cookTime * multiplier / 200;
+    }
 
     public int getFuelTimeDelta(int multiplier)
     {
@@ -111,7 +129,10 @@ public class BlockEntityFurnace : BlockEntity, IInventory
         return burnTime * multiplier / fuelTime;
     }
 
-    public bool isBurning() => burnTime > 0;
+    public bool isBurning()
+    {
+        return burnTime > 0;
+    }
 
     public override void tick()
     {

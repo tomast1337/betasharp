@@ -2,6 +2,7 @@ using BetaSharp.NBT;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -69,7 +70,7 @@ public class EntityFireball : Entity
 
         if (inGround)
         {
-            int var1 = _level.BlocksReader.GetBlockId(blockX, blockY, blockZ);
+            int var1 = world.Reader.GetBlockId(blockX, blockY, blockZ);
             if (var1 == blockId)
             {
                 ++removalTimer;
@@ -95,7 +96,7 @@ public class EntityFireball : Entity
 
         Vec3D var15 = new(x, y, z);
         Vec3D var2 = new(x + velocityX, y + velocityY, z + velocityZ);
-        HitResult var3 = _level.BlocksReader.Raycast(var15, var2);
+        HitResult var3 = world.Reader.Raycast(var15, var2);
         var15 = new Vec3D(x, y, z);
         var2 = new Vec3D(x + velocityX, y + velocityY, z + velocityZ);
         if (var3.Type != HitResultType.MISS)
@@ -104,7 +105,7 @@ public class EntityFireball : Entity
         }
 
         Entity var4 = null;
-        List<Entity> var5 = _level.Entities.GetEntities(this, boundingBox.Stretch(velocityX, velocityY, velocityZ).Expand(1.0D, 1.0D, 1.0D));
+        List<Entity> var5 = world.Entities.GetEntities(this, boundingBox.Stretch(velocityX, velocityY, velocityZ).Expand(1.0D, 1.0D, 1.0D));
         double var6 = 0.0D;
 
         for (int var8 = 0; var8 < var5.Count; ++var8)
@@ -134,13 +135,13 @@ public class EntityFireball : Entity
 
         if (var3.Type != HitResultType.MISS)
         {
-            if (!_level.IsRemote)
+            if (!world.IsRemote)
             {
                 if (var3.Entity != null && var3.Entity.damage(owner, 0))
                 {
                 }
 
-                _level.CreateExplosion(null, x, y, z, 1.0F, true);
+                world.CreateExplosion(null, x, y, z, 1.0F, true);
             }
 
             markDead();
@@ -179,7 +180,7 @@ public class EntityFireball : Entity
             for (int var18 = 0; var18 < 4; ++var18)
             {
                 float var19 = 0.25F;
-                _level.Broadcaster.AddParticle("bubble", x - velocityX * var19, y - velocityY * var19, z - velocityZ * var19, velocityX, velocityY, velocityZ);
+                world.Broadcaster.AddParticle("bubble", x - velocityX * var19, y - velocityY * var19, z - velocityZ * var19, velocityX, velocityY, velocityZ);
             }
 
             var17 = 0.8F;
@@ -191,7 +192,7 @@ public class EntityFireball : Entity
         velocityX *= var17;
         velocityY *= var17;
         velocityZ *= var17;
-        _level.Broadcaster.AddParticle("smoke", x, y + 0.5D, z, 0.0D, 0.0D, 0.0D);
+        world.Broadcaster.AddParticle("smoke", x, y + 0.5D, z, 0.0D, 0.0D, 0.0D);
         setPosition(x, y, z);
     }
 

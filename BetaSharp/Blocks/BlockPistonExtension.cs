@@ -1,6 +1,7 @@
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -21,15 +22,15 @@ public class BlockPistonExtension : Block
     public override void onBreak(OnBreakEvt evt)
     {
         base.onBreak(evt);
-        int var5 = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+        int var5 = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
         int var6 = PistonConstants.field_31057_a[getFacing(var5)];
         evt.X += PistonConstants.HEAD_OFFSET_X[var6];
         evt.Y += PistonConstants.HEAD_OFFSET_Y[var6];
         evt.Z += PistonConstants.HEAD_OFFSET_Z[var6];
-        int var7 = evt.Level.BlocksReader.GetBlockId(evt.X, evt.Y, evt.Z);
+        int var7 = evt.Level.Reader.GetBlockId(evt.X, evt.Y, evt.Z);
         if (var7 == Piston.id || var7 == StickyPiston.id)
         {
-            var5 = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+            var5 = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
             if (BlockPistonBase.isExtended(var5))
             {
                 Blocks[var7].dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, var5));
@@ -128,8 +129,8 @@ public class BlockPistonExtension : Block
 
     public override void neighborUpdate(OnTickEvt evt)
     {
-        int facing = getFacing(evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z));
-        int var7 = evt.Level.BlocksReader.GetBlockId(evt.X - PistonConstants.HEAD_OFFSET_X[facing], evt.Y - PistonConstants.HEAD_OFFSET_Y[facing], evt.Z - PistonConstants.HEAD_OFFSET_Z[facing]);
+        int facing = getFacing(evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z));
+        int var7 = evt.Level.Reader.GetBlockId(evt.X - PistonConstants.HEAD_OFFSET_X[facing], evt.Y - PistonConstants.HEAD_OFFSET_Y[facing], evt.Z - PistonConstants.HEAD_OFFSET_Z[facing]);
         if (var7 != Piston.id && var7 != StickyPiston.id)
         {
             evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
@@ -137,7 +138,7 @@ public class BlockPistonExtension : Block
         else
         {
             Blocks[var7].neighborUpdate(new OnTickEvt(evt.Level, evt.X - PistonConstants.HEAD_OFFSET_X[facing], evt.Y - PistonConstants.HEAD_OFFSET_Y[facing], evt.Z - PistonConstants.HEAD_OFFSET_Z[facing],
-                evt.Level.BlocksReader.GetMeta(evt.X - PistonConstants.HEAD_OFFSET_X[facing], evt.Y - PistonConstants.HEAD_OFFSET_Y[facing], evt.Z - PistonConstants.HEAD_OFFSET_Z[facing]), id));
+                evt.Level.Reader.GetMeta(evt.X - PistonConstants.HEAD_OFFSET_X[facing], evt.Y - PistonConstants.HEAD_OFFSET_Y[facing], evt.Z - PistonConstants.HEAD_OFFSET_Z[facing]), id));
         }
     }
 

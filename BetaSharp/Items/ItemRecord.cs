@@ -1,6 +1,7 @@
 using BetaSharp.Blocks;
 using BetaSharp.Entities;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Items;
 
@@ -17,7 +18,7 @@ public class ItemRecord : Item
 
     public override bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IWorldContext world, int x, int y, int z, int meta)
     {
-        if (world.BlocksReader.GetBlockId(x, y, z) == Block.Jukebox.id && world.BlocksReader.GetMeta(x, y, z) == 0)
+        if (world.Reader.GetBlockId(x, y, z) == Block.Jukebox.id && world.Reader.GetMeta(x, y, z) == 0)
         {
             if (world.IsRemote)
             {

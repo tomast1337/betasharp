@@ -1,10 +1,11 @@
-using BetaSharp.Blocks;
+﻿using BetaSharp.Blocks;
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Items;
 using BetaSharp.NBT;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -63,7 +64,7 @@ public class EntityLiving : Entity
     public float walkAnimationSpeed;
     protected float walkProgress;
 
-    public EntityLiving(IWorldContext level) : base(level)
+    public EntityLiving(IWorldContext world) : base(world)
     {
         preventEntitySpawning = true;
         limbSwingScale = (Random.Shared.NextSingle() + 1.0f) * 0.01f;
@@ -78,7 +79,7 @@ public class EntityLiving : Entity
     }
 
 
-    public bool canSee(Entity entity) => _level.BlocksReader.Raycast(new Vec3D(x, y + getEyeHeight(), z), new Vec3D(entity.x, entity.y + entity.getEyeHeight(), entity.z)).Type == HitResultType.MISS;
+    public bool canSee(Entity entity) => world.Reader.Raycast(new Vec3D(x, y + getEyeHeight(), z), new Vec3D(entity.x, entity.y + entity.getEyeHeight(), entity.z)).Type == HitResultType.MISS;
 
     public override string getTexture() => texture;
 
@@ -95,7 +96,7 @@ public class EntityLiving : Entity
         string sound = getLivingSound();
         if (sound != null)
         {
-            _level.Broadcaster.PlaySoundAtEntity(this, sound, getSoundVolume(), (random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F);
+            world.Broadcaster.PlaySoundAtEntity(this, sound, getSoundVolume(), (random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F);
         }
     }
 
@@ -114,7 +115,7 @@ public class EntityLiving : Entity
             damage(null, 1);
         }
 
-        if (isImmuneToFire || _level.IsRemote)
+        if (isImmuneToFire || world.IsRemote)
         {
             fireTicks = 0;
         }
@@ -132,7 +133,7 @@ public class EntityLiving : Entity
                     float offsetX = random.NextFloat() - random.NextFloat();
                     float offsetY = random.NextFloat() - random.NextFloat();
                     float offsetZ = random.NextFloat() - random.NextFloat();
-                    _level.Broadcaster.AddParticle("bubble", x + offsetX, y + offsetY, z + offsetZ, velocityX, velocityY, velocityZ);
+                    world.Broadcaster.AddParticle("bubble", x + offsetX, y + offsetY, z + offsetZ, velocityX, velocityY, velocityZ);
                 }
 
                 damage(null, 2);
@@ -174,7 +175,7 @@ public class EntityLiving : Entity
                     double velX = random.NextGaussian() * 0.02D;
                     double velY = random.NextGaussian() * 0.02D;
                     double velZ = random.NextGaussian() * 0.02D;
-                    _level.Broadcaster.AddParticle("explode", x + random.NextFloat() * width * 2.0F - width, y + random.NextFloat() * height, z + random.NextFloat() * width * 2.0F - width, velX, velY, velZ);
+                    world.Broadcaster.AddParticle("explode", x + random.NextFloat() * width * 2.0F - width, y + random.NextFloat() * height, z + random.NextFloat() * width * 2.0F - width, velX, velY, velZ);
                 }
             }
         }
@@ -201,7 +202,7 @@ public class EntityLiving : Entity
             double velY = random.NextGaussian() * 0.02D;
             double velZ = random.NextGaussian() * 0.02D;
             double spread = 10.0D;
-            _level.Broadcaster.AddParticle("explode", x + random.NextFloat() * width * 2.0F - width - velX * spread, y + random.NextFloat() * height - velY * spread, z + random.NextFloat() * width * 2.0F - width - velZ * spread, velX, velY,
+            world.Broadcaster.AddParticle("explode", x + random.NextFloat() * width * 2.0F - width - velX * spread, y + random.NextFloat() * height - velY * spread, z + random.NextFloat() * width * 2.0F - width - velZ * spread, velX, velY,
                 velZ);
         }
     }
@@ -349,7 +350,7 @@ public class EntityLiving : Entity
 
     public override bool damage(Entity? entity, int amount)
     {
-        if (_level.IsRemote)
+        if (world.IsRemote)
         {
             return false;
         }
@@ -385,7 +386,7 @@ public class EntityLiving : Entity
         attackedAtYaw = 0.0F;
         if (var3)
         {
-            _level.Broadcaster.BroadcastEntityEvent(this, 2);
+            world.Broadcaster.BroadcastEntityEvent(this, 2);
             scheduleVelocityUpdate();
             if (entity != null)
             {
@@ -410,14 +411,14 @@ public class EntityLiving : Entity
         {
             if (var3)
             {
-                _level.Broadcaster.PlaySoundAtEntity(this, getDeathSound(), getSoundVolume(), (random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F);
+                world.Broadcaster.PlaySoundAtEntity(this, getDeathSound(), getSoundVolume(), (random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F);
             }
 
             onKilledBy(entity);
         }
         else if (var3)
         {
-            _level.Broadcaster.PlaySoundAtEntity(this, getHurtSound(), getSoundVolume(), (random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F);
+            world.Broadcaster.PlaySoundAtEntity(this, getHurtSound(), getSoundVolume(), (random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F);
         }
 
         return true;
@@ -468,12 +469,12 @@ public class EntityLiving : Entity
         }
 
         unused_flag = true;
-        if (!_level.IsRemote)
+        if (!world.IsRemote)
         {
             dropFewItems();
         }
 
-        _level.Broadcaster.BroadcastEntityEvent(this, 3);
+        world.Broadcaster.BroadcastEntityEvent(this, 3);
     }
 
     protected virtual void dropFewItems()
@@ -499,11 +500,11 @@ public class EntityLiving : Entity
         if (var2 > 0)
         {
             damage(null, var2);
-            int var3 = _level.BlocksReader.GetBlockId(MathHelper.Floor(x), MathHelper.Floor(y - 0.2F - standingEyeHeight), MathHelper.Floor(z));
+            int var3 = world.Reader.GetBlockId(MathHelper.Floor(x), MathHelper.Floor(y - 0.2F - standingEyeHeight), MathHelper.Floor(z));
             if (var3 > 0)
             {
                 BlockSoundGroup soundGroup = Block.Blocks[var3].soundGroup;
-                _level.Broadcaster.PlaySoundAtEntity(this, soundGroup.StepSound, soundGroup.Volume * 0.5F, soundGroup.Pitch * (12.0F / 16.0F));
+                world.Broadcaster.PlaySoundAtEntity(this, soundGroup.StepSound, soundGroup.Volume * 0.5F, soundGroup.Pitch * (12.0F / 16.0F));
             }
         }
     }
@@ -545,7 +546,7 @@ public class EntityLiving : Entity
             if (onGround)
             {
                 friction = 546.0F * 0.1F * 0.1F * 0.1F;
-                int groundBlockId = _level.BlocksReader.GetBlockId(MathHelper.Floor(x), MathHelper.Floor(boundingBox.MinY) - 1, MathHelper.Floor(z));
+                int groundBlockId = world.Reader.GetBlockId(MathHelper.Floor(x), MathHelper.Floor(boundingBox.MinY) - 1, MathHelper.Floor(z));
                 if (groundBlockId > 0)
                 {
                     friction = Block.Blocks[groundBlockId].slipperiness * 0.91F;
@@ -558,7 +559,7 @@ public class EntityLiving : Entity
             if (onGround)
             {
                 friction = 546.0F * 0.1F * 0.1F * 0.1F;
-                int groundBlockId = _level.BlocksReader.GetBlockId(MathHelper.Floor(x), MathHelper.Floor(boundingBox.MinY) - 1, MathHelper.Floor(z));
+                int groundBlockId = world.Reader.GetBlockId(MathHelper.Floor(x), MathHelper.Floor(boundingBox.MinY) - 1, MathHelper.Floor(z));
                 if (groundBlockId > 0)
                 {
                     friction = Block.Blocks[groundBlockId].slipperiness * 0.91F;
@@ -630,7 +631,7 @@ public class EntityLiving : Entity
         int x = MathHelper.Floor(this.x);
         int y = MathHelper.Floor(boundingBox.MinY);
         int z = MathHelper.Floor(this.z);
-        return _level.BlocksReader.GetBlockId(x, y, z) == Block.Ladder.id;
+        return world.Reader.GetBlockId(x, y, z) == Block.Ladder.id;
     }
 
     public override void writeNbt(NBTTagCompound nbt)
@@ -744,7 +745,7 @@ public class EntityLiving : Entity
         sidewaysSpeed *= 0.98F;
         forwardSpeed *= 0.98F;
         rotationSpeed *= 0.9F;
-        List<Entity>? nearbyEntities = _level.Entities.GetEntitiesScratch(this, boundingBox.Expand(0.2F, 0.0D, 0.2F));
+        List<Entity>? nearbyEntities = world.Entities.GetEntitiesScratch(this, boundingBox.Expand(0.2F, 0.0D, 0.2F));
         if (nearbyEntities != null && nearbyEntities.Count > 0)
         {
             for (int i = 0; i < nearbyEntities.Count; ++i)
@@ -774,7 +775,7 @@ public class EntityLiving : Entity
                     ++nextStepSoundDistance;
 
                     bool isFluid = false;
-                    if (_level != null)
+                    if (world != null)
                     {
                         // Full AABB Fluid Check
                         int minX = MathHelper.Floor(boundingBox.MinX);
@@ -790,7 +791,7 @@ public class EntityLiving : Entity
                             {
                                 for (int bz = minZ; bz < maxZ; ++bz)
                                 {
-                                    int blockId = _level.BlocksReader.GetBlockId(bx, by, bz);
+                                    int blockId = world.Reader.GetBlockId(bx, by, bz);
                                     if (blockId > 0 && Block.Blocks[blockId].material.IsFluid)
                                     {
                                         isFluid = true;
@@ -803,7 +804,7 @@ public class EntityLiving : Entity
 
                     if (isFluid)
                     {
-                        _level.Broadcaster.PlaySoundAtEntity(this, "random.splash", 0.4F,
+                        world.Broadcaster.PlaySoundAtEntity(this, "random.splash", 0.4F,
                             1.0F + (random.NextFloat() - random.NextFloat()) * 0.4F);
                     }
                     else
@@ -811,15 +812,15 @@ public class EntityLiving : Entity
                         int bx = MathHelper.Floor(x);
                         int by = MathHelper.Floor(boundingBox.MinY - 0.2F);
                         int bz = MathHelper.Floor(z);
-                        int blockId = _level.BlocksReader.GetBlockId(bx, by, bz);
-                        if (_level.BlocksReader.GetBlockId(bx, by - 1, bz) == Block.Fence.id)
+                        int blockId = world.Reader.GetBlockId(bx, by, bz);
+                        if (world.Reader.GetBlockId(bx, by - 1, bz) == Block.Fence.id)
                         {
-                            blockId = _level.BlocksReader.GetBlockId(bx, by - 1, bz);
+                            blockId = world.Reader.GetBlockId(bx, by - 1, bz);
                         }
 
                         if (blockId > 0)
                         {
-                            _level.Broadcaster.PlaySoundAtEntity(this, Block.Blocks[blockId].soundGroup.StepSound,
+                            world.Broadcaster.PlaySoundAtEntity(this, Block.Blocks[blockId].soundGroup.StepSound,
                                 Block.Blocks[blockId].soundGroup.Volume * 0.3F,
                                 Block.Blocks[blockId].soundGroup.Pitch);
                         }
@@ -841,7 +842,7 @@ public class EntityLiving : Entity
 
     protected void func_27021_X()
     {
-        EntityPlayer player = _level.Entities.GetClosestPlayer(x, y, z, -1.0D);
+        EntityPlayer player = world.Entities.GetClosestPlayer(x, y, z, -1.0D);
         if (canDespawn() && player != null)
         {
             double dx = player.x - x;
@@ -870,14 +871,14 @@ public class EntityLiving : Entity
     public virtual void tickLiving()
     {
         ++entityAge;
-        EntityPlayer closestPlayer = _level.Entities.GetClosestPlayer(x, y, z, -1.0D);
+        EntityPlayer closestPlayer = world.Entities.GetClosestPlayer(x, y, z, -1.0D);
         func_27021_X();
         sidewaysSpeed = 0.0F;
         forwardSpeed = 0.0F;
         float lookRange = 8.0F;
         if (random.NextFloat() < 0.02F)
         {
-            closestPlayer = _level.Entities.GetClosestPlayer(x, y, z, lookRange);
+            closestPlayer = world.Entities.GetClosestPlayer(x, y, z, lookRange);
             if (closestPlayer != null)
             {
                 lookTarget = closestPlayer;
@@ -973,7 +974,7 @@ public class EntityLiving : Entity
     {
     }
 
-    public virtual bool canSpawn() => _level.Entities.CanSpawnEntity(boundingBox) && _level.Entities.GetEntityCollisionsScratch(this, boundingBox).Count == 0 && !_level.BlocksReader.IsBoxSubmergedInFluid(boundingBox);
+    public virtual bool canSpawn() => world.Entities.CanSpawnEntity(boundingBox) && world.Entities.GetEntityCollisionsScratch(this, boundingBox).Count == 0 && !world.Reader.IsBoxSubmergedInFluid(boundingBox);
 
     protected override void tickInVoid() => damage(null, 4);
 
@@ -1032,7 +1033,7 @@ public class EntityLiving : Entity
         Vec3D startPos = getPosition(partialTick);
         Vec3D lookDir = getLook(partialTick);
         Vec3D endPos = startPos + range * lookDir;
-        return _level.BlocksReader.Raycast(startPos, endPos);
+        return world.Reader.Raycast(startPos, endPos);
     }
 
     public virtual int getMaxSpawnedInChunk() => 4;
@@ -1047,12 +1048,12 @@ public class EntityLiving : Entity
             hearts = maxHealth;
             hurtTime = maxHurtTime = 10;
             attackedAtYaw = 0.0F;
-            _level.Broadcaster.PlaySoundAtEntity(this, getHurtSound(), getSoundVolume(), (random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F);
+            world.Broadcaster.PlaySoundAtEntity(this, getHurtSound(), getSoundVolume(), (random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F);
             damage(null, 0);
         }
         else if (statusId == 3)
         {
-            _level.Broadcaster.PlaySoundAtEntity(this, getDeathSound(), getSoundVolume(), (random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F);
+            world.Broadcaster.PlaySoundAtEntity(this, getDeathSound(), getSoundVolume(), (random.NextFloat() - random.NextFloat()) * 0.2F + 1.0F);
             health = 0;
             onKilledBy(null);
         }

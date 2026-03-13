@@ -11,9 +11,9 @@ public class WorldTickScheduler
     public void Tick(bool forceFlush = false) => ProcessScheduledTicks(forceFlush);
 
     /// <summary>
-    /// Schedules a block update when restoring from chunk NBT (TileTicks). Skips the load-radius check
-    /// because Chunk.Load() runs when the chunk is being loaded—neighbor chunks for the ±8 block radius
-    /// may not be loaded yet, which would cause ticks to be silently dropped.
+    ///     Schedules a block update when restoring from chunk NBT (TileTicks). Skips the load-radius check
+    ///     because Chunk.Load() runs when the chunk is being loaded—neighbor chunks for the ±8 block radius
+    ///     may not be loaded yet, which would cause ticks to be silently dropped.
     /// </summary>
     public void ScheduleBlockUpdateFromChunkLoad(int x, int y, int z, int blockId, int tickRate)
     {
@@ -29,10 +29,10 @@ public class WorldTickScheduler
         {
             if (instantBlockUpdateEnabled)
             {
-                int currentBlockId = _context.BlocksReader.GetBlockId(x, y, z);
+                int currentBlockId = _context.Reader.GetBlockId(x, y, z);
                 if (currentBlockId == blockId && currentBlockId > 0)
                 {
-                    int meta = _context.BlocksReader.GetMeta(x, y, z);
+                    int meta = _context.Reader.GetMeta(x, y, z);
                     Block.Blocks[currentBlockId].onTick(new OnTickEvt(_context, x, y, z, meta, currentBlockId));
                 }
             }
@@ -70,30 +70,32 @@ public class WorldTickScheduler
             BlockUpdate blockUpdate = _scheduledUpdates.Dequeue();
 
             const byte loadRadius = 8;
-            bool posLoaded = _context.BlocksReader.IsPosLoaded(blockUpdate.X - loadRadius, blockUpdate.Y - loadRadius, blockUpdate.Z - loadRadius) &&
-                            _context.BlocksReader.IsPosLoaded(blockUpdate.X + loadRadius, blockUpdate.Y + loadRadius, blockUpdate.Z + loadRadius);
+            bool posLoaded = _context.Reader.IsPosLoaded(blockUpdate.X - loadRadius, blockUpdate.Y - loadRadius, blockUpdate.Z - loadRadius) &&
+                             _context.Reader.IsPosLoaded(blockUpdate.X + loadRadius, blockUpdate.Y + loadRadius, blockUpdate.Z + loadRadius);
             if (!posLoaded)
             {
                 continue;
             }
-            int currentBlockId = _context.BlocksReader.GetBlockId(blockUpdate.X, blockUpdate.Y, blockUpdate.Z);
+
+            int currentBlockId = _context.Reader.GetBlockId(blockUpdate.X, blockUpdate.Y, blockUpdate.Z);
             if (currentBlockId != blockUpdate.BlockId || currentBlockId <= 0)
             {
                 continue;
             }
-            Block.Blocks[currentBlockId].onTick(new OnTickEvt(_context, blockUpdate.X, blockUpdate.Y, blockUpdate.Z, _context.BlocksReader.GetMeta(blockUpdate.X, blockUpdate.Y, blockUpdate.Z), currentBlockId));
+
+            Block.Blocks[currentBlockId].onTick(new OnTickEvt(_context, blockUpdate.X, blockUpdate.Y, blockUpdate.Z, _context.Reader.GetMeta(blockUpdate.X, blockUpdate.Y, blockUpdate.Z), currentBlockId));
         }
     }
-    
+
     public void TriggerInstantTick(int x, int y, int z, int blockId)
     {
-        int meta = _context.BlocksReader.GetMeta(x, y, z);
+        int meta = _context.Reader.GetMeta(x, y, z);
         Block.Blocks[blockId].onTick(new OnTickEvt(_context, x, y, z, meta, blockId));
     }
 
     /// <summary>
-    /// Returns pending block updates whose (x,z) falls within the given chunk bounds.
-    /// Used for persisting scheduled ticks to chunk NBT (TileTicks) on save.
+    ///     Returns pending block updates whose (x,z) falls within the given chunk bounds.
+    ///     Used for persisting scheduled ticks to chunk NBT (TileTicks) on save.
     /// </summary>
     public IEnumerable<(int X, int Y, int Z, int BlockId, long ScheduledTime)> GetPendingTicksInChunk(int chunkX, int chunkZ)
     {
@@ -102,7 +104,7 @@ public class WorldTickScheduler
         int minZ = chunkZ * 16;
         int maxZ = minZ + 15;
 
-        foreach (var (blockUpdate, _) in _scheduledUpdates.UnorderedItems)
+        foreach ((BlockUpdate blockUpdate, (long, long) _) in _scheduledUpdates.UnorderedItems)
         {
             if (blockUpdate.X >= minX && blockUpdate.X <= maxX && blockUpdate.Z >= minZ && blockUpdate.Z <= maxZ)
             {

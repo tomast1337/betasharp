@@ -16,7 +16,7 @@ internal class BlockSponge : Block
             {
                 for (int checkZ = evt.Z - radius; checkZ <= evt.Z + radius; ++checkZ)
                 {
-                    if (evt.Level.BlocksReader.GetMaterial(checkX, checkY, checkZ) == Material.Water)
+                    if (evt.Level.Reader.GetMaterial(checkX, checkY, checkZ) == Material.Water)
                     {
                     }
                 }
@@ -34,7 +34,7 @@ internal class BlockSponge : Block
             {
                 for (int checkZ = evt.Z - radius; checkZ <= evt.Z + radius; ++checkZ)
                 {
-                    evt.Level.Broadcaster.NotifyNeighbors(checkX, checkY, checkZ, evt.Level.BlocksReader.GetBlockId(checkX, checkY, checkZ));
+                    evt.Level.Broadcaster.NotifyNeighbors(checkX, checkY, checkZ, evt.Level.Reader.GetBlockId(checkX, checkY, checkZ));
                 }
             }
         }

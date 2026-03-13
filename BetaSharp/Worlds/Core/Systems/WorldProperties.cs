@@ -6,26 +6,6 @@ namespace BetaSharp.Worlds.Core.Systems;
 
 public class WorldProperties
 {
-
-    public virtual long RandomSeed { get; }
-    public virtual int SpawnX { get; set; }
-    public virtual int SpawnY { get; set; }
-    public virtual int SpawnZ { get; set; }
-    public virtual long WorldTime { get; set; }
-    public virtual long LastTimePlayed { get; }
-    public virtual long SizeOnDisk { get; set; }
-    public virtual NBTTagCompound? PlayerTag { get; set; }
-    public virtual NBTTagCompound? RulesTag { get; set; }
-    public virtual int Dimension { get; }
-    public virtual string LevelName { get; set; }
-    public virtual int SaveVersion { get; set; }
-    public virtual WorldType TerrainType { get; set; }
-    public virtual bool IsRaining { get; set; }
-    public virtual int RainTime { get; set; }
-    public virtual bool IsThundering { get; set; }
-    public virtual int ThunderTime { get; set; }
-    public virtual string GeneratorOptions { get; set; } = "";
-
     protected WorldProperties()
     {
     }
@@ -44,7 +24,7 @@ public class WorldProperties
         IsRaining = nbt.GetBoolean("raining");
         ThunderTime = nbt.GetInteger("thunderTime");
         IsThundering = nbt.GetBoolean("thundering");
-        
+
         if (nbt.HasKey("generatorName"))
         {
             string generatorName = nbt.GetString("generatorName");
@@ -60,10 +40,12 @@ public class WorldProperties
             PlayerTag = nbt.GetCompoundTag("Player");
             Dimension = PlayerTag.GetInteger("Dimension");
         }
+
         if (nbt.HasKey("GameRules"))
         {
             RulesTag = nbt.GetCompoundTag("GameRules");
         }
+
         if (nbt.HasKey("generatorOptions"))
         {
             GeneratorOptions = nbt.GetString("generatorOptions");
@@ -107,6 +89,25 @@ public class WorldProperties
         GeneratorOptions = WorldProp.GeneratorOptions;
     }
 
+    public virtual long RandomSeed { get; }
+    public virtual int SpawnX { get; set; }
+    public virtual int SpawnY { get; set; }
+    public virtual int SpawnZ { get; set; }
+    public virtual long WorldTime { get; set; }
+    public virtual long LastTimePlayed { get; }
+    public virtual long SizeOnDisk { get; set; }
+    public virtual NBTTagCompound? PlayerTag { get; set; }
+    public virtual NBTTagCompound? RulesTag { get; set; }
+    public virtual int Dimension { get; }
+    public virtual string LevelName { get; set; }
+    public virtual int SaveVersion { get; set; }
+    public virtual WorldType TerrainType { get; set; }
+    public virtual bool IsRaining { get; set; }
+    public virtual int RainTime { get; set; }
+    public virtual bool IsThundering { get; set; }
+    public virtual int ThunderTime { get; set; }
+    public virtual string GeneratorOptions { get; set; } = "";
+
     public NBTTagCompound getNBTTagCompound()
     {
         NBTTagCompound nbt = new();
@@ -146,7 +147,7 @@ public class WorldProperties
         worldNbt.SetBoolean("raining", IsRaining);
         worldNbt.SetInteger("thunderTime", ThunderTime);
         worldNbt.SetBoolean("thundering", IsThundering);
-        
+
         if (TerrainType != null)
         {
             worldNbt.SetString("generatorName", TerrainType.Name);
@@ -160,10 +161,14 @@ public class WorldProperties
         }
 
         if (playerNbt != null)
+        {
             worldNbt.SetCompoundTag("Player", playerNbt);
+        }
 
         if (RulesTag != null)
+        {
             worldNbt.SetCompoundTag("GameRules", RulesTag);
+        }
     }
 
     public virtual void SetSpawn(int x, int y, int z)

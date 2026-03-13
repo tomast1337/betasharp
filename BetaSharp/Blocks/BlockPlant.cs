@@ -1,6 +1,7 @@
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -14,7 +15,7 @@ public class BlockPlant : Block
         setBoundingBox(0.5F - halfSize, 0.0F, 0.5F - halfSize, 0.5F + halfSize, halfSize * 3.0F, 0.5F + halfSize);
     }
 
-    public override bool canPlaceAt(CanPlaceAtCtx ctx) => base.canPlaceAt(ctx) && canPlantOnTop(ctx.Level.BlocksReader.GetBlockId(ctx.X, ctx.Y - 1, ctx.Z));
+    public override bool canPlaceAt(CanPlaceAtCtx ctx) => base.canPlaceAt(ctx) && canPlantOnTop(ctx.Level.Reader.GetBlockId(ctx.X, ctx.Y - 1, ctx.Z));
 
     protected virtual bool canPlantOnTop(int id) => id == GrassBlock.id || id == Dirt.id || id == Farmland.id;
 
@@ -28,15 +29,15 @@ public class BlockPlant : Block
 
     protected void breakIfCannotGrow(IWorldContext level, int x, int y, int z)
     {
-        if (!canGrow(new OnTickEvt(level, x, y, z, level.BlocksReader.GetMeta(x, y, z), level.BlocksReader.GetBlockId(x, y, z))))
+        if (!canGrow(new OnTickEvt(level, x, y, z, level.Reader.GetMeta(x, y, z), level.Reader.GetBlockId(x, y, z))))
         {
-            dropStacks(new OnDropEvt(level, x, y, z, level.BlocksReader.GetMeta(x, y, z)));
+            dropStacks(new OnDropEvt(level, x, y, z, level.Reader.GetMeta(x, y, z)));
             level.BlockWriter.SetBlock(x, y, z, 0);
         }
     }
 
     public override bool canGrow(OnTickEvt ctx) =>
-        (ctx.Level.BlocksReader.GetBrightness(ctx.X, ctx.Y, ctx.Z) >= 8 || ctx.Level.Lighting.HasSkyLight(ctx.X, ctx.Y, ctx.Z)) && canPlantOnTop(ctx.Level.BlocksReader.GetBlockId(ctx.X, ctx.Y - 1, ctx.Z));
+        (ctx.Level.Reader.GetBrightness(ctx.X, ctx.Y, ctx.Z) >= 8 || ctx.Level.Lighting.HasSkyLight(ctx.X, ctx.Y, ctx.Z)) && canPlantOnTop(ctx.Level.Reader.GetBlockId(ctx.X, ctx.Y - 1, ctx.Z));
 
     public override Box? getCollisionShape(IBlockReader world, int x, int y, int z) => null;
 

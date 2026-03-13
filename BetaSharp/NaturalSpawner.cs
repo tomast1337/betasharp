@@ -3,6 +3,7 @@ using BetaSharp.Entities;
 using BetaSharp.PathFinding;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 using BetaSharp.Worlds.Generation.Biomes;
 
 namespace BetaSharp;
@@ -24,7 +25,7 @@ internal static class NaturalSpawner
 
     private static BlockPos GetRandomSpawningPointInChunk(IWorldContext world, PathFinder pathFinder, int centerX, int centerZ)
     {
-        pathFinder.SetWorld(world.BlocksReader);
+        pathFinder.SetWorld(world.Reader);
         int x = centerX + world.random.NextInt(16);
         int y = world.random.NextInt(128);
         int z = centerZ + world.random.NextInt(16);
@@ -33,7 +34,7 @@ internal static class NaturalSpawner
 
     internal static void DoSpawning(IWorldContext world, PathFinder pathFinder, bool spawnHostile, bool spawnPeaceful)
     {
-        pathFinder.SetWorld(world.BlocksReader);
+        pathFinder.SetWorld(world.Reader);
         if (!spawnHostile && !spawnPeaceful) return;
 
         ChunksForSpawning.Clear();
@@ -67,8 +68,8 @@ internal static class NaturalSpawner
                     SpawnListEntry toSpawn = spawnSelector.GetNext(world.random);
 
                     BlockPos spawnPos = GetRandomSpawningPointInChunk(world, pathFinder, chunk.X * 16, chunk.Z * 16);
-                    if (world.BlocksReader.ShouldSuffocate(spawnPos.x, spawnPos.y, spawnPos.z)) continue;
-                    if (world.BlocksReader.GetMaterial(spawnPos.x, spawnPos.y, spawnPos.z) != creatureKind.SpawnMaterial) continue;
+                    if (world.Reader.ShouldSuffocate(spawnPos.x, spawnPos.y, spawnPos.z)) continue;
+                    if (world.Reader.GetMaterial(spawnPos.x, spawnPos.y, spawnPos.z) != creatureKind.SpawnMaterial) continue;
 
                     int spawnedCount = 0;
                     bool breakToNextChunk = false;
@@ -84,7 +85,7 @@ internal static class NaturalSpawner
                             x += world.random.NextInt(SpawnCloseness) - world.random.NextInt(SpawnCloseness);
                             y += world.random.NextInt(1) - world.random.NextInt(1);
                             z += world.random.NextInt(SpawnCloseness) - world.random.NextInt(SpawnCloseness);
-                            if (creatureKind.CanSpawnAtLocation(world.BlocksReader, x, y, z))
+                            if (creatureKind.CanSpawnAtLocation(world.Reader, x, y, z))
                             {
                                 Vec3D entityPos = new Vec3D(x + 0.5D, y, z + 0.5D);
 
@@ -119,7 +120,7 @@ internal static class NaturalSpawner
 
     internal static bool SpawnMonstersAndWakePlayers(IWorldContext world, List<EntityPlayer> players)
     {
-        world.Pathing.SetWorld(world.BlocksReader);
+        world.Pathing.SetWorld(world.Reader);
         bool monstersSpawned = false;
         foreach (var player in players)
         {
@@ -142,10 +143,10 @@ internal static class NaturalSpawner
                 int newSpawnY;
                 for (newSpawnY = spawnY; newSpawnY > 2; --newSpawnY)
                 {
-                    if (world.BlocksReader.ShouldSuffocate(spawnX, newSpawnY - 1, spawnZ)) break;
+                    if (world.Reader.ShouldSuffocate(spawnX, newSpawnY - 1, spawnZ)) break;
                 }
 
-                while (!CreatureKind.Monster.CanSpawnAtLocation(world.BlocksReader, spawnX, newSpawnY, spawnZ) &&
+                while (!CreatureKind.Monster.CanSpawnAtLocation(world.Reader, spawnX, newSpawnY, spawnZ) &&
                        newSpawnY < spawnY + 16 && newSpawnY < 128)
                 {
                     ++newSpawnY;
@@ -167,7 +168,7 @@ internal static class NaturalSpawner
                                 Math.Abs(pathPoint.Y - player.y) < 1.5D)
                             {
                                 Vec3i wakeUpPos =
-                                    BlockBed.findWakeUpPosition(world.BlocksReader, MathHelper.Floor(player.x),
+                                    BlockBed.findWakeUpPosition(world.Reader, MathHelper.Floor(player.x),
                                         MathHelper.Floor(player.y), MathHelper.Floor(player.z), 1) ??
                                     new Vec3i(spawnX, newSpawnY + 1, spawnZ);
 

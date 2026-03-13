@@ -1,6 +1,7 @@
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -12,7 +13,7 @@ internal class BlockCake : Block
     {
         int slicesEaten = iBlockReader.GetMeta(x, y, z);
         float edgeInset = 1.0F / 16.0F;
-        float minX = (1 + slicesEaten * 2) / 16.0F;
+        float minX = (float)(1 + slicesEaten * 2) / 16.0F;
         float height = 0.5F;
         setBoundingBox(minX, 0.0F, edgeInset, 1.0F - edgeInset, height, 1.0F - edgeInset);
     }
@@ -30,32 +31,44 @@ internal class BlockCake : Block
         float edgeInset = 1.0F / 16.0F;
         float minX = (1 + slicesEaten * 2) / 16.0F;
         float height = 0.5F;
-        return new Box(x + minX, y, z + edgeInset, x + 1 - edgeInset, y + height - edgeInset, z + 1 - edgeInset);
+        return new Box((double)((float)x + minX), (double)y, (double)((float)z + edgeInset), (double)((float)(x + 1) - edgeInset), (double)((float)y + height - edgeInset), (double)((float)(z + 1) - edgeInset));
     }
 
     public override Box getBoundingBox(IBlockReader world, int x, int y, int z)
     {
         int slicesEaten = world.GetMeta(x, y, z);
         float edgeInset = 1.0F / 16.0F;
-        float minX = (1 + slicesEaten * 2) / 16.0F;
+        float minX = (float)(1 + slicesEaten * 2) / 16.0F;
         float height = 0.5F;
-        return new Box(x + minX, y, z + edgeInset, x + 1 - edgeInset, y + height, z + 1 - edgeInset);
+        return new Box((double)((float)x + minX), (double)y, (double)((float)z + edgeInset), (double)((float)(x + 1) - edgeInset), (double)((float)y + height), (double)((float)(z + 1) - edgeInset));
     }
 
-    public override int getTexture(int side, int meta) => side == 1 ? textureId : side == 0 ? textureId + 3 : meta > 0 && side == 4 ? textureId + 2 : textureId + 1;
+    public override int getTexture(int side, int meta)
+    {
+        return side == 1 ? textureId : (side == 0 ? textureId + 3 : (meta > 0 && side == 4 ? textureId + 2 : textureId + 1));
+    }
 
-    public override int getTexture(int side) => side == 1 ? textureId : side == 0 ? textureId + 3 : textureId + 1;
+    public override int getTexture(int side)
+    {
+        return side == 1 ? textureId : (side == 0 ? textureId + 3 : textureId + 1);
+    }
 
-    public override bool isFullCube() => false;
+    public override bool isFullCube()
+    {
+        return false;
+    }
 
-    public override bool isOpaque() => false;
+    public override bool isOpaque()
+    {
+        return false;
+    }
 
     public override bool onUse(OnUseEvt evt)
     {
         if (evt.Player.health < 20)
         {
             evt.Player.heal(3);
-            int slicesEaten = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z) + 1;
+            int slicesEaten = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z) + 1;
             if (slicesEaten >= 6)
             {
                 evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
@@ -78,7 +91,7 @@ internal class BlockCake : Block
         }
 
         evt.Player.heal(3);
-        int slicesEaten = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z) + 1;
+        int slicesEaten = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z) + 1;
         if (slicesEaten >= 6)
         {
             evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
@@ -90,24 +103,39 @@ internal class BlockCake : Block
         }
     }
 
-    public override bool canPlaceAt(CanPlaceAtCtx evt) => !base.canPlaceAt(evt) ? false : canGrow(evt.Level.BlocksReader, evt.X, evt.Y, evt.Z);
+    public override bool canPlaceAt(CanPlaceAtCtx evt)
+    {
+        return !base.canPlaceAt(evt) ? false : canGrow(evt.Level.Reader, evt.X, evt.Y, evt.Z);
+    }
 
     public override void neighborUpdate(OnTickEvt evt)
     {
-        if (canGrow(evt.Level.BlocksReader, evt.X, evt.Y, evt.Z))
+        if (canGrow(evt.Level.Reader, evt.X, evt.Y, evt.Z))
         {
             return;
         }
 
-        dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z)));
+        dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z)));
         evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
     }
 
-    public override bool canGrow(OnTickEvt evt) => canGrow(evt.Level.BlocksReader, evt.X, evt.Y, evt.Z);
+    public override bool canGrow(OnTickEvt evt)
+    {
+        return canGrow(evt.Level.Reader, evt.X, evt.Y, evt.Z);
+    }
 
-    private static bool canGrow(IBlockReader world, int x, int y, int z) => world.GetMaterial(x, y - 1, z).IsSolid;
+    private static bool canGrow(IBlockReader world, int x, int y, int z)
+    {
+        return world.GetMaterial(x, y - 1, z).IsSolid;
+    }
 
-    public override int getDroppedItemCount() => 0;
+    public override int getDroppedItemCount()
+    {
+        return 0;
+    }
 
-    public override int getDroppedItemId(int blockMeta) => 0;
+    public override int getDroppedItemId(int blockMeta)
+    {
+        return 0;
+    }
 }

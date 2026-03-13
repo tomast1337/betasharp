@@ -3,6 +3,7 @@ using BetaSharp.Client.Rendering.Entities;
 using BetaSharp.Entities;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Client.Entities.FX;
 
@@ -39,7 +40,7 @@ public class EntityPickupFX : EntityFX
         int itemX = MathHelper.Floor(renderX);
         int itemY = MathHelper.Floor(renderY + (double)(standingEyeHeight / 2.0F));
         int itemZ = MathHelper.Floor(renderZ);
-        float luminance = _level.Lighting.GetLuminance(itemX, itemY, itemZ);
+        float luminance = world.Lighting.GetLuminance(itemX, itemY, itemZ);
         renderX -= interpPosX;
         renderY -= interpPosY;
         renderZ -= interpPosZ;

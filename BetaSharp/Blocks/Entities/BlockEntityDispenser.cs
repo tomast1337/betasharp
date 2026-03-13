@@ -11,9 +11,15 @@ public class BlockEntityDispenser : BlockEntity, IInventory
     private readonly JavaRandom random = new();
     private ItemStack[] inventory = new ItemStack[9];
 
-    public int size() => 9;
+    public int size()
+    {
+        return 9;
+    }
 
-    public ItemStack getStack(int slot) => inventory[slot];
+    public ItemStack getStack(int slot)
+    {
+        return inventory[slot];
+    }
 
     public ItemStack removeStack(int slot, int amount)
     {
@@ -52,11 +58,20 @@ public class BlockEntityDispenser : BlockEntity, IInventory
         markDirty();
     }
 
-    public string getName() => "Trap";
+    public string getName()
+    {
+        return "Trap";
+    }
 
-    public int getMaxCountPerStack() => 64;
+    public int getMaxCountPerStack()
+    {
+        return 64;
+    }
 
-    public bool canPlayerUse(EntityPlayer player) => World.BlocksReader.GetBlockEntity(X, Y, Z) != this ? false : player.getSquaredDistance(X + 0.5D, Y + 0.5D, Z + 0.5D) <= 64.0D;
+    public bool canPlayerUse(EntityPlayer player)
+    {
+        return World.Reader.GetBlockEntity(X, Y, Z) != this ? false : player.getSquaredDistance(X + 0.5D, Y + 0.5D, Z + 0.5D) <= 64.0D;
+    }
 
     public ItemStack getItemToDispose()
     {

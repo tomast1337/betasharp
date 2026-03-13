@@ -1,6 +1,7 @@
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -71,29 +72,29 @@ internal class BlockLadder : Block
     public override BlockRendererType getRenderType() => BlockRendererType.Ladder;
 
     public override bool canPlaceAt(CanPlaceAtCtx ctx) =>
-        ctx.Level.BlocksReader.ShouldSuffocate(ctx.X - 1, ctx.Y, ctx.Z) ? true :
-        ctx.Level.BlocksReader.ShouldSuffocate(ctx.X + 1, ctx.Y, ctx.Z) ? true :
-        ctx.Level.BlocksReader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z - 1) ? true : ctx.Level.BlocksReader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z + 1);
+        ctx.Level.Reader.ShouldSuffocate(ctx.X - 1, ctx.Y, ctx.Z) ? true :
+        ctx.Level.Reader.ShouldSuffocate(ctx.X + 1, ctx.Y, ctx.Z) ? true :
+        ctx.Level.Reader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z - 1) ? true : ctx.Level.Reader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z + 1);
 
     public override void onPlaced(OnPlacedEvt ctx)
     {
-        int meta = ctx.Level.BlocksReader.GetMeta(ctx.X, ctx.Y, ctx.Z);
-        if ((meta == 0 || ctx.Direction == 2) && ctx.Level.BlocksReader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z + 1))
+        int meta = ctx.Level.Reader.GetMeta(ctx.X, ctx.Y, ctx.Z);
+        if ((meta == 0 || ctx.Direction == 2) && ctx.Level.Reader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z + 1))
         {
             meta = 2;
         }
 
-        if ((meta == 0 || ctx.Direction == 3) && ctx.Level.BlocksReader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z - 1))
+        if ((meta == 0 || ctx.Direction == 3) && ctx.Level.Reader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z - 1))
         {
             meta = 3;
         }
 
-        if ((meta == 0 || ctx.Direction == 4) && ctx.Level.BlocksReader.ShouldSuffocate(ctx.X + 1, ctx.Y, ctx.Z))
+        if ((meta == 0 || ctx.Direction == 4) && ctx.Level.Reader.ShouldSuffocate(ctx.X + 1, ctx.Y, ctx.Z))
         {
             meta = 4;
         }
 
-        if ((meta == 0 || ctx.Direction == 5) && ctx.Level.BlocksReader.ShouldSuffocate(ctx.X - 1, ctx.Y, ctx.Z))
+        if ((meta == 0 || ctx.Direction == 5) && ctx.Level.Reader.ShouldSuffocate(ctx.X - 1, ctx.Y, ctx.Z))
         {
             meta = 5;
         }
@@ -103,24 +104,24 @@ internal class BlockLadder : Block
 
     public override void neighborUpdate(OnTickEvt ctx)
     {
-        int meta = ctx.Level.BlocksReader.GetMeta(ctx.X, ctx.Y, ctx.Z);
+        int meta = ctx.Level.Reader.GetMeta(ctx.X, ctx.Y, ctx.Z);
         bool hasSupport = false;
-        if (meta == 2 && ctx.Level.BlocksReader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z + 1))
+        if (meta == 2 && ctx.Level.Reader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z + 1))
         {
             hasSupport = true;
         }
 
-        if (meta == 3 && ctx.Level.BlocksReader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z - 1))
+        if (meta == 3 && ctx.Level.Reader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z - 1))
         {
             hasSupport = true;
         }
 
-        if (meta == 4 && ctx.Level.BlocksReader.ShouldSuffocate(ctx.X + 1, ctx.Y, ctx.Z))
+        if (meta == 4 && ctx.Level.Reader.ShouldSuffocate(ctx.X + 1, ctx.Y, ctx.Z))
         {
             hasSupport = true;
         }
 
-        if (meta == 5 && ctx.Level.BlocksReader.ShouldSuffocate(ctx.X - 1, ctx.Y, ctx.Z))
+        if (meta == 5 && ctx.Level.Reader.ShouldSuffocate(ctx.X - 1, ctx.Y, ctx.Z))
         {
             hasSupport = true;
         }

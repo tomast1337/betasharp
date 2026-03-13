@@ -4,6 +4,7 @@ using BetaSharp.Blocks.Materials;
 using BetaSharp.Items;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Worlds.Generation.Generators.Features;
 
@@ -23,7 +24,7 @@ internal class DungeonFeature : Feature
             {
                 for (int cz = z - radiusZ - 1; cz <= z + radiusZ + 1; ++cz)
                 {
-                    Material mat = level.BlocksReader.GetMaterial(cx, cy, cz);
+                    Material mat = level.Reader.GetMaterial(cx, cy, cz);
 
                     if ((cy == y - 1 || cy == y + height + 1) && !mat.IsSolid)
                     {
@@ -35,7 +36,7 @@ internal class DungeonFeature : Feature
                                   cz == z - radiusZ - 1 ||
                                   cz == z + radiusZ + 1;
 
-                    if (isWall && cy == y && level.BlocksReader.IsAir(cx, cy, cz) && level.BlocksReader.IsAir(cx, cy + 1, cz))
+                    if (isWall && cy == y && level.Reader.IsAir(cx, cy, cz) && level.Reader.IsAir(cx, cy + 1, cz))
                     {
                         ++openingsCount;
                     }
@@ -64,11 +65,11 @@ internal class DungeonFeature : Feature
                     {
                         level.BlockWriter.SetBlock(cx, cy, cz, 0, 0, doUpdate: false);
                     }
-                    else if (cy >= 0 && !level.BlocksReader.GetMaterial(cx, cy - 1, cz).IsSolid)
+                    else if (cy >= 0 && !level.Reader.GetMaterial(cx, cy - 1, cz).IsSolid)
                     {
                         level.BlockWriter.SetBlock(cx, cy, cz, 0, 0, doUpdate: false);
                     }
-                    else if (level.BlocksReader.GetMaterial(cx, cy, cz).IsSolid)
+                    else if (level.Reader.GetMaterial(cx, cy, cz).IsSolid)
                     {
                         if (cy == y - 1 && rand.NextInt(4) != 0)
                         {
@@ -90,25 +91,25 @@ internal class DungeonFeature : Feature
             {
                 int chestX = x + rand.NextInt(radiusX * 2 + 1) - radiusX;
                 int chestZ = z + rand.NextInt(radiusZ * 2 + 1) - radiusZ;
-                if (level.BlocksReader.IsAir(chestX, y, chestZ))
+                if (level.Reader.IsAir(chestX, y, chestZ))
                 {
                     int neighbors = 0;
-                    if (level.BlocksReader.GetMaterial(chestX - 1, y, chestZ).IsSolid)
+                    if (level.Reader.GetMaterial(chestX - 1, y, chestZ).IsSolid)
                     {
                         ++neighbors;
                     }
 
-                    if (level.BlocksReader.GetMaterial(chestX + 1, y, chestZ).IsSolid)
+                    if (level.Reader.GetMaterial(chestX + 1, y, chestZ).IsSolid)
                     {
                         ++neighbors;
                     }
 
-                    if (level.BlocksReader.GetMaterial(chestX, y, chestZ - 1).IsSolid)
+                    if (level.Reader.GetMaterial(chestX, y, chestZ - 1).IsSolid)
                     {
                         ++neighbors;
                     }
 
-                    if (level.BlocksReader.GetMaterial(chestX, y, chestZ + 1).IsSolid)
+                    if (level.Reader.GetMaterial(chestX, y, chestZ + 1).IsSolid)
                     {
                         ++neighbors;
                     }

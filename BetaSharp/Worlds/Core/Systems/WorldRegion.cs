@@ -7,7 +7,7 @@ using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Chunks;
 using BetaSharp.Worlds.Generation.Biomes.Source;
 
-namespace BetaSharp.Worlds.Core;
+namespace BetaSharp.Worlds.Core.Systems;
 
 internal class WorldRegion : IBlockReader
 {
@@ -74,7 +74,7 @@ internal class WorldRegion : IBlockReader
         return _chunks[cx][cz]?.GetBlockEntity(x & 15, y, z & 15);
     }
 
-    public BiomeSource GetBiomeSource() => _level.BlocksReader.GetBiomeSource();
+    public BiomeSource GetBiomeSource() => _level.Reader.GetBiomeSource();
 
     public bool IsOpaque(int x, int y, int z)
     {
@@ -106,6 +106,8 @@ internal class WorldRegion : IBlockReader
     public bool IsMaterialInBox(Box area, Material material) => throw new NotImplementedException();
     public bool IsFluidInBox(Box area, Material fluid) => throw new NotImplementedException();
     public bool UpdateMovementInFluid(Box entityBox, Material fluidMaterial, Entity entity) => throw new NotImplementedException();
+
+    public bool IsPosLoaded(int x, int y, int z) => throw new NotImplementedException();
 
     public float GetNaturalBrightness(int x, int y, int z, int blockLight)
     {
@@ -172,6 +174,4 @@ internal class WorldRegion : IBlockReader
 
         return _chunks[cIdxX][cIdxZ].GetLight(x & 15, y, z & 15, _level.Environment.AmbientDarkness);
     }
-
-    public bool IsPosLoaded(int x, int y, int z) => throw new NotImplementedException();
 }

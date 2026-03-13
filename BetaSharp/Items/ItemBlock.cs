@@ -2,6 +2,7 @@ using BetaSharp.Blocks;
 using BetaSharp.Entities;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Items;
 
@@ -18,7 +19,7 @@ internal class ItemBlock : Item
 
     public override bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IWorldContext world, int x, int y, int z, int meta)
     {
-        if (world.BlocksReader.GetBlockId(x, y, z) == Block.Snow.id)
+        if (world.Reader.GetBlockId(x, y, z) == Block.Snow.id)
         {
             meta = 0;
         }
@@ -61,7 +62,7 @@ internal class ItemBlock : Item
         }
 
         // Prevent overwriting existing non-replaceable blocks (fixes Lever/Button overlap)
-        int existingBlockId = world.BlocksReader.GetBlockId(x, y, z);
+        int existingBlockId = world.Reader.GetBlockId(x, y, z);
         if (existingBlockId != 0 && !Block.Blocks[existingBlockId].material.IsReplaceable)
         {
             return false;
@@ -73,7 +74,7 @@ internal class ItemBlock : Item
         }
 
         Block block = Block.Blocks[blockID];
-        Box? collisionBox = block.getCollisionShape(world.BlocksReader, x, y, z);
+        Box? collisionBox = block.getCollisionShape(world.Reader, x, y, z);
         if (collisionBox is { } box)
         {
             List<Entity> entitiesInBox = world.Entities.CollectEntitiesOfType<Entity>(box);

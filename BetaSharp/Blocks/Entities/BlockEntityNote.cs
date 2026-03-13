@@ -1,6 +1,7 @@
 using BetaSharp.Blocks.Materials;
 using BetaSharp.NBT;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks.Entities;
 
@@ -38,9 +39,9 @@ internal class BlockEntityNote : BlockEntity
 
     public void playNote(IWorldContext level, int x, int y, int z)
     {
-        if (level.BlocksReader.GetMaterial(x, y + 1, z) == Material.Air)
+        if (level.Reader.GetMaterial(x, y + 1, z) == Material.Air)
         {
-            Material material = level.BlocksReader.GetMaterial(x, y - 1, z);
+            Material material = level.Reader.GetMaterial(x, y - 1, z);
             byte instrument = 0;
             if (material == Material.Stone)
             {

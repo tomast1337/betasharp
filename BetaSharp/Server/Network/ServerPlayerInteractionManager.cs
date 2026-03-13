@@ -43,7 +43,7 @@ public class ServerPlayerInteractionManager
         if (mining)
         {
             int miningTicks = tickCounter - startMiningTime;
-            int blockId = world.BlocksReader.GetBlockId(miningX, miningY, miningZ);
+            int blockId = world.Reader.GetBlockId(miningX, miningY, miningZ);
             if (blockId != 0)
             {
                 Block block = Block.Blocks[blockId];
@@ -67,7 +67,7 @@ public class ServerPlayerInteractionManager
     {
         world.ExtinguishFire(null, x, y, z, direction);
         failedMiningStartTime = tickCounter;
-        int blockId = world.BlocksReader.GetBlockId(x, y, z);
+        int blockId = world.Reader.GetBlockId(x, y, z);
         if (blockId > 0)
         {
             Block.Blocks[blockId].onBlockBreakStart(new OnBlockBreakStartEvt(world, player, x, y, z));
@@ -93,7 +93,7 @@ public class ServerPlayerInteractionManager
         if (x == failedMiningX && y == failedMiningY && z == failedMiningZ)
         {
             int ticksSinceFailedStart = tickCounter - failedMiningStartTime;
-            int blockId = world.BlocksReader.GetBlockId(x, y, z);
+            int blockId = world.Reader.GetBlockId(x, y, z);
             if (blockId != 0)
             {
                 Block block = Block.Blocks[blockId];
@@ -119,8 +119,8 @@ public class ServerPlayerInteractionManager
 
     public bool finishMining(int x, int y, int z)
     {
-        Block block = Block.Blocks[world.BlocksReader.GetBlockId(x, y, z)];
-        int blockMeta = world.BlocksReader.GetMeta(x, y, z);
+        Block block = Block.Blocks[world.Reader.GetBlockId(x, y, z)];
+        int blockMeta = world.Reader.GetMeta(x, y, z);
         bool success = world.BlockWriter.SetBlock(x, y, z, 0);
         if (block != null && success)
         {
@@ -133,7 +133,7 @@ public class ServerPlayerInteractionManager
     public void UpdateMiningTool()
     {
         if (miningProgress is < 0F or >= 1F) return;
-        int blockId = world.BlocksReader.GetBlockId(failedMiningX, failedMiningY, failedMiningZ);
+        int blockId = world.Reader.GetBlockId(failedMiningX, failedMiningY, failedMiningZ);
         if (blockId == 0)
         {
             miningProgress = -1;
@@ -148,9 +148,9 @@ public class ServerPlayerInteractionManager
 
     public bool tryBreakBlock(int x, int y, int z)
     {
-        int blockId = world.BlocksReader.GetBlockId(x, y, z);
-        int blockMeta = world.BlocksReader.GetMeta(x, y, z);
-        world.Broadcaster.WorldEvent(player, 2001, x, y, z, blockId + world.BlocksReader.GetMeta(x, y, z) * 256);
+        int blockId = world.Reader.GetBlockId(x, y, z);
+        int blockMeta = world.Reader.GetMeta(x, y, z);
+        world.Broadcaster.WorldEvent(player, 2001, x, y, z, blockId + world.Reader.GetMeta(x, y, z) * 256);
         bool success = finishMining(x, y, z);
 
         if (success && player.canHarvest(Block.Blocks[blockId]))
@@ -197,7 +197,7 @@ public class ServerPlayerInteractionManager
 
     public bool interactBlock(EntityPlayer player, World world, ItemStack? stack, int x, int y, int z, int side)
     {
-        int blockId = world.BlocksReader.GetBlockId(x, y, z);
+        int blockId = world.Reader.GetBlockId(x, y, z);
         if (blockId > 0 && Block.Blocks[blockId].onUse(new OnUseEvt(world,player, x, y, z)))
         {
             miningProgress = -1;

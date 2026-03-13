@@ -432,7 +432,7 @@ public class Block
 
     public virtual bool canPlaceAt(CanPlaceAtCtx evt)
     {
-        int blockId = evt.Level.BlocksReader.GetBlockId(evt.X, evt.Y, evt.Z);
+        int blockId = evt.Level.Reader.GetBlockId(evt.X, evt.Y, evt.Z);
         return blockId == 0 || Blocks[blockId].material.IsReplaceable;
     }
 

@@ -3,6 +3,7 @@ using BetaSharp.Blocks.Materials;
 using BetaSharp.Entities;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
+using BetaSharp.Worlds.Core.Systems;
 using BetaSharp.Worlds.Generation.Biomes.Source;
 
 namespace BetaSharp.Worlds.Core;
@@ -49,6 +50,7 @@ public sealed class PistonItemBlockReader : IBlockReader
     public bool IsMaterialInBox(Box area, Material material) => throw new NotImplementedException();
     public bool IsFluidInBox(Box area, Material fluid) => throw new NotImplementedException();
     public bool UpdateMovementInFluid(Box entityBox, Material fluidMaterial, Entity entity) => throw new NotImplementedException();
+    public bool IsPosLoaded(int x, int y, int z) => throw new NotImplementedException();
 
     public float GetNaturalBrightness(int x, int y, int z, int blockLight) => 1.0f;
 
@@ -57,5 +59,4 @@ public sealed class PistonItemBlockReader : IBlockReader
     public int getBlockMeta(int x, int y, int z) => x == 0 && y == 0 && z == 0 ? _metadata : 0;
 
     public Material getMaterial(int x, int y, int z) => Material.Air;
-    public bool IsPosLoaded(int x, int y, int z) => throw new NotImplementedException();
 }

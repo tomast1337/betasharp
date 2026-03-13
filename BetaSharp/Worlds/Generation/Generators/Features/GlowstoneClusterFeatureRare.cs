@@ -1,6 +1,7 @@
 using BetaSharp.Blocks;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Worlds.Generation.Generators.Features;
 
@@ -8,12 +9,12 @@ internal class GlowstoneClusterFeatureRare : Feature
 {
     public override bool Generate(IWorldContext level, JavaRandom rand, int x, int y, int z)
     {
-        if (!level.BlocksReader.IsAir(x, y, z))
+        if (!level.Reader.IsAir(x, y, z))
         {
             return false;
         }
 
-        if (level.BlocksReader.GetBlockId(x, y + 1, z) != Block.Netherrack.id)
+        if (level.Reader.GetBlockId(x, y + 1, z) != Block.Netherrack.id)
         {
             return false;
         }
@@ -26,7 +27,7 @@ internal class GlowstoneClusterFeatureRare : Feature
             int genX = x + rand.NextInt(8) - rand.NextInt(8);
             int genY = y - rand.NextInt(12);
             int genZ = z + rand.NextInt(8) - rand.NextInt(8);
-            if (level.BlocksReader.GetBlockId(genX, genY, genZ) == 0)
+            if (level.Reader.GetBlockId(genX, genY, genZ) == 0)
             {
                 int GlowstoneNeighbors = 0;
 
@@ -35,32 +36,32 @@ internal class GlowstoneClusterFeatureRare : Feature
                     int blockId = 0;
                     if (j == 0)
                     {
-                        blockId = level.BlocksReader.GetBlockId(genX - 1, genY, genZ);
+                        blockId = level.Reader.GetBlockId(genX - 1, genY, genZ);
                     }
 
                     if (j == 1)
                     {
-                        blockId = level.BlocksReader.GetBlockId(genX + 1, genY, genZ);
+                        blockId = level.Reader.GetBlockId(genX + 1, genY, genZ);
                     }
 
                     if (j == 2)
                     {
-                        blockId = level.BlocksReader.GetBlockId(genX, genY - 1, genZ);
+                        blockId = level.Reader.GetBlockId(genX, genY - 1, genZ);
                     }
 
                     if (j == 3)
                     {
-                        blockId = level.BlocksReader.GetBlockId(genX, genY + 1, genZ);
+                        blockId = level.Reader.GetBlockId(genX, genY + 1, genZ);
                     }
 
                     if (j == 4)
                     {
-                        blockId = level.BlocksReader.GetBlockId(genX, genY, genZ - 1);
+                        blockId = level.Reader.GetBlockId(genX, genY, genZ - 1);
                     }
 
                     if (j == 5)
                     {
-                        blockId = level.BlocksReader.GetBlockId(genX, genY, genZ + 1);
+                        blockId = level.Reader.GetBlockId(genX, genY, genZ + 1);
                     }
 
                     if (blockId == Block.Glowstone.id)

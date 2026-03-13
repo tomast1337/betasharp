@@ -2,6 +2,7 @@ using BetaSharp.Items;
 using BetaSharp.NBT;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -16,11 +17,11 @@ public class EntitySpider : EntityMonster
 
     public override void PostSpawn()
     {
-        if (_level.random.NextInt(100) == 0)
+        if (world.random.NextInt(100) == 0)
         {
-            EntitySkeleton skeleton = new(_level);
+            EntitySkeleton skeleton = new(world);
             skeleton.setPositionAndAnglesKeepPrevAngles(x, y, z, yaw, 0.0F);
-            _level.SpawnEntity(skeleton);
+            world.SpawnEntity(skeleton);
             skeleton.setVehicle(this);
         }
     }
@@ -35,7 +36,7 @@ public class EntitySpider : EntityMonster
         if (brightness < 0.5F)
         {
             double distance = 16.0D;
-            return _level.Entities.GetClosestPlayer(x, y, z, distance);
+            return world.Entities.GetClosestPlayer(x, y, z, distance);
         }
 
         return null;

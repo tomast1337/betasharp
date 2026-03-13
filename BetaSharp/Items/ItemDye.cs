@@ -1,6 +1,7 @@
 using BetaSharp.Blocks;
 using BetaSharp.Entities;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Items;
 
@@ -66,7 +67,7 @@ internal class ItemDye : Item
     {
         if (itemStack.getDamage() == 15)
         {
-            int blockId = world.BlocksReader.GetBlockId(x, y, z);
+            int blockId = world.Reader.GetBlockId(x, y, z);
             if (blockId == Block.Sapling.id)
             {
                 if (!world.IsRemote)
@@ -103,13 +104,13 @@ internal class ItemDye : Item
                             spawnX += itemRand.NextInt(3) - 1;
                             spawnY += (itemRand.NextInt(3) - 1) * itemRand.NextInt(3) / 2;
                             spawnZ += itemRand.NextInt(3) - 1;
-                            if (world.BlocksReader.GetBlockId(spawnX, spawnY - 1, spawnZ) != Block.GrassBlock.id || world.BlocksReader.ShouldSuffocate(spawnX, spawnY, spawnZ))
+                            if (world.Reader.GetBlockId(spawnX, spawnY - 1, spawnZ) != Block.GrassBlock.id || world.Reader.ShouldSuffocate(spawnX, spawnY, spawnZ))
                             {
                                 validPosition = false;
                             }
                         }
 
-                        if (validPosition && world.BlocksReader.GetBlockId(spawnX, spawnY, spawnZ) == 0)
+                        if (validPosition && world.Reader.GetBlockId(spawnX, spawnY, spawnZ) == 0)
                         {
                             if (itemRand.NextInt(10) != 0)
                             {

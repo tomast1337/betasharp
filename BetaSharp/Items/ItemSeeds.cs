@@ -1,6 +1,7 @@
 using BetaSharp.Blocks;
 using BetaSharp.Entities;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Items;
 
@@ -22,8 +23,8 @@ internal class ItemSeeds : Item
         }
         else
         {
-            int blockId = world.BlocksReader.GetBlockId(x, y, z);
-            if (blockId == Block.Farmland.id && world.BlocksReader.IsAir(x, y + 1, z))
+            int blockId = world.Reader.GetBlockId(x, y, z);
+            if (blockId == Block.Farmland.id && world.Reader.IsAir(x, y + 1, z))
             {
                 world.BlockWriter.SetBlock(x, y + 1, z, this.blockId);
                 --itemStack.count;

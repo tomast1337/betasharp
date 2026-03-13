@@ -4,6 +4,7 @@ using BetaSharp.Entities;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 using Microsoft.Extensions.Logging;
 
 namespace BetaSharp.Items;
@@ -36,7 +37,7 @@ internal class ItemBucket : Item
         float dirZ = cosYaw * cosPitch;
         double reachDistance = 5.0D;
         Vec3D rayEnd = rayStart + new Vec3D((double)dirX * reachDistance, (double)sinPitch * reachDistance, (double)dirZ * reachDistance);
-        HitResult hitResult = world.BlocksReader.Raycast(rayStart, rayEnd, isFull == 0);
+        HitResult hitResult = world.Reader.Raycast(rayStart, rayEnd, isFull == 0);
         if (hitResult.Type == HitResultType.MISS)
         {
             return itemStack;
@@ -55,13 +56,13 @@ internal class ItemBucket : Item
 
                 if (isFull == 0)
                 {
-                    if (world.BlocksReader.GetMaterial(hitX, hitY, hitZ) == Material.Water && world.BlocksReader.GetMeta(hitX, hitY, hitZ) == 0)
+                    if (world.Reader.GetMaterial(hitX, hitY, hitZ) == Material.Water && world.Reader.GetMeta(hitX, hitY, hitZ) == 0)
                     {
                         world.BlockWriter.SetBlock(hitX, hitY, hitZ, 0);
                         return new ItemStack(Item.WaterBucket);
                     }
 
-                    if (world.BlocksReader.GetMaterial(hitX, hitY, hitZ) == Material.Lava && world.BlocksReader.GetMeta(hitX, hitY, hitZ) == 0)
+                    if (world.Reader.GetMaterial(hitX, hitY, hitZ) == Material.Lava && world.Reader.GetMeta(hitX, hitY, hitZ) == 0)
                     {
                         world.BlockWriter.SetBlock(hitX, hitY, hitZ, 0);
                         return new ItemStack(Item.LavaBucket);
@@ -104,7 +105,7 @@ internal class ItemBucket : Item
                         ++hitX;
                     }
 
-                    if (world.BlocksReader.IsAir(hitX, hitY, hitZ) || !world.BlocksReader.GetMaterial(hitX, hitY, hitZ).IsSolid)
+                    if (world.Reader.IsAir(hitX, hitY, hitZ) || !world.Reader.GetMaterial(hitX, hitY, hitZ).IsSolid)
                     {
                         if (world.dimension.EvaporatesWater && isFull == Block.FlowingWater.id)
                         {

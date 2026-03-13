@@ -20,14 +20,14 @@ public class BlockRedstoneRepeater : Block
 
     public override bool isFullCube() => false;
 
-    public override bool canPlaceAt(CanPlaceAtCtx ctx) => !ctx.Level.BlocksReader.ShouldSuffocate(ctx.X, ctx.Y - 1, ctx.Z) ? false : base.canPlaceAt(ctx);
+    public override bool canPlaceAt(CanPlaceAtCtx ctx) => !ctx.Level.Reader.ShouldSuffocate(ctx.X, ctx.Y - 1, ctx.Z) ? false : base.canPlaceAt(ctx);
 
-    public override bool canGrow(OnTickEvt evt) => !evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z) ? false : base.canGrow(evt);
+    public override bool canGrow(OnTickEvt evt) => !evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z) ? false : base.canGrow(evt);
 
     public override void onTick(OnTickEvt evt)
     {
-        int meta = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
-        bool powered = isPowered(evt.Level.BlocksReader, evt.Level.Redstone, evt.X, evt.Y, evt.Z, meta);
+        int meta = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
+        bool powered = isPowered(evt.Level.Reader, evt.Level.Redstone, evt.X, evt.Y, evt.Z, meta);
 
         if (lit && !powered)
         {
@@ -77,8 +77,8 @@ public class BlockRedstoneRepeater : Block
         }
         else
         {
-            int meta = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
-            bool powered = isPowered(evt.Level.BlocksReader, evt.Level.Redstone, evt.X, evt.Y, evt.Z, meta);
+            int meta = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
+            bool powered = isPowered(evt.Level.Reader, evt.Level.Redstone, evt.X, evt.Y, evt.Z, meta);
             int delaySetting = (meta & 12) >> 2;
             if (lit && !powered)
             {
@@ -111,7 +111,7 @@ public class BlockRedstoneRepeater : Block
 
     public override bool onUse(OnUseEvt ctx)
     {
-        int meta = ctx.Level.BlocksReader.GetMeta(ctx.X, ctx.Y, ctx.Z);
+        int meta = ctx.Level.Reader.GetMeta(ctx.X, ctx.Y, ctx.Z);
         int newDelaySetting = (meta & 12) >> 2;
         newDelaySetting = ((newDelaySetting + 1) << 2) & 12;
         ctx.Level.BlockWriter.SetBlockMeta(ctx.X, ctx.Y, ctx.Z, newDelaySetting | (meta & 3));
@@ -129,9 +129,9 @@ public class BlockRedstoneRepeater : Block
             evt.Level.BlockWriter.SetBlockMeta(evt.X, evt.Y, evt.Z, facing);
         }
 
-        int meta = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+        int meta = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
 
-        bool powered = isPowered(evt.Level.BlocksReader, evt.Level.Redstone, evt.X, evt.Y, evt.Z, meta);
+        bool powered = isPowered(evt.Level.Reader, evt.Level.Redstone, evt.X, evt.Y, evt.Z, meta);
         if (powered)
         {
             evt.Level.TickScheduler.ScheduleBlockUpdate(evt.X, evt.Y, evt.Z, id, 1);
@@ -156,7 +156,7 @@ public class BlockRedstoneRepeater : Block
             return;
         }
 
-        int meta = ctx.Level.BlocksReader.GetMeta(ctx.X, ctx.Y, ctx.Z);
+        int meta = ctx.Level.Reader.GetMeta(ctx.X, ctx.Y, ctx.Z);
         double particleX = ctx.X + 0.5F + (Random.Shared.NextSingle() - 0.5F) * 0.2D;
         double particleY = ctx.Y + 0.4F + (Random.Shared.NextSingle() - 0.5F) * 0.2D;
         double particleZ = ctx.Z + 0.5F + (Random.Shared.NextSingle() - 0.5F) * 0.2D;

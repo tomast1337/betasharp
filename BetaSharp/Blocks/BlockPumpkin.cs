@@ -42,8 +42,8 @@ internal class BlockPumpkin : Block
 
     public override bool canPlaceAt(CanPlaceAtCtx evt)
     {
-        int blockId = evt.Level.BlocksReader.GetBlockId(evt.X, evt.Y, evt.Z);
-        return (blockId == 0 || Blocks[blockId].material.IsReplaceable) && evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z);
+        int blockId = evt.Level.Reader.GetBlockId(evt.X, evt.Y, evt.Z);
+        return (blockId == 0 || Blocks[blockId].material.IsReplaceable) && evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z);
     }
 
     public override void onPlaced(OnPlacedEvt evt)

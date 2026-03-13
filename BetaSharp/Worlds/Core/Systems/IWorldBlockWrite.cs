@@ -1,4 +1,4 @@
-namespace BetaSharp.Worlds.Core;
+namespace BetaSharp.Worlds.Core.Systems;
 
 public interface IBlockWrite
 {

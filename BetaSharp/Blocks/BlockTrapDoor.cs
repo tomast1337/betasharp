@@ -88,14 +88,14 @@ internal class BlockTrapDoor : Block
         return true;
     }
 
-    public override void onBlockBreakStart(OnBlockBreakStartEvt ctx) => UpdateState(ctx.Level.BlocksReader, ctx.Level.BlockWriter, ctx.Level.Broadcaster, ctx.X, ctx.Y, ctx.Z);
+    public override void onBlockBreakStart(OnBlockBreakStartEvt ctx) => UpdateState(ctx.Level.Reader, ctx.Level.BlockWriter, ctx.Level.Broadcaster, ctx.X, ctx.Y, ctx.Z);
 
 
-    public override bool onUse(OnUseEvt ctx) => UpdateState(ctx.Level.BlocksReader, ctx.Level.BlockWriter, ctx.Level.Broadcaster, ctx.X, ctx.Y, ctx.Z);
+    public override bool onUse(OnUseEvt ctx) => UpdateState(ctx.Level.Reader, ctx.Level.BlockWriter, ctx.Level.Broadcaster, ctx.X, ctx.Y, ctx.Z);
 
     public void setOpen(OnTickEvt ctx, bool open)
     {
-        int meta = ctx.Level.BlocksReader.GetMeta(ctx.X, ctx.Y, ctx.Z);
+        int meta = ctx.Level.Reader.GetMeta(ctx.X, ctx.Y, ctx.Z);
         bool isOpen = (meta & 4) > 0;
         if (isOpen != open)
         {
@@ -108,7 +108,7 @@ internal class BlockTrapDoor : Block
     {
         if (!ctx.Level.IsRemote)
         {
-            int meta = ctx.Level.BlocksReader.GetMeta(ctx.X, ctx.Y, ctx.Z);
+            int meta = ctx.Level.Reader.GetMeta(ctx.X, ctx.Y, ctx.Z);
             int xPos = ctx.X;
             int zPos = ctx.Z;
             if ((meta & 3) == 0)
@@ -131,7 +131,7 @@ internal class BlockTrapDoor : Block
                 --xPos;
             }
 
-            if (!ctx.Level.BlocksReader.ShouldSuffocate(xPos, ctx.Y, zPos))
+            if (!ctx.Level.Reader.ShouldSuffocate(xPos, ctx.Y, zPos))
             {
                 ctx.Level.BlockWriter.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
                 dropStacks(new OnDropEvt(ctx.Level, ctx.X, ctx.Y, ctx.Z, meta));
@@ -209,7 +209,7 @@ internal class BlockTrapDoor : Block
             --ctx.X;
         }
 
-        return ctx.Level.BlocksReader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z);
+        return ctx.Level.Reader.ShouldSuffocate(ctx.X, ctx.Y, ctx.Z);
     }
 
     public static bool isOpen(int meta) => (meta & 4) != 0;

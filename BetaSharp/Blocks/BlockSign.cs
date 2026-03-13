@@ -3,6 +3,7 @@ using BetaSharp.Blocks.Materials;
 using BetaSharp.Items;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -87,31 +88,31 @@ internal class BlockSign : BlockWithEntity
         bool shouldBreak = false;
         if (_standing)
         {
-            if (!evt.Level.BlocksReader.GetMaterial(evt.X, evt.Y - 1, evt.Z).IsSolid)
+            if (!evt.Level.Reader.GetMaterial(evt.X, evt.Y - 1, evt.Z).IsSolid)
             {
                 shouldBreak = true;
             }
         }
         else
         {
-            int facing = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+            int facing = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
             shouldBreak = true;
-            if (facing == 2 && evt.Level.BlocksReader.GetMaterial(evt.X, evt.Y, evt.Z + 1).IsSolid)
+            if (facing == 2 && evt.Level.Reader.GetMaterial(evt.X, evt.Y, evt.Z + 1).IsSolid)
             {
                 shouldBreak = false;
             }
 
-            if (facing == 3 && evt.Level.BlocksReader.GetMaterial(evt.X, evt.Y, evt.Z - 1).IsSolid)
+            if (facing == 3 && evt.Level.Reader.GetMaterial(evt.X, evt.Y, evt.Z - 1).IsSolid)
             {
                 shouldBreak = false;
             }
 
-            if (facing == 4 && evt.Level.BlocksReader.GetMaterial(evt.X + 1, evt.Y, evt.Z).IsSolid)
+            if (facing == 4 && evt.Level.Reader.GetMaterial(evt.X + 1, evt.Y, evt.Z).IsSolid)
             {
                 shouldBreak = false;
             }
 
-            if (facing == 5 && evt.Level.BlocksReader.GetMaterial(evt.X - 1, evt.Y, evt.Z).IsSolid)
+            if (facing == 5 && evt.Level.Reader.GetMaterial(evt.X - 1, evt.Y, evt.Z).IsSolid)
             {
                 shouldBreak = false;
             }
@@ -119,7 +120,7 @@ internal class BlockSign : BlockWithEntity
 
         if (shouldBreak)
         {
-            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z)));
+            dropStacks(new OnDropEvt(evt.Level, evt.X, evt.Y, evt.Z, evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z)));
             evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
         }
 

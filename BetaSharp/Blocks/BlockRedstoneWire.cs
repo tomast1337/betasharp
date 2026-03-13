@@ -2,6 +2,7 @@ using BetaSharp.Blocks.Materials;
 using BetaSharp.Items;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -23,7 +24,7 @@ public class BlockRedstoneWire : Block
 
     public override int getColorMultiplier(IBlockReader var1, int var2, int var3, int var4) => 8388608;
 
-    public override bool canPlaceAt(CanPlaceAtCtx ctx) => ctx.Level.BlocksReader.ShouldSuffocate(ctx.X, ctx.Y - 1, ctx.Z);
+    public override bool canPlaceAt(CanPlaceAtCtx ctx) => ctx.Level.Reader.ShouldSuffocate(ctx.X, ctx.Y - 1, ctx.Z);
 
     private void updateAndPropagateCurrentStrength(IWorldContext level, int x, int y, int z)
     {
@@ -41,7 +42,7 @@ public class BlockRedstoneWire : Block
 
     private void CalculateCurrentChanges(IWorldContext level, int x, int y, int z, int srcX, int srcY, int srcZ, HashSet<BlockPos> neighbors)
     {
-        int oldMeta = level.BlocksReader.GetMeta(x, y, z);
+        int oldMeta = level.Reader.GetMeta(x, y, z);
         int newMeta = 0;
 
         s_wiresProvidePower.Value = false;
@@ -66,20 +67,20 @@ public class BlockRedstoneWire : Block
 
                 if (nx != srcX || y != srcY || nz != srcZ)
                 {
-                    newMeta = getMaxCurrentStrength(level.BlocksReader, nx, y, nz, newMeta);
+                    newMeta = getMaxCurrentStrength(level.Reader, nx, y, nz, newMeta);
                 }
 
                 // Check if power can travel up/down blocks (Redstone staircasing)
-                if (level.BlocksReader.ShouldSuffocate(nx, y, nz) && !level.BlocksReader.ShouldSuffocate(x, y + 1, z))
+                if (level.Reader.ShouldSuffocate(nx, y, nz) && !level.Reader.ShouldSuffocate(x, y + 1, z))
                 {
                     if (nx != srcX || y + 1 != srcY || nz != srcZ)
                     {
-                        newMeta = getMaxCurrentStrength(level.BlocksReader, nx, y + 1, nz, newMeta);
+                        newMeta = getMaxCurrentStrength(level.Reader, nx, y + 1, nz, newMeta);
                     }
                 }
-                else if (!level.BlocksReader.ShouldSuffocate(nx, y, nz) && (nx != srcX || y - 1 != srcY || nz != srcZ))
+                else if (!level.Reader.ShouldSuffocate(nx, y, nz) && (nx != srcX || y - 1 != srcY || nz != srcZ))
                 {
-                    newMeta = getMaxCurrentStrength(level.BlocksReader, nx, y - 1, nz, newMeta);
+                    newMeta = getMaxCurrentStrength(level.Reader, nx, y - 1, nz, newMeta);
                 }
             }
 
@@ -112,13 +113,13 @@ public class BlockRedstoneWire : Block
                 if (dir == 2) nz = z - 1;
                 if (dir == 3) ++nz;
 
-                if (level.BlocksReader.ShouldSuffocate(nx, y, nz))
+                if (level.Reader.ShouldSuffocate(nx, y, nz))
                 {
                     ny += 2;
                 }
 
-                int neighborMeta = getMaxCurrentStrength(level.BlocksReader, nx, y, nz, -1);
-                newMeta = level.BlocksReader.GetMeta(x, y, z);
+                int neighborMeta = getMaxCurrentStrength(level.Reader, nx, y, nz, -1);
+                newMeta = level.Reader.GetMeta(x, y, z);
                 if (newMeta > 0)
                 {
                     --newMeta;
@@ -129,8 +130,8 @@ public class BlockRedstoneWire : Block
                     CalculateCurrentChanges(level, nx, y, nz, x, y, z, neighbors);
                 }
 
-                neighborMeta = getMaxCurrentStrength(level.BlocksReader, nx, ny, nz, -1);
-                newMeta = level.BlocksReader.GetMeta(x, y, z);
+                neighborMeta = getMaxCurrentStrength(level.Reader, nx, ny, nz, -1);
+                newMeta = level.Reader.GetMeta(x, y, z);
                 if (newMeta > 0)
                 {
                     --newMeta;
@@ -158,7 +159,7 @@ public class BlockRedstoneWire : Block
 
     private void NotifyWireNeighborsOfNeighborChange(IWorldContext level, int var2, int var3, int var4)
     {
-        if (level.BlocksReader.GetBlockId(var2, var3, var4) == id)
+        if (level.Reader.GetBlockId(var2, var3, var4) == id)
         {
             level.Broadcaster.NotifyNeighbors(var2, var3, var4, id);
             level.Broadcaster.NotifyNeighbors(var2 - 1, var3, var4, id);
@@ -182,7 +183,7 @@ public class BlockRedstoneWire : Block
             NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X + 1, evt.Y, evt.Z);
             NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X, evt.Y, evt.Z - 1);
             NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X, evt.Y, evt.Z + 1);
-            if (evt.Level.BlocksReader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z))
+            if (evt.Level.Reader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z))
             {
                 NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X - 1, evt.Y + 1, evt.Z);
             }
@@ -191,7 +192,7 @@ public class BlockRedstoneWire : Block
                 NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X - 1, evt.Y - 1, evt.Z);
             }
 
-            if (evt.Level.BlocksReader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z))
+            if (evt.Level.Reader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z))
             {
                 NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X + 1, evt.Y + 1, evt.Z);
             }
@@ -200,7 +201,7 @@ public class BlockRedstoneWire : Block
                 NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X + 1, evt.Y - 1, evt.Z);
             }
 
-            if (evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1))
+            if (evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1))
             {
                 NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X, evt.Y + 1, evt.Z - 1);
             }
@@ -209,7 +210,7 @@ public class BlockRedstoneWire : Block
                 NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X, evt.Y - 1, evt.Z - 1);
             }
 
-            if (evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y, evt.Z + 1))
+            if (evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z + 1))
             {
                 NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X, evt.Y + 1, evt.Z + 1);
             }
@@ -232,7 +233,7 @@ public class BlockRedstoneWire : Block
             NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X + 1, evt.Y, evt.Z);
             NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X, evt.Y, evt.Z - 1);
             NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X, evt.Y, evt.Z + 1);
-            if (evt.Level.BlocksReader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z))
+            if (evt.Level.Reader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z))
             {
                 NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X - 1, evt.Y + 1, evt.Z);
             }
@@ -241,7 +242,7 @@ public class BlockRedstoneWire : Block
                 NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X - 1, evt.Y - 1, evt.Z);
             }
 
-            if (evt.Level.BlocksReader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z))
+            if (evt.Level.Reader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z))
             {
                 NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X + 1, evt.Y + 1, evt.Z);
             }
@@ -250,7 +251,7 @@ public class BlockRedstoneWire : Block
                 NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X + 1, evt.Y - 1, evt.Z);
             }
 
-            if (evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1))
+            if (evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1))
             {
                 NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X, evt.Y + 1, evt.Z - 1);
             }
@@ -259,7 +260,7 @@ public class BlockRedstoneWire : Block
                 NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X, evt.Y - 1, evt.Z - 1);
             }
 
-            if (evt.Level.BlocksReader.ShouldSuffocate(evt.X, evt.Y, evt.Z + 1))
+            if (evt.Level.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z + 1))
             {
                 NotifyWireNeighborsOfNeighborChange(evt.Level, evt.X, evt.Y + 1, evt.Z + 1);
             }
@@ -285,7 +286,7 @@ public class BlockRedstoneWire : Block
     {
         if (!evt.Level.IsRemote)
         {
-            int var6 = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+            int var6 = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
             bool var7 = canPlaceAt(new CanPlaceAtCtx(evt.Level, 0, evt.X, evt.Y, evt.Z));
             if (!var7)
             {
@@ -359,7 +360,7 @@ public class BlockRedstoneWire : Block
 
     public override void randomDisplayTick(OnTickEvt evt)
     {
-        int var6 = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+        int var6 = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
         if (var6 > 0)
         {
             double x = evt.X + 0.5D + (evt.Level.random.NextFloat() - 0.5D) * 0.2D;

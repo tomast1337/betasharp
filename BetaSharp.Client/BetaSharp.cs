@@ -1230,7 +1230,7 @@ public partial class BetaSharp
     {
         if (objectMouseOver.Type != HitResultType.MISS)
         {
-            int blockId = world.BlocksReader.GetBlockId(objectMouseOver.BlockX, objectMouseOver.BlockY, objectMouseOver.BlockZ);
+            int blockId = world.Reader.GetBlockId(objectMouseOver.BlockX, objectMouseOver.BlockY, objectMouseOver.BlockZ);
             if (blockId == Block.GrassBlock.id)
             {
                 blockId = Block.Dirt.id;
@@ -1708,7 +1708,7 @@ public partial class BetaSharp
             for (int zOffset = -loadingRadius; zOffset <= loadingRadius; zOffset += 16)
             {
                 loadingScreen.setLoadingProgress(loadedChunkCount++ * 100 / totalChunksToLoad);
-                world.BlocksReader.GetBlockId(centerPos.X + xOffset, 64, centerPos.Z + zOffset);
+                world.Reader.GetBlockId(centerPos.X + xOffset, 64, centerPos.Z + zOffset);
 
                 while (world.Lighting.DoLightingUpdates())
                 {

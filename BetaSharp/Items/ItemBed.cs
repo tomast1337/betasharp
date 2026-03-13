@@ -2,6 +2,7 @@ using BetaSharp.Blocks;
 using BetaSharp.Entities;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Items;
 
@@ -31,8 +32,8 @@ internal class ItemBed : Item
 
         bool footReplaceable = isReplaceable(world, x, y, z);
         bool headReplaceable = isReplaceable(world, x + offsetX, y, z + offsetZ);
-        bool footSupported = world.BlocksReader.ShouldSuffocate(x, y - 1, z);
-        bool headSupported = world.BlocksReader.ShouldSuffocate(x + offsetX, y - 1, z + offsetZ);
+        bool footSupported = world.Reader.ShouldSuffocate(x, y - 1, z);
+        bool headSupported = world.Reader.ShouldSuffocate(x + offsetX, y - 1, z + offsetZ);
 
         if (!footReplaceable || !headReplaceable || !footSupported || !headSupported)
         {
@@ -49,7 +50,7 @@ internal class ItemBed : Item
 
     private static bool isReplaceable(IWorldContext world, int x, int y, int z)
     {
-        int blockId = world.BlocksReader.GetBlockId(x, y, z);
+        int blockId = world.Reader.GetBlockId(x, y, z);
         return blockId == 0 || Block.Blocks[blockId].material.IsReplaceable;
     }
 }

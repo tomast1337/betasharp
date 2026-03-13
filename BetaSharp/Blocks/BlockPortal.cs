@@ -1,6 +1,7 @@
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -98,38 +99,38 @@ public class BlockPortal : BlockBreakable
     {
         sbyte offsetX = 0;
         sbyte offsetZ = 1;
-        if (evt.Level.BlocksReader.GetBlockId(evt.X - 1, evt.Y, evt.Z) == id || evt.Level.BlocksReader.GetBlockId(evt.X + 1, evt.Y, evt.Z) == id)
+        if (evt.Level.Reader.GetBlockId(evt.X - 1, evt.Y, evt.Z) == id || evt.Level.Reader.GetBlockId(evt.X + 1, evt.Y, evt.Z) == id)
         {
             offsetX = 1;
             offsetZ = 0;
         }
 
         int portalBottomY;
-        for (portalBottomY = evt.Y; evt.Level.BlocksReader.GetBlockId(evt.X, portalBottomY - 1, evt.Z) == id; --portalBottomY)
+        for (portalBottomY = evt.Y; evt.Level.Reader.GetBlockId(evt.X, portalBottomY - 1, evt.Z) == id; --portalBottomY)
         {
         }
 
-        if (evt.Level.BlocksReader.GetBlockId(evt.X, portalBottomY - 1, evt.Z) != Obsidian.id)
+        if (evt.Level.Reader.GetBlockId(evt.X, portalBottomY - 1, evt.Z) != Obsidian.id)
         {
             evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
         }
         else
         {
             int blocksAbove;
-            for (blocksAbove = 1; blocksAbove < 4 && evt.Level.BlocksReader.GetBlockId(evt.X, portalBottomY + blocksAbove, evt.Z) == id; ++blocksAbove)
+            for (blocksAbove = 1; blocksAbove < 4 && evt.Level.Reader.GetBlockId(evt.X, portalBottomY + blocksAbove, evt.Z) == id; ++blocksAbove)
             {
             }
 
-            if (blocksAbove == 3 && evt.Level.BlocksReader.GetBlockId(evt.X, portalBottomY + blocksAbove, evt.Z) == Obsidian.id)
+            if (blocksAbove == 3 && evt.Level.Reader.GetBlockId(evt.X, portalBottomY + blocksAbove, evt.Z) == Obsidian.id)
             {
-                bool hasXNeighbors = evt.Level.BlocksReader.GetBlockId(evt.X - 1, evt.Y, evt.Z) == id || evt.Level.BlocksReader.GetBlockId(evt.X + 1, evt.Y, evt.Z) == id;
-                bool hasZNeighbors = evt.Level.BlocksReader.GetBlockId(evt.X, evt.Y, evt.Z - 1) == id || evt.Level.BlocksReader.GetBlockId(evt.X, evt.Y, evt.Z + 1) == id;
+                bool hasXNeighbors = evt.Level.Reader.GetBlockId(evt.X - 1, evt.Y, evt.Z) == id || evt.Level.Reader.GetBlockId(evt.X + 1, evt.Y, evt.Z) == id;
+                bool hasZNeighbors = evt.Level.Reader.GetBlockId(evt.X, evt.Y, evt.Z - 1) == id || evt.Level.Reader.GetBlockId(evt.X, evt.Y, evt.Z + 1) == id;
                 if (hasXNeighbors && hasZNeighbors)
                 {
                     evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
                 }
-                else if ((evt.Level.BlocksReader.GetBlockId(evt.X + offsetX, evt.Y, evt.Z + offsetZ) != Obsidian.id || evt.Level.BlocksReader.GetBlockId(evt.X - offsetX, evt.Y, evt.Z - offsetZ) != id) &&
-                         (evt.Level.BlocksReader.GetBlockId(evt.X - offsetX, evt.Y, evt.Z - offsetZ) != Obsidian.id || evt.Level.BlocksReader.GetBlockId(evt.X + offsetX, evt.Y, evt.Z + offsetZ) != id))
+                else if ((evt.Level.Reader.GetBlockId(evt.X + offsetX, evt.Y, evt.Z + offsetZ) != Obsidian.id || evt.Level.Reader.GetBlockId(evt.X - offsetX, evt.Y, evt.Z - offsetZ) != id) &&
+                         (evt.Level.Reader.GetBlockId(evt.X - offsetX, evt.Y, evt.Z - offsetZ) != Obsidian.id || evt.Level.Reader.GetBlockId(evt.X + offsetX, evt.Y, evt.Z + offsetZ) != id))
                 {
                     evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, 0);
                 }
@@ -185,7 +186,7 @@ public class BlockPortal : BlockBreakable
             double velocityX = (Random.Shared.NextSingle() - 0.5D) * 0.5D;
             double velocityY = (Random.Shared.NextSingle() - 0.5D) * 0.5D;
             double velocityZ = (Random.Shared.NextSingle() - 0.5D) * 0.5D;
-            if (evt.Level.BlocksReader.GetBlockId(evt.X - 1, evt.Y, evt.Z) != id && evt.Level.BlocksReader.GetBlockId(evt.X + 1, evt.Y, evt.Z) != id)
+            if (evt.Level.Reader.GetBlockId(evt.X - 1, evt.Y, evt.Z) != id && evt.Level.Reader.GetBlockId(evt.X + 1, evt.Y, evt.Z) != id)
             {
                 particleX = evt.X + 0.5D + 0.25D * direction;
                 velocityX = Random.Shared.NextSingle() * 2.0F * direction;

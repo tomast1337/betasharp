@@ -4,6 +4,7 @@ using BetaSharp.Entities;
 using BetaSharp.Profiling;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 using Microsoft.Extensions.Logging;
 
 namespace BetaSharp.Worlds.Chunks;
@@ -175,7 +176,7 @@ public class Chunk
 
     private void LightGap(int worldX, int worldZ, int height)
     {
-        int topY = Level.BlocksReader.GetTopY(worldX, worldZ);
+        int topY = Level.Reader.GetTopY(worldX, worldZ);
         if (topY > height)
         {
             Level.Lighting.QueueLightUpdate(LightType.Sky, worldX, height, worldZ, worldX, topY, worldZ);

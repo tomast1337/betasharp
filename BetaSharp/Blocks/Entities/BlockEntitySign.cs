@@ -46,7 +46,13 @@ public class BlockEntitySign : BlockEntity
         return UpdateSignPacket.Get(X, Y, Z, lines);
     }
 
-    public bool IsEditable() => _editable;
+    public bool IsEditable()
+    {
+        return _editable;
+    }
 
-    public void SetEditable(bool editable) => _editable = editable;
+    public void SetEditable(bool editable)
+    {
+        _editable = editable;
+    }
 }

@@ -1,6 +1,7 @@
 using BetaSharp.Blocks;
 using BetaSharp.Entities;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Items;
 
@@ -15,8 +16,8 @@ internal class ItemHoe : Item
 
     public override bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IWorldContext world, int x, int y, int z, int meta)
     {
-        int targetBlockId = world.BlocksReader.GetBlockId(x, y, z);
-        int blockAbove = world.BlocksReader.GetBlockId(x, y + 1, z);
+        int targetBlockId = world.Reader.GetBlockId(x, y, z);
+        int blockAbove = world.Reader.GetBlockId(x, y + 1, z);
         if ((meta == 0 || blockAbove != 0 || targetBlockId != Block.GrassBlock.id) && targetBlockId != Block.Dirt.id)
         {
             return false;

@@ -4,6 +4,7 @@ using BetaSharp.Items;
 using BetaSharp.NBT;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -55,7 +56,7 @@ public class EntityBoat : Entity
 
     public override bool damage(Entity entity, int amount)
     {
-        if (!_level.IsRemote && !dead)
+        if (!world.IsRemote && !dead)
         {
             boatRockDirection = -boatRockDirection;
             boatTimeSinceHit = 10;
@@ -141,7 +142,7 @@ public class EntityBoat : Entity
             double var5 = boundingBox.MinY + (boundingBox.MaxY - boundingBox.MinY) * (i + 0) / var1 - 0.125D;
             double var7 = boundingBox.MinY + (boundingBox.MaxY - boundingBox.MinY) * (i + 1) / var1 - 0.125D;
             Box var9 = new(boundingBox.MinX, var5, boundingBox.MinZ, boundingBox.MaxX, var7, boundingBox.MaxZ);
-            if (_level.BlocksReader.IsFluidInBox(var9, Material.Water))
+            if (world.Reader.IsFluidInBox(var9, Material.Water))
             {
                 var2 += 1.0D / var1;
             }
@@ -151,7 +152,7 @@ public class EntityBoat : Entity
         double var8;
         double var10;
         double var21;
-        if (_level.IsRemote)
+        if (world.IsRemote)
         {
             if (lerpSteps > 0)
             {
@@ -260,20 +261,20 @@ public class EntityBoat : Entity
                     {
                         particleX = x - var8 * randomOffset * 0.8D + var10 * sideOffset;
                         particleZ = z - var10 * randomOffset * 0.8D - var8 * sideOffset;
-                        _level.Broadcaster.AddParticle("splash", particleX, y - 0.125D, particleZ, velocityX, velocityY, velocityZ);
+                        world.Broadcaster.AddParticle("splash", particleX, y - 0.125D, particleZ, velocityX, velocityY, velocityZ);
                     }
                     else
                     {
                         particleX = x + var8 + var10 * randomOffset * 0.7D;
                         particleZ = z + var10 - var8 * randomOffset * 0.7D;
-                        _level.Broadcaster.AddParticle("splash", particleX, y - 0.125D, particleZ, velocityX, velocityY, velocityZ);
+                        world.Broadcaster.AddParticle("splash", particleX, y - 0.125D, particleZ, velocityX, velocityY, velocityZ);
                     }
                 }
             }
 
             if (horizontalCollison && var6 > 0.15D)
             {
-                if (!_level.IsRemote)
+                if (!world.IsRemote)
                 {
                     markDead();
 
@@ -327,7 +328,7 @@ public class EntityBoat : Entity
 
             yaw = (float)(yaw + yawDelta);
             setRotation(yaw, pitch);
-            var entitiesInbound = _level.Entities.GetEntities(this, boundingBox.Expand(0.2F, 0.0D, 0.2F));
+            var entitiesInbound = world.Entities.GetEntities(this, boundingBox.Expand(0.2F, 0.0D, 0.2F));
             int i;
             if (entitiesInbound != null && entitiesInbound.Count > 0)
             {
@@ -346,9 +347,9 @@ public class EntityBoat : Entity
                 int x = MathHelper.Floor(this.x + (i % 2 - 0.5D) * 0.8D);
                 int y = MathHelper.Floor(this.y);
                 int z = MathHelper.Floor(this.z + (i / 2 - 0.5D) * 0.8D);
-                if (_level.BlocksReader.GetBlockId(x, y, z) == Block.Snow.id)
+                if (world.Reader.GetBlockId(x, y, z) == Block.Snow.id)
                 {
-                    _level.BlockWriter.SetBlock(x, y, z, 0);
+                    world.BlockWriter.SetBlock(x, y, z, 0);
                 }
             }
 
@@ -386,7 +387,7 @@ public class EntityBoat : Entity
             return true;
         }
 
-        if (!_level.IsRemote)
+        if (!world.IsRemote)
         {
             player.setVehicle(this);
         }

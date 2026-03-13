@@ -154,7 +154,7 @@ public abstract class EntityRenderer
             {
                 for (int blockZ = minZ; blockZ <= maxZ; ++blockZ)
                 {
-                    int blockId = World.BlocksReader.GetBlockId(blockX, blockY - 1, blockZ);
+                    int blockId = World.Reader.GetBlockId(blockX, blockY - 1, blockZ);
                     if (blockId > 0 && World.Lighting.GetLightLevel(blockX, blockY, blockZ) > 3)
                     {
                         renderShadowOnBlock(

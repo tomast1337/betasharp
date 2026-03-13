@@ -3,17 +3,16 @@ using BetaSharp.Items;
 using BetaSharp.PathFinding;
 using BetaSharp.Rules;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds.Core.Systems;
 using BetaSharp.Worlds.Dimensions;
 using BetaSharp.Worlds.Mechanics;
 using BetaSharp.Worlds.Storage;
 
-namespace BetaSharp.Worlds.Core;
+namespace BetaSharp.Worlds.Core.Systems;
 
 public interface IWorldContext
 {
-    public WorldBlockReader BlocksReader { get; }
-    public WorldBlockWrite BlockWriter { get; }
+    public WorldReader Reader { get; }
+    public WorldWriter BlockWriter { get; }
     public ChunkHost BlockHost { get; }
     public WorldEventBroadcaster Broadcaster { get; }
     public RedstoneEngine Redstone { get; }
@@ -27,10 +26,10 @@ public interface IWorldContext
     public RuleSet Rules { get; }
     public PersistentStateManager StateManager { get; }
     public int Difficulty { get; }
-    public void SetDifficulty(int difficulty);
     public WorldProperties Properties { get; }
     public JavaRandom random { get; }
     internal PathFinder Pathing { get; }
+    public void SetDifficulty(int difficulty);
     public long GetTime();
     public bool SpawnEntity(Entity entity);
     public bool SpawnItemDrop(double x, double y, double z, ItemStack itemStack);

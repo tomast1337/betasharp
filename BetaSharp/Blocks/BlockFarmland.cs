@@ -1,6 +1,7 @@
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -14,26 +15,38 @@ internal class BlockFarmland : Block
         setOpacity(255);
     }
 
-    public override Box? getCollisionShape(IBlockReader world, int x, int y, int z) => new Box(x + 0, y + 0, z + 0, x + 1, y + 1, z + 1);
+    public override Box? getCollisionShape(IBlockReader world, int x, int y, int z)
+    {
+        return new Box(x + 0, y + 0, z + 0, x + 1, y + 1, z + 1);
+    }
 
-    public override bool isOpaque() => false;
+    public override bool isOpaque()
+    {
+        return false;
+    }
 
-    public override bool isFullCube() => false;
+    public override bool isFullCube()
+    {
+        return false;
+    }
 
-    public override int getTexture(int side, int meta) => side == 1 && meta > 0 ? textureId - 1 : side == 1 ? textureId : 2;
+    public override int getTexture(int side, int meta)
+    {
+        return side == 1 && meta > 0 ? textureId - 1 : side == 1 ? textureId : 2;
+    }
 
     public override void onTick(OnTickEvt evt)
     {
         if (Random.Shared.Next(5) == 0)
         {
-            if (!isWaterNearby(evt.Level.BlocksReader, evt.X, evt.Y, evt.Z) && !evt.Level.Environment.IsRaining)
+            if (!isWaterNearby(evt.Level.Reader, evt.X, evt.Y, evt.Z) && !evt.Level.Environment.IsRaining)
             {
-                int meta = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+                int meta = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
                 if (meta > 0)
                 {
                     evt.Level.BlockWriter.SetBlockMeta(evt.X, evt.Y, evt.Z, meta - 1);
                 }
-                else if (!hasCrop(evt.Level.BlocksReader, evt.X, evt.Y, evt.Z))
+                else if (!hasCrop(evt.Level.Reader, evt.X, evt.Y, evt.Z))
                 {
                     evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, Dirt.id);
                 }
@@ -93,12 +106,15 @@ internal class BlockFarmland : Block
     public override void neighborUpdate(OnTickEvt evt)
     {
         base.neighborUpdate(evt);
-        Material material = evt.Level.BlocksReader.GetMaterial(evt.X, evt.Y + 1, evt.Z);
+        Material material = evt.Level.Reader.GetMaterial(evt.X, evt.Y + 1, evt.Z);
         if (material.IsSolid)
         {
             evt.Level.BlockWriter.SetBlock(evt.X, evt.Y, evt.Z, Dirt.id);
         }
     }
 
-    public override int getDroppedItemId(int blockMeta) => Dirt.getDroppedItemId(0);
+    public override int getDroppedItemId(int blockMeta)
+    {
+        return Dirt.getDroppedItemId(0);
+    }
 }

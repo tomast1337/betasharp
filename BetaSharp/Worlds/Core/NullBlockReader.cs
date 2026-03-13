@@ -3,6 +3,7 @@ using BetaSharp.Blocks.Materials;
 using BetaSharp.Entities;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
+using BetaSharp.Worlds.Core.Systems;
 using BetaSharp.Worlds.Generation.Biomes.Source;
 
 namespace BetaSharp.Worlds.Core;
@@ -14,7 +15,6 @@ namespace BetaSharp.Worlds.Core;
 /// </summary>
 public sealed class NullBlockReader : IBlockReader
 {
-
     public static readonly NullBlockReader Instance = new();
 
     private NullBlockReader()
@@ -67,6 +67,8 @@ public sealed class NullBlockReader : IBlockReader
 
     public bool UpdateMovementInFluid(Box entityBox, Material fluidMaterial, Entity entity) => false;
 
+    public bool IsPosLoaded(int x, int y, int z) => true;
+
     public float GetNaturalBrightness(int x, int y, int z, int blockLight) => 1.0f;
 
     public float GetLuminance(int x, int y, int z) => 1.0f;
@@ -74,6 +76,4 @@ public sealed class NullBlockReader : IBlockReader
     public int getBlockMeta(int x, int y, int z) => 0;
 
     public Material getMaterial(int x, int y, int z) => Material.Air;
-
-    public bool IsPosLoaded(int x, int y, int z) => true;
 }

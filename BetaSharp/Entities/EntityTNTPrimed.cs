@@ -2,6 +2,7 @@ using BetaSharp.NBT;
 using BetaSharp.Rules;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
@@ -54,7 +55,7 @@ public class EntityTNTPrimed : Entity
 
         if (fuse-- <= 0)
         {
-            if (!_level.IsRemote)
+            if (!world.IsRemote)
             {
                 markDead();
                 explode();
@@ -66,19 +67,19 @@ public class EntityTNTPrimed : Entity
         }
         else
         {
-            _level.Broadcaster.AddParticle("smoke", x, y + 0.5D, z, 0.0D, 0.0D, 0.0D);
+            world.Broadcaster.AddParticle("smoke", x, y + 0.5D, z, 0.0D, 0.0D, 0.0D);
         }
     }
 
     private void explode()
     {
-        if (!_level.Rules.GetBool(DefaultRules.TntExplodes))
+        if (!world.Rules.GetBool(DefaultRules.TntExplodes))
         {
             return;
         }
 
         const float power = 4.0F;
-        _level.CreateExplosion(null, x, y, z, power);
+        world.CreateExplosion(null, x, y, z, power);
     }
 
     public override void writeNbt(NBTTagCompound nbt) => nbt.SetByte("Fuse", (sbyte)fuse);

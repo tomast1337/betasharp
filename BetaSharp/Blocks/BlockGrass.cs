@@ -1,6 +1,7 @@
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Worlds.ClientData.Colors;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -57,7 +58,7 @@ public class BlockGrass : Block
     {
         if (!ctx.Level.IsRemote)
         {
-            if (ctx.Level.Lighting.GetLightLevel(ctx.X, ctx.Y + 1, ctx.Z) < 4 && BlockLightOpacity[ctx.Level.BlocksReader.GetBlockId(ctx.X, ctx.Y + 1, ctx.Z)] > 2)
+            if (ctx.Level.Lighting.GetLightLevel(ctx.X, ctx.Y + 1, ctx.Z) < 4 && BlockLightOpacity[ctx.Level.Reader.GetBlockId(ctx.X, ctx.Y + 1, ctx.Z)] > 2)
             {
                 if (Random.Shared.Next(4) != 0)
                 {
@@ -71,8 +72,8 @@ public class BlockGrass : Block
                 int spreadX = ctx.X + Random.Shared.Next(3) - 1;
                 int spreadY = ctx.Y + Random.Shared.Next(5) - 3;
                 int spreadZ = ctx.Z + Random.Shared.Next(3) - 1;
-                int blockAboveId = ctx.Level.BlocksReader.GetBlockId(spreadX, spreadY + 1, spreadZ);
-                if (ctx.Level.BlocksReader.GetBlockId(spreadX, spreadY, spreadZ) == Dirt.id && ctx.Level.Lighting.GetLightLevel(spreadX, spreadY + 1, spreadZ) >= 4 && BlockLightOpacity[blockAboveId] <= 2)
+                int blockAboveId = ctx.Level.Reader.GetBlockId(spreadX, spreadY + 1, spreadZ);
+                if (ctx.Level.Reader.GetBlockId(spreadX, spreadY, spreadZ) == Dirt.id && ctx.Level.Lighting.GetLightLevel(spreadX, spreadY + 1, spreadZ) >= 4 && BlockLightOpacity[blockAboveId] <= 2)
                 {
                     ctx.Level.BlockWriter.SetBlock(spreadX, spreadY, spreadZ, GrassBlock.id);
                 }

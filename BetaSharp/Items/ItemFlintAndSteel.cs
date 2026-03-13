@@ -46,7 +46,7 @@ internal class ItemFlintAndSteel : Item
             ++x;
         }
 
-        int blockId = world.BlocksReader.GetBlockId(x, y, z);
+        int blockId = world.Reader.GetBlockId(x, y, z);
         if (blockId == 0)
         {
             world.Broadcaster.PlaySoundAtPos(x + 0.5D, y + 0.5D, z + 0.5D, "fire.ignite", 1.0F, itemRand.NextFloat() * 0.4F + 0.8F);

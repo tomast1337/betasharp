@@ -5,23 +5,23 @@ using BetaSharp.Entities;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Chunks;
-using BetaSharp.Worlds.Core.Systems;
 using BetaSharp.Worlds.Dimensions;
 using BetaSharp.Worlds.Generation.Biomes.Source;
 
-namespace BetaSharp.Worlds.Core;
+namespace BetaSharp.Worlds.Core.Systems;
 
-public class WorldBlockReader : IBlockReader
+public class WorldReader : IBlockReader
 {
     private readonly IWorldContext _context;
     private readonly Dimension _dimension;
-    public int AmbientDarkness => _context.Environment?.AmbientDarkness ?? 0;
 
-    public WorldBlockReader(IWorldContext context, Dimension dimension)
+    public WorldReader(IWorldContext context, Dimension dimension)
     {
         _dimension = dimension;
         _context = context;
     }
+
+    public int AmbientDarkness => _context.Environment?.AmbientDarkness ?? 0;
 
     public bool IsPosLoaded(int x, int y, int z) => y >= 0 && y < 128 && _context.BlockHost.HasChunk(x >> 4, z >> 4);
 
@@ -607,8 +607,7 @@ public class WorldBlockReader : IBlockReader
 
     public void MarkChunkDirty(int x, int z)
     {
-
-        if (_context.BlocksReader.IsPosLoaded(x, 0, z)) 
+        if (_context.Reader.IsPosLoaded(x, 0, z))
         {
             _context.BlockHost.GetChunkFromPos(x, z).MarkDirty();
         }

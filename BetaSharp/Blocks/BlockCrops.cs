@@ -2,6 +2,7 @@ using BetaSharp.Entities;
 using BetaSharp.Items;
 using BetaSharp.Rules;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
@@ -15,17 +16,20 @@ internal class BlockCrops : BlockPlant
         setBoundingBox(0.5F - halfWidth, 0.0F, 0.5F - halfWidth, 0.5F + halfWidth, 0.25F, 0.5F + halfWidth);
     }
 
-    protected override bool canPlantOnTop(int id) => id == Farmland.id;
+    protected override bool canPlantOnTop(int id)
+    {
+        return id == Farmland.id;
+    }
 
     public override void onTick(OnTickEvt evt)
     {
         base.onTick(evt);
         if (evt.Level.Lighting.GetBrightness(LightType.Block, evt.X, evt.Y + 1, evt.Z) >= 9)
         {
-            int meta = evt.Level.BlocksReader.GetMeta(evt.X, evt.Y, evt.Z);
+            int meta = evt.Level.Reader.GetMeta(evt.X, evt.Y, evt.Z);
             if (meta < 7)
             {
-                float var7 = getAvailableMoisture(evt.Level.BlocksReader, evt.X, evt.Y, evt.Z);
+                float var7 = getAvailableMoisture(evt.Level.Reader, evt.X, evt.Y, evt.Z);
                 if (Random.Shared.Next(100) / var7 == 0)
                 {
                     ++meta;
@@ -35,7 +39,10 @@ internal class BlockCrops : BlockPlant
         }
     }
 
-    public void applyFullGrowth(IWorldContext world, int x, int y, int z) => world.BlockWriter.SetBlockMeta(x, y, z, 7);
+    public void applyFullGrowth(IWorldContext world, int x, int y, int z)
+    {
+        world.BlockWriter.SetBlockMeta(x, y, z, 7);
+    }
 
     private float getAvailableMoisture(IBlockReader read, int x, int y, int z)
     {
@@ -94,7 +101,10 @@ internal class BlockCrops : BlockPlant
         return textureId + meta;
     }
 
-    public override BlockRendererType getRenderType() => BlockRendererType.Crops;
+    public override BlockRendererType getRenderType()
+    {
+        return BlockRendererType.Crops;
+    }
 
     public override void dropStacks(OnDropEvt evt)
     {
@@ -117,7 +127,13 @@ internal class BlockCrops : BlockPlant
         }
     }
 
-    public override int getDroppedItemId(int blockMeta) => blockMeta == 7 ? Item.Wheat.id : -1;
+    public override int getDroppedItemId(int blockMeta)
+    {
+        return blockMeta == 7 ? Item.Wheat.id : -1;
+    }
 
-    public override int getDroppedItemCount() => 1;
+    public override int getDroppedItemCount()
+    {
+        return 1;
+    }
 }

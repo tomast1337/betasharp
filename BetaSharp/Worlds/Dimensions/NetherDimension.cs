@@ -37,8 +37,8 @@ internal class NetherDimension : Dimension
 
     public override bool IsValidSpawnPoint(int x, int z)
     {
-        int y = World.BlocksReader.GetTopY(x, z);
-        int topBlockId = World.BlocksReader.GetBlockId(x, y, z);
+        int y = World.Reader.GetTopY(x, z);
+        int topBlockId = World.Reader.GetBlockId(x, y, z);
         return topBlockId != 0 && Block.Blocks[topBlockId] != null && Block.Blocks[topBlockId].material.BlocksMovement;
     }
 

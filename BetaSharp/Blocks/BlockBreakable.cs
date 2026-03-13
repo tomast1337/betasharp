@@ -1,15 +1,22 @@
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
 public class BlockBreakable : Block
 {
-    private readonly bool hideAdjacentFaces;
+    private bool hideAdjacentFaces;
 
-    protected BlockBreakable(int id, int textureId, Material material, bool hideAdjacentFaces) : base(id, textureId, material) => this.hideAdjacentFaces = hideAdjacentFaces;
+    protected BlockBreakable(int id, int textureId, Material material, bool hideAdjacentFaces) : base(id, textureId, material)
+    {
+        this.hideAdjacentFaces = hideAdjacentFaces;
+    }
 
-    public override bool isOpaque() => false;
+    public override bool isOpaque()
+    {
+        return false;
+    }
 
     public override bool isSideVisible(IBlockReader iBlockReader, int x, int y, int z, int side)
     {

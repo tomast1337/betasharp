@@ -38,10 +38,10 @@ internal class PortalForcer
 
                 for (int y = 127; y >= 0; --y)
                 {
-                    if (world.BlocksReader.GetBlockId(x, y, z) == Block.NetherPortal.id)
+                    if (world.Reader.GetBlockId(x, y, z) == Block.NetherPortal.id)
                     {
                         // Walk down to the bottom obsidian block of the portal frame
-                        while (world.BlocksReader.GetBlockId(x, y - 1, z) == Block.NetherPortal.id)
+                        while (world.Reader.GetBlockId(x, y - 1, z) == Block.NetherPortal.id)
                         {
                             --y;
                         }
@@ -68,22 +68,22 @@ internal class PortalForcer
             double targetZ = foundZ + 0.5D;
 
             // Offset the player so they don't spawn inside the obsidian frame
-            if (world.BlocksReader.GetBlockId(foundX - 1, foundY, foundZ) == Block.NetherPortal.id)
+            if (world.Reader.GetBlockId(foundX - 1, foundY, foundZ) == Block.NetherPortal.id)
             {
                 targetX -= 0.5D;
             }
 
-            if (world.BlocksReader.GetBlockId(foundX + 1, foundY, foundZ) == Block.NetherPortal.id)
+            if (world.Reader.GetBlockId(foundX + 1, foundY, foundZ) == Block.NetherPortal.id)
             {
                 targetX += 0.5D;
             }
 
-            if (world.BlocksReader.GetBlockId(foundX, foundY, foundZ - 1) == Block.NetherPortal.id)
+            if (world.Reader.GetBlockId(foundX, foundY, foundZ - 1) == Block.NetherPortal.id)
             {
                 targetZ -= 0.5D;
             }
 
-            if (world.BlocksReader.GetBlockId(foundX, foundY, foundZ + 1) == Block.NetherPortal.id)
+            if (world.Reader.GetBlockId(foundX, foundY, foundZ + 1) == Block.NetherPortal.id)
             {
                 targetZ += 0.5D;
             }
@@ -123,9 +123,9 @@ internal class PortalForcer
 
                 for (int y = 127; y >= 0; --y)
                 {
-                    if (world.BlocksReader.IsAir(x, y, z))
+                    if (world.Reader.IsAir(x, y, z))
                     {
-                        while (y > 0 && world.BlocksReader.IsAir(x, y - 1, z))
+                        while (y > 0 && world.Reader.IsAir(x, y - 1, z))
                         {
                             --y;
                         }
@@ -151,7 +151,7 @@ internal class PortalForcer
                                         int checkY = y + height;
                                         int checkZ = z + (widthDepth - 1) * dirZ - width * dirX;
 
-                                        if ((height < 0 && !world.BlocksReader.GetMaterial(checkX, checkY, checkZ).IsSolid) || (height >= 0 && !world.BlocksReader.IsAir(checkX, checkY, checkZ)))
+                                        if ((height < 0 && !world.Reader.GetMaterial(checkX, checkY, checkZ).IsSolid) || (height >= 0 && !world.Reader.IsAir(checkX, checkY, checkZ)))
                                         {
                                             validLocation = false;
                                         }
@@ -191,9 +191,9 @@ internal class PortalForcer
 
                     for (int y = 127; y >= 0; --y)
                     {
-                        if (world.BlocksReader.IsAir(x, y, z))
+                        if (world.Reader.IsAir(x, y, z))
                         {
-                            while (world.BlocksReader.IsAir(x, y - 1, z))
+                            while (world.Reader.IsAir(x, y - 1, z))
                             {
                                 --y;
                             }
@@ -212,7 +212,7 @@ internal class PortalForcer
                                         int checkY = y + height;
                                         int checkZ = z + (widthDepth - 1) * dirZ;
 
-                                        if ((height < 0 && !world.BlocksReader.GetMaterial(checkX, checkY, checkZ).IsSolid) || (height >= 0 && !world.BlocksReader.IsAir(checkX, checkY, checkZ)))
+                                        if ((height < 0 && !world.Reader.GetMaterial(checkX, checkY, checkZ).IsSolid) || (height >= 0 && !world.Reader.IsAir(checkX, checkY, checkZ)))
                                         {
                                             validLocation = false;
                                         }
@@ -300,7 +300,7 @@ internal class PortalForcer
                     int buildY = finalY + h;
                     int buildZ = finalZ + (wDepth - 1) * finalDirZ;
 
-                    world.Broadcaster.NotifyNeighbors(buildX, buildY, buildZ, world.BlocksReader.GetBlockId(buildX, buildY, buildZ));
+                    world.Broadcaster.NotifyNeighbors(buildX, buildY, buildZ, world.Reader.GetBlockId(buildX, buildY, buildZ));
                 }
             }
         }
