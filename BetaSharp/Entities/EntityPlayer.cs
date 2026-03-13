@@ -717,7 +717,8 @@ public abstract class EntityPlayer : EntityLiving
         Vec3i? var4 = sleepingPos;
         if (var4 is (int x, int y, int z) && world.Reader.GetBlockId(x, y, z) == Block.Bed.id)
         {
-            BlockBed.updateState(world.BlockWriter, x, y, z, 0, false);
+            int bedMeta = world.Reader.GetMeta(x, y, z);
+            BlockBed.updateState(world.BlockWriter, x, y, z, bedMeta, false);
             Vec3i? var5 = BlockBed.findWakeUpPosition(world.Reader, x, y, z, 0);
             if (var5 == null)
             {

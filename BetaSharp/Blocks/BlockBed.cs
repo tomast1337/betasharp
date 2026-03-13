@@ -194,7 +194,7 @@ public class BlockBed : Block
         }
         else
         {
-            meta &= -5;
+            meta &= ~4;
         }
 
         worldWrite.SetBlockMeta(x, y, z, meta);
