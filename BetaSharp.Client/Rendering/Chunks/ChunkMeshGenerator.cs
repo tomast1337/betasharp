@@ -86,10 +86,6 @@ internal class ChunkMeshGenerator : IDisposable
                 lock (results)
                     results.Enqueue(mesh);
             }
-            catch (Exception ex)
-            {
-                Log.Instance.For<ChunkMeshGenerator>().LogError(ex, "Chunk mesh generation failed at {Pos}", pos);
-            }
             finally
             {
                 cache.Dispose();

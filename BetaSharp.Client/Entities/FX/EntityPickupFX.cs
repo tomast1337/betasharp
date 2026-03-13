@@ -25,26 +25,26 @@ public class EntityPickupFX : EntityFX
 
     public override void renderParticle(Tessellator t, float partialTick, float rotX, float rotY, float rotZ, float upX, float upZ)
     {
-        float lifeProgress = (currentAge + partialTick) / maxAge;
+        float lifeProgress = ((float)currentAge + partialTick) / (float)maxAge;
         lifeProgress *= lifeProgress;
         double targetX = target.x;
         double targetY = target.y;
         double targetZ = target.z;
-        double sourceX = source.lastTickX + (source.x - source.lastTickX) * partialTick;
-        double sourceY = source.lastTickY + (source.y - source.lastTickY) * partialTick + yOffset;
-        double sourceZ = source.lastTickZ + (source.z - source.lastTickZ) * partialTick;
-        double renderX = targetX + (sourceX - targetX) * lifeProgress;
-        double renderY = targetY + (sourceY - targetY) * lifeProgress;
-        double renderZ = targetZ + (sourceZ - targetZ) * lifeProgress;
+        double sourceX = source.lastTickX + (source.x - source.lastTickX) * (double)partialTick;
+        double sourceY = source.lastTickY + (source.y - source.lastTickY) * (double)partialTick + (double)yOffset;
+        double sourceZ = source.lastTickZ + (source.z - source.lastTickZ) * (double)partialTick;
+        double renderX = targetX + (sourceX - targetX) * (double)lifeProgress;
+        double renderY = targetY + (sourceY - targetY) * (double)lifeProgress;
+        double renderZ = targetZ + (sourceZ - targetZ) * (double)lifeProgress;
         int itemX = MathHelper.Floor(renderX);
-        int itemY = MathHelper.Floor(renderY + standingEyeHeight / 2.0F);
+        int itemY = MathHelper.Floor(renderY + (double)(standingEyeHeight / 2.0F));
         int itemZ = MathHelper.Floor(renderZ);
         float luminance = _level.Lighting.GetLuminance(itemX, itemY, itemZ);
         renderX -= interpPosX;
         renderY -= interpPosY;
         renderZ -= interpPosZ;
         GLManager.GL.Color4(luminance, luminance, luminance, 1.0F);
-        EntityRenderDispatcher.instance.renderEntityWithPosYaw(target, renderX, renderY, renderZ, target.yaw, partialTick);
+        EntityRenderDispatcher.instance.renderEntityWithPosYaw(target, (double)((float)renderX), (double)((float)renderY), (double)((float)renderZ), target.yaw, partialTick);
     }
 
     public override void tick()
@@ -56,5 +56,8 @@ public class EntityPickupFX : EntityFX
         }
     }
 
-    public override int getFXLayer() => 3;
+    public override int getFXLayer()
+    {
+        return 3;
+    }
 }

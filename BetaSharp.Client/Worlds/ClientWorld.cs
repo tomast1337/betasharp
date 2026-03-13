@@ -16,9 +16,9 @@ public class ClientWorld : World
 {
     private readonly List<BlockReset> _blockResets = [];
     private readonly ClientNetworkHandler _networkHandler;
-    private MultiplayerIChunkCache _iChunkCache; 
-    private readonly HashSet<Entity> _forcedEntities = [];
-    private readonly HashSet<Entity> _pendingEntities = [];
+    private MultiplayerChunkCache _chunkCache; 
+    private readonly HashSet<Entity> forcedEntities = [];
+    private readonly HashSet<Entity> pendingEntities = [];
 
     public ClientWorld(ClientNetworkHandler netHandler, long seed, int dimId) : base(new EmptyWorldStorage(), "MpServer", new WorldSettings(seed, WorldType.Default, ""), Dimension.FromId(dimId))
     {
@@ -47,9 +47,9 @@ public class ClientWorld : World
         }
 
         // 3. Entity Management
-        for (int i = 0; i < 10 && _pendingEntities.Count > 0; ++i)
+        for (int i = 0; i < 10 && pendingEntities.Count > 0; ++i)
         {
-            Entity entity = _pendingEntities.First();
+            Entity entity = pendingEntities.First();
             if (!Entities.Entities.Contains(entity))
             {
                 SpawnEntity(entity);
@@ -92,8 +92,8 @@ public class ClientWorld : World
 
     protected override IChunkSource CreateChunkCache()
     {
-        _iChunkCache = new MultiplayerIChunkCache(this);
-        return _iChunkCache;
+        _chunkCache = new MultiplayerChunkCache(this);
+        return _chunkCache;
     }
 
     public override void UpdateSpawnPosition() => SetSpawnPos(new Vec3i(8, 64, 8));
@@ -106,11 +106,11 @@ public class ClientWorld : World
     {
         if (load)
         {
-            _iChunkCache.LoadChunk(chunkX, chunkZ);
+            _chunkCache.LoadChunk(chunkX, chunkZ);
         }
         else
         {
-            _iChunkCache.UnloadChunk(chunkX, chunkZ);
+            _chunkCache.UnloadChunk(chunkX, chunkZ);
         }
 
         if (!load)
@@ -122,10 +122,10 @@ public class ClientWorld : World
     private bool SpawnEntity(Entity entity)
     {
         bool spawned = Entities.SpawnEntity(entity);
-        _forcedEntities.Add(entity);
+        forcedEntities.Add(entity);
         if (!spawned)
         {
-            _pendingEntities.Add(entity);
+            pendingEntities.Add(entity);
         }
 
         return spawned;
@@ -134,22 +134,22 @@ public class ClientWorld : World
     private void Remove(Entity ent)
     {
         Entities.Remove(ent);
-        _forcedEntities.Remove(ent);
+        forcedEntities.Remove(ent);
     }
 
     private void HandleEntityAdded(Entity ent)
     {
-        if (_pendingEntities.Contains(ent))
+        if (pendingEntities.Contains(ent))
         {
-            _pendingEntities.Remove(ent);
+            pendingEntities.Remove(ent);
         }
     }
 
     private void HandleEntityRemoved(Entity ent)
     {
-        if (_forcedEntities.Contains(ent))
+        if (forcedEntities.Contains(ent))
         {
-            _pendingEntities.Add(ent);
+            pendingEntities.Add(ent);
         }
     }
 
@@ -166,12 +166,12 @@ public class ClientWorld : World
             Remove(existingEnt);
         }
 
-        _forcedEntities.Add(ent);
+        forcedEntities.Add(ent);
         ent.id = networkId;
 
         if (!SpawnEntity(ent))
         {
-            _pendingEntities.Add(ent);
+            pendingEntities.Add(ent);
         }
     }
 
@@ -185,7 +185,7 @@ public class ClientWorld : World
         Entity? ent = GetEntity(networkId);
         if (ent != null)
         {
-            _forcedEntities.Remove(ent);
+            forcedEntities.Remove(ent);
             Remove(ent);
         }
         return ent;

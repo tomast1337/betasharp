@@ -10,23 +10,11 @@ public class BlockEntity
     private static readonly Dictionary<string, Type> s_idToClass = new();
     private static readonly Dictionary<Type, string> s_classToId = new();
     private static readonly ILogger<BlockEntity> s_logger = Log.Instance.For<BlockEntity>();
-    public IWorldContext Level;
+    public IWorldContext World;
     protected bool Removed;
     public int X;
     public int Y;
     public int Z;
-
-    static BlockEntity()
-    {
-        Create(typeof(BlockEntityFurnace), "Furnace");
-        Create(typeof(BlockEntityChest), "Chest");
-        Create(typeof(BlockEntityRecordPlayer), "RecordPlayer");
-        Create(typeof(BlockEntityDispenser), "Trap");
-        Create(typeof(BlockEntitySign), "Sign");
-        Create(typeof(BlockEntityMobSpawner), "MobSpawner");
-        Create(typeof(BlockEntityNote), "Music");
-        Create(typeof(BlockEntityPiston), "Piston");
-    }
 
     private static void Create(Type blockEntityClass, string id)
     {
@@ -96,13 +84,13 @@ public class BlockEntity
         return blockEntity;
     }
 
-    public virtual int getPushedBlockData() => Level.BlocksReader.GetMeta(X, Y, Z);
+    public virtual int getPushedBlockData() => World.BlocksReader.GetMeta(X, Y, Z);
 
     public void markDirty()
     {
-        if (Level != null)
+        if (World != null)
         {
-            Level.Broadcaster.UpdateBlockEntity(X, Y, Z, this);
+            World.Broadcaster.UpdateBlockEntity(X, Y, Z, this);
         }
     }
 
@@ -114,7 +102,7 @@ public class BlockEntity
         return dx * dx + dy * dy + dz * dz;
     }
 
-    public Block getBlock() => Block.Blocks[Level.BlocksReader.GetBlockId(X, Y, Z)];
+    public Block getBlock() => Block.Blocks[World.BlocksReader.GetBlockId(X, Y, Z)];
 
     public virtual Packet createUpdatePacket() => null;
 
@@ -125,9 +113,9 @@ public class BlockEntity
             return true;
         }
 
-        if (Level != null)
+        if (World != null)
         {
-            int id = Level.BlocksReader.GetBlockId(X, Y, Z);
+            int id = World.BlocksReader.GetBlockId(X, Y, Z);
             if (id == 0 || !Block.BlocksWithEntity[id])
             {
                 return true;
@@ -140,4 +128,16 @@ public class BlockEntity
     public void markRemoved() => Removed = true;
 
     public void cancelRemoval() => Removed = false;
+
+    static BlockEntity()
+    {
+        Create(typeof(BlockEntityFurnace), "Furnace");
+        Create(typeof(BlockEntityChest), "Chest");
+        Create(typeof(BlockEntityRecordPlayer), "RecordPlayer");
+        Create(typeof(BlockEntityDispenser), "Trap");
+        Create(typeof(BlockEntitySign), "Sign");
+        Create(typeof(BlockEntityMobSpawner), "MobSpawner");
+        Create(typeof(BlockEntityNote), "Music");
+        Create(typeof(BlockEntityPiston), "Piston");
+    }
 }

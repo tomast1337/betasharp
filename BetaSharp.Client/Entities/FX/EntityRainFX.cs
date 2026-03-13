@@ -10,9 +10,9 @@ public class EntityRainFX : EntityFX
 {
     public EntityRainFX(IWorldContext world, double x, double y, double z) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
     {
-        velocityX *= 0.3F;
-        velocityY = Random.Shared.NextDouble() * 0.2F + 0.1F;
-        velocityZ *= 0.3F;
+        velocityX *= (double)0.3F;
+        velocityY = (double)((float)Random.Shared.NextDouble() * 0.2F + 0.1F);
+        velocityZ *= (double)0.3F;
         particleRed = 1.0F;
         particleGreen = 1.0F;
         particleBlue = 1.0F;
@@ -29,11 +29,11 @@ public class EntityRainFX : EntityFX
         prevX = x;
         prevY = y;
         prevZ = z;
-        velocityY -= particleGravity;
+        velocityY -= (double)particleGravity;
         move(velocityX, velocityY, velocityZ);
-        velocityX *= 0.98F;
-        velocityY *= 0.98F;
-        velocityZ *= 0.98F;
+        velocityX *= (double)0.98F;
+        velocityY *= (double)0.98F;
+        velocityZ *= (double)0.98F;
         if (particleMaxAge-- <= 0)
         {
             markDead();
@@ -46,14 +46,14 @@ public class EntityRainFX : EntityFX
                 markDead();
             }
 
-            velocityX *= 0.7F;
-            velocityZ *= 0.7F;
+            velocityX *= (double)0.7F;
+            velocityZ *= (double)0.7F;
         }
 
         Material material = _level.BlocksReader.GetMaterial(MathHelper.Floor(x), MathHelper.Floor(y), MathHelper.Floor(z));
         if (material.IsFluid || material.IsSolid)
         {
-            double height = MathHelper.Floor(y) + 1 - BlockFluid.getFluidHeightFromMeta(_level.BlocksReader.GetMeta(MathHelper.Floor(x), MathHelper.Floor(y), MathHelper.Floor(z)));
+            double height = (double)((float)(MathHelper.Floor(y) + 1) - BlockFluid.getFluidHeightFromMeta(_level.BlocksReader.GetMeta(MathHelper.Floor(x), MathHelper.Floor(y), MathHelper.Floor(z))));
             if (y < height)
             {
                 markDead();

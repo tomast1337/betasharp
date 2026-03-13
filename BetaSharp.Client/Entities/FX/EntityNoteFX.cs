@@ -15,10 +15,9 @@ public class EntityNoteFX : EntityFX
 
     public EntityNoteFX(IWorldContext world, double x, double y, double z, double notePitch, double _, double __, float scaleMultiplier) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
     {
-        velocityX *= 0.01F;
-        velocityY *= 0.01F;
-        velocityZ *= 0.01F;
-        velocityY += 0.2D;
+        velocityX *= (double)0.01F;
+        velocityY *= (double)0.01F;
+        velocityZ *= (double)0.01F;
         particleRed = MathHelper.Sin(((float)notePitch + 0.0F) * (float)Math.PI * 2.0F) * 0.65F + 0.35F;
         particleGreen = MathHelper.Sin(((float)notePitch + 1.0F / 3.0F) * (float)Math.PI * 2.0F) * 0.65F + 0.35F;
         particleBlue = MathHelper.Sin(((float)notePitch + 2.0F / 3.0F) * (float)Math.PI * 2.0F) * 0.65F + 0.35F;
@@ -32,7 +31,7 @@ public class EntityNoteFX : EntityFX
 
     public override void renderParticle(Tessellator t, float partialTick, float rotX, float rotY, float rotZ, float upX, float upZ)
     {
-        float lifeProgress = (particleAge + partialTick) / particleMaxAge * 32.0F;
+        float lifeProgress = ((float)particleAge + partialTick) / (float)particleMaxAge * 32.0F;
         if (lifeProgress < 0.0F)
         {
             lifeProgress = 0.0F;
@@ -64,13 +63,14 @@ public class EntityNoteFX : EntityFX
             velocityZ *= 1.1D;
         }
 
-        velocityX *= 0.66F;
-        velocityY *= 0.66F;
-        velocityZ *= 0.66F;
+        velocityX *= (double)0.66F;
+        velocityY *= (double)0.66F;
+        velocityZ *= (double)0.66F;
         if (onGround)
         {
-            velocityX *= 0.7F;
-            velocityZ *= 0.7F;
+            velocityX *= (double)0.7F;
+            velocityZ *= (double)0.7F;
         }
+
     }
 }

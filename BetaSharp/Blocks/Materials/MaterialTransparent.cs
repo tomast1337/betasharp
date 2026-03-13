@@ -1,13 +1,20 @@
 using BetaSharp.Worlds.Maps;
 
-namespace BetaSharp.Blocks.Materials;
-
-internal class MaterialTransparent : Material
+namespace BetaSharp.Blocks.Materials
 {
-    public MaterialTransparent(MapColor mapColor) : base(mapColor) => SetReplaceable();
-    public override bool IsSolid => false;
+    internal class MaterialTransparent : Material
+    {
+        public override bool IsSolid => false;
 
-    public override bool BlocksVision => false;
+        public override bool BlocksVision => false;
 
-    public override bool BlocksMovement => false;
+        public override bool BlocksMovement => false;
+
+        public MaterialTransparent(MapColor mapColor) : base(mapColor)
+        {
+            SetReplaceable();
+        }
+
+    }
+
 }

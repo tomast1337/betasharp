@@ -515,7 +515,7 @@ public class Chunk
     public virtual void SetBlockEntity(int localX, int y, int localZ, BlockEntity blockEntity)
     {
         BlockPos pos = new(localX, y, localZ);
-        blockEntity.Level = Level;
+        blockEntity.World = Level;
         blockEntity.X = X * 16 + localX;
         blockEntity.Y = y;
         blockEntity.Z = Z * 16 + localZ;

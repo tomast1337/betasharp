@@ -65,10 +65,10 @@ public class BlockEntityPiston : BlockEntity
             collisionShapeSizeMultiplier = 1.0F - collisionShapeSizeMultiplier;
         }
 
-        Box? pushCollisionBox = Block.MovingPiston.getPushedBlockCollisionShape(Level.BlocksReader, X, Y, Z, _pushedBlockId, collisionShapeSizeMultiplier, _facing);
+        Box? pushCollisionBox = Block.MovingPiston.getPushedBlockCollisionShape(World.BlocksReader, X, Y, Z, _pushedBlockId, collisionShapeSizeMultiplier, _facing);
         if (pushCollisionBox != null)
         {
-            List<Entity> entitiesToPush = Level.Entities.GetEntities(null!, pushCollisionBox.Value);
+            List<Entity> entitiesToPush = World.Entities.GetEntities(null!, pushCollisionBox.Value);
             if (entitiesToPush.Count > 0)
             {
                 List<Entity> pushedEntities = s_pushedEntities.Value!;
@@ -92,11 +92,11 @@ public class BlockEntityPiston : BlockEntity
         if (_progress < 1.0F)
         {
             _progress = _lastProgess = 1.0F;
-            Level.Entities.RemoveBlockEntity(X, Y, Z);
+            World.Entities.RemoveBlockEntity(X, Y, Z);
             markRemoved();
-            if (Level.BlocksReader.GetBlockId(X, Y, Z) == Block.MovingPiston.id)
+            if (World.BlocksReader.GetBlockId(X, Y, Z) == Block.MovingPiston.id)
             {
-                Level.BlockWriter.SetBlock(X, Y, Z, _pushedBlockId, _pushedBlockData);
+                World.BlockWriter.SetBlock(X, Y, Z, _pushedBlockId, _pushedBlockData);
             }
         }
     }
@@ -107,11 +107,11 @@ public class BlockEntityPiston : BlockEntity
         if (_progress >= 1.0F)
         {
             pushEntities(1.0F, 0.25F);
-            Level.Entities.RemoveBlockEntity(X, Y, Z);
+            World.Entities.RemoveBlockEntity(X, Y, Z);
             markRemoved();
-            if (Level.BlocksReader.GetBlockId(X, Y, Z) == Block.MovingPiston.id)
+            if (World.BlocksReader.GetBlockId(X, Y, Z) == Block.MovingPiston.id)
             {
-                Level.BlockWriter.SetBlock(X, Y, Z, _pushedBlockId, _pushedBlockData);
+                World.BlockWriter.SetBlock(X, Y, Z, _pushedBlockId, _pushedBlockData);
             }
         }
         else

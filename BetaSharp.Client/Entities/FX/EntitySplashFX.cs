@@ -8,11 +8,11 @@ public class EntitySplashFX : EntityRainFX
     {
         particleGravity = 0.04F;
         ++particleTextureIndex;
-        if (velocityY == 0.0 && (velocityX != 0.0 || velocityZ != 0.0))
+        if (velocityY == 0.0D && (velocityX != 0.0D || velocityZ != 0.0D))
         {
-            this.velocityX = velocityX;
-            this.velocityY = velocityY + 0.1;
-            this.velocityZ = velocityZ;
+            base.velocityX = velocityX;
+            base.velocityY = velocityY + 0.1D;
+            base.velocityZ = velocityZ;
         }
     }
 }

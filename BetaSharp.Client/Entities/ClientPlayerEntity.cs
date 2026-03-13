@@ -13,15 +13,15 @@ namespace BetaSharp.Client.Entities;
 
 public class ClientPlayerEntity : EntityPlayer
 {
+    public MovementInput movementInput;
+    protected BetaSharp Game;
     private readonly MouseFilter field_21902_bL = new();
     private readonly MouseFilter field_21903_bJ = new();
     private readonly MouseFilter field_21904_bK = new();
-    protected BetaSharp Game;
-    public MovementInput movementInput;
 
     public ClientPlayerEntity(BetaSharp game, IWorldContext world, Session session, int dimensionId) : base(world)
     {
-        Game = game;
+        this.Game = game;
         this.dimensionId = dimensionId;
         name = session.username;
     }
@@ -93,10 +93,10 @@ public class ClientPlayerEntity : EntityPlayer
             cameraOffset = 0.2F;
         }
 
-        pushOutOfBlocks(x - width * 0.35D, boundingBox.MinY + 0.5D, z + width * 0.35D);
-        pushOutOfBlocks(x - width * 0.35D, boundingBox.MinY + 0.5D, z - width * 0.35D);
-        pushOutOfBlocks(x + width * 0.35D, boundingBox.MinY + 0.5D, z - width * 0.35D);
-        pushOutOfBlocks(x + width * 0.35D, boundingBox.MinY + 0.5D, z + width * 0.35D);
+        pushOutOfBlocks(x - (double)width * 0.35D, boundingBox.MinY + 0.5D, z + (double)width * 0.35D);
+        pushOutOfBlocks(x - (double)width * 0.35D, boundingBox.MinY + 0.5D, z - (double)width * 0.35D);
+        pushOutOfBlocks(x + (double)width * 0.35D, boundingBox.MinY + 0.5D, z - (double)width * 0.35D);
+        pushOutOfBlocks(x + (double)width * 0.35D, boundingBox.MinY + 0.5D, z + (double)width * 0.35D);
         base.tickMovement();
     }
 

@@ -6,7 +6,7 @@ using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Client.Chunks;
 
-public class MultiplayerIChunkCache(World world) : IChunkSource
+public class MultiplayerChunkCache(World world) : IChunkSource
 {
     private readonly Chunk _empty = new EmptyChunk(world, new byte[-short.MinValue], 0, 0);
     private readonly Dictionary<ChunkPos, Chunk> _chunkByPos = [];

@@ -22,7 +22,6 @@ namespace BetaSharp.Client.Rendering;
 
 public class GameRenderer
 {
-    private const bool EnablePostProcessing = true;
     private readonly bool _cloudFog = false;
     private readonly BetaSharp _client;
     private float _viewDistance;
@@ -214,16 +213,14 @@ public class GameRenderer
     {
         if (!Display.isActive())
         {
-            if (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
-                - _prevFrameTime > 500L)
+            if (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - _prevFrameTime > 500L)
             {
                 _client.displayInGameMenu();
             }
         }
         else
         {
-            _prevFrameTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
-                ;
+            _prevFrameTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         }
 
         if (_client.inGameHasFocus)
@@ -246,7 +243,6 @@ public class GameRenderer
                 var4 = _mouseFilterXAxis.Smooth(var4, 0.05F * var3);
                 var5 = _mouseFilterYAxis.Smooth(var5, 0.05F * var3);
             }
-
             _client.player.changeLookDirection(var4, var5 * var6);
         }
 
@@ -274,10 +270,7 @@ public class GameRenderer
                 Display.setVSyncEnabled(false);
             }
 
-            if (EnablePostProcessing)
-            {
-                _client.PostProcessManager.Begin();
-            }
+            _client.PostProcessManager.Begin();
 
             if (_client.world != null)
             {
@@ -317,10 +310,9 @@ public class GameRenderer
                 }
             }
 
-            if (EnablePostProcessing)
-            {
-                _client.PostProcessManager.End();
-            }
+            
+            _client.PostProcessManager.End();
+            
 
             if (var7 < 240)
             {

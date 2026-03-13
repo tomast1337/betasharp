@@ -14,13 +14,13 @@ public class EntityHeartFX : EntityFX
 
     public EntityHeartFX(IWorldContext world, double x, double y, double z, double motionX, double motionY, double motionZ, float particleScale) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
     {
-        velocityX *= 0.01;
-        velocityY *= 0.01;
-        velocityZ *= 0.01;
+        velocityX *= (double)0.01F;
+        velocityY *= (double)0.01F;
+        velocityZ *= (double)0.01F;
         velocityY += 0.1D;
-        this.particleScale *= 12.0F / 16.0F;
-        this.particleScale *= particleScale;
-        baseScale = this.particleScale;
+        base.particleScale *= 12.0F / 16.0F;
+        base.particleScale *= particleScale;
+        baseScale = base.particleScale;
         particleMaxAge = 16;
         noClip = false;
         particleTextureIndex = 80;
@@ -28,7 +28,7 @@ public class EntityHeartFX : EntityFX
 
     public override void renderParticle(Tessellator t, float partialTick, float rotX, float rotY, float rotZ, float upX, float upZ)
     {
-        float lifeProgress = (particleAge + partialTick) / particleMaxAge * 32.0F;
+        float lifeProgress = ((float)particleAge + partialTick) / (float)particleMaxAge * 32.0F;
         if (lifeProgress < 0.0F)
         {
             lifeProgress = 0.0F;
@@ -60,13 +60,13 @@ public class EntityHeartFX : EntityFX
             velocityZ *= 1.1D;
         }
 
-        velocityX *= 0.86F;
-        velocityY *= 0.86F;
-        velocityZ *= 0.86F;
+        velocityX *= (double)0.86F;
+        velocityY *= (double)0.86F;
+        velocityZ *= (double)0.86F;
         if (onGround)
         {
-            velocityX *= 0.7F;
-            velocityZ *= 0.7F;
+            velocityX *= (double)0.7F;
+            velocityZ *= (double)0.7F;
         }
     }
 }

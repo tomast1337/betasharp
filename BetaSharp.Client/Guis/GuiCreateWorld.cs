@@ -171,7 +171,7 @@ public class GuiCreateWorld : GuiScreen
                         Game.statFileWriter.ReadStat(Stats.Stats.CreateWorldStat, 1);
                         Game.playerController = new PlayerControllerSP(Game);
 
-                        WorldSettings settings = new WorldSettings(worldSeed, _selectedWorldType, GeneratorOptions);
+                        WorldSettings settings = new (worldSeed, _selectedWorldType, GeneratorOptions);
 
                         Game.startWorld(_folderName, _textboxWorldName.GetText(), settings);
                         break;

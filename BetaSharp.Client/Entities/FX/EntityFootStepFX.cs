@@ -16,13 +16,13 @@ public class EntityFootStepFX : EntityFX
     public EntityFootStepFX(TextureManager textureManager, IWorldContext world, double x, double y, double z) : base(world, x, y, z, 0.0D, 0.0D, 0.0D)
     {
         this.textureManager = textureManager;
-        velocityX = velocityY = velocityZ = 0.0;
+        velocityX = velocityY = velocityZ = 0.0D;
         maxAge = 200;
     }
 
     public override void renderParticle(Tessellator t, float partialTick, float rotX, float rotY, float rotZ, float upX, float upZ)
     {
-        float lifeProgress = (localAge + partialTick) / maxAge;
+        float lifeProgress = ((float)localAge + partialTick) / (float)maxAge;
         lifeProgress *= lifeProgress;
         float alpha = 2.0F - lifeProgress * 2.0F;
         if (alpha > 1.0F)
@@ -41,11 +41,10 @@ public class EntityFootStepFX : EntityFX
         GLManager.GL.Enable(GLEnum.Blend);
         GLManager.GL.BlendFunc(GLEnum.SrcAlpha, GLEnum.OneMinusSrcAlpha);
         t.startDrawingQuads();
-        t.setColorRGBA_F(brightness, brightness, brightness, alpha);
-        t.addVertexWithUV(renderX - footprintSize, renderY, renderZ + footprintSize, 0.0, 1.0);
-        t.addVertexWithUV(renderX + footprintSize, renderY, renderZ + footprintSize, 1.0, 1.0);
-        t.addVertexWithUV(renderX + footprintSize, renderY, renderZ - footprintSize, 1.0, 0.0);
-        t.addVertexWithUV(renderX - footprintSize, renderY, renderZ - footprintSize, 0.0, 0.0);
+        t.addVertexWithUV((double)(renderX - footprintSize), (double)renderY, (double)(renderZ + footprintSize), 0.0D, 1.0D);
+        t.addVertexWithUV((double)(renderX + footprintSize), (double)renderY, (double)(renderZ + footprintSize), 1.0D, 1.0D);
+        t.addVertexWithUV((double)(renderX + footprintSize), (double)renderY, (double)(renderZ - footprintSize), 1.0D, 0.0D);
+        t.addVertexWithUV((double)(renderX - footprintSize), (double)renderY, (double)(renderZ - footprintSize), 0.0D, 0.0D);
         t.draw();
         GLManager.GL.Disable(GLEnum.Blend);
         GLManager.GL.Enable(GLEnum.Lighting);
