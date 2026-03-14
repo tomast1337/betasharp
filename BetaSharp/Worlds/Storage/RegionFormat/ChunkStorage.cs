@@ -1,15 +1,15 @@
 using BetaSharp.Worlds.Chunks;
-using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Worlds.Storage.RegionFormat;
 
 public interface IChunkStorage
 {
-    Chunk LoadChunk(World world, int chunkX, int chunkZ);
+    Chunk LoadChunk(IWorldContext world, int chunkX, int chunkZ);
 
-    void SaveChunk(World world, Chunk chunk, Action onSave, long sequence);
+    void SaveChunk(IWorldContext world, Chunk chunk, Action onSave, long sequence);
 
-    void SaveEntities(World world, Chunk chunk);
+    void SaveEntities(IWorldContext world, Chunk chunk);
 
     void Tick();
 

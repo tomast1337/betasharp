@@ -1,8 +1,6 @@
-using BetaSharp.Worlds.Chunks.Storage;
+namespace BetaSharp.Worlds.Chunks.Storage;
 
-namespace BetaSharp.Worlds.Storage.RegionFormat;
-
-internal sealed class RegionFileChunkBuffer(RegionFile region, int var2, int var3) : MemoryStream(8096)
+internal sealed class RegionFileChunkBuffer(RegionFile region, int chunkX, int chunkZ) : MemoryStream(8096)
 {
     protected override void Dispose(bool disposing)
     {
@@ -12,9 +10,9 @@ internal sealed class RegionFileChunkBuffer(RegionFile region, int var2, int var
             {
                 return;
             }
-
-            byte[] buffer = ToArray();
-            region.write(var2, var3, buffer, buffer.Length);
+            
+            var buffer = ToArray();
+            region.write(chunkX, chunkZ, buffer, buffer.Length);
         }
         finally
         {

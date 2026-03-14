@@ -1,7 +1,7 @@
 using BetaSharp.Blocks.Entities;
 using BetaSharp.Entities;
 using BetaSharp.Network.Packets.S2CPlay;
-using BetaSharp.Worlds.Core; // Kept your new Core namespace!
+using BetaSharp.Worlds.Core;
 
 namespace BetaSharp.Server.Worlds;
 
@@ -59,8 +59,6 @@ internal class ServerWorldEventListener : IWorldEventListener
     // ====================================================================================
     // TODO: Move to Client ???? INTENTIONALLY EMPTY METHODS: Headless server methods (No graphics/audio/particles on the server side)
     // ====================================================================================
-
-    public void addParticle(string particle, double x, double y, double z, double velocityX, double velocityY, double velocityZ) { }
     
     public void spawnParticle(string particle, double x, double y, double z, double velocityX, double velocityY, double velocityZ) { }
     
