@@ -15,13 +15,13 @@ public class ItemPickupAnimationS2CPacket() : Packet(PacketId.ItemPickupAnimatio
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         entityId = stream.ReadInt();
         collectorEntityId = stream.ReadInt();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteInt(entityId);
         stream.WriteInt(collectorEntityId);

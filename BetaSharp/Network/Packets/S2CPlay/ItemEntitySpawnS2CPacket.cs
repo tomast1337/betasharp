@@ -33,7 +33,7 @@ public class ItemEntitySpawnS2CPacket() : Packet(PacketId.ItemEntitySpawnS2C)
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         id = stream.ReadInt();
         itemRawId = stream.ReadShort();
@@ -47,7 +47,7 @@ public class ItemEntitySpawnS2CPacket() : Packet(PacketId.ItemEntitySpawnS2C)
         velocityZ = (sbyte)stream.ReadByte();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteInt(id);
         stream.WriteShort((short)itemRawId);

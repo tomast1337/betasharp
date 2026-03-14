@@ -14,13 +14,13 @@ public class EntityTrackerUpdateS2CPacket() : PacketBaseEntity(PacketId.EntityTr
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         base.Read(stream);
         Data = stream.ReadUntil(127);
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         base.Write(stream);
         stream.Write(Data);

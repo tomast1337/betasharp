@@ -13,12 +13,12 @@ public class WorldTimeUpdateS2CPacket() : Packet(PacketId.WorldTimeUpdateS2C)
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         time = stream.ReadLong();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteLong(time);
     }

@@ -20,13 +20,13 @@ public class IncreaseStatS2CPacket() : Packet(PacketId.IncreaseStatS2C)
         handler.onIncreaseStat(this);
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         statId = stream.ReadInt();
         amount = (sbyte)stream.ReadByte();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteInt(statId);
         stream.WriteByte((byte)amount);

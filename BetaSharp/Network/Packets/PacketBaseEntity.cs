@@ -11,12 +11,12 @@ public abstract class PacketBaseEntity : Packet
     public PacketBaseEntity(byte id) : base(id) { }
     public PacketBaseEntity(PacketId id) : base(id) { }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         EntityId = stream.ReadInt();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteInt(EntityId);
     }

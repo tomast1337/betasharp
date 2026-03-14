@@ -16,13 +16,13 @@ public class ClientCommandC2SPacket() : Packet(PacketId.ClientCommandC2S)
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         entityId = stream.ReadInt();
         mode = (sbyte)stream.ReadByte();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteInt(entityId);
         stream.WriteByte((byte)mode);

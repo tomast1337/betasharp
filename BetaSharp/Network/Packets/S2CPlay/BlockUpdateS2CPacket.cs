@@ -1,5 +1,4 @@
 using System.Net.Sockets;
-using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Network.Packets.S2CPlay;
@@ -12,7 +11,7 @@ public class BlockUpdateS2CPacket() : Packet(PacketId.BlockUpdateS2C)
     public int blockRawId;
     public int blockMetadata;
 
-    public static BlockUpdateS2CPacket Get(int x, int y, int z, World world)
+    public static BlockUpdateS2CPacket Get(int x, int y, int z, IWorldContext world)
     {
         var p = Get<BlockUpdateS2CPacket>(PacketId.BlockUpdateS2C);
         p.x = x;
@@ -23,7 +22,7 @@ public class BlockUpdateS2CPacket() : Packet(PacketId.BlockUpdateS2C)
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         x = stream.ReadInt();
         y = stream.ReadByte();
@@ -32,7 +31,7 @@ public class BlockUpdateS2CPacket() : Packet(PacketId.BlockUpdateS2C)
         blockMetadata = stream.ReadByte();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteInt(x);
         stream.WriteByte((byte)y);

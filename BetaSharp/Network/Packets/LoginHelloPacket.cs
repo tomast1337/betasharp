@@ -25,7 +25,7 @@ public class LoginHelloPacket() : Packet(PacketId.LoginHello)
         this.protocolVersion = protocolVersion;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         protocolVersion = stream.ReadInt();
         username = stream.ReadLongString(16);
@@ -33,7 +33,7 @@ public class LoginHelloPacket() : Packet(PacketId.LoginHello)
         dimensionId = (sbyte)stream.ReadByte();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteInt(protocolVersion);
         stream.WriteLongString(username);

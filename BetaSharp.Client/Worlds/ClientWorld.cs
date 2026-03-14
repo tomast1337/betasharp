@@ -28,7 +28,7 @@ public class ClientWorld : World
         StateManager = netHandler.clientPersistentStateManager;
         Entities.OnEntityAdded += HandleEntityAdded;
         Entities.OnEntityRemoved += HandleEntityRemoved;
-        BlockWriter.OnBlockChangedWithPrev += HandleBlockChanged;
+        Writer.OnBlockChangedWithPrev += HandleBlockChanged;
     }
 
     public override void Tick()
@@ -65,12 +65,12 @@ public class ClientWorld : World
             BlockReset blockReset = _blockResets[i];
             if (--blockReset.Delay == 0)
             {
-                BlockWriter.OnBlockChangedWithPrev -= HandleBlockChanged;
+                Writer.OnBlockChangedWithPrev -= HandleBlockChanged;
 
-                BlockWriter.SetBlockWithoutNotifyingNeighbors(blockReset.X, blockReset.Y, blockReset.Z, blockReset.BlockId, blockReset.Meta);
+                Writer.SetBlockWithoutNotifyingNeighbors(blockReset.X, blockReset.Y, blockReset.Z, blockReset.BlockId, blockReset.Meta);
                 Broadcaster.BlockUpdateEvent(blockReset.X, blockReset.Y, blockReset.Z);
 
-                BlockWriter.OnBlockChangedWithPrev += HandleBlockChanged;
+                Writer.OnBlockChangedWithPrev += HandleBlockChanged;
 
                 _blockResets.RemoveAt(i--);
             }
@@ -194,7 +194,7 @@ public class ClientWorld : World
     public bool SetBlockWithMetaFromPacket(int minX, int minY, int minZ, int blockId, int meta)
     {
         ClearBlockResets(minX, minY, minZ, minX, minY, minZ);
-        if (BlockWriter.SetBlockWithoutNotifyingNeighbors(minX, minY, minZ, blockId, meta))
+        if (Writer.SetBlockWithoutNotifyingNeighbors(minX, minY, minZ, blockId, meta))
         {
             BlockUpdate(minX, minY, minZ, blockId);
             return true;

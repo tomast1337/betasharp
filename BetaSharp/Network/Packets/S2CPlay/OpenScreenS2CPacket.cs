@@ -24,7 +24,7 @@ public class OpenScreenS2CPacket() : Packet(PacketId.OpenScreenS2C)
         handler.onOpenScreen(this);
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         syncId = (sbyte)stream.ReadByte();
         screenHandlerId = (sbyte)stream.ReadByte();
@@ -32,7 +32,7 @@ public class OpenScreenS2CPacket() : Packet(PacketId.OpenScreenS2C)
         slotsCount = (sbyte)stream.ReadByte();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteByte((byte)syncId);
         stream.WriteByte((byte)screenHandlerId);

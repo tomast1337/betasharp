@@ -27,7 +27,7 @@ public class GlobalEntitySpawnS2CPacket() : Packet(PacketId.GlobalEntitySpawnS2C
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         id = stream.ReadInt();
         type = (byte)stream.ReadByte();
@@ -36,7 +36,7 @@ public class GlobalEntitySpawnS2CPacket() : Packet(PacketId.GlobalEntitySpawnS2C
         z = stream.ReadInt();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteInt(id);
         stream.WriteByte(type);

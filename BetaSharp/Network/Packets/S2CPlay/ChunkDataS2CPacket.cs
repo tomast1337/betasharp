@@ -1,6 +1,5 @@
 using System.IO.Compression;
 using System.Net.Sockets;
-using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Network.Packets.S2CPlay;
@@ -40,7 +39,7 @@ public class ChunkDataS2CPacket() : Packet(PacketId.ChunkDataS2C)
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         x = stream.ReadInt();
         y = stream.ReadShort();
@@ -61,7 +60,7 @@ public class ChunkDataS2CPacket() : Packet(PacketId.ChunkDataS2C)
         chunkData = output.GetBuffer();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteInt(x);
         stream.WriteShort((short)y);
@@ -87,9 +86,4 @@ public class ChunkDataS2CPacket() : Packet(PacketId.ChunkDataS2C)
     {
         chunkData = rawData;
     }
-
-    /// <summary>
-    /// Not round-trippable: ProcessForInternal() replaces compressed payload with raw, so serialize/deserialize would fail on Read (expects zlib).
-    /// </summary>
-    public override bool SkipCloneForInternal => true;
 }

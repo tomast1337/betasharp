@@ -11,12 +11,12 @@ public class HandshakePacket() : Packet(PacketId.Handshake)
         this.username = username;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         username = stream.ReadLongString(32);
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteLongString(username);
     }

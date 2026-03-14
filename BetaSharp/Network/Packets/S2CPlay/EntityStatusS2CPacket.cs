@@ -14,13 +14,13 @@ public class EntityStatusS2CPacket() : PacketBaseEntity(PacketId.EntityStatusS2C
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         base.Read(stream);
         EntityStatus = (sbyte)stream.ReadByte();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         base.Write(stream);
         stream.WriteByte((byte)EntityStatus);

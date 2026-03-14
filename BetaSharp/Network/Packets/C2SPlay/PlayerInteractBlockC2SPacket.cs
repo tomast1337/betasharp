@@ -22,7 +22,7 @@ public class PlayerInteractBlockC2SPacket() : Packet(PacketId.PlayerInteractBloc
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         x = stream.ReadInt();
         y = stream.ReadByte();
@@ -42,7 +42,7 @@ public class PlayerInteractBlockC2SPacket() : Packet(PacketId.PlayerInteractBloc
 
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteInt(x);
         stream.WriteByte((byte)y);

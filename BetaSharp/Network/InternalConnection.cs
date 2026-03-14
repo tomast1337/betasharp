@@ -25,30 +25,14 @@ public class InternalConnection : Connection
 
     public override void sendPacket(Packet packet)
     {
-        if (closed) return;
-
-        packet.ProcessForInternal();
-
-        if (RemoteConnection == null || RemoteConnection.closed) return;
-
-        if (packet.SkipCloneForInternal)
+        if (!closed)
         {
-            Interlocked.Increment(ref packet.UseCount);
-            RemoteConnection.ReceivePacket(packet);
-            return;
-        }
+            packet.ProcessForInternal();
 
-        using (var ms = new MemoryStream())
-        {
-            Packet.WriteToStreamWithoutReturn(packet, ms);
-            ms.Position = 0;
-
-            bool isReceiverServer = RemoteConnection.netHandler?.isServerSide() == true;
-            Packet? clonedPacket = Packet.Read(ms, isReceiverServer);
-
-            if (clonedPacket != null)
+            if (RemoteConnection != null && !RemoteConnection.closed)
             {
-                RemoteConnection.ReceivePacket(clonedPacket);
+                Interlocked.Increment(ref packet.UseCount);
+                RemoteConnection.ReceivePacket(packet);
             }
         }
     }

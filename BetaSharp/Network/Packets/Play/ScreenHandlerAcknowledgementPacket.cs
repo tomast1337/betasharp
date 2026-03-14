@@ -22,14 +22,14 @@ public class ScreenHandlerAcknowledgementPacket() : Packet(PacketId.ScreenHandle
         handler.onScreenHandlerAcknowledgement(this);
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         syncId = (sbyte)stream.ReadByte();
         actionType = stream.ReadShort();
         accepted = (sbyte)stream.ReadByte() != 0;
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteByte((byte)syncId);
         stream.WriteShort((short)actionType);

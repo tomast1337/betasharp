@@ -3,6 +3,7 @@ using BetaSharp.Entities;
 using BetaSharp.Items;
 using BetaSharp.Network.Packets.S2CPlay;
 using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Server.Network;
 
@@ -121,7 +122,7 @@ public class ServerPlayerInteractionManager
     {
         Block block = Block.Blocks[world.Reader.GetBlockId(x, y, z)];
         int blockMeta = world.Reader.GetBlockMeta(x, y, z);
-        bool success = world.BlockWriter.SetBlock(x, y, z, 0);
+        bool success = world.Writer.SetBlock(x, y, z, 0);
         if (block != null && success)
         {
             block.onMetadataChange(new OnMetadataChangeEvent(world, x, y, z, blockMeta));
@@ -173,7 +174,7 @@ public class ServerPlayerInteractionManager
         return success;
     }
 
-    public bool interactItem(EntityPlayer player, World world, ItemStack stack)
+    public bool interactItem(EntityPlayer player, IWorldContext world, ItemStack stack)
     {
         int count = stack.count;
         ItemStack itemStack = stack.use(world, player);
@@ -198,7 +199,7 @@ public class ServerPlayerInteractionManager
     public bool interactBlock(EntityPlayer player, World world, ItemStack? stack, int x, int y, int z, int side)
     {
         int blockId = world.Reader.GetBlockId(x, y, z);
-        if (blockId > 0 && Block.Blocks[blockId].onUse(new OnUseEvent(world,player, x, y, z)))
+        if (blockId > 0 && Block.Blocks[blockId].onUse(new OnUseEvent(world, player, x, y, z)))
         {
             miningProgress = -1;
             return true;

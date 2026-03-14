@@ -54,12 +54,12 @@ public abstract class World : IWorldContext
 
         BlockHost = new ChunkHost(chunkSource);
         Reader = new WorldReader(this, dim);
-        BlockWriter = new WorldWriter(BlockHost, Reader);
-        BlockWriter.OnBlockChanged += BlockUpdate;
+        Writer = new WorldWriter(BlockHost, Reader);
+        Writer.OnBlockChanged += BlockUpdate;
 
         Broadcaster = new WorldEventBroadcaster(EventListeners, Reader, this);
 
-        BlockWriter.OnNeighborsShouldUpdate += (x, y, z, id) => Broadcaster.NotifyNeighbors(x, y, z, id);
+        Writer.OnNeighborsShouldUpdate += (x, y, z, id) => Broadcaster.NotifyNeighbors(x, y, z, id);
 
         Redstone = new RedstoneEngine(Reader);
         Lighting = new LightingEngine(Reader, dim, BlockHost);
@@ -93,7 +93,7 @@ public abstract class World : IWorldContext
 
     public ChunkHost BlockHost { get; }
     public WorldReader Reader { get; }
-    public WorldWriter BlockWriter { get; }
+    public WorldWriter Writer { get; }
     public WorldEventBroadcaster Broadcaster { get; }
 
     public EntityManager Entities { get; }
@@ -117,7 +117,7 @@ public abstract class World : IWorldContext
 
     ChunkHost IWorldContext.ChunkHost => BlockHost;
     WorldReader IWorldContext.Reader => Reader;
-    WorldWriter IWorldContext.Writer => BlockWriter;
+    WorldWriter IWorldContext.Writer => Writer;
     WorldEventBroadcaster IWorldContext.Broadcaster => Broadcaster;
     RedstoneEngine IWorldContext.Redstone => Redstone;
     EntityManager IWorldContext.Entities => Entities;
@@ -394,7 +394,7 @@ public abstract class World : IWorldContext
         if (Reader.GetBlockId(x, y, z) == Block.Fire.id)
         {
             Broadcaster.WorldEvent(player, 1004, x, y, z, 0);
-            BlockWriter.SetBlock(x, y, z, 0);
+            Writer.SetBlock(x, y, z, 0);
         }
     }
 
@@ -563,12 +563,12 @@ public abstract class World : IWorldContext
                         blockBelowId != 0 && blockBelowId != Block.Ice.id &&
                         Block.Blocks[blockBelowId].material.BlocksMovement)
                     {
-                        BlockWriter.SetBlock(worldX, worldY, worldZ, Block.Snow.id);
+                        Writer.SetBlock(worldX, worldY, worldZ, Block.Snow.id);
                     }
 
                     if (blockBelowId == Block.Water.id && currentChunk.GetBlockMeta(localX, worldY - 1, localZ) == 0)
                     {
-                        BlockWriter.SetBlock(worldX, worldY - 1, worldZ, Block.Ice.id);
+                        Writer.SetBlock(worldX, worldY - 1, worldZ, Block.Ice.id);
                     }
                 }
             }

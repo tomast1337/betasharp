@@ -17,14 +17,14 @@ public class PlayerInteractEntityC2SPacket() : Packet(PacketId.PlayerInteractEnt
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         playerId = stream.ReadInt();
         entityId = stream.ReadInt();
         isLeftClick = (sbyte)stream.ReadByte();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteInt(playerId);
         stream.WriteInt(entityId);

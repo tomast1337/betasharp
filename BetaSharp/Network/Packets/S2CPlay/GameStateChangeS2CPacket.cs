@@ -14,12 +14,12 @@ public class GameStateChangeS2CPacket() : Packet(PacketId.GameStateChangeS2C)
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         reason = (sbyte)stream.ReadByte();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteByte((byte)reason);
     }

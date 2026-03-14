@@ -22,14 +22,14 @@ public class ScreenHandlerPropertyUpdateS2CPacket() : Packet(PacketId.ScreenHand
         handler.onScreenHandlerPropertyUpdate(this);
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         syncId = (sbyte)stream.ReadByte();
         propertyId = stream.ReadShort();
         value = stream.ReadShort();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteByte((byte)syncId);
         stream.WriteShort((short)propertyId);

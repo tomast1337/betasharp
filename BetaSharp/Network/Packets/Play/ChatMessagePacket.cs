@@ -18,12 +18,12 @@ public class ChatMessagePacket() : Packet(PacketId.ChatMessage)
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         chatMessage = stream.ReadLongString(119);
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteLongString(chatMessage);
     }

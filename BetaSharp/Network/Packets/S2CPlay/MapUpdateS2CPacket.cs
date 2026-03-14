@@ -17,7 +17,7 @@ public class MapUpdateS2CPacket() : Packet(PacketId.MapUpdateS2C)
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         itemRawId = stream.ReadShort();
         id = stream.ReadShort();
@@ -25,7 +25,7 @@ public class MapUpdateS2CPacket() : Packet(PacketId.MapUpdateS2C)
         stream.ReadExactly(updateData);
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteShort(itemRawId);
         stream.WriteShort(id);

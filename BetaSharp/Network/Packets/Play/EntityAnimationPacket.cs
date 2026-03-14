@@ -16,13 +16,13 @@ public class EntityAnimationPacket() : PacketBaseEntity(PacketId.EntityAnimation
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         base.Read(stream);
         animationId = (sbyte)stream.ReadByte();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         base.Write(stream);
         stream.WriteByte((byte)animationId);

@@ -17,14 +17,14 @@ public class ChunkStatusUpdateS2CPacket() : Packet(PacketId.ChunkStatusUpdateS2C
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         x = stream.ReadInt();
         z = stream.ReadInt();
         load = stream.ReadByte() != 0;
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteInt(x);
         stream.WriteInt(z);

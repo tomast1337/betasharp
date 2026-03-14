@@ -13,12 +13,12 @@ public class UpdateSelectedSlotC2SPacket() : Packet(PacketId.UpdateSelectedSlotC
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         selectedSlot = stream.ReadShort();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteShort((short)selectedSlot);
     }

@@ -13,12 +13,12 @@ public class DisconnectPacket() : Packet(PacketId.Disconnect)
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         reason = stream.ReadLongString(100);
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         // TODO: should have a index for common responses
         stream.WriteLongString(reason);

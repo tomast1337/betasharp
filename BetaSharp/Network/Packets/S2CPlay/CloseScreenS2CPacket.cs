@@ -18,12 +18,12 @@ public class CloseScreenS2CPacket() : Packet(PacketId.CloseScreenS2C)
         handler.onCloseScreen(this);
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         windowId = (sbyte)stream.ReadByte();
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteByte((byte)windowId);
     }

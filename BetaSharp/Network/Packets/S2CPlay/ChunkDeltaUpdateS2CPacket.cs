@@ -1,7 +1,5 @@
 using System.Net.Sockets;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.Chunks;
-using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Network.Packets.S2CPlay;
@@ -39,7 +37,7 @@ public class ChunkDeltaUpdateS2CPacket() : Packet(PacketId.ChunkDeltaUpdateS2C)
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         x = stream.ReadInt();
         z = stream.ReadInt();
@@ -58,7 +56,7 @@ public class ChunkDeltaUpdateS2CPacket() : Packet(PacketId.ChunkDeltaUpdateS2C)
         stream.ReadExactly(blockMetadata);
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteInt(x);
         stream.WriteInt(z);

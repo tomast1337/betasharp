@@ -24,7 +24,7 @@ public class PlayerMovePositionAndOnGroundPacket : PlayerMovePacket
         return p;
     }
 
-    public override void Read(Stream stream)
+    public override void Read(NetworkStream stream)
     {
         x = stream.ReadDouble();
         y = stream.ReadDouble();
@@ -33,7 +33,7 @@ public class PlayerMovePositionAndOnGroundPacket : PlayerMovePacket
         base.Read(stream);
     }
 
-    public override void Write(Stream stream)
+    public override void Write(NetworkStream stream)
     {
         stream.WriteDouble(x);
         stream.WriteDouble(y);

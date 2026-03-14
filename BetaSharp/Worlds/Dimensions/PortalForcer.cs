@@ -269,7 +269,7 @@ internal class PortalForcer
                         int buildZ = finalZ + (wDepth - 1) * finalDirZ - w * finalDirX;
 
                         bool isFloor = h < 0;
-                        world.BlockWriter.SetBlock(buildX, buildY, buildZ, isFloor ? Block.Obsidian.id : 0);
+                        world.Writer.SetBlock(buildX, buildY, buildZ, isFloor ? Block.Obsidian.id : 0);
                     }
                 }
             }
@@ -287,7 +287,7 @@ internal class PortalForcer
                     int buildZ = finalZ + (wDepth - 1) * finalDirZ;
 
                     bool isFrameEdge = wDepth == 0 || wDepth == 3 || h == -1 || h == 3;
-                    world.BlockWriter.SetBlockInternal(buildX, buildY, buildZ, isFrameEdge ? Block.Obsidian.id : Block.NetherPortal.id);
+                    world.Writer.SetBlockInternal(buildX, buildY, buildZ, isFrameEdge ? Block.Obsidian.id : Block.NetherPortal.id);
                 }
             }
 
