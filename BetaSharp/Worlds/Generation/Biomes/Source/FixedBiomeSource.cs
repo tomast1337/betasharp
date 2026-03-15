@@ -1,5 +1,5 @@
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds.Core;
+using BetaSharp.Worlds.Biomes.Source;
 using BetaSharp.Worlds.Core.Systems;
 using java.util;
 

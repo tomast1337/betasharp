@@ -1,12 +1,11 @@
 using BetaSharp.Blocks;
-using BetaSharp.Blocks.Entities;
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Entities;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
+using BetaSharp.Worlds.Biomes.Source;
 using BetaSharp.Worlds.Chunks;
 using BetaSharp.Worlds.Dimensions;
-using BetaSharp.Worlds.Generation.Biomes.Source;
 
 namespace BetaSharp.Worlds.Core.Systems;
 

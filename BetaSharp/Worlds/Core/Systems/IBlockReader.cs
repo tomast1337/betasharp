@@ -1,9 +1,8 @@
-using BetaSharp.Blocks.Entities;
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Entities;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds.Generation.Biomes.Source;
+using BetaSharp.Worlds.Biomes.Source;
 
 namespace BetaSharp.Worlds.Core.Systems;
 

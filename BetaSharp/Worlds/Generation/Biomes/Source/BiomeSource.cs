@@ -1,34 +1,53 @@
+using System.Collections.Concurrent;
 using BetaSharp.Util.Maths;
 using BetaSharp.Util.Maths.Noise;
-using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Core.Systems;
+using BetaSharp.Worlds.Generation.Biomes;
 
-namespace BetaSharp.Worlds.Generation.Biomes.Source;
+namespace BetaSharp.Worlds.Biomes.Source;
 
 public class BiomeSource
 {
-    private readonly OctaveSimplexNoiseSampler _downfallSampler;
+    public static readonly ConcurrentBag<BiomeSource> Pool = [];
     private readonly OctaveSimplexNoiseSampler _temperatureSampler;
+    private readonly OctaveSimplexNoiseSampler _downfallSampler;
     private readonly OctaveSimplexNoiseSampler _weirdnessSampler;
-    public Biome[] Biomes;
-    public double[] DownfallMap;
     public double[] TemperatureMap;
+    public double[] DownfallMap;
     public double[] WeirdnessMap;
+    public Biome[] Biomes;
 
-    public BiomeSource(IWorldContext level)
+    protected BiomeSource()
     {
-        _temperatureSampler = new OctaveSimplexNoiseSampler(new JavaRandom(level.Seed * 9871L), 4);
-        _downfallSampler = new OctaveSimplexNoiseSampler(new JavaRandom(level.Seed * 39811L), 4);
-        _weirdnessSampler = new OctaveSimplexNoiseSampler(new JavaRandom(level.Seed * 543321L), 2);
     }
 
-    public virtual Biome GetBiome(ChunkPos chunkPos) => GetBiome(chunkPos.X << 4, chunkPos.Z << 4);
+    public BiomeSource(IWorldContext world)
+    {
+        _temperatureSampler = new OctaveSimplexNoiseSampler(new JavaRandom(world.Seed * 9871L), 4);
+        _downfallSampler = new OctaveSimplexNoiseSampler(new JavaRandom(world.Seed * 39811L), 4);
+        _weirdnessSampler = new OctaveSimplexNoiseSampler(new JavaRandom(world.Seed * 543321L), 2);
+    }
 
-    public virtual Biome GetBiome(int x, int z) => GetBiomesInArea(x, z, 1, 1)[0];
+    public void Restore(IWorldContext world)
+    {
+        _temperatureSampler.Restore(new JavaRandom(world.Seed * 9871L));
+        _downfallSampler.Restore(new JavaRandom(world.Seed * 39811L));
+        _weirdnessSampler.Restore(new JavaRandom(world.Seed * 543321L));
+    }
+
+    public virtual Biome GetBiome(ChunkPos chunkPos)
+    {
+        return GetBiome(chunkPos.X << 4, chunkPos.Z << 4);
+    }
+
+    public virtual Biome GetBiome(int x, int z)
+    {
+        return GetBiomesInArea(x, z, 1, 1)[0];
+    }
 
     public virtual double GetTemperature(int x, int z)
     {
-        TemperatureMap = _temperatureSampler.sample(TemperatureMap, x, z, 1, 1, 0.025F, 0.025F, 0.5D);
+        TemperatureMap = _temperatureSampler.sample(TemperatureMap, x, z, 1, 1, (double)0.025F, (double)0.025F, 0.5D);
         return TemperatureMap[0];
     }
 
@@ -46,7 +65,7 @@ public class BiomeSource
             map = new double[size];
         }
 
-        map = _temperatureSampler.sample(map, x, z, width, depth, 0.025F, 0.025F, 0.25D);
+        map = _temperatureSampler.sample(map, x, z, width, depth, (double)0.025F, (double)0.025F, 0.25D);
         WeirdnessMap = _weirdnessSampler.sample(WeirdnessMap, x, z, width, depth, 0.25D, 0.25D, 10 / 17d);
         int index = 0;
 
@@ -85,8 +104,8 @@ public class BiomeSource
             biomes = new Biome[size];
         }
 
-        TemperatureMap = _temperatureSampler.sample(TemperatureMap, x, z, width, width, 0.025F, 0.025F, 0.25D);
-        DownfallMap = _downfallSampler.sample(DownfallMap, x, z, width, width, 0.05F, 0.05F, 1.0D / 3.0D);
+        TemperatureMap = _temperatureSampler.sample(TemperatureMap, x, z, width, width, (double)0.025F, (double)0.025F, 0.25D);
+        DownfallMap = _downfallSampler.sample(DownfallMap, x, z, width, width, (double)0.05F, (double)0.05F, 1.0D / 3.0D);
         WeirdnessMap = _weirdnessSampler.sample(WeirdnessMap, x, z, width, width, 0.25D, 0.25D, 0.5882352941176471D);
         int index = 0;
 

@@ -5,9 +5,9 @@ using BetaSharp.Entities;
 using BetaSharp.NBT;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
+using BetaSharp.Worlds.Biomes.Source;
 using BetaSharp.Worlds.Chunks;
 using BetaSharp.Worlds.Core.Systems;
-using BetaSharp.Worlds.Generation.Biomes.Source;
 
 namespace BetaSharp.Worlds.Core;
 
@@ -22,10 +22,16 @@ public class WorldRegionSnapshot : IBlockReader, ILightProvider, IDisposable
     private readonly Dictionary<BlockPos, BlockEntity> _tileEntityCache = [];
     private bool _isLit;
 
-    public WorldRegionSnapshot(IWorldContext level, int minX, int var3, int minZ, int maxX, int var6, int maxZ)
+    public WorldRegionSnapshot(IWorldContext world, int minX, int var3, int minZ, int maxX, int var6, int maxZ)
     {
-        //TODO: OPTIMIZE THIS
-        _biomeSource = new BiomeSource(level);
+        if (!BiomeSource.Pool.TryTake(out _biomeSource!))
+        {
+            _biomeSource = new(world);
+        }
+        else
+        {
+            _biomeSource.Restore(world);
+        }
 
         _chunkX = minX >> 4;
         _chunkZ = minZ >> 4;
@@ -45,13 +51,13 @@ public class WorldRegionSnapshot : IBlockReader, ILightProvider, IDisposable
         {
             for (int cz = _chunkZ; cz <= maxChunkZ; ++cz)
             {
-                Chunk originalChunk = level.ChunkHost.GetChunk(cx, cz);
+                Chunk originalChunk = world.ChunkHost.GetChunk(cx, cz);
                 _chunks[cx - _chunkX][cz - _chunkZ] = new ChunkSnapshot(originalChunk);
             }
         }
 
-        _lightTable = (float[])level.Dimension.LightLevelToLuminance.Clone();
-        _skylightSubtracted = level.Environment.AmbientDarkness;
+        _lightTable = (float[])world.Dimension.LightLevelToLuminance.Clone();
+        _skylightSubtracted = world.Environment.AmbientDarkness;
     }
 
     public int GetBlockId(int x, int y, int z)
@@ -107,7 +113,7 @@ public class WorldRegionSnapshot : IBlockReader, ILightProvider, IDisposable
                 {
                     _tileEntityCache[pos] = newEntity;
                     return newEntity;
-                }
+        }
             }
         }
 
@@ -147,24 +153,6 @@ public class WorldRegionSnapshot : IBlockReader, ILightProvider, IDisposable
     public bool IsFluidInBox(Box area, Material fluid) => throw new NotImplementedException();
     public bool UpdateMovementInFluid(Box entityBox, Material fluidMaterial, Entity entity) => throw new NotImplementedException();
     public bool IsPosLoaded(int x, int y, int z) => throw new NotImplementedException();
-
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
-
-        foreach (ChunkSnapshot[] column in _chunks)
-        {
-            if (column == null)
-            {
-                continue;
-            }
-
-            foreach (ChunkSnapshot snapshot in column)
-            {
-                snapshot?.Dispose();
-            }
-        }
-    }
 
     public float GetNaturalBrightness(int x, int y, int z, int minLight)
     {
@@ -241,5 +229,45 @@ public class WorldRegionSnapshot : IBlockReader, ILightProvider, IDisposable
         return lightValue;
     }
 
-    public bool getIsLit() => _isLit;
+    public BiomeSource getBiomeSource()
+    {
+        return _biomeSource;
+    }
+
+    public bool shouldSuffocate(int x, int y, int z)
+    {
+        Block block = Block.Blocks[GetBlockId(x, y, z)];
+        return block != null && block.material.BlocksMovement && block.isFullCube();
+    }
+
+    public bool isOpaque(int x, int y, int z)
+    {
+        Block block = Block.Blocks[GetBlockId(x, y, z)];
+        return block != null && block.isOpaque();
+    }
+
+    public bool getIsLit()
+    {
+        return _isLit;
+    }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+
+        if (_biomeSource != null)
+        {
+            BiomeSource.Pool.Add(_biomeSource);
+        }
+
+        foreach (ChunkSnapshot[] column in _chunks)
+        {
+            if (column == null) continue;
+
+            foreach (ChunkSnapshot snapshot in column)
+            {
+                snapshot?.Dispose();
+            }
+        }
+    }
 }
