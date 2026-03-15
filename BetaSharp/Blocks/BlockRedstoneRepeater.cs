@@ -32,12 +32,10 @@ public class BlockRedstoneRepeater : Block
         if (lit && !powered)
         {
             @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, Repeater.id, meta);
-            NotifyOutputNeighbor(@event.World, @event.X, @event.Y, @event.Z, meta);
         }
         else if (!lit)
         {
             @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, PoweredRepeater.id, meta);
-            NotifyOutputNeighbor(@event.World, @event.X, @event.Y, @event.Z, meta);
 
             if (!powered)
             {
@@ -201,17 +199,5 @@ public class BlockRedstoneRepeater : Block
         }
 
         ctx.World.Broadcaster.AddParticle("reddust", particleX + offsetX, particleY, particleZ + offsetY, 0.0D, 0.0D, 0.0D);
-    }
-
-    private void NotifyOutputNeighbor(IWorldContext level, int x, int y, int z, int meta)
-    {
-        int facing = meta & 3;
-        switch (facing)
-        {
-            case 0: level.Broadcaster.NotifyNeighbors(x, y, z - 1, id); break; // Outputs North
-            case 1: level.Broadcaster.NotifyNeighbors(x + 1, y, z, id); break; // Outputs East
-            case 2: level.Broadcaster.NotifyNeighbors(x, y, z + 1, id); break; // Outputs South
-            case 3: level.Broadcaster.NotifyNeighbors(x - 1, y, z, id); break; // Outputs West
-        }
     }
 }
