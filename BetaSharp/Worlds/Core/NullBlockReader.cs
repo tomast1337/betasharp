@@ -55,15 +55,7 @@ public sealed class NullBlockReader : IBlockReader
 
     public HitResult Raycast(Vec3D start, Vec3D target, bool includeFluids, bool ignoreNonSolid) => new(HitResultType.MISS);
 
-    public bool IsAnyBlockInBox(Box area) => false;
-
-    public bool IsBoxSubmergedInFluid(Box area) => false;
-
-    public bool IsFireOrLavaInBox(Box area) => false;
-
-    public bool IsMaterialInBox(Box area, Material material) => false;
-
-    public bool IsFluidInBox(Box area, Material fluid) => false;
+    public bool IsMaterialInBox(Box area, Func<Material, bool> predicate) => false;
 
     public bool UpdateMovementInFluid(Box entityBox, Material fluidMaterial, Entity entity) => false;
 

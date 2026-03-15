@@ -267,7 +267,7 @@ public abstract class Entity
     {
         Box box = boundingBox.Offset(x, y, z);
         List<Box> entitiesInbound = world.Entities.GetEntityCollisionsScratch(this, box);
-        return entitiesInbound.Count > 0 ? false : !world.Reader.IsBoxSubmergedInFluid(box);
+        return entitiesInbound.Count > 0 ? false : !world.Reader.IsMaterialInBox(box, m => m.IsFluid);
     }
 
     public virtual void move(double x, double y, double z)
@@ -556,7 +556,7 @@ public abstract class Entity
             }
 
             bool var42 = isWet();
-            if (world.Reader.IsFireOrLavaInBox(boundingBox.Contract(0.001D, 0.001D, 0.001D)))
+            if (world.Reader.IsMaterialInBox(boundingBox.Contract(0.001D, 0.001D, 0.001D), m => m == Material.Fire || m == Material.Lava))
             {
                 damage(1);
                 if (!var42)
@@ -642,7 +642,7 @@ public abstract class Entity
 
     public virtual float getEyeHeight() => 0.0F;
 
-    public bool isTouchingLava() => world.Reader.IsMaterialInBox(boundingBox.Expand(-0.1F, -0.4F, -0.1F), Material.Lava);
+    public bool isTouchingLava() => world.Reader.IsMaterialInBox(boundingBox.Expand(-0.1F, -0.4F, -0.1F), m => m == Material.Lava);
 
     public void moveNonSolid(float strafe, float forward, float speed)
     {

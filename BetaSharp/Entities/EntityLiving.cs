@@ -1,4 +1,4 @@
-﻿using BetaSharp.Blocks;
+using BetaSharp.Blocks;
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Items;
 using BetaSharp.NBT;
@@ -974,7 +974,7 @@ public class EntityLiving : Entity
     {
     }
 
-    public virtual bool canSpawn() => world.Entities.CanSpawnEntity(boundingBox) && world.Entities.GetEntityCollisionsScratch(this, boundingBox).Count == 0 && !world.Reader.IsBoxSubmergedInFluid(boundingBox);
+    public virtual bool canSpawn() => world.Entities.CanSpawnEntity(boundingBox) && world.Entities.GetEntityCollisionsScratch(this, boundingBox).Count == 0 && !world.Reader.IsMaterialInBox(boundingBox, m => m.IsFluid);
 
     protected override void tickInVoid() => damage(null, 4);
 

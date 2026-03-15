@@ -6,7 +6,7 @@ using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Biomes.Source;
 using BetaSharp.Worlds.Core.Systems;
 
-namespace BetaSharp.Worlds;
+namespace BetaSharp.Worlds.Core;
 
 /// <summary>
 /// IBlockAccess implementation for rendering a single block in item/entity contexts.
@@ -71,11 +71,7 @@ public sealed class ItemRenderBlockAccess : IBlockReader, ILightProvider
     public HitResult Raycast(Vec3D start, Vec3D end, bool includeFluids) => new(HitResultType.MISS);
     public HitResult Raycast(Vec3D start, Vec3D target, bool includeFluids, bool ignoreNonSolid) => new(HitResultType.MISS);
     public bool IsPosLoaded(int x, int y, int z) => true;
-    public bool IsAnyBlockInBox(Box area) => false;
-    public bool IsBoxSubmergedInFluid(Box area) => false;
-    public bool IsFireOrLavaInBox(Box area) => false;
-    public bool IsMaterialInBox(Box area, Material material) => false;
-    public bool IsFluidInBox(Box area, Material fluid) => false;
+    public bool IsMaterialInBox(Box area, Func<Material, bool> predicate) => false;
     public bool UpdateMovementInFluid(Box entityBox, Material fluidMaterial, Entity entity) => false;
     public float GetNaturalBrightness(int x, int y, int z, int minLight) => getNaturalBrightness(x, y, z, minLight);
     public float GetLuminance(int x, int y, int z) => getLuminance(x, y, z);

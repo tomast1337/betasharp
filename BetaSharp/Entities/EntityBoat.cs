@@ -142,7 +142,7 @@ public class EntityBoat : Entity
             double var5 = boundingBox.MinY + (boundingBox.MaxY - boundingBox.MinY) * (i + 0) / var1 - 0.125D;
             double var7 = boundingBox.MinY + (boundingBox.MaxY - boundingBox.MinY) * (i + 1) / var1 - 0.125D;
             Box var9 = new(boundingBox.MinX, var5, boundingBox.MinZ, boundingBox.MaxX, var7, boundingBox.MaxZ);
-            if (world.Reader.IsFluidInBox(var9, Material.Water))
+            if (world.Reader.IsMaterialInBox(var9, m => m == Material.Water))
             {
                 var2 += 1.0D / var1;
             }

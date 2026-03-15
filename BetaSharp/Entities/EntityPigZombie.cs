@@ -30,7 +30,7 @@ internal class EntityPigZombie : EntityZombie
         base.tick();
     }
 
-    public override bool canSpawn() => world.Difficulty > 0 && world.Entities.GetEntityCollisionsScratch(this, boundingBox).Count == 0 && !world.Reader.IsBoxSubmergedInFluid(boundingBox);
+    public override bool canSpawn() => world.Difficulty > 0 && world.Entities.GetEntityCollisionsScratch(this, boundingBox).Count == 0 && !world.Reader.IsMaterialInBox(boundingBox, m => m.IsFluid);
 
     public override void writeNbt(NBTTagCompound nbt)
     {

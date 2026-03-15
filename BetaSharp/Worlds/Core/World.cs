@@ -1,4 +1,5 @@
 using BetaSharp.Blocks;
+using BetaSharp.Blocks.Materials;
 using BetaSharp.Entities;
 using BetaSharp.Items;
 using BetaSharp.NBT;
@@ -318,46 +319,7 @@ public abstract class World : IWorldContext
         return intensityFactor * intensityFactor * 0.5F;
     }
 
-    public bool IsAnyBlockInBox(Box area)
-    {
-        int minX = MathHelper.Floor(area.MinX);
-        int maxX = MathHelper.Floor(area.MaxX + 1.0);
-        int minY = MathHelper.Floor(area.MinY);
-        int maxY = MathHelper.Floor(area.MaxY + 1.0);
-        int minZ = MathHelper.Floor(area.MinZ);
-        int maxZ = MathHelper.Floor(area.MaxZ + 1.0);
-
-        if (area.MinX < 0.0)
-        {
-            minX--;
-        }
-
-        if (area.MinY < 0.0)
-        {
-            minY--;
-        }
-
-        if (area.MinZ < 0.0)
-        {
-            minZ--;
-        }
-
-        for (int x = minX; x < maxX; x++)
-        {
-            for (int y = minY; y < maxY; y++)
-            {
-                for (int z = minZ; z < maxZ; z++)
-                {
-                    if (Reader.GetBlockId(x, y, z) > 0)
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
+    public bool IsMaterialInBox(Box area, Func<Material, bool> predicate) => Reader.IsMaterialInBox(area, predicate);
 
     public void ExtinguishFire(EntityPlayer? player, int x, int y, int z, int direction)
     {

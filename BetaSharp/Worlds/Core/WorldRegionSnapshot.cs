@@ -146,11 +146,7 @@ public class WorldRegionSnapshot : IBlockReader, ILightProvider, IDisposable
     public HitResult Raycast(Vec3D start, Vec3D end) => throw new NotImplementedException();
     public HitResult Raycast(Vec3D start, Vec3D end, bool includeFluids) => throw new NotImplementedException();
     public HitResult Raycast(Vec3D start, Vec3D target, bool includeFluids, bool ignoreNonSolid) => throw new NotImplementedException();
-    public bool IsAnyBlockInBox(Box area) => throw new NotImplementedException();
-    public bool IsBoxSubmergedInFluid(Box area) => throw new NotImplementedException();
-    public bool IsFireOrLavaInBox(Box area) => throw new NotImplementedException();
-    public bool IsMaterialInBox(Box area, Material material) => throw new NotImplementedException();
-    public bool IsFluidInBox(Box area, Material fluid) => throw new NotImplementedException();
+    public bool IsMaterialInBox(Box area, Func<Material, bool> predicate) => throw new NotImplementedException();
     public bool UpdateMovementInFluid(Box entityBox, Material fluidMaterial, Entity entity) => throw new NotImplementedException();
     public bool IsPosLoaded(int x, int y, int z) => throw new NotImplementedException();
 

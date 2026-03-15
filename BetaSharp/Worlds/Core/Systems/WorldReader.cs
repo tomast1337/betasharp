@@ -371,48 +371,7 @@ public class WorldReader : IBlockReader
         return (float)visiblePoints / totalPoints;
     }
 
-    public bool IsAnyBlockInBox(Box area)
-    {
-        int minX = MathHelper.Floor(area.MinX);
-        int maxX = MathHelper.Floor(area.MaxX + 1.0);
-        int minY = MathHelper.Floor(area.MinY);
-        int maxY = MathHelper.Floor(area.MaxY + 1.0);
-        int minZ = MathHelper.Floor(area.MinZ);
-        int maxZ = MathHelper.Floor(area.MaxZ + 1.0);
-
-        if (area.MinX < 0.0)
-        {
-            minX--;
-        }
-
-        if (area.MinY < 0.0)
-        {
-            minY--;
-        }
-
-        if (area.MinZ < 0.0)
-        {
-            minZ--;
-        }
-
-        for (int x = minX; x < maxX; x++)
-        {
-            for (int y = minY; y < maxY; y++)
-            {
-                for (int z = minZ; z < maxZ; z++)
-                {
-                    if (GetBlockId(x, y, z) > 0)
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public bool IsBoxSubmergedInFluid(Box area)
+    public bool IsMaterialInBox(Box area, Func<Material, bool> predicate)
     {
         int minX = MathHelper.Floor(area.MinX);
         int maxX = MathHelper.Floor(area.MaxX + 1.0D);
@@ -442,40 +401,9 @@ public class WorldReader : IBlockReader
             {
                 for (int z = minZ; z < maxZ; ++z)
                 {
-                    Block? block = Block.Blocks[GetBlockId(x, y, z)];
-                    if (block != null && block.material.IsFluid)
+                    if (predicate(GetMaterial(x, y, z)))
                     {
                         return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public bool IsFireOrLavaInBox(Box area)
-    {
-        int minX = MathHelper.Floor(area.MinX);
-        int maxX = MathHelper.Floor(area.MaxX + 1.0D);
-        int minY = MathHelper.Floor(area.MinY);
-        int maxY = MathHelper.Floor(area.MaxY + 1.0D);
-        int minZ = MathHelper.Floor(area.MinZ);
-        int maxZ = MathHelper.Floor(area.MaxZ + 1.0D);
-
-        if (_context.ChunkHost.IsRegionLoaded(minX, minY, minZ, maxX, maxY, maxZ))
-        {
-            for (int x = minX; x < maxX; ++x)
-            {
-                for (int y = minY; y < maxY; ++y)
-                {
-                    for (int z = minZ; z < maxZ; ++z)
-                    {
-                        int blockId = GetBlockId(x, y, z);
-                        if (blockId == Block.Fire.id || blockId == Block.FlowingLava.id || blockId == Block.Lava.id)
-                        {
-                            return true;
-                        }
                     }
                 }
             }
@@ -535,70 +463,6 @@ public class WorldReader : IBlockReader
         }
 
         return isSubmerged;
-    }
-
-    public bool IsMaterialInBox(Box area, Material material)
-    {
-        int minX = MathHelper.Floor(area.MinX);
-        int maxX = MathHelper.Floor(area.MaxX + 1.0D);
-        int minY = MathHelper.Floor(area.MinY);
-        int maxY = MathHelper.Floor(area.MaxY + 1.0D);
-        int minZ = MathHelper.Floor(area.MinZ);
-        int maxZ = MathHelper.Floor(area.MaxZ + 1.0D);
-
-        for (int x = minX; x < maxX; ++x)
-        {
-            for (int y = minY; y < maxY; ++y)
-            {
-                for (int z = minZ; z < maxZ; ++z)
-                {
-                    Block? block = Block.Blocks[GetBlockId(x, y, z)];
-                    if (block != null && block.material == material)
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public bool IsFluidInBox(Box area, Material fluid)
-    {
-        int minX = MathHelper.Floor(area.MinX);
-        int maxX = MathHelper.Floor(area.MaxX + 1.0D);
-        int minY = MathHelper.Floor(area.MinY);
-        int maxY = MathHelper.Floor(area.MaxY + 1.0D);
-        int minZ = MathHelper.Floor(area.MinZ);
-        int maxZ = MathHelper.Floor(area.MaxZ + 1.0D);
-
-        for (int x = minX; x < maxX; ++x)
-        {
-            for (int y = minY; y < maxY; ++y)
-            {
-                for (int z = minZ; z < maxZ; ++z)
-                {
-                    Block? block = Block.Blocks[GetBlockId(x, y, z)];
-                    if (block != null && block.material == fluid)
-                    {
-                        int meta = GetBlockMeta(x, y, z);
-                        double waterLevel = y + 1;
-                        if (meta < 8)
-                        {
-                            waterLevel = y + 1 - meta / 8.0D;
-                        }
-
-                        if (waterLevel >= area.MinY)
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-
-        return false;
     }
 
     public void MarkChunkDirty(int x, int z)

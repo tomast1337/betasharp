@@ -28,11 +28,8 @@ public interface IBlockReader
     public HitResult Raycast(Vec3D start, Vec3D target, bool includeFluids, bool ignoreNonSolid);
 
     public bool IsPosLoaded(int x, int y, int z);
-    public bool IsAnyBlockInBox(Box area);
-    public bool IsBoxSubmergedInFluid(Box area);
-    public bool IsFireOrLavaInBox(Box area);
-    public bool IsMaterialInBox(Box area, Material material);
-    public bool IsFluidInBox(Box area, Material fluid);
+
+    public bool IsMaterialInBox(Box area, Func<Material, bool> predicate);
 
     public bool UpdateMovementInFluid(Box entityBox, Material fluidMaterial, Entity entity);
 }

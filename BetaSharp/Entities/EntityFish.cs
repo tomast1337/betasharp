@@ -307,7 +307,7 @@ public class EntityFish : Entity
                     double var14 = boundingBox.MinY + (boundingBox.MaxY - boundingBox.MinY) * (var28 + 0) / var26 - 0.125D + 0.125D;
                     double var16 = boundingBox.MinY + (boundingBox.MaxY - boundingBox.MinY) * (var28 + 1) / var26 - 0.125D + 0.125D;
                     Box var18 = new(boundingBox.MinX, var14, boundingBox.MinZ, boundingBox.MaxX, var16, boundingBox.MaxZ);
-                    if (world.Reader.IsFluidInBox(var18, Material.Water))
+                    if (world.Reader.IsMaterialInBox(var18, m => m == Material.Water))
                     {
                         var27 += 1.0D / var26;
                     }

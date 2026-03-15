@@ -1,4 +1,5 @@
 using BetaSharp.Blocks.Entities;
+using BetaSharp.Blocks.Materials;
 using BetaSharp.Entities;
 using BetaSharp.Inventorys;
 using BetaSharp.Items;
@@ -12,7 +13,6 @@ using BetaSharp.Server.Commands;
 using BetaSharp.Server.Internal;
 using BetaSharp.Util;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds;
 using BetaSharp.Worlds.Core;
 using Microsoft.Extensions.Logging;
 
@@ -231,7 +231,7 @@ public class ServerPlayNetworkHandler : NetHandler, CommandOutput
             }
 
             Box var25 = player.boundingBox.Expand(var21, var21, var21).Stretch(0.0, -0.55, 0.0);
-            if (server.flightEnabled || var2.Reader.IsAnyBlockInBox(var25))
+            if (server.flightEnabled || var2.Reader.IsMaterialInBox(var25, m => m != Material.Air))
             {
                 floatingTime = 0;
             }
