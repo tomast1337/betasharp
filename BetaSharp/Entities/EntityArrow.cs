@@ -3,26 +3,28 @@ using BetaSharp.Items;
 using BetaSharp.NBT;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
 public class EntityArrow : Entity
 {
-    public int arrowShake;
-    public bool doesArrowBelongToPlayer;
-    private int inData;
-    private bool inGround;
-    private int inTile;
-    public EntityLiving owner;
-    private int ticksInAir;
-    private int ticksInGround;
     private int xTile = -1;
     private int yTile = -1;
     private int zTile = -1;
+    private int inTile;
+    private int inData;
+    private bool inGround;
+    public bool doesArrowBelongToPlayer;
+    public int arrowShake;
+    public EntityLiving owner;
+    private int ticksInGround;
+    private int ticksInAir;
 
-    public EntityArrow(IWorldContext world) : base(world) => setBoundingBoxSpacing(0.5F, 0.5F);
+    public EntityArrow(IWorldContext world) : base(world)
+    {
+        setBoundingBoxSpacing(0.5F, 0.5F);
+    }
 
     public EntityArrow(IWorldContext world, double x, double y, double z) : base(world)
     {
@@ -36,54 +38,55 @@ public class EntityArrow : Entity
         this.owner = owner;
         doesArrowBelongToPlayer = owner is EntityPlayer;
         setBoundingBoxSpacing(0.5F, 0.5F);
-        setPositionAndAnglesKeepPrevAngles(owner.x, owner.y + owner.getEyeHeight(), owner.z, owner.yaw, owner.pitch);
-        x -= MathHelper.Cos(yaw / 180.0F * (float)Math.PI) * 0.16F;
-        y -= 0.1F;
-        z -= MathHelper.Sin(yaw / 180.0F * (float)Math.PI) * 0.16F;
+        setPositionAndAnglesKeepPrevAngles(owner.x, owner.y + (double)owner.getEyeHeight(), owner.z, owner.yaw, owner.pitch);
+        x -= (double)(MathHelper.Cos(yaw / 180.0F * (float)System.Math.PI) * 0.16F);
+        y -= (double)0.1F;
+        z -= (double)(MathHelper.Sin(yaw / 180.0F * (float)System.Math.PI) * 0.16F);
         setPosition(x, y, z);
         standingEyeHeight = 0.0F;
-        velocityX = -MathHelper.Sin(yaw / 180.0F * (float)Math.PI) * MathHelper.Cos(pitch / 180.0F * (float)Math.PI);
-        velocityZ = MathHelper.Cos(yaw / 180.0F * (float)Math.PI) * MathHelper.Cos(pitch / 180.0F * (float)Math.PI);
-        velocityY = -MathHelper.Sin(pitch / 180.0F * (float)Math.PI);
+        velocityX = (double)(-MathHelper.Sin(yaw / 180.0F * (float)System.Math.PI) * MathHelper.Cos(pitch / 180.0F * (float)System.Math.PI));
+        velocityZ = (double)(MathHelper.Cos(yaw / 180.0F * (float)System.Math.PI) * MathHelper.Cos(pitch / 180.0F * (float)System.Math.PI));
+        velocityY = (double)(-MathHelper.Sin(pitch / 180.0F * (float)System.Math.PI));
         setArrowHeading(velocityX, velocityY, velocityZ, 1.5F, 1.0F);
     }
 
     public void setArrowHeading(double x, double y, double z, float speed, float spread)
     {
         float length = MathHelper.Sqrt(x * x + y * y + z * z);
-        x /= length;
-        y /= length;
-        z /= length;
-        x += random.NextGaussian() * 0.0075F * spread;
-        y += random.NextGaussian() * 0.0075F * spread;
-        z += random.NextGaussian() * 0.0075F * spread;
-        x *= speed;
-        y *= speed;
-        z *= speed;
+        x /= (double)length;
+        y /= (double)length;
+        z /= (double)length;
+        x += random.NextGaussian() * (double)0.0075F * (double)spread;
+        y += random.NextGaussian() * (double)0.0075F * (double)spread;
+        z += random.NextGaussian() * (double)0.0075F * (double)spread;
+        x *= (double)speed;
+        y *= (double)speed;
+        z *= (double)speed;
         velocityX = x;
         velocityY = y;
         velocityZ = z;
         float horizontalSpeed = MathHelper.Sqrt(x * x + z * z);
-        prevYaw = yaw = (float)(Math.Atan2(x, z) * 180.0D / (float)Math.PI);
-        prevPitch = pitch = (float)(Math.Atan2(y, horizontalSpeed) * 180.0D / (float)Math.PI);
+        prevYaw = yaw = (float)(System.Math.Atan2(x, z) * 180.0D / (double)((float)System.Math.PI));
+        prevPitch = pitch = (float)(System.Math.Atan2(y, (double)horizontalSpeed) * 180.0D / (double)((float)System.Math.PI));
         ticksInGround = 0;
     }
 
     public override void setVelocityClient(double velocityX, double velocityY, double velocityZ)
     {
-        this.velocityX = velocityX;
-        this.velocityY = velocityY;
-        this.velocityZ = velocityZ;
+        base.velocityX = velocityX;
+        base.velocityY = velocityY;
+        base.velocityZ = velocityZ;
         if (prevPitch == 0.0F && prevYaw == 0.0F)
         {
             float length = MathHelper.Sqrt(velocityX * velocityX + velocityZ * velocityZ);
-            prevYaw = yaw = (float)(Math.Atan2(velocityX, velocityZ) * 180.0D / (float)Math.PI);
-            prevPitch = pitch = (float)(Math.Atan2(velocityY, length) * 180.0D / (float)Math.PI);
+            prevYaw = yaw = (float)(System.Math.Atan2(velocityX, velocityZ) * 180.0D / (double)((float)System.Math.PI));
+            prevPitch = pitch = (float)(System.Math.Atan2(velocityY, (double)length) * 180.0D / (double)((float)System.Math.PI));
             prevPitch = pitch;
             prevYaw = yaw;
             setPositionAndAnglesKeepPrevAngles(x, y, z, yaw, pitch);
             ticksInGround = 0;
         }
+
     }
 
     public override void tick()
@@ -92,8 +95,8 @@ public class EntityArrow : Entity
         if (prevPitch == 0.0F && prevYaw == 0.0F)
         {
             float length = MathHelper.Sqrt(velocityX * velocityX + velocityZ * velocityZ);
-            prevYaw = yaw = (float)(Math.Atan2(velocityX, velocityZ) * 180.0D / (float)Math.PI);
-            prevPitch = pitch = (float)(Math.Atan2(velocityY, length) * 180.0D / (float)Math.PI);
+            prevYaw = yaw = (float)(System.Math.Atan2(velocityX, velocityZ) * 180.0D / (double)((float)System.Math.PI));
+            prevPitch = pitch = (float)(System.Math.Atan2(velocityY, (double)length) * 180.0D / (double)((float)System.Math.PI));
         }
 
         int blockId = world.Reader.GetBlockId(xTile, yTile, zTile);
@@ -123,13 +126,14 @@ public class EntityArrow : Entity
                 {
                     markDead();
                 }
+
             }
             else
             {
                 inGround = false;
-                velocityX *= random.NextFloat() * 0.2F;
-                velocityY *= random.NextFloat() * 0.2F;
-                velocityZ *= random.NextFloat() * 0.2F;
+                velocityX *= (double)(random.NextFloat() * 0.2F);
+                velocityY *= (double)(random.NextFloat() * 0.2F);
+                velocityZ *= (double)(random.NextFloat() * 0.2F);
                 ticksInGround = 0;
                 ticksInAir = 0;
             }
@@ -137,8 +141,8 @@ public class EntityArrow : Entity
         else
         {
             ++ticksInAir;
-            Vec3D rayStart = new(x, y, z);
-            Vec3D rayEnd = new(x + velocityX, y + velocityY, z + velocityZ);
+            Vec3D rayStart = new Vec3D(x, y, z);
+            Vec3D rayEnd = new Vec3D(x + velocityX, y + velocityY, z + velocityZ);
             HitResult hit = world.Reader.Raycast(rayStart, rayEnd, false, true);
             if (hit.Type != HitResultType.MISS)
             {
@@ -156,7 +160,7 @@ public class EntityArrow : Entity
                 if (entity.isCollidable() && (entity != owner || ticksInAir >= 5))
                 {
                     expandAmount = 0.3F;
-                    Box expandedBox = entity.boundingBox.Expand(expandAmount, expandAmount, expandAmount);
+                    Box expandedBox = entity.boundingBox.Expand((double)expandAmount, (double)expandAmount, (double)expandAmount);
                     HitResult hitResult = expandedBox.Raycast(rayStart, rayEnd);
                     if (hitResult.Type != HitResultType.MISS)
                     {
@@ -182,14 +186,14 @@ public class EntityArrow : Entity
                 {
                     if (hit.Entity.damage(owner, 4))
                     {
-                        world.Broadcaster.PlaySoundAtPos(x, y, z, "random.drr", 1.0F, 1.2F / (random.NextFloat() * 0.2F + 0.9F));
+                        world.Broadcaster.PlaySoundAtEntity(this, "random.drr", 1.0F, 1.2F / (random.NextFloat() * 0.2F + 0.9F));
                         markDead();
                     }
                     else
                     {
-                        velocityX *= -0.1F;
-                        velocityY *= -0.1F;
-                        velocityZ *= -0.1F;
+                        velocityX *= (double)-0.1F;
+                        velocityY *= (double)-0.1F;
+                        velocityZ *= (double)-0.1F;
                         yaw += 180.0F;
                         prevYaw += 180.0F;
                         ticksInAir = 0;
@@ -202,14 +206,14 @@ public class EntityArrow : Entity
                     zTile = hit.BlockZ;
                     inTile = world.Reader.GetBlockId(xTile, yTile, zTile);
                     inData = world.Reader.GetBlockMeta(xTile, yTile, zTile);
-                    velocityX = hit.Pos.x - x;
-                    velocityY = hit.Pos.y - y;
-                    velocityZ = hit.Pos.z - z;
+                    velocityX = (double)((float)(hit.Pos.x - x));
+                    velocityY = (double)((float)(hit.Pos.y - y));
+                    velocityZ = (double)((float)(hit.Pos.z - z));
                     horizontalSpeed = MathHelper.Sqrt(velocityX * velocityX + velocityY * velocityY + velocityZ * velocityZ);
-                    x -= velocityX / horizontalSpeed * 0.05F;
-                    y -= velocityY / horizontalSpeed * 0.05F;
-                    z -= velocityZ / horizontalSpeed * 0.05F;
-                    world.Broadcaster.PlaySoundAtPos(x, y, z, "random.drr", 1.0F, 1.2F / (random.NextFloat() * 0.2F + 0.9F));
+                    x -= velocityX / (double)horizontalSpeed * (double)0.05F;
+                    y -= velocityY / (double)horizontalSpeed * (double)0.05F;
+                    z -= velocityZ / (double)horizontalSpeed * (double)0.05F;
+                    world.Broadcaster.PlaySoundAtEntity(this, "random.drr", 1.0F, 1.2F / (random.NextFloat() * 0.2F + 0.9F));
                     inGround = true;
                     arrowShake = 7;
                 }
@@ -219,9 +223,9 @@ public class EntityArrow : Entity
             y += velocityY;
             z += velocityZ;
             horizontalSpeed = MathHelper.Sqrt(velocityX * velocityX + velocityZ * velocityZ);
-            yaw = (float)(Math.Atan2(velocityX, velocityZ) * 180.0D / (float)Math.PI);
+            yaw = (float)(System.Math.Atan2(velocityX, velocityZ) * 180.0D / (double)((float)System.Math.PI));
 
-            for (pitch = (float)(Math.Atan2(velocityY, horizontalSpeed) * 180.0D / (float)Math.PI); pitch - prevPitch < -180.0F; prevPitch -= 360.0F)
+            for (pitch = (float)(System.Math.Atan2(velocityY, (double)horizontalSpeed) * 180.0D / (double)((float)System.Math.PI)); pitch - prevPitch < -180.0F; prevPitch -= 360.0F)
             {
             }
 
@@ -249,16 +253,16 @@ public class EntityArrow : Entity
                 for (int _ = 0; _ < 4; ++_)
                 {
                     float bubbleOffset = 0.25F;
-                    world.Broadcaster.AddParticle("bubble", x - velocityX * bubbleOffset, y - velocityY * bubbleOffset, z - velocityZ * bubbleOffset, velocityX, velocityY, velocityZ);
+                    world.Broadcaster.AddParticle("bubble", x - velocityX * (double)bubbleOffset, y - velocityY * (double)bubbleOffset, z - velocityZ * (double)bubbleOffset, velocityX, velocityY, velocityZ);
                 }
 
                 drag = 0.8F;
             }
 
-            velocityX *= drag;
-            velocityY *= drag;
-            velocityZ *= drag;
-            velocityY -= expandAmount;
+            velocityX *= (double)drag;
+            velocityY *= (double)drag;
+            velocityZ *= (double)drag;
+            velocityY -= (double)expandAmount;
             setPosition(x, y, z);
         }
     }
@@ -293,12 +297,16 @@ public class EntityArrow : Entity
         {
             if (inGround && doesArrowBelongToPlayer && arrowShake <= 0 && player.inventory.addItemStackToInventory(new ItemStack(Item.ARROW, 1)))
             {
-                world.Broadcaster.PlaySoundAtPos(x, y, z, "random.pop", 0.2F, ((random.NextFloat() - random.NextFloat()) * 0.7F + 1.0F) * 2.0F);
+                world.Broadcaster.PlaySoundAtEntity(this, "random.pop", 0.2F, ((random.NextFloat() - random.NextFloat()) * 0.7F + 1.0F) * 2.0F);
                 player.sendPickup(this, 1);
                 markDead();
             }
+
         }
     }
 
-    public override float getShadowRadius() => 0.0F;
+    public override float getShadowRadius()
+    {
+        return 0.0F;
+    }
 }

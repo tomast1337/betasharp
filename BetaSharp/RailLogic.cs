@@ -80,14 +80,14 @@ internal class RailLogic
 
         if (meta == 0)
         {
-            if (BlockRail.IsRail(_level, _trackPos.X, _trackPos.Y + 1, _trackPos.Z - 1)) meta = 4;
-            if (BlockRail.IsRail(_level, _trackPos.X, _trackPos.Y + 1, _trackPos.Z + 1)) meta = 5;
+            if (BlockRail.isRail(_level, _trackPos.X, _trackPos.Y + 1, _trackPos.Z - 1)) meta = 4;
+            if (BlockRail.isRail(_level, _trackPos.X, _trackPos.Y + 1, _trackPos.Z + 1)) meta = 5;
         }
 
         if (meta == 1)
         {
-            if (BlockRail.IsRail(_level, _trackPos.X + 1, _trackPos.Y + 1, _trackPos.Z)) meta = 2;
-            if (BlockRail.IsRail(_level, _trackPos.X - 1, _trackPos.Y + 1, _trackPos.Z)) meta = 3;
+            if (BlockRail.isRail(_level, _trackPos.X + 1, _trackPos.Y + 1, _trackPos.Z)) meta = 2;
+            if (BlockRail.isRail(_level, _trackPos.X - 1, _trackPos.Y + 1, _trackPos.Z)) meta = 3;
         }
 
         if (meta < 0) meta = 0;
@@ -165,20 +165,20 @@ internal class RailLogic
 
     private bool IsMinecartTrack(Vec3i pos)
     {
-        return BlockRail.IsRail(_level, pos.X, pos.Y, pos.Z) ||
-               BlockRail.IsRail(_level, pos.X, pos.Y + 1, pos.Z) ||
-               BlockRail.IsRail(_level, pos.X, pos.Y - 1, pos.Z);
+        return BlockRail.isRail(_level, pos.X, pos.Y, pos.Z) ||
+               BlockRail.isRail(_level, pos.X, pos.Y + 1, pos.Z) ||
+               BlockRail.isRail(_level, pos.X, pos.Y - 1, pos.Z);
     }
 
     private RailLogic? GetMinecartTrackLogic(Vec3i pos)
     {
-        if (BlockRail.IsRail(_level, pos.X, pos.Y, pos.Z))
+        if (BlockRail.isRail(_level, pos.X, pos.Y, pos.Z))
             return new RailLogic(_rail, _level, pos);
 
-        if (BlockRail.IsRail(_level, pos.X, pos.Y + 1, pos.Z))
+        if (BlockRail.isRail(_level, pos.X, pos.Y + 1, pos.Z))
             return new RailLogic(_rail, _level, new Vec3i(pos.X, pos.Y + 1, pos.Z));
 
-        if (BlockRail.IsRail(_level, pos.X, pos.Y - 1, pos.Z))
+        if (BlockRail.isRail(_level, pos.X, pos.Y - 1, pos.Z))
             return new RailLogic(_rail, _level, new Vec3i(pos.X, pos.Y - 1, pos.Z));
 
         return null;
@@ -248,14 +248,14 @@ internal class RailLogic
 
         if (meta == 0)
         {
-            if (BlockRail.IsRail(_level, _trackPos.X, _trackPos.Y + 1, _trackPos.Z - 1)) meta = 4;
-            if (BlockRail.IsRail(_level, _trackPos.X, _trackPos.Y + 1, _trackPos.Z + 1)) meta = 5;
+            if (BlockRail.isRail(_level, _trackPos.X, _trackPos.Y + 1, _trackPos.Z - 1)) meta = 4;
+            if (BlockRail.isRail(_level, _trackPos.X, _trackPos.Y + 1, _trackPos.Z + 1)) meta = 5;
         }
 
         if (meta == 1)
         {
-            if (BlockRail.IsRail(_level, _trackPos.X + 1, _trackPos.Y + 1, _trackPos.Z)) meta = 2;
-            if (BlockRail.IsRail(_level, _trackPos.X - 1, _trackPos.Y + 1, _trackPos.Z)) meta = 3;
+            if (BlockRail.isRail(_level, _trackPos.X + 1, _trackPos.Y + 1, _trackPos.Z)) meta = 2;
+            if (BlockRail.isRail(_level, _trackPos.X - 1, _trackPos.Y + 1, _trackPos.Z)) meta = 3;
         }
 
         if (meta < 0) meta = 0;

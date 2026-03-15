@@ -137,7 +137,7 @@ public class WorldEventBroadcaster
         }
     }
 
-    public virtual void BroadcastEntityEvent(Entity entity, byte @event)
+    public virtual void EntityEvent(Entity entity, byte @event)
     {
         for (int i = 0; i < _eventListeners.Count; ++i)
         {

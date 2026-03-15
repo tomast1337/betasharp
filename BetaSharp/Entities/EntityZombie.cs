@@ -1,6 +1,5 @@
 using BetaSharp.Items;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
@@ -28,11 +27,23 @@ public class EntityZombie : EntityMonster
         base.tickMovement();
     }
 
-    protected override string getLivingSound() => "mob.zombie";
+    protected override String getLivingSound()
+    {
+        return "mob.zombie";
+    }
 
-    protected override string getHurtSound() => "mob.zombiehurt";
+    protected override String getHurtSound()
+    {
+        return "mob.zombiehurt";
+    }
 
-    protected override string getDeathSound() => "mob.zombiedeath";
+    protected override String getDeathSound()
+    {
+        return "mob.zombiedeath";
+    }
 
-    protected override int getDropItemId() => Item.Feather.id;
+    protected override int getDropItemId()
+    {
+        return Item.Feather.id;
+    }
 }

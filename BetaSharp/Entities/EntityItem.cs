@@ -3,20 +3,19 @@ using BetaSharp.Blocks.Materials;
 using BetaSharp.Items;
 using BetaSharp.NBT;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
 public class EntityItem : Entity
 {
-    public float bobPhase = Random.Shared.NextSingle() * (float)Math.PI * 2.0f;
+    public ItemStack stack;
+    public int itemAge;
     public int delayBeforeCanPickup;
     private int health = 5;
-    public int itemAge;
-    public ItemStack stack;
+    public float bobPhase = Random.Shared.NextSingle() * ((float)Math.PI) * 2.0f;
 
-    public EntityItem(IWorldContext ctx, double x, double y, double z, ItemStack stack) : base(ctx)
+    public EntityItem(IWorldContext world, double x, double y, double z, ItemStack stack) : base(world)
     {
         setBoundingBoxSpacing(0.25F, 0.25F);
         standingEyeHeight = height / 2.0F;
@@ -28,13 +27,17 @@ public class EntityItem : Entity
         velocityZ = Random.Shared.NextDouble() * 0.2f - 0.1f;
     }
 
+    protected override bool bypassesSteppingEffects()
+    {
+        return false;
+    }
+
     public EntityItem(IWorldContext world) : base(world)
     {
         setBoundingBoxSpacing(0.25F, 0.25F);
         standingEyeHeight = height / 2.0F;
     }
 
-    protected override bool bypassesSteppingEffects() => false;
 
     public override void tick()
     {
@@ -47,12 +50,12 @@ public class EntityItem : Entity
         prevX = x;
         prevY = y;
         prevZ = z;
-        velocityY -= 0.04F;
+        velocityY -= (double)0.04F;
         if (world.Reader.GetMaterial(MathHelper.Floor(x), MathHelper.Floor(y), MathHelper.Floor(z)) == Material.Lava)
         {
-            velocityY = 0.2F;
-            velocityX = (random.NextFloat() - random.NextFloat()) * 0.2F;
-            velocityZ = (random.NextFloat() - random.NextFloat()) * 0.2F;
+            velocityY = (double)0.2F;
+            velocityX = (double)((random.NextFloat() - random.NextFloat()) * 0.2F);
+            velocityZ = (double)((random.NextFloat() - random.NextFloat()) * 0.2F);
             world.Broadcaster.PlaySoundAtEntity(this, "random.fizz", 0.4F, 2.0F + random.NextFloat() * 0.4F);
         }
 
@@ -69,9 +72,9 @@ public class EntityItem : Entity
             }
         }
 
-        velocityX *= friction;
-        velocityY *= 0.98F;
-        velocityZ *= friction;
+        velocityX *= (double)friction;
+        velocityY *= (double)0.98F;
+        velocityZ *= (double)friction;
         if (onGround)
         {
             velocityY *= -0.5D;
@@ -82,13 +85,20 @@ public class EntityItem : Entity
         {
             markDead();
         }
+
     }
 
-    public override bool checkWaterCollisions() => world.Reader.UpdateMovementInFluid(boundingBox, Material.Water, this);
+    public override bool checkWaterCollisions()
+    {
+        return world.Reader.UpdateMovementInFluid(boundingBox, Material.Water, this);
+    }
 
-    protected override void damage(int amount) => damage(null, amount);
+    protected override void damage(int amount)
+    {
+        damage((Entity)null, amount);
+    }
 
-    public override bool damage(Entity? entity, int amount)
+    public override bool damage(Entity entity, int amount)
     {
         scheduleVelocityUpdate();
         health -= amount;
@@ -102,7 +112,7 @@ public class EntityItem : Entity
 
     public override void writeNbt(NBTTagCompound nbt)
     {
-        nbt.SetShort("Health", (byte)health);
+        nbt.SetShort("Health", (short)((byte)health));
         nbt.SetShort("Age", (short)itemAge);
         nbt.SetCompoundTag("Item", stack.writeToNBT(new NBTTagCompound()));
     }
@@ -132,13 +142,14 @@ public class EntityItem : Entity
                     player.incrementStat(Achievements.KillCow);
                 }
 
-                world.Broadcaster.PlaySoundAtEntity(this, "random.pop", 0.2F, ((Random.Shared.NextSingle() - Random.Shared.NextSingle()) * 0.7F + 1.0F) * 2.0F);
+                world.Broadcaster.PlaySoundAtEntity(this, "random.pop", 0.2F, ((random.NextFloat() - random.NextFloat()) * 0.7F + 1.0F) * 2.0F);
                 player.sendPickup(this, pickedUpCount);
                 if (stack.count <= 0)
                 {
                     markDead();
                 }
             }
+
         }
     }
 }

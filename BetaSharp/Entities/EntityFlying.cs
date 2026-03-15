@@ -1,6 +1,5 @@
 using BetaSharp.Blocks;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
@@ -21,9 +20,9 @@ public class EntityFlying : EntityLiving
         {
             moveNonSolid(strafe, forward, 0.02F);
             move(velocityX, velocityY, velocityZ);
-            velocityX *= 0.8F;
-            velocityY *= 0.8F;
-            velocityZ *= 0.8F;
+            velocityX *= (double)0.8F;
+            velocityY *= (double)0.8F;
+            velocityZ *= (double)0.8F;
         }
         else if (isTouchingLava())
         {
@@ -60,9 +59,9 @@ public class EntityFlying : EntityLiving
             }
 
             move(velocityX, velocityY, velocityZ);
-            velocityX *= friction;
-            velocityY *= friction;
-            velocityZ *= friction;
+            velocityX *= (double)friction;
+            velocityY *= (double)friction;
+            velocityZ *= (double)friction;
         }
 
         lastWalkAnimationSpeed = walkAnimationSpeed;
@@ -78,5 +77,8 @@ public class EntityFlying : EntityLiving
         animationPhase += walkAnimationSpeed;
     }
 
-    public override bool isOnLadder() => false;
+    public override bool isOnLadder()
+    {
+        return false;
+    }
 }

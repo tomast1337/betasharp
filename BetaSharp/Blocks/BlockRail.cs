@@ -16,13 +16,13 @@ public class BlockRail : Block
         setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 2.0F / 16.0F, 1.0F);
     }
 
-    public static bool IsRail(IWorldContext level, int x, int y, int z)
+    public static bool isRail(IWorldContext level, int x, int y, int z)
     {
         int blockId = level.Reader.GetBlockId(x, y, z);
         return blockId == Rail.id || blockId == PoweredRail.id || blockId == DetectorRail.id;
     }
 
-    public static bool IsRail(int blockId) => blockId == Rail.id || blockId == PoweredRail.id || blockId == DetectorRail.id;
+    public static bool isRail(int blockId) => blockId == Rail.id || blockId == PoweredRail.id || blockId == DetectorRail.id;
 
     public bool isAlwaysStraight() => alwaysStraight;
 

@@ -1,16 +1,15 @@
 using BetaSharp.Blocks;
 using BetaSharp.NBT;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
 public class EntityLightningBolt : EntityWeatherEffect
 {
-    private int flashCount;
     private int flashTimer;
     public long renderSeed;
+    private int flashCount;
 
     public EntityLightningBolt(IWorldContext world, double x, double y, double z) : base(world)
     {
@@ -39,6 +38,7 @@ public class EntityLightningBolt : EntityWeatherEffect
                 }
             }
         }
+
     }
 
     public override void tick()
@@ -78,7 +78,7 @@ public class EntityLightningBolt : EntityWeatherEffect
         if (flashTimer >= 0)
         {
             double searchRadius = 3.0D;
-            List<Entity> entities = world.Entities.CollectEntitiesOfType<Entity>(new Box(x - searchRadius, y - searchRadius, z - searchRadius, x + searchRadius, y + 6.0D + searchRadius, z + searchRadius));
+            var entities = world.Entities.GetEntities(this, new Box(x - searchRadius, y - searchRadius, z - searchRadius, x + searchRadius, y + 6.0D + searchRadius, z + searchRadius));
 
             for (int i = 0; i < entities.Count; ++i)
             {
@@ -88,6 +88,7 @@ public class EntityLightningBolt : EntityWeatherEffect
 
             world.Environment.LightningTicksLeft = 2;
         }
+
     }
 
 
@@ -99,5 +100,8 @@ public class EntityLightningBolt : EntityWeatherEffect
     {
     }
 
-    public override bool shouldRender(Vec3D cameraPos) => flashTimer >= 0;
+    public override bool shouldRender(Vec3D cameraPos)
+    {
+        return flashTimer >= 0;
+    }
 }

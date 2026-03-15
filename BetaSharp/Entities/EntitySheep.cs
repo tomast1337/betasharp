@@ -3,18 +3,13 @@ using BetaSharp.Items;
 using BetaSharp.NBT;
 using BetaSharp.Util;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
 public class EntitySheep : EntityAnimal
 {
-    public static readonly float[][] fleeceColorTable =
-    [
-        [1.0F, 1.0F, 1.0F], [0.95F, 0.7F, 0.2F], [0.9F, 0.5F, 0.85F], [0.6F, 0.7F, 0.95F], [0.9F, 0.9F, 0.2F], [0.5F, 0.8F, 0.1F], [0.95F, 0.7F, 0.8F], [0.3F, 0.3F, 0.3F], [0.6F, 0.6F, 0.6F], [0.3F, 0.6F, 0.7F], [0.7F, 0.4F, 0.9F],
-        [0.2F, 0.4F, 0.8F], [0.5F, 0.4F, 0.3F], [0.4F, 0.5F, 0.2F], [0.8F, 0.3F, 0.3F], [0.1F, 0.1F, 0.1F]
-    ];
+    public static readonly float[][] fleeceColorTable = [[1.0F, 1.0F, 1.0F], [0.95F, 0.7F, 0.2F], [0.9F, 0.5F, 0.85F], [0.6F, 0.7F, 0.95F], [0.9F, 0.9F, 0.2F], [0.5F, 0.8F, 0.1F], [0.95F, 0.7F, 0.8F], [0.3F, 0.3F, 0.3F], [0.6F, 0.6F, 0.6F], [0.3F, 0.6F, 0.7F], [0.7F, 0.4F, 0.9F], [0.2F, 0.4F, 0.8F], [0.5F, 0.4F, 0.3F], [0.4F, 0.5F, 0.2F], [0.8F, 0.3F, 0.3F], [0.1F, 0.1F, 0.1F]];
 
     public readonly SyncedProperty<byte> SheepData;
 
@@ -25,7 +20,10 @@ public class EntitySheep : EntityAnimal
         SheepData = DataSynchronizer.MakeProperty<byte>(16, 0);
     }
 
-    public override void PostSpawn() => setFleeceColor(getRandomFleeceColor(world.Random));
+    public override void PostSpawn()
+    {
+        setFleeceColor(getRandomFleeceColor(world.Random));
+    }
 
     protected override void dropFewItems()
     {
@@ -33,9 +31,13 @@ public class EntitySheep : EntityAnimal
         {
             dropItem(new ItemStack(Block.Wool.id, 1, getFleeceColor()), 0.0F);
         }
+
     }
 
-    protected override int getDropItemId() => Block.Wool.id;
+    protected override int getDropItemId()
+    {
+        return Block.Wool.id;
+    }
 
     public override bool interact(EntityPlayer player)
     {
@@ -50,9 +52,9 @@ public class EntitySheep : EntityAnimal
                 for (int i = 0; i < woolCount; ++i)
                 {
                     EntityItem woolItem = dropItem(new ItemStack(Block.Wool.id, 1, getFleeceColor()), 1.0F);
-                    woolItem.velocityY += random.NextFloat() * 0.05F;
-                    woolItem.velocityX += (random.NextFloat() - random.NextFloat()) * 0.1F;
-                    woolItem.velocityZ += (random.NextFloat() - random.NextFloat()) * 0.1F;
+                    woolItem.velocityY += (double)(random.NextFloat() * 0.05F);
+                    woolItem.velocityX += (double)((random.NextFloat() - random.NextFloat()) * 0.1F);
+                    woolItem.velocityZ += (double)((random.NextFloat() - random.NextFloat()) * 0.1F);
                 }
             }
 
@@ -76,11 +78,20 @@ public class EntitySheep : EntityAnimal
         setFleeceColor(nbt.GetByte("Color"));
     }
 
-    protected override string getLivingSound() => "mob.sheep";
+    protected override string getLivingSound()
+    {
+        return "mob.sheep";
+    }
 
-    protected override string getHurtSound() => "mob.sheep";
+    protected override string getHurtSound()
+    {
+        return "mob.sheep";
+    }
 
-    protected override string getDeathSound() => "mob.sheep";
+    protected override string getDeathSound()
+    {
+        return "mob.sheep";
+    }
 
     public int getFleeceColor()
     {
@@ -109,11 +120,12 @@ public class EntitySheep : EntityAnimal
         {
             SheepData.Value = (byte)(packedData & -17);
         }
+
     }
 
     public static int getRandomFleeceColor(JavaRandom random) // TODO: Use WeightedRandomSelector
     {
         int roll = random.NextInt(100);
-        return roll < 5 ? 15 : roll < 10 ? 7 : roll < 15 ? 8 : roll < 18 ? 12 : random.NextInt(500) == 0 ? 6 : 0;
+        return roll < 5 ? 15 : (roll < 10 ? 7 : (roll < 15 ? 8 : (roll < 18 ? 12 : (random.NextInt(500) == 0 ? 6 : 0))));
     }
 }

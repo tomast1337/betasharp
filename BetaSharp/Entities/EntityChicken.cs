@@ -1,18 +1,17 @@
 using BetaSharp.Items;
 using BetaSharp.NBT;
-using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
 public class EntityChicken : EntityAnimal
 {
-    public float destPos;
-    public float field_752_b;
     public bool field_753_a = false;
-    public float field_755_h = 1.0F;
-    public float field_756_e;
+    public float field_752_b;
+    public float destPos;
     public float field_757_d;
+    public float field_756_e;
+    public float field_755_h = 1.0F;
     public int timeUntilNextEgg;
 
     public EntityChicken(IWorldContext world) : base(world)
@@ -28,12 +27,11 @@ public class EntityChicken : EntityAnimal
         base.tickMovement();
         if (world.IsRemote)
         {
-            onGround = Math.Abs(y - prevY) < 0.02D;
+            onGround = System.Math.Abs(y - prevY) < 0.02D;
         }
-
         field_756_e = field_752_b;
         field_757_d = destPos;
-        destPos = (float)(destPos + (onGround ? -1 : 4) * 0.3D);
+        destPos = (float)((double)destPos + (double)(onGround ? -1 : 4) * 0.3D);
         if (destPos < 0.0F)
         {
             destPos = 0.0F;
@@ -49,7 +47,7 @@ public class EntityChicken : EntityAnimal
             field_755_h = 1.0F;
         }
 
-        field_755_h = (float)(field_755_h * 0.9D);
+        field_755_h = (float)((double)field_755_h * 0.9D);
         if (!onGround && velocityY < 0.0D)
         {
             velocityY *= 0.6D;
@@ -62,21 +60,40 @@ public class EntityChicken : EntityAnimal
             dropItem(Item.Egg.id, 1);
             timeUntilNextEgg = random.NextInt(6000) + 6000;
         }
+
     }
 
     protected override void onLanding(float fallDistance)
     {
     }
 
-    public override void writeNbt(NBTTagCompound nbt) => base.writeNbt(nbt);
+    public override void writeNbt(NBTTagCompound nbt)
+    {
+        base.writeNbt(nbt);
+    }
 
-    public override void readNbt(NBTTagCompound nbt) => base.readNbt(nbt);
+    public override void readNbt(NBTTagCompound nbt)
+    {
+        base.readNbt(nbt);
+    }
 
-    protected override string getLivingSound() => "mob.chicken";
+    protected override string getLivingSound()
+    {
+        return "mob.chicken";
+    }
 
-    protected override string getHurtSound() => "mob.chickenhurt";
+    protected override string getHurtSound()
+    {
+        return "mob.chickenhurt";
+    }
 
-    protected override string getDeathSound() => "mob.chickenhurt";
+    protected override string getDeathSound()
+    {
+        return "mob.chickenhurt";
+    }
 
-    protected override int getDropItemId() => Item.Feather.id;
+    protected override int getDropItemId()
+    {
+        return Item.Feather.id;
+    }
 }
