@@ -11,5 +11,7 @@ namespace BetaSharp.Blocks.Materials
         public MaterialLogic(MapColor mapColor) : base(mapColor)
         {
         }
+
     }
+
 }

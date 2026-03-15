@@ -6,7 +6,13 @@ internal class BlockObsidian : BlockStone
     {
     }
 
-    public override int getDroppedItemCount() => 1;
+    public override int getDroppedItemCount()
+    {
+        return 1;
+    }
 
-    public override int getDroppedItemId(int blockMeta) => Obsidian.id;
+    public override int getDroppedItemId(int blockMeta)
+    {
+        return Block.Obsidian.id;
+    }
 }

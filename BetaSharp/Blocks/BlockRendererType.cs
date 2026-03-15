@@ -1,6 +1,6 @@
 namespace BetaSharp.Blocks;
 
-public enum BlockRendererType
+public enum BlockRendererType: int
 {
     Entity = -1,
     Standard = 0,
@@ -20,5 +20,5 @@ public enum BlockRendererType
     Bed = 14,
     Repeater = 15,
     PistonBase = 16,
-    PistonExtension = 17
+    PistonExtension = 17,
 }

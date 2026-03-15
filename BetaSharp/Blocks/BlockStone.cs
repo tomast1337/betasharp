@@ -8,5 +8,8 @@ internal class BlockStone : Block
     {
     }
 
-    public override int getDroppedItemId(int blockMeta) => Cobblestone.id;
+    public override int getDroppedItemId(int blockMeta)
+    {
+        return Block.Cobblestone.id;
+    }
 }

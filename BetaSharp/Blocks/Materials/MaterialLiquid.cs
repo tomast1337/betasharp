@@ -4,6 +4,7 @@ namespace BetaSharp.Blocks.Materials
 {
     internal class MaterialLiquid : Material
     {
+
         public override bool IsFluid => true;
         public override bool IsSolid => false;
         public override bool BlocksMovement => false;
@@ -13,5 +14,7 @@ namespace BetaSharp.Blocks.Materials
             SetReplaceable();
             SetDestroyPistonBehavior();
         }
+
     }
+
 }
