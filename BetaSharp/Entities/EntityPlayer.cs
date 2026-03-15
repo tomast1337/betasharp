@@ -1018,11 +1018,7 @@ public abstract class EntityPlayer : EntityLiving
 
     public override void tickPortalCooldown()
     {
-        if (portalCooldown > 0)
-        {
-            portalCooldown = 10;
-        }
-        else
+        if (portalCooldown <= 0)
         {
             inTeleportationState = true;
         }
