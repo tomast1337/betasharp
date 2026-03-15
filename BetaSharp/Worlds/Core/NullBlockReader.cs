@@ -49,11 +49,7 @@ public sealed class NullBlockReader : IBlockReader
 
     public float GetVisibilityRatio(Vec3D sourcePosition, Box targetBox) => 1.0f;
 
-    public HitResult Raycast(Vec3D start, Vec3D end) => new(HitResultType.MISS);
-
-    public HitResult Raycast(Vec3D start, Vec3D end, bool includeFluids) => new(HitResultType.MISS);
-
-    public HitResult Raycast(Vec3D start, Vec3D target, bool includeFluids, bool ignoreNonSolid) => new(HitResultType.MISS);
+    public HitResult Raycast(Vec3D start, Vec3D end, bool includeFluids = false, bool ignoreNonSolid = false) => new(HitResultType.MISS);
 
     public bool IsMaterialInBox(Box area, Func<Material, bool> predicate) => false;
 

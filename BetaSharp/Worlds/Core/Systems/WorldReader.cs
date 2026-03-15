@@ -166,21 +166,17 @@ public class WorldReader : IBlockReader
         return -1;
     }
 
-    public HitResult Raycast(Vec3D start, Vec3D end) => Raycast(start, end, false, false);
-
-    public HitResult Raycast(Vec3D start, Vec3D end, bool includeFluids) => Raycast(start, end, includeFluids, false);
-
-    public HitResult Raycast(Vec3D start, Vec3D target, bool includeFluids, bool ignoreNonSolid)
+    public HitResult Raycast(Vec3D start, Vec3D end, bool includeFluids = false, bool ignoreNonSolid = false)
     {
         if (double.IsNaN(start.x) || double.IsNaN(start.y) || double.IsNaN(start.z) ||
-            double.IsNaN(target.x) || double.IsNaN(target.y) || double.IsNaN(target.z))
+            double.IsNaN(end.x) || double.IsNaN(end.y) || double.IsNaN(end.z))
         {
             return new HitResult(HitResultType.MISS);
         }
 
-        int targetX = MathHelper.Floor(target.x);
-        int targetY = MathHelper.Floor(target.y);
-        int targetZ = MathHelper.Floor(target.z);
+        int targetX = MathHelper.Floor(end.x);
+        int targetY = MathHelper.Floor(end.y);
+        int targetZ = MathHelper.Floor(end.z);
         int currentX = MathHelper.Floor(start.x);
         int currentY = MathHelper.Floor(start.y);
         int currentZ = MathHelper.Floor(start.z);
@@ -189,12 +185,11 @@ public class WorldReader : IBlockReader
         int initialMeta = GetBlockMeta(currentX, currentY, currentZ);
         Block? initialBlock = Block.Blocks[initialId];
 
-        // Notice we pass "this" as the IBlockReader
         if ((!ignoreNonSolid || initialBlock == null ||
              initialBlock.getCollisionShape(this, _context.Entities, currentX, currentY, currentZ) != null) &&
             initialId > 0 && initialBlock!.hasCollision(initialMeta, includeFluids))
         {
-            HitResult result = initialBlock.raycast(this, _context.Entities, currentX, currentY, currentZ, start, target);
+            HitResult result = initialBlock.raycast(this, _context.Entities, currentX, currentY, currentZ, start, end);
             if (result.Type != HitResultType.MISS)
             {
                 return result;
@@ -256,9 +251,9 @@ public class WorldReader : IBlockReader
                 canMoveZ = false;
             }
 
-            double deltaX = target.x - start.x;
-            double deltaY = target.y - start.y;
-            double deltaZ = target.z - start.z;
+            double deltaX = end.x - start.x;
+            double deltaY = end.y - start.y;
+            double deltaZ = end.z - start.z;
 
             double scaleX = 999.0D, scaleY = 999.0D, scaleZ = 999.0D;
             if (canMoveX)
@@ -329,7 +324,7 @@ public class WorldReader : IBlockReader
                  blockAtStep.getCollisionShape(this, _context.Entities, currentX, currentY, currentZ) != null) &&
                 blockIdAtStep > 0 && blockAtStep!.hasCollision(metaAtStep, includeFluids))
             {
-                HitResult hit = blockAtStep.raycast(this, _context.Entities, currentX, currentY, currentZ, start, target);
+                HitResult hit = blockAtStep.raycast(this, _context.Entities, currentX, currentY, currentZ, start, end);
                 if (hit.Type != HitResultType.MISS)
                 {
                     return hit;

@@ -23,9 +23,7 @@ public interface IBlockReader
 
     public float GetVisibilityRatio(Vec3D sourcePosition, Box targetBox);
 
-    public HitResult Raycast(Vec3D start, Vec3D end);
-    public HitResult Raycast(Vec3D start, Vec3D end, bool includeFluids);
-    public HitResult Raycast(Vec3D start, Vec3D target, bool includeFluids, bool ignoreNonSolid);
+    public HitResult Raycast(Vec3D start, Vec3D end, bool includeFluids = false, bool ignoreNonSolid = false);
 
     public bool IsPosLoaded(int x, int y, int z);
 
