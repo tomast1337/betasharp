@@ -4,24 +4,27 @@ namespace BetaSharp.Network.Packets.S2CPlay;
 
 public class EntityTrackerUpdateS2CPacket() : PacketBaseEntity(PacketId.EntityTrackerUpdateS2C)
 {
-    private List<WatchableObject> trackedValues;
+    public byte[] Data;
 
-    public EntityTrackerUpdateS2CPacket(int entityId, DataWatcher dataWatcher) : this()
+    public static EntityTrackerUpdateS2CPacket Get(int entityId, byte[] data)
     {
-        EntityId = entityId;
-        trackedValues = dataWatcher.GetDirtyEntries();
+        var p = Get<EntityTrackerUpdateS2CPacket>(PacketId.EntityTrackerUpdateS2C);
+        p.EntityId = entityId;
+        p.Data = data;
+        return p;
     }
 
     public override void Read(NetworkStream stream)
     {
         base.Read(stream);
-        trackedValues = DataWatcher.ReadWatchableObjects(stream);
+        Data = stream.ReadUntil(127);
     }
 
     public override void Write(NetworkStream stream)
     {
         base.Write(stream);
-        DataWatcher.WriteObjectsInListToStream(trackedValues, stream);
+        stream.Write(Data);
+        stream.WriteByte(127);
     }
 
     public override void Apply(NetHandler handler)
@@ -31,12 +34,6 @@ public class EntityTrackerUpdateS2CPacket() : PacketBaseEntity(PacketId.EntityTr
 
     public override int Size()
     {
-        // TODO : this is wrong
-        return 5;
-    }
-
-    public List<WatchableObject> GetWatchedObjects()
-    {
-        return trackedValues;
+        return base.Size() + Data.Length + 1;
     }
 }

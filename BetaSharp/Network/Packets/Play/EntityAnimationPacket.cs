@@ -7,16 +7,13 @@ public class EntityAnimationPacket() : PacketBaseEntity(PacketId.EntityAnimation
 {
     public int animationId;
 
-    public EntityAnimationPacket(Entity ent, int animationId) : this()
+    public static EntityAnimationPacket Get(Entity ent, EntityAnimation id) => Get(ent, (int)id);
+    public static EntityAnimationPacket Get(Entity ent, int animationId)
     {
-        EntityId = ent.id;
-        this.animationId = animationId;
-    }
-
-    public EntityAnimationPacket(Entity ent, EntityAnimation animationId) : this()
-    {
-        EntityId = ent.id;
-        this.animationId = (int)animationId;
+        var p = Get<EntityAnimationPacket>(PacketId.EntityAnimation);
+        p.EntityId = ent.id;
+        p.animationId = animationId;
+        return p;
     }
 
     public override void Read(NetworkStream stream)

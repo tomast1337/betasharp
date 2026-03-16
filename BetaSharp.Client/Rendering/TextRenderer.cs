@@ -17,7 +17,7 @@ public class TextRenderer
     private readonly ILogger<TextRenderer> _logger = Log.Instance.For<TextRenderer>();
 
     private const char ColorCodeChar = '§';
-    private const string FontPath = "font/Monocraft.ttc";
+    private const string FontPath = "assets/font/Monocraft.ttc";
     private const int AtlasSize = 2048;
     private const int AtlasFontSize = 64;
     private const int GlyphPadding = 2;
@@ -148,7 +148,7 @@ public class TextRenderer
         try
         {
             AssetManager.Asset asset = AssetManager.Instance.getAsset("font/default.png");
-            using var stream = new MemoryStream(asset.getBinaryContent());
+            using var stream = new MemoryStream(asset.GetBinaryContent());
             using var classicFontImage = Image.Load<Rgba32>(stream);
 
             LoadClassicFontIntoAtlas(classicFontImage);
@@ -196,7 +196,7 @@ public class TextRenderer
             _atlasY = 0;
 
             AssetManager.Asset asset = AssetManager.Instance.getAsset("font/default.png");
-            using var stream = new MemoryStream(asset.getBinaryContent());
+            using var stream = new MemoryStream(asset.GetBinaryContent());
             using var classicFontImage = Image.Load<Rgba32>(stream);
             LoadClassicFontIntoAtlas(classicFontImage);
         }

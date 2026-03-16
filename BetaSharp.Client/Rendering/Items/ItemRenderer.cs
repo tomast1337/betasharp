@@ -15,11 +15,20 @@ public class ItemRenderer : EntityRenderer
 {
     private readonly JavaRandom random = new();
     public bool useCustomDisplayColor = true;
-    TextureManager textureManager;
+    private readonly TextureManager textureManager;
 
     public ItemRenderer(BetaSharp game)
     {
         textureManager = game.textureManager;
+        ShadowRadius = 0.15F;
+        ShadowStrength = 12.0F / 16.0F;
+    }
+
+    public ItemRenderer()
+    {
+        // Fallback for GUI/static usage; will be wired to the singleton's texture manager.
+        textureManager = EntityRenderDispatcher.instance?.textureManager
+                         ?? throw new InvalidOperationException("EntityRenderDispatcher.instance must be initialized before using parameterless ItemRenderer.");
         ShadowRadius = 0.15F;
         ShadowStrength = 12.0F / 16.0F;
     }
@@ -193,7 +202,7 @@ public class ItemRenderer : EntityRenderer
             renderTexturedQuad(var6, var7, var5 % 16 * 16, var5 / 16 * 16, 16, 16);
             GLManager.GL.Enable(GLEnum.Lighting);
         }
-
+ 
         GLManager.GL.Enable(GLEnum.CullFace);
     }
 

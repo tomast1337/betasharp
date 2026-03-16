@@ -14,38 +14,74 @@ public abstract class Packet
 
     private static readonly Dictionary<int, PacketTracker> s_trackers = new();
 
-    public readonly long CreationTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+    public long CreationTime;
 
     public readonly byte Id;
+
+    /// <summary>
+    /// When sending to multiple clients, we only want to return when all packages have been sent
+    /// </summary>
+    public int UseCount;
+
+#if DEBUG
+    public string AllocationTrace = string.Empty;
+    public string ReturnTrace = string.Empty;
+    public bool IsReturned = false;
+#endif
 
     protected Packet(byte id)
     {
         Id = id;
+        UseCount = 1;
     }
 
     protected Packet(PacketId id)
     {
         Id = (byte)id;
+        UseCount = 1;
     }
 
     public void Return()
     {
+        Interlocked.Decrement(ref UseCount);
+        ReturnNoCount();
+    }
+
+    protected void ReturnNoCount()
+    {
+        if (Volatile.Read(ref UseCount) > 0) return;
+
+#if DEBUG
+        if (IsReturned)
+        {
+            throw new InvalidOperationException($"Packet double-returned! It was freed by an earlier call.\nAllocated at:\n{AllocationTrace}\n\nPreviously returned at:\n{ReturnTrace}\n\nDouble return at:\n{Environment.StackTrace}");
+        }
+        IsReturned = true;
+        ReturnTrace = Environment.StackTrace;
+#endif
+
         if (Registry.TryGet(Id, out PacketRegisterItem? item))
         {
             item.Return(this);
             return;
         }
+
         s_logger.LogError("Packet id " + Id + " not found");
     }
 
-    public static void Return(Packet packet)
+    public static T Get<T>(PacketId id) where T : Packet => (T)Get((byte)id);
+
+    public Packet Get() => Get(Id);
+    public static Packet Get(PacketId id) => Get((byte)id);
+
+    public static Packet Get(byte id)
     {
-        if (Registry.TryGet(packet.Id, out PacketRegisterItem? item))
+        if (!Registry.TryGet(id, out PacketRegisterItem? packetR))
         {
-            item.Return(packet);
-            return;
+            throw new Exception("Unable to get packet id " + id);
         }
-        s_logger.LogError("Packet id " + packet.Id + " not found");
+
+        return packetR.Get();
     }
 
     public static Packet? Read(NetworkStream stream, bool server)
@@ -97,8 +133,15 @@ public abstract class Packet
 
     public static void Write(Packet packet, NetworkStream stream)
     {
+#if DEBUG
+        if (packet.IsReturned)
+        {
+            throw new InvalidOperationException($"Packet used after return (Write). Allocated at:\n{packet.AllocationTrace}\n\nReturned at:\n{packet.ReturnTrace}\n\nWritten at:\n{Environment.StackTrace}");
+        }
+#endif
         stream.WriteByte((byte)packet.Id);
         packet.Write(stream);
+        packet.Return();
     }
 
     public abstract void Read(NetworkStream stream);
@@ -169,13 +212,59 @@ public abstract class Packet
             New(PacketId.ScreenHandlerAcknowledgement, true, true, false, () => new ScreenHandlerAcknowledgementPacket()),
             New(PacketId.UpdateSign, true, true, true, () => new UpdateSignPacket()),
             New(PacketId.MapUpdateS2C, true, false, true, () => new MapUpdateS2CPacket()),
+            New(PacketId.PlayerConnectionUpdateS2C, true, false, false, () => new PlayerConnectionUpdateS2CPacket()),
             New(PacketId.IncreaseStatS2C, true, false, false, () => new IncreaseStatS2CPacket()),
             New(PacketId.Disconnect, true, true, false, () => new DisconnectPacket())
         ]);
     }
 
-    public class PacketRegisterItem(byte rawId, bool clientBound, bool serverBound, bool worldPacket, Func<Packet> factory) : FactoryPoolItem<Packet>(rawId, item: factory)
+    public class PacketRegisterItem(byte rawId, bool clientBound, bool serverBound, bool worldPacket, Func<Packet> factory) : FactoryPoolItem<Packet>(rawId, item: factory, PoolSize(rawId))
     {
+        private static int PoolSize(byte rawId)
+        {
+            switch (rawId)
+            {
+                case (byte)PacketId.EntityRotateAndMoveRelativeS2C:
+                case (byte)PacketId.EntityMoveRelativeS2C:
+                case (byte)PacketId.EntityPositionS2C:
+                    return 256;
+                case (byte)PacketId.ChunkStatusUpdateS2C:
+                case (byte)PacketId.BlockUpdateS2C:
+                case (byte)PacketId.PlayerActionC2S:
+                case (byte)PacketId.ChunkDataS2C:
+                case (byte)PacketId.LivingEntitySpawnS2C:
+                case (byte)PacketId.EntityDestroyS2C:
+                    return 64;
+                case (byte)PacketId.KeepAlive:
+                case (byte)PacketId.UpdateSign:
+                case (byte)PacketId.PlayerConnectionUpdateS2C:
+                case (byte)PacketId.Disconnect:
+                case (byte)PacketId.LoginHello:
+                case (byte)PacketId.Handshake:
+                case (byte)PacketId.ChatMessage:
+                case (byte)PacketId.EntityEquipmentUpdateS2C:
+                case (byte)PacketId.PlayerSpawnPositionS2C:
+                case (byte)PacketId.PaintingEntitySpawnS2C:
+                    return 16;
+                default:
+                    return 32;
+            }
+        }
+
+        public override Packet Get()
+        {
+            Packet p = Item.Get();
+            // note. DateTimeOffset.UtcNow.UtcTicks would be slightly faster as no conversion would be needed
+            p.CreationTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            p.UseCount = 1;
+#if DEBUG
+            p.IsReturned = false;
+            p.AllocationTrace = Environment.StackTrace;
+            p.ReturnTrace = string.Empty;
+#endif
+            return p;
+        }
+
         public readonly bool ClientBound = clientBound;
         public readonly bool ServerBound = serverBound;
         public readonly bool WorldPacket = worldPacket;

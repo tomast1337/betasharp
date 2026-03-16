@@ -1,0 +1,21 @@
+﻿name: .NET
+
+on: [workflow_dispatch]
+
+jobs:
+    format:
+
+        runs-on: ubuntu-latest
+
+        steps:
+            -   uses: actions/checkout@v4
+            -   name: Setup .NET
+                uses: actions/setup-dotnet@v4
+                with:
+                    dotnet-version: 10.0.x
+            -   name: Restore dependencies
+                run: dotnet restore
+            -   name: Format
+                run: |
+                    dotnet format --verify-no-changes --verbosity minimal
+                    dotnet format analyzers --verify-no-changes --verbosity minimal

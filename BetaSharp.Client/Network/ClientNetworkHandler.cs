@@ -5,6 +5,7 @@ using BetaSharp.Blocks.Entities;
 using BetaSharp.Client.Entities;
 using BetaSharp.Client.Entities.FX;
 using BetaSharp.Client.Guis;
+using BetaSharp.Client.Rendering.Entities;
 using BetaSharp.Client.Input;
 using BetaSharp.Client.Worlds;
 using BetaSharp.Entities;
@@ -72,11 +73,10 @@ public class ClientNetworkHandler : NetHandler
 
             if (ticks++ - lastKeepAliveTime > 200)
             {
-                SendPacket(new KeepAlivePacket());
+                SendPacket(KeepAlivePacket.Get());
             }
         }
 
-        netManager.interrupt();
     }
 
     public void SendPacket(Packet packet)
@@ -85,6 +85,10 @@ public class ClientNetworkHandler : NetHandler
         {
             netManager.sendPacket(packet);
             lastKeepAliveTime = ticks;
+        }
+        else
+        {
+            packet.Return();
         }
     }
 
@@ -254,11 +258,7 @@ public class ClientNetworkHandler : NetHandler
     public override void onEntityTrackerUpdate(EntityTrackerUpdateS2CPacket packet)
     {
         Entity ent = getEntityByID(packet.EntityId);
-        if (ent != null && packet.GetWatchedObjects() != null)
-        {
-            ent.getDataWatcher().UpdateWatchedObjectsFromList(packet.GetWatchedObjects());
-        }
-
+        ent.DataSynchronizer.ApplyChanges(new MemoryStream(packet.Data));
     }
 
     public override void onPlayerSpawn(PlayerSpawnS2CPacket packet)
@@ -431,10 +431,7 @@ public class ClientNetworkHandler : NetHandler
 
     public void addToSendQueue(Packet packet)
     {
-        if (!disconnected)
-        {
-            SendPacket(packet);
-        }
+        SendPacket(packet);
     }
 
     public override void onItemPickupAnimation(ItemPickupAnimationS2CPacket packet)
@@ -533,7 +530,6 @@ public class ClientNetworkHandler : NetHandler
     public void disconnect()
     {
         disconnected = true;
-        netManager.interrupt();
         netManager.disconnect("disconnect.closed");
     }
 
@@ -552,12 +548,7 @@ public class ClientNetworkHandler : NetHandler
         ent.setPositionAndAngles(x, y, z, yaw, pitch);
         ent.interpolateOnly = true;
         worldClient.ForceEntity(packet.entityId, ent);
-        List<WatchableObject> metaData = packet.GetMetadata();
-        if (metaData != null)
-        {
-            ent.getDataWatcher().UpdateWatchedObjectsFromList(metaData);
-        }
-
+        ent.DataSynchronizer.ApplyChanges(new MemoryStream(packet.Data));
     }
 
     public override void onWorldTimeUpdate(WorldTimeUpdateS2CPacket packet)
@@ -710,7 +701,7 @@ public class ClientNetworkHandler : NetHandler
             else
             {
                 screenHandler.onAcknowledgementDenied(packet.actionType);
-                addToSendQueue(new ScreenHandlerAcknowledgementPacket(packet.syncId, packet.actionType, true));
+                addToSendQueue(ScreenHandlerAcknowledgementPacket.Get(packet.syncId, packet.actionType, true));
             }
         }
 
@@ -804,7 +795,7 @@ public class ClientNetworkHandler : NetHandler
     {
         if (packet.itemRawId == Item.Map.id)
         {
-            ItemMap.getMapState(packet.id, _game.world).updateData(packet.updateData);
+            ItemMap.getMapState(packet.id, _game.world).UpdateData(packet.updateData);
         }
         else
         {
@@ -828,6 +819,15 @@ public class ClientNetworkHandler : NetHandler
         catch (KeyNotFoundException ex)
         {
             _logger.LogWarning(ex, "Unknown stat id in IncreaseStatS2CPacket: {StatId}", packet.statId);
+        }
+    }
+
+    public override void onPlayerConnectionUpdate(PlayerConnectionUpdateS2CPacket packet)
+    {
+        if (packet.type == PlayerConnectionUpdateS2CPacket.ConnectionUpdateType.Leave)
+        {
+            Entity ent = worldClient.GetEntity(packet.entityId);
+            EntityRenderDispatcher.instance.skinManager?.Release(packet.name);
         }
     }
 

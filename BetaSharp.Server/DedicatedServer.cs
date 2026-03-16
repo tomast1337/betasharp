@@ -19,9 +19,9 @@ internal class DedicatedServer(IServerConfiguration config) : BetaSharpServer(co
 
     protected override bool Init()
     {
-        ConsoleInputThread var1 = new(this);
-        var1.setDaemon(true);
-        var1.start();
+        ConsoleInputThread consoleInputThread = new(this);
+        consoleInputThread.setDaemon(true);
+        consoleInputThread.start();
 
         s_logger.LogInformation("Starting BetaSharp server version Beta 1.7.3");
         if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
@@ -72,6 +72,7 @@ internal class DedicatedServer(IServerConfiguration config) : BetaSharpServer(co
     public static void Main(string[] args)
     {
         Log.Instance.Initialize(Directory.GetCurrentDirectory());
+        AssetManager.Initialize(AssetManager.AssetProfile.Headless);
 
         try
         {

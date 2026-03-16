@@ -1,6 +1,7 @@
 using BetaSharp.Client.Input;
 using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Client.Rendering.Core.OpenGL;
+using Silk.NET.GLFW;
 
 namespace BetaSharp.Client.Guis;
 
@@ -63,7 +64,7 @@ public abstract class GuiSlot
 
     protected virtual void DrawHeader(int x, int y, Tessellator tess) { }
 
-    protected virtual void HeaderClicked(int var1, int var2)
+    protected virtual void HeaderClicked(int mouseX, int mouseY)
     {
     }
 
@@ -123,7 +124,12 @@ public abstract class GuiSlot
         int scrollbarXStart = _width / 2 + 124;
         int scrollbarXEnd = scrollbarXStart + 6;
 
-        if (Mouse.isButtonDown(0))
+        if (_game.isControllerMode)
+        {
+            _amountScrolled += Controller.RightStickY;
+        }
+
+        if (Mouse.isButtonDown(0) || (_game.isControllerMode && Controller.IsButtonDown(GamepadButton.A)))
         {
             if (_initialClickY == -1.0f)
             {
@@ -318,8 +324,7 @@ public abstract class GuiSlot
 
     private void OverlayBackground(int startY, int endY, int alphaStart, int alphaEnd)
     {
-        var tess = Tessellator.instance;
-        var textureId = (uint)_game.textureManager.GetTextureId("/gui/background.png").Id;
+        Tessellator tess = Tessellator.instance;
 
         _game.textureManager.BindTexture(_game.textureManager.GetTextureId("/gui/background.png"));
         GLManager.GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
