@@ -20,7 +20,7 @@ public class EntityDiggingFX : EntityFX
         this.hitFace = hitFace;
     }
 
-    public EntityDiggingFX func_4041_a(int x, int y, int z)
+    public EntityDiggingFX colorMultiplier(int x, int y, int z)
     {
         if (targetedBlock == Block.GrassBlock)
         {
