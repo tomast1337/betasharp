@@ -71,7 +71,6 @@ public class ServerChunkCache : IChunkSource
             {
                 chunk.PopulateBlockLight();
                 chunk.Load();
-                chunk.WakeUpActiveRedstone(_world);
             }
 
             if (!chunk.TerrainPopulated
