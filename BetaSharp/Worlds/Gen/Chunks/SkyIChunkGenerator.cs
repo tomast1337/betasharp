@@ -3,13 +3,12 @@ using BetaSharp.Blocks.Materials;
 using BetaSharp.Util.Maths;
 using BetaSharp.Util.Maths.Noise;
 using BetaSharp.Worlds.Chunks;
-using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Core.Systems;
 using BetaSharp.Worlds.Generation.Biomes;
 using BetaSharp.Worlds.Generation.Generators.Carvers;
 using BetaSharp.Worlds.Generation.Generators.Features;
 
-namespace BetaSharp.Worlds.Generation.Generators.Chunks;
+namespace BetaSharp.Worlds.Gen.Chunks;
 
 internal class SkyIChunkGenerator : IChunkSource
 {

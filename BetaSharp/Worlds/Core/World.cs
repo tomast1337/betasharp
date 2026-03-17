@@ -172,7 +172,7 @@ public abstract class World : IWorldContext
     {
         EventProcessingEnabled = true;
         int x = 0;
-        byte y = 64;
+        int y = 64;
 
         int z;
         for (
@@ -181,6 +181,13 @@ public abstract class World : IWorldContext
             z += Random.NextInt(64) - Random.NextInt(64))
         {
             x += Random.NextInt(64) - Random.NextInt(64);
+        }
+
+        if (Properties.TerrainType == WorldType.Sky)
+        {
+            int topY = Reader.GetTopSolidBlockY(x, z);
+            if (topY > 0)
+                y = topY;
         }
 
         Properties.SetSpawn(x, y, z);

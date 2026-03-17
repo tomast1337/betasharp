@@ -31,6 +31,7 @@ public interface IWorldContext
     internal PathFinder Pathing { get; }
     public void SetDifficulty(int difficulty);
     public long GetTime();
+    public int GetSpawnBlockId(int x, int z);
     public bool SpawnEntity(Entity entity);
     public bool SpawnItemDrop(double x, double y, double z, ItemStack itemStack);
     public bool CanInteract(EntityPlayer player, int x, int y, int z);

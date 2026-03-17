@@ -14,7 +14,7 @@ public class SkyDimension : Dimension
 
     public override void InitBiomeSource()
     {
-        BiomeSource = new FixedBiomeSource(World, Biome.Sky, 0.5D, 0.0D);
+        BiomeSource = new FixedBiomeSource(Biome.Sky, 0.5D, 0.0D);
     }
 
     public override IChunkSource CreateChunkGenerator()
@@ -27,11 +27,9 @@ public class SkyDimension : Dimension
         return 0.0F;
     }
 
-    public override bool IsValidSpawnPoint(int x, int z) // Variable named y here but is actually z in Minecraft coords
+    public override bool IsValidSpawnPoint(int x, int y) // Variable named y here but is actually z in Minecraft coords
     {
-        int y = World.Reader.GetTopY(x, z);
-        int topBlockId = World.Reader.GetBlockId(x, y, z);
-
+        int topBlockId = World.GetSpawnBlockId(x, y);
         return topBlockId != 0 && Block.Blocks[topBlockId] != null && Block.Blocks[topBlockId].material.BlocksMovement;
     }
 

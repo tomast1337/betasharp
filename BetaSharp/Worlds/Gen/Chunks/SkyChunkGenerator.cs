@@ -78,7 +78,7 @@ internal class SkyChunkGenerator : IChunkSource
     {
         _world = world;
         _seed = seed;
-        _biomeSource = world.Reader.GetBiomeSource();
+        _biomeSource = world.Dimension.BiomeSource;
         _random = new JavaRandom(seed);
         _minLimitPerlinNoise = new OctavePerlinNoiseSampler(_random, 16);
         _maxLimitPerlinNoise = new OctavePerlinNoiseSampler(_random, 16);
@@ -382,7 +382,7 @@ internal class SkyChunkGenerator : IChunkSource
             featureX = blockX + _random.NextInt(16);
             featureY = _random.NextInt(64);
             featureZ = blockZ + _random.NextInt(16);
-            _featureIron.Generate(_world, _random,  featureX, featureY, featureZ);
+            _featureIron.Generate(_world, _random, featureX, featureY, featureZ);
         }
 
         for (int i = 0; i < 2; ++i)
@@ -467,7 +467,7 @@ internal class SkyChunkGenerator : IChunkSource
             featureZ = blockZ + _random.NextInt(16) + 8;
             Feature treeFeature = chunkBiome.GetRandomWorldGenForTrees(_random);
             treeFeature.prepare(1.0D, 1.0D, 1.0D);
-                treeFeature.Generate(_world, _random, featureX, _world.Reader.GetTopSolidBlockY(featureX, featureZ), featureZ);
+            treeFeature.Generate(_world, _random, featureX, _world.Reader.GetTopY(featureX, featureZ), featureZ);
         }
 
         for (int i = 0; i < 2; ++i)

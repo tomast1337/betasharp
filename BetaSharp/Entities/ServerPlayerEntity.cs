@@ -12,6 +12,7 @@ using BetaSharp.Server.Entities;
 using BetaSharp.Server.Network;
 using BetaSharp.Stats;
 using BetaSharp.Util.Maths;
+using BetaSharp.Worlds;
 using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Core.Systems;
 using Microsoft.Extensions.Logging;
@@ -46,9 +47,19 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         int z = spawnPos.Y;
         if (!world.Dimension.HasCeiling)
         {
-            x += random.NextInt(20) - 10;
-            z = world.Reader.GetSpawnPositionValidityY(x, y);
-            y += random.NextInt(20) - 10;
+            if (world.Properties.TerrainType == WorldType.Sky)
+            {
+                // Sky: no random offset so we stay on the island; use validity Y at spawn (x,z)
+                int validityY = world.Reader.GetSpawnPositionValidityY(x, y);
+                if (validityY > 0)
+                    z = validityY;
+            }
+            else
+            {
+                x += random.NextInt(20) - 10;
+                z = world.Reader.GetSpawnPositionValidityY(x, y);
+                y += random.NextInt(20) - 10;
+            }
         }
 
         setPositionAndAnglesKeepPrevAngles(x + 0.5, z, y + 0.5, 0.0F, 0.0F);

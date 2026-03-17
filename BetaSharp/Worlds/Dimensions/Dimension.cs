@@ -3,7 +3,7 @@ using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Biomes.Source;
 using BetaSharp.Worlds.Chunks;
 using BetaSharp.Worlds.Core.Systems;
-using BetaSharp.Worlds.Generation.Generators.Chunks;
+using BetaSharp.Worlds.Gen.Chunks;
 using Silk.NET.Maths;
 
 namespace BetaSharp.Worlds.Dimensions;
