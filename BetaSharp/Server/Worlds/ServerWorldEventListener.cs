@@ -56,10 +56,6 @@ internal class ServerWorldEventListener : IWorldEventListener
         server.playerManager.sendToAround(x, y, z, 64.0, world.dimension.Id, PlayNoteSoundS2CPacket.Get(x, y, z, soundType, pitch));
     }
 
-    // ====================================================================================
-    // TODO: Move to Client ???? INTENTIONALLY EMPTY METHODS: Headless server methods (No graphics/audio/particles on the server side)
-    // ====================================================================================
-    
     public void spawnParticle(string particle, double x, double y, double z, double velocityX, double velocityY, double velocityZ) { }
     
     public void playSound(string sound, double x, double y, double z, float volume, float pitch) { }

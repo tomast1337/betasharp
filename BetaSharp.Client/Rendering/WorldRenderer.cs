@@ -232,11 +232,6 @@ public class WorldRenderer : IWorldEventListener
                     {
                         if (living.deathTime >= 20)
                         {
-                            // TODO (Architecture): The Renderer is actively mutating the global game state here.
-                            // Removing entities from the master list should ONLY happen in EntityManager.TickEntities().
-                            // If the Render loop and Tick loop ever run on separate threads, this RemoveAt call
-                            // will throw a "Collection was modified" exception and crash the game.
-                            // For now, it works, but this list needs to be treated as read-only in the future.
                             var5.RemoveAt(var6--);
                             continue;
                         }

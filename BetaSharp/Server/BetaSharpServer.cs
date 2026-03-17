@@ -44,11 +44,6 @@ public abstract class BetaSharpServer : CommandOutput
     private int _ticksThisSecond;
     private float _currentTps;
 
-    // Accumulated tick timing, used to compute mean tick time for diagnostics.
-    private long _tickTimeAccumulated;
-    private int _tickTimeCount;
-    private float _meanTickTimeMs;
-
     private volatile bool _isPaused;
 
     public float Tps
@@ -58,17 +53,6 @@ public abstract class BetaSharpServer : CommandOutput
             lock (_tpsLock)
             {
                 return _currentTps;
-            }
-        }
-    }
-
-    public float MeanTickTimeMs
-    {
-        get
-        {
-            lock (_tpsLock)
-            {
-                return _meanTickTimeMs;
             }
         }
     }
@@ -121,7 +105,7 @@ public abstract class BetaSharpServer : CommandOutput
         WorldType worldType = WorldType.ParseWorldType(typeString) ?? WorldType.Default;
         string optionsString = config.GetLevelOptions("");
 
-        _logger.LogInformation($"Preparing level \"{worldName}\"");
+        _logger.LogInformation("Preparing level \"{WorldName}\"", worldName);
         loadWorld(worldName, new WorldSettings(seed, worldType, optionsString));
 
         if (logHelp)
@@ -143,11 +127,11 @@ public abstract class BetaSharpServer : CommandOutput
         {
             if (i == 0)
             {
-                worlds[i] = new ServerWorld(this, worldStorage, worldDir, i == 0 ? 0 : -1, settings, null);
+                worlds[i] = new ServerWorld(this, worldStorage, worldDir, 0, settings, null);
             }
             else
             {
-                worlds[i] = new ReadOnlyServerWorld(this, worldStorage, worldDir, i == 0 ? 0 : -1, settings, worlds[0]);
+                worlds[i] = new ReadOnlyServerWorld(this, worldStorage, worldDir, -1, settings, worlds[0]);
             }
 
             worlds[i].EventListeners.Add(new ServerWorldEventListener(this, worlds[i]));
@@ -208,7 +192,7 @@ public abstract class BetaSharpServer : CommandOutput
                     long currentTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                     if (currentTime > lastTimeLogged + 1000L)
                     {
-                        logProgress("Preparing spawn area", (idx + 1) * 50 / totalChunks);
+                        logProgress("Preparing spawn area", (idx + 1) * 100 / totalChunks);
                         lastTimeLogged = currentTime;
                     }
 
@@ -328,13 +312,12 @@ public abstract class BetaSharpServer : CommandOutput
                         {
                             _currentTps = 0.0f;
                         }
-                        System.Threading.Thread.Sleep(50);
+                        Thread.Sleep(50);
                         continue;
                     }
 
                     if (worlds[0].Entities.AreAllPlayersAsleep())
                     {
-                        TickWithProfiling();
                         accumulatedTime = 0L;
                     }
                     else
@@ -342,7 +325,6 @@ public abstract class BetaSharpServer : CommandOutput
                         while (accumulatedTime > 50L)
                         {
                             accumulatedTime -= 50L;
-                            TickWithProfiling();
                         }
                     }
 
@@ -353,24 +335,12 @@ public abstract class BetaSharpServer : CommandOutput
                         lock (_tpsLock)
                         {
                             _currentTps = _ticksThisSecond * 1000.0f / tpsElapsed;
-                            if (_tickTimeCount > 0)
-                            {
-                                // Convert Stopwatch ticks to milliseconds and average over the samples.
-                                _meanTickTimeMs = (float)(_tickTimeAccumulated * 1000.0 / Stopwatch.Frequency / _tickTimeCount);
-                            }
-                            else
-                            {
-                                _meanTickTimeMs = 0.0f;
-                            }
-
-                            _tickTimeAccumulated = 0;
-                            _tickTimeCount = 0;
                         }
                         _ticksThisSecond = 0;
                         _lastTpsTime = tpsNow;
                     }
 
-                    System.Threading.Thread.Sleep(1);
+                    Thread.Sleep(1);
                 }
             }
             else
@@ -381,7 +351,7 @@ public abstract class BetaSharpServer : CommandOutput
 
                     try
                     {
-                        System.Threading.Thread.Sleep(10);
+                        Thread.Sleep(10);
                     }
                     catch (ThreadInterruptedException ex)
                     {
@@ -390,7 +360,7 @@ public abstract class BetaSharpServer : CommandOutput
                 }
             }
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             _logger.LogError(ex, "Exception");
 
@@ -400,7 +370,7 @@ public abstract class BetaSharpServer : CommandOutput
 
                 try
                 {
-                    System.Threading.Thread.Sleep(10);
+                    Thread.Sleep(10);
                 }
                 catch (ThreadInterruptedException interruptedEx)
                 {
@@ -427,21 +397,6 @@ public abstract class BetaSharpServer : CommandOutput
                 }
             }
         }
-    }
-
-    private void TickWithProfiling()
-    {
-        long startTicks = Stopwatch.GetTimestamp();
-        tick();
-        long elapsedTicks = Stopwatch.GetTimestamp() - startTicks;
-
-        lock (_tpsLock)
-        {
-            _tickTimeAccumulated += elapsedTicks;
-            _tickTimeCount++;
-        }
-
-        _ticksThisSecond++;
     }
 
     private void tick()
@@ -499,7 +454,7 @@ public abstract class BetaSharpServer : CommandOutput
         {
             runPendingCommands();
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             _logger.LogWarning($"Unexpected exception while parsing console command: {e}");
         }

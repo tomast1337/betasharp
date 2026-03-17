@@ -11,7 +11,7 @@ public class BlockPistonExtension : Block
 
     public BlockPistonExtension(int id, int textureId) : base(id, textureId, Material.Piston)
     {
-        setSoundGroup(soundStoneFootstep);
+        setSoundGroup(SoundStoneFootstep);
         setHardness(0.5F);
     }
 
