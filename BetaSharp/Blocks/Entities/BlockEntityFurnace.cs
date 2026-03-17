@@ -10,10 +10,11 @@ namespace BetaSharp.Blocks.Entities;
 
 public class BlockEntityFurnace : BlockEntity, IInventory
 {
+    public override BlockEntityType Type => BlockEntity.Furnace;
+    private ItemStack[] inventory = new ItemStack[3];
     public int burnTime;
     public int cookTime;
     public int fuelTime;
-    private ItemStack[] inventory = new ItemStack[3];
 
     public int size()
     {

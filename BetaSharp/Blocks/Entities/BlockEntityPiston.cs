@@ -7,14 +7,14 @@ namespace BetaSharp.Blocks.Entities;
 
 public class BlockEntityPiston : BlockEntity
 {
-    private static readonly ThreadLocal<List<Entity>> s_pushedEntities = new(() => []);
-    private readonly bool _source;
-    private bool _extending;
+    public override BlockEntityType Type => BlockEntity.Piston;
+    private int _pushedBlockId;
+    private int _pushedBlockData;
     private int _facing;
+    private bool _extending;
+    private readonly bool _source;
     private float _lastProgess;
     private float _progress;
-    private int _pushedBlockData;
-    private int _pushedBlockId;
 
     public BlockEntityPiston()
     {
@@ -87,7 +87,7 @@ public class BlockEntityPiston : BlockEntity
             List<Entity> entitiesToPush = World.Entities.GetEntities(null!, pushCollisionBox.Value);
             if (entitiesToPush.Count > 0)
             {
-                List<Entity> pushedEntities = s_pushedEntities.Value!;
+                List<Entity> pushedEntities = [];
                 pushedEntities.AddRange(entitiesToPush);
                 foreach (Entity entity in pushedEntities)
                 {

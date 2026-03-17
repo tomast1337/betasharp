@@ -7,23 +7,23 @@ using BetaSharp.Inventorys;
 using BetaSharp.NBT;
 using BetaSharp.Stats;
 using BetaSharp.Util.Maths;
-using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Client.Entities;
 
 public class ClientPlayerEntity : EntityPlayer
 {
+    public override EntityType Type => EntityRegistry.Player;
     public MovementInput movementInput;
     protected BetaSharp Game;
-    private readonly MouseFilter field_21902_bL = new();
     private readonly MouseFilter field_21903_bJ = new();
     private readonly MouseFilter field_21904_bK = new();
+    private readonly MouseFilter field_21902_bL = new();
 
     public ClientPlayerEntity(BetaSharp game, IWorldContext world, Session session, int dimensionId) : base(world)
     {
         this.Game = game;
-        this.dimensionId = dimensionId;
+        base.dimensionId = dimensionId;
         name = session.username;
     }
 
@@ -52,12 +52,12 @@ public class ClientPlayerEntity : EntityPlayer
         {
             if (!world.IsRemote && vehicle != null)
             {
-                setVehicle(null);
+                setVehicle((Entity)null);
             }
 
             if (Game.currentScreen != null)
             {
-                Game.displayGuiScreen(null);
+                Game.displayGuiScreen((GuiScreen)null);
             }
 
             if (changeDimensionCooldown == 0.0F)
@@ -139,7 +139,7 @@ public class ClientPlayerEntity : EntityPlayer
 
     public override void openChestScreen(IInventory inventory)
     {
-        Game.displayGuiScreen(new GuiChest(this.inventory, inventory));
+        Game.displayGuiScreen(new GuiChest(base.inventory, inventory));
     }
 
     public override void openCraftingScreen(int x, int y, int z)
@@ -248,8 +248,8 @@ public class ClientPlayerEntity : EntityPlayer
         int floorX = MathHelper.Floor(posX);
         int floorY = MathHelper.Floor(posY);
         int floorZ = MathHelper.Floor(posZ);
-        double fracX = posX - floorX;
-        double fracZ = posZ - floorZ;
+        double fracX = posX - (double)floorX;
+        double fracZ = posZ - (double)floorZ;
         if (isBlockTranslucent(floorX, floorY, floorZ) || isBlockTranslucent(floorX, floorY + 1, floorZ))
         {
             bool canPushWest = !isBlockTranslucent(floorX - 1, floorY, floorZ) && !isBlockTranslucent(floorX - 1, floorY + 1, floorZ);

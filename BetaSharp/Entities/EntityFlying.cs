@@ -4,7 +4,7 @@ using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
-public class EntityFlying : EntityLiving
+public abstract class EntityFlying : EntityLiving
 {
     public EntityFlying(IWorldContext world) : base(world)
     {

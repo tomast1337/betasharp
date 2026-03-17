@@ -7,6 +7,7 @@ namespace BetaSharp.Blocks.Entities;
 
 internal class BlockEntityNote : BlockEntity
 {
+    public override BlockEntityType Type => BlockEntity.Note;
     public sbyte note;
     public bool powered = false;
 

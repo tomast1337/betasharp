@@ -5,6 +5,8 @@ namespace BetaSharp.Entities;
 
 public class EntityCow : EntityAnimal
 {
+    public override EntityType Type => EntityRegistry.Cow;
+    
     public EntityCow(IWorldContext world) : base(world)
     {
         this.texture = "/mob/cow.png";

@@ -44,7 +44,7 @@ public abstract class Dimension
 
     public virtual void InitBiomeSource() => BiomeSource = new BiomeSource(World);
 
-    public virtual IChunkSource CreateChunkGenerator() => new OverworldIChunkGenerator(World, World.Seed);
+    public virtual IChunkSource CreateChunkGenerator() => new OverworldChunkGenerator(World, World.Seed);
 
     public virtual bool IsValidSpawnPoint(int x, int z) {
         int y = World.Reader.GetTopY(x, z);

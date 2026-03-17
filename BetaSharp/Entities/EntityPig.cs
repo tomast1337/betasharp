@@ -7,6 +7,7 @@ namespace BetaSharp.Entities;
 
 public class EntityPig : EntityAnimal
 {
+    public override EntityType Type => EntityRegistry.Pig;
     public readonly SyncedProperty<bool> Saddled;
 
     public EntityPig(IWorldContext world) : base(world)

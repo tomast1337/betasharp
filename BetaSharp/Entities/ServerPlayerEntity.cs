@@ -21,8 +21,9 @@ namespace BetaSharp.Entities;
 
 public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
 {
-    private const int MaxChunkPackets = 16;
     private static readonly ILogger s_logger = Log.Instance.For<ServerPlayerEntity>();
+    public override EntityType Type => EntityRegistry.Player;
+    private const int MaxChunkPackets = 16;
     private readonly ItemStack?[] equipment = [null, null, null, null, null];
     public HashSet<ChunkPos> activeChunks = new();
     public ServerPlayerInteractionManager interactionManager;

@@ -322,9 +322,11 @@ public abstract class BetaSharpServer : CommandOutput
                     }
                     else
                     {
-                        while (accumulatedTime > 50L)
+                        while (accumulatedTime >= 50L && running)
                         {
                             accumulatedTime -= 50L;
+                            tick();
+                            _ticksThisSecond++;
                         }
                     }
 
@@ -460,7 +462,7 @@ public abstract class BetaSharpServer : CommandOutput
         }
     }
 
-    public void queueCommands(string str, CommandOutput cmd)
+    public void QueueCommands(string str, CommandOutput cmd)
     {
         lock (_pendingCommandsLock)
         {

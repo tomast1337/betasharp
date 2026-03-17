@@ -8,7 +8,7 @@ using BetaSharp.Worlds.Generation.Generators.Features;
 
 namespace BetaSharp.Worlds.Gen.Chunks;
 
-internal class NetherIChunkGenerator : IChunkSource
+internal class NetherChunkGenerator : IChunkSource
 {
     private readonly Carver _cave = new NetherCaveCarver();
     private readonly OctavePerlinNoiseSampler _depthNoise;
@@ -37,7 +37,7 @@ internal class NetherIChunkGenerator : IChunkSource
     private double[] _sandBuffer = new double[256];
     private double[] _scaleNoiseBuffer;
 
-    public NetherIChunkGenerator(IWorldContext world, long seed)
+    public NetherChunkGenerator(IWorldContext world, long seed)
     {
         _world = world;
         random = new JavaRandom(seed);
@@ -52,7 +52,7 @@ internal class NetherIChunkGenerator : IChunkSource
         InitFeatures();
     }
 
-    public IChunkSource CreateParallelInstance() => new NetherIChunkGenerator(_world, _seed);
+    public IChunkSource CreateParallelInstance() => new NetherChunkGenerator(_world, _seed);
 
     public Chunk LoadChunk(int x, int z) => GetChunk(x, z);
 

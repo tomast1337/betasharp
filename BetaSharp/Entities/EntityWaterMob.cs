@@ -2,7 +2,7 @@ using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Entities;
 
-public class EntityWaterMob : EntityCreature, SpawnableEntity
+public abstract class EntityWaterMob : EntityCreature, SpawnableEntity
 {
     public EntityWaterMob(IWorldContext world) : base(world)
     {

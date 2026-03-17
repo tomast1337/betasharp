@@ -38,7 +38,7 @@ internal class NetherDimension : Dimension
 
     public override IChunkSource CreateChunkGenerator()
     {
-        return new NetherIChunkGenerator(World, World.Seed);
+        return new NetherChunkGenerator(World, World.Seed);
     }
 
     public override bool IsValidSpawnPoint(int x, int z)

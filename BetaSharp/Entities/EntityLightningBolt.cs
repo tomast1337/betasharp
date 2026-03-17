@@ -7,10 +7,13 @@ namespace BetaSharp.Entities;
 
 public class EntityLightningBolt : EntityWeatherEffect
 {
+    public override EntityType Type => EntityRegistry.LightningBolt;
+
     private int flashTimer;
     public long renderSeed;
     private int flashCount;
 
+    public EntityLightningBolt(IWorldContext world) : this(world, 0, 0, 0) { }
     public EntityLightningBolt(IWorldContext world, double x, double y, double z) : base(world)
     {
         setPositionAndAnglesKeepPrevAngles(x, y, z, 0.0F, 0.0F);

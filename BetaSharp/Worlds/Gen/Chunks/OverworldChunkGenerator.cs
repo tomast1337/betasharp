@@ -11,7 +11,7 @@ using BetaSharp.Worlds.Generation.Generators.Features;
 
 namespace BetaSharp.Worlds.Gen.Chunks;
 
-internal class OverworldIChunkGenerator : IChunkSource
+internal class OverworldChunkGenerator : IChunkSource
 {
     private readonly BiomeSource _biomeSource;
     private readonly Carver _carver = new CaveCarver();
@@ -66,7 +66,7 @@ internal class OverworldIChunkGenerator : IChunkSource
     private double[] _selectorNoiseBuffer;
     private double[] _temperatures;
 
-    public OverworldIChunkGenerator(IWorldContext world, long seed)
+    public OverworldChunkGenerator(IWorldContext world, long seed)
     {
         _level = world;
         _random = new JavaRandom(seed);
@@ -83,7 +83,7 @@ internal class OverworldIChunkGenerator : IChunkSource
         InitFeatures();
     }
 
-    private OverworldIChunkGenerator(IWorldContext level, long seed, BiomeSource biomeSource)
+    private OverworldChunkGenerator(IWorldContext level, long seed, BiomeSource biomeSource)
     {
         _level = level;
         _seed = seed;
@@ -103,7 +103,7 @@ internal class OverworldIChunkGenerator : IChunkSource
     // Creates a thread-safe parallel generator with its own BiomeSource and _random state.
     // All noise samplers are deterministically equivalent (same seed), so chunk output is identical.
     public IChunkSource CreateParallelInstance()
-        => new OverworldIChunkGenerator(_level, _seed, new BiomeSource(_level));
+        => new OverworldChunkGenerator(_level, _seed, new BiomeSource(_level));
 
     public Chunk LoadChunk(int chunkX, int chunkZ) => GetChunk(chunkX, chunkZ);
 

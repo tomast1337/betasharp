@@ -8,17 +8,18 @@ namespace BetaSharp.Blocks.Entities;
 
 public class BlockEntityMobSpawner : BlockEntity
 {
-    private readonly ILogger<BlockEntityMobSpawner> _logger = Log.Instance.For<BlockEntityMobSpawner>();
+    public override BlockEntityType Type => BlockEntity.MobSpawner;
+    public int SpawnDelay { get; set; } = -1;
     private string _spawnedEntityId = "Pig";
+    public double Rotation { get; set; }
+    public double LastRotation { get; set; } = 0.0D;
+
+    private readonly ILogger<BlockEntityMobSpawner> _logger = Log.Instance.For<BlockEntityMobSpawner>();
 
     public BlockEntityMobSpawner()
     {
         SpawnDelay = 20;
     }
-
-    public int SpawnDelay { get; set; } = -1;
-    public double Rotation { get; set; }
-    public double LastRotation { get; set; }
 
     public string GetSpawnedEntityId()
     {
