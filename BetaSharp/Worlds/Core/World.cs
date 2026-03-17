@@ -290,7 +290,7 @@ public abstract class World : IWorldContext
 
     public bool AttemptSaving(int i)
     {
-        if (BlockHost.ChunkSource.CanSave())
+        if (!BlockHost.ChunkSource.CanSave())
         {
             return true;
         }
