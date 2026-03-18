@@ -83,6 +83,11 @@ public abstract class BlockEntity
 
     public void markDirty()
     {
+        if (World == null || World.IsRemote)
+        {
+            return;
+        }
+
         World.Broadcaster.UpdateBlockEntity(X, Y, Z, this);
     }
 
