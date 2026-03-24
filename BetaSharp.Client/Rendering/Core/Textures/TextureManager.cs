@@ -52,6 +52,7 @@ public class TextureManager : IDisposable
     public TextureRegion? GetTerrainRegion(int index) => _terrainAtlasBuilder?.GetRegion(index);
     public int GetTerrainAtlasWidth() => _terrainAtlasBuilder?.CurrentWidth ?? 256;
     public int GetTerrainAtlasHeight() => _terrainAtlasBuilder?.CurrentHeight ?? 256;
+    public int GetTerrainTileSize() => _terrainAtlasBuilder?.TileSize ?? 16;
 
     public int[] GetColors(string path)
     {
@@ -391,11 +392,15 @@ public class TextureManager : IDisposable
             else
             {
                 targetTileSize = atlasTexture.Width / 16;
-                tileX = (texture.Sprite % 16) * targetTileSize;
-                tileY = (texture.Sprite / 16) * targetTileSize;
+                int slotStrideItems = atlasTexture.Width / 16;
+                int paddingItems = Math.Max(0, (slotStrideItems - targetTileSize) / 2);
+                tileX = (texture.Sprite % 16) * slotStrideItems + paddingItems;
+                tileY = (texture.Sprite / 16) * slotStrideItems + paddingItems;
             }
 
             int fxSize = (int)Math.Sqrt(texture.Pixels.Length / 4);
+            int slotStride = atlasTexture.Width / 16;
+            int padding = Math.Max(0, (slotStride - targetTileSize) / 2);
             int scale = targetTileSize / fxSize;
             if (scale < 1) scale = 1;
 
@@ -408,36 +413,71 @@ public class TextureManager : IDisposable
                 if (scale > 1)
                 {
                     uploadSize = fxSize * scale;
-                    rentedArray = System.Buffers.ArrayPool<byte>.Shared.Rent(uploadSize * uploadSize * 4);
+                    rentedArray = ArrayPool<byte>.Shared.Rent(uploadSize * uploadSize * 4);
                     UpscaleNearestNeighbor(texture.Pixels, rentedArray, fxSize, uploadSize, scale);
                     uploadPixels = rentedArray;
                 }
-
-                int finalReplicate = texture.Replicate;
-
-                fixed (byte* ptr = uploadPixels)
+                else if (fxSize > targetTileSize)
                 {
-                    for (int x = 0; x < finalReplicate; x++)
+                    uploadSize = targetTileSize;
+                    rentedArray = ArrayPool<byte>.Shared.Rent(uploadSize * uploadSize * 4);
+                    DownscaleNearestNeighbor(texture.Pixels, rentedArray, fxSize, uploadSize);
+                    uploadPixels = rentedArray;
+                }
+                else
+                {
+                    uploadSize = targetTileSize;
+                }
+
+                int slotBaseX = tileX - padding;
+                int slotBaseY = tileY - padding;
+                int slotSize = targetTileSize + (padding * 2);
+
+                byte[]? expandedArray = null;
+                if (padding > 0)
+                {
+                    expandedArray = ArrayPool<byte>.Shared.Rent(slotSize * slotSize * 4);
+                    ExtrudePadding(uploadPixels, expandedArray, uploadSize, padding);
+                    uploadPixels = expandedArray;
+                    uploadSize = slotSize;
+                }
+
+                try
+                {
+                    int finalReplicate = texture.Replicate;
+
+                    fixed (byte* ptr = uploadPixels)
                     {
-                        for (int y = 0; y < finalReplicate; y++)
+                        for (int x = 0; x < finalReplicate; x++)
                         {
-                            atlasTexture.UploadSubImage(
-                               tileX + (x * uploadSize),
-                               tileY + (y * uploadSize),
-                               uploadSize, uploadSize, ptr, 0, PixelFormat.Rgba);
+                            for (int y = 0; y < finalReplicate; y++)
+                            {
+                                int destX = slotBaseX + (x * slotStride);
+                                int destY = slotBaseY + (y * slotStride);
+                                atlasTexture.UploadSubImage(destX, destY, uploadSize, uploadSize, ptr, 0, PixelFormat.Rgba);
+                            }
+                        }
+                    }
+
+                    if (texture.Atlas == DynamicTexture.FxImage.Terrain && _gameOptions.UseMipmaps)
+                    {
+                        int atlasWidth = GetTerrainAtlasWidth();
+                        int atlasHeight = GetTerrainAtlasHeight();
+                        for (int x = 0; x < finalReplicate; x++)
+                        {
+                            for (int y = 0; y < finalReplicate; y++)
+                            {
+                                int destX = slotBaseX + (x * slotStride);
+                                int destY = slotBaseY + (y * slotStride);
+                                UpdateTileMipmaps(destX, destY, uploadSize, uploadPixels, atlasTexture, atlasWidth, atlasHeight);
+                            }
                         }
                     }
                 }
-
-                if (texture.Atlas == DynamicTexture.FxImage.Terrain && _gameOptions.UseMipmaps)
+                finally
                 {
-                    for (int x = 0; x < finalReplicate; x++)
-                    {
-                        for (int y = 0; y < finalReplicate; y++)
-                        {
-                            UpdateTileMipmaps(tileX + (x * uploadSize), tileY + (y * uploadSize), uploadSize, targetTileSize, uploadPixels, atlasTexture);
-                        }
-                    }
+                    if (expandedArray != null)
+                        ArrayPool<byte>.Shared.Return(expandedArray);
                 }
             }
             finally
@@ -472,9 +512,58 @@ public class TextureManager : IDisposable
         }
     }
 
-    private unsafe void UpdateTileMipmaps(int baseX, int baseY, int dataSize, int targetTileSize, byte[] tileData, GLTexture texture)
+    private static void DownscaleNearestNeighbor(byte[] src, byte[] dst, int srcSize, int dstSize)
     {
-        int maxMipLevels = (int)Math.Log2(targetTileSize) + 1;
+        ReadOnlySpan<byte> srcSpan = src;
+        Span<byte> dstSpan = dst;
+
+        for (int y = 0; y < dstSize; y++)
+        {
+            int srcY = (y * srcSize) / dstSize;
+            for (int x = 0; x < dstSize; x++)
+            {
+                int srcX = (x * srcSize) / dstSize;
+                int srcIdx = (srcY * srcSize + srcX) * 4;
+                int dstIdx = (y * dstSize + x) * 4;
+
+                dstSpan[dstIdx] = srcSpan[srcIdx];
+                dstSpan[dstIdx + 1] = srcSpan[srcIdx + 1];
+                dstSpan[dstIdx + 2] = srcSpan[srcIdx + 2];
+                dstSpan[dstIdx + 3] = srcSpan[srcIdx + 3];
+            }
+        }
+    }
+
+    /// <summary>
+    /// Expands content by extruding edges into padding. Produces (contentSize + 2*padding)^2 output
+    /// so the padded slot can be uploaded and the bleeding edges stay in sync with animated content.
+    /// </summary>
+    private static void ExtrudePadding(byte[] content, byte[] dst, int contentSize, int padding)
+    {
+        int slotSize = contentSize + (padding * 2);
+        ReadOnlySpan<byte> srcSpan = content;
+        Span<byte> dstSpan = dst;
+
+        for (int dy = 0; dy < slotSize; dy++)
+        {
+            int srcY = dy < padding ? 0 : (dy >= padding + contentSize ? contentSize - 1 : dy - padding);
+            for (int dx = 0; dx < slotSize; dx++)
+            {
+                int srcX = dx < padding ? 0 : (dx >= padding + contentSize ? contentSize - 1 : dx - padding);
+                int srcIdx = (srcY * contentSize + srcX) * 4;
+                int dstIdx = (dy * slotSize + dx) * 4;
+
+                dstSpan[dstIdx] = srcSpan[srcIdx];
+                dstSpan[dstIdx + 1] = srcSpan[srcIdx + 1];
+                dstSpan[dstIdx + 2] = srcSpan[srcIdx + 2];
+                dstSpan[dstIdx + 3] = srcSpan[srcIdx + 3];
+            }
+        }
+    }
+
+    private unsafe void UpdateTileMipmaps(int baseX, int baseY, int dataSize, byte[] tileData, GLTexture texture, int atlasWidth, int atlasHeight)
+    {
+        int maxMipLevels = (int)Math.Log2(dataSize) + 1;
         byte[] currentData = tileData;
         int currentSize = dataSize;
 
@@ -512,8 +601,10 @@ public class TextureManager : IDisposable
                     for (int i = 0; i < 4; i++) downsampled[i] = currentData[i];
                 }
 
-                int mipX = baseX >> mipLevel;
-                int mipY = baseY >> mipLevel;
+                int mipWidth = Math.Max(1, atlasWidth >> mipLevel);
+                int mipHeight = Math.Max(1, atlasHeight >> mipLevel);
+                int mipX = (baseX * mipWidth) / atlasWidth;
+                int mipY = (baseY * mipHeight) / atlasHeight;
 
                 fixed (byte* ptr = downsampled)
                 {

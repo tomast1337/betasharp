@@ -17,6 +17,7 @@ public class TextureAtlasBuilder : IDisposable
 
     public int CurrentWidth => _atlasImage.Width;
     public int CurrentHeight => _atlasImage.Height;
+    public int TileSize => _tileSize;
 
     public TextureAtlasBuilder(int tileSize = 16, int padding = 1, int initialGridSize = 16)
     {

@@ -576,10 +576,23 @@ public class GuiIngame : Gui
         GLManager.GL.BlendFunc(GLEnum.SrcAlpha, GLEnum.OneMinusSrcAlpha);
         GLManager.GL.Color4(1.0F, 1.0F, 1.0F, portalStrength);
         _game.textureManager.BindTexture(_game.textureManager.GetTextureId("/terrain.png"));
-        float u1 = Block.NetherPortal.textureId % 16 / 16.0F;
-        float v1 = Block.NetherPortal.textureId / 16 / 16.0F;
-        float u2 = (Block.NetherPortal.textureId % 16 + 1) / 16.0F;
-        float v2 = (Block.NetherPortal.textureId / 16 + 1) / 16.0F;
+        float u1, v1, u2, v2;
+        if (_game.textureManager.GetTerrainRegion(Block.NetherPortal.textureId) is { } region)
+        {
+            var uvs = region.GetNormalizedUVs(_game.textureManager.GetTerrainAtlasWidth(), _game.textureManager.GetTerrainAtlasHeight());
+            u1 = uvs.uMin;
+            v1 = uvs.vMin;
+            u2 = uvs.uMax;
+            v2 = uvs.vMax;
+        }
+        else
+        {
+            int tid = Block.NetherPortal.textureId;
+            u1 = (tid % 16) / 16.0F;
+            v1 = (tid / 16) / 16.0F;
+            u2 = (tid % 16 + 1) / 16.0F;
+            v2 = (tid / 16 + 1) / 16.0F;
+        }
         Tessellator tess = Tessellator.instance;
         tess.startDrawingQuads();
         tess.addVertexWithUV(0.0D, screenHeight, -90.0D, (double)u1, (double)v2);

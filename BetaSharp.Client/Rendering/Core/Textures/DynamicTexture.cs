@@ -46,7 +46,9 @@ public class DynamicTexture(int iconIdx)
         {
             string atlasPath = Atlas == FxImage.Terrain ? "/terrain.png" : "/gui/items.png";
             int targetWidth = game.textureManager.GetTextureId(atlasPath).Texture?.Width ?? 256;
-            int targetTileSize = targetWidth / 16;
+            int targetTileSize = Atlas == FxImage.Terrain
+                ? game.textureManager.GetTerrainTileSize()
+                : targetWidth / 16;
 
             if (targetTileSize < 1) targetTileSize = 1;
 
