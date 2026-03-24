@@ -40,10 +40,10 @@ internal class ItemBed : Item
             return false;
         }
 
-        world.Writer.SetBlock(x, y, z, Block.Bed.id, dir);
-        world.Writer.SetBlock(x + offsetX, y, z + offsetZ, Block.Bed.id, dir + 8);
-        world.Broadcaster.NotifyNeighbors(x, y, z, Block.Bed.id);
-        world.Broadcaster.NotifyNeighbors(x + offsetX, y, z + offsetZ, Block.Bed.id);
+        world.Writer.SetBlock(x, y, z, Block.Bed.Id, dir);
+        world.Writer.SetBlock(x + offsetX, y, z + offsetZ, Block.Bed.Id, dir + 8);
+        world.Broadcaster.NotifyNeighbors(x, y, z, Block.Bed.Id);
+        world.Broadcaster.NotifyNeighbors(x + offsetX, y, z + offsetZ, Block.Bed.Id);
         --itemStack.count;
         return true;
     }
@@ -51,6 +51,6 @@ internal class ItemBed : Item
     private static bool isReplaceable(IWorldContext world, int x, int y, int z)
     {
         int blockId = world.Reader.GetBlockId(x, y, z);
-        return blockId == 0 || Block.Blocks[blockId].material.IsReplaceable;
+        return blockId == 0 || Block.Blocks[blockId].Material.IsReplaceable;
     }
 }

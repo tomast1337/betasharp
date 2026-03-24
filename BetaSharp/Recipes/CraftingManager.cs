@@ -30,7 +30,7 @@ internal class CraftingManager
         AddRecipe(new ItemStack(Item.Book, 1), ["#", "#", "#", '#', Item.Paper]);
         AddRecipe(new ItemStack(Block.Fence, 2), ["###", "###", '#', Item.Stick]);
         AddRecipe(new ItemStack(Block.Jukebox, 1), ["###", "#X#", "###", '#', Block.Planks, 'X', Item.Diamond]);
-        AddRecipe(new ItemStack(Block.Noteblock, 1), ["###", "#X#", "###", '#', Block.Planks, 'X', Item.Redstone]);
+        AddRecipe(new ItemStack(Block.NoteBlock, 1), ["###", "#X#", "###", '#', Block.Planks, 'X', Item.Redstone]);
         AddRecipe(new ItemStack(Block.Bookshelf, 1), ["###", "XXX", "###", '#', Block.Planks, 'X', Item.Book]);
         AddRecipe(new ItemStack(Block.SnowBlock, 1), ["##", "##", '#', Item.Snowball]);
         AddRecipe(new ItemStack(Block.Clay, 1), ["##", "##", '#', Item.Clay]);

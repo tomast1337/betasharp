@@ -28,7 +28,7 @@ public class LeverRenderer : IBlockRenderer
         };
 
         // Levers use a cobblestone texture for the baseplate by default, unless overridden
-        int baseTextureId = ctx.OverrideTexture >= 0 ? ctx.OverrideTexture : Block.Cobblestone.textureId;
+        int baseTextureId = ctx.OverrideTexture >= 0 ? ctx.OverrideTexture : Block.Cobblestone.TextureId;
 
         // Create a sub-context specifically for drawing the baseplate
         var baseCtx = new BlockRenderContext(
@@ -73,7 +73,7 @@ public class LeverRenderer : IBlockRenderer
         );
 
         // Determine texture for the handle itself
-        int handleTextureId = handleCtx.OverrideTexture >= 0 ? handleCtx.OverrideTexture : block.getTexture(0);
+        int handleTextureId = handleCtx.OverrideTexture >= 0 ? handleCtx.OverrideTexture : block.GetTexture(0);
 
         int texU = (handleTextureId & 15) << 4;
         int texV = handleTextureId & 240;
@@ -136,12 +136,12 @@ public class LeverRenderer : IBlockRenderer
         }
 
         // --- 4. Draw the Handle Faces ---
-        int colorMultiplier = block.getColorMultiplier(ctx.BlockReader, pos.x, pos.y, pos.z);
+        int colorMultiplier = block.GetColorMultiplier(ctx.BlockReader, pos.x, pos.y, pos.z);
         float r = (colorMultiplier >> 16 & 255) * 0.0039215686F;
         float g = (colorMultiplier >> 8 & 255) * 0.0039215686F;
         float b = (colorMultiplier & 255) * 0.0039215686F;
 
-        float luminance = block.getLuminance(ctx.Lighting, pos.x, pos.y, pos.z);
+        float luminance = block.GetLuminance(ctx.Lighting, pos.x, pos.y, pos.z);
 
         handleCtx.Tess.setColorOpaque_F(r * luminance, g * luminance, b * luminance);
 

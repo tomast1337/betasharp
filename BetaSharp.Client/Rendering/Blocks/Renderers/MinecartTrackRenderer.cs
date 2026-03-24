@@ -12,7 +12,7 @@ public class MinecartTrackRenderer : IBlockRenderer
 
         int metadata = ctx.BlockReader.GetBlockMeta(pos.x, pos.y, pos.z);
 
-        int textureId = rail.getTexture(0, metadata);
+        int textureId = rail.GetTexture(0, metadata);
         if (ctx.OverrideTexture >= 0)
         {
             textureId = ctx.OverrideTexture;
@@ -24,7 +24,7 @@ public class MinecartTrackRenderer : IBlockRenderer
             metadata &= 7;
         }
 
-        float luminance = rail.getLuminance(ctx.Lighting, pos.x, pos.y, pos.z);
+        float luminance = rail.GetLuminance(ctx.Lighting, pos.x, pos.y, pos.z);
         ctx.Tess.setColorOpaque_F(luminance, luminance, luminance);
 
         int texU = (textureId & 15) << 4;

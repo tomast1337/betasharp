@@ -69,7 +69,7 @@ public class EntityItem : Entity
             int groundBlockId = world.Reader.GetBlockId(MathHelper.Floor(x), MathHelper.Floor(boundingBox.MinY) - 1, MathHelper.Floor(z));
             if (groundBlockId > 0)
             {
-                friction = Block.Blocks[groundBlockId].slipperiness * 0.98F;
+                friction = Block.Blocks[groundBlockId].Slipperiness * 0.98F;
             }
         }
 
@@ -133,7 +133,7 @@ public class EntityItem : Entity
             int pickedUpCount = stack.count;
             if (delayBeforeCanPickup == 0 && player.inventory.addItemStackToInventory(stack))
             {
-                if (stack.itemId == Block.Log.id)
+                if (stack.itemId == Block.Log.Id)
                 {
                     player.incrementStat(Achievements.MineWood);
                 }

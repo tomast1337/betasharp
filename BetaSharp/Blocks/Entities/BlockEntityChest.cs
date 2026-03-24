@@ -7,36 +7,30 @@ namespace BetaSharp.Blocks.Entities;
 
 internal class BlockEntityChest : BlockEntity, IInventory
 {
-    public override BlockEntityType Type => BlockEntity.Chest;
-    private ItemStack[] inventory = new ItemStack[36];
+    private ItemStack?[] _inventory = new ItemStack[36];
+    public override BlockEntityType Type => Chest;
 
-    public int size()
-    {
-        return 27;
-    }
+    public int size() => 27;
 
-    public ItemStack getStack(int stackIndex)
-    {
-        return inventory[stackIndex];
-    }
+    public ItemStack? getStack(int stackIndex) => _inventory[stackIndex];
 
     public ItemStack? removeStack(int slot, int amount)
     {
-        if (inventory[slot] != null)
+        if (_inventory[slot] != null)
         {
             ItemStack itemStack;
-            if (inventory[slot].count <= amount)
+            if (_inventory[slot].count <= amount)
             {
-                itemStack = inventory[slot];
-                inventory[slot] = null;
+                itemStack = _inventory[slot];
+                _inventory[slot] = null;
                 markDirty();
                 return itemStack;
             }
 
-            itemStack = inventory[slot].split(amount);
-            if (inventory[slot].count == 0)
+            itemStack = _inventory[slot].split(amount);
+            if (_inventory[slot].count == 0)
             {
-                inventory[slot] = null;
+                _inventory[slot] = null;
             }
 
             markDirty();
@@ -48,7 +42,7 @@ internal class BlockEntityChest : BlockEntity, IInventory
 
     public void setStack(int slot, ItemStack? stack)
     {
-        inventory[slot] = stack;
+        _inventory[slot] = stack;
         if (stack != null && stack.count > getMaxCountPerStack())
         {
             stack.count = getMaxCountPerStack();
@@ -57,34 +51,25 @@ internal class BlockEntityChest : BlockEntity, IInventory
         markDirty();
     }
 
-    public string getName()
-    {
-        return "Chest";
-    }
+    public string getName() => "Chest";
 
-    public int getMaxCountPerStack()
-    {
-        return 64;
-    }
+    public int getMaxCountPerStack() => 64;
 
-    public bool canPlayerUse(EntityPlayer player)
-    {
-        return World.Entities.GetBlockEntity<BlockEntityChest>(X, Y, Z) == this && player.getSquaredDistance(X + 0.5D, Y + 0.5D, Z + 0.5D) <= 64.0D;
-    }
+    public bool canPlayerUse(EntityPlayer player) => World.Entities.GetBlockEntity<BlockEntityChest>(X, Y, Z) == this && player.getSquaredDistance(X + 0.5D, Y + 0.5D, Z + 0.5D) <= 64.0D;
 
     public override void readNbt(NBTTagCompound nbt)
     {
         base.readNbt(nbt);
         NBTTagList itemList = nbt.GetTagList("Items");
-        inventory = new ItemStack[size()];
+        _inventory = new ItemStack[size()];
 
         for (int itemIndex = 0; itemIndex < itemList.TagCount(); ++itemIndex)
         {
             NBTTagCompound itemsTag = (NBTTagCompound)itemList.TagAt(itemIndex);
             int slot = itemsTag.GetByte("Slot") & 255;
-            if (slot >= 0 && slot < inventory.Length)
+            if (slot >= 0 && slot < _inventory.Length)
             {
-                inventory[slot] = new ItemStack(itemsTag);
+                _inventory[slot] = new ItemStack(itemsTag);
             }
         }
     }
@@ -94,13 +79,13 @@ internal class BlockEntityChest : BlockEntity, IInventory
         base.writeNbt(nbt);
         NBTTagList itemList = new();
 
-        for (int slotIndex = 0; slotIndex < inventory.Length; ++slotIndex)
+        for (int slotIndex = 0; slotIndex < _inventory.Length; ++slotIndex)
         {
-            if (inventory[slotIndex] != null)
+            if (_inventory[slotIndex] != null)
             {
                 NBTTagCompound itemsTag = new();
                 itemsTag.SetByte("Slot", (sbyte)slotIndex);
-                inventory[slotIndex].writeToNBT(itemsTag);
+                _inventory[slotIndex].writeToNBT(itemsTag);
                 itemList.SetTag(itemsTag);
             }
         }

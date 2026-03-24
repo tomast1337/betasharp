@@ -7,7 +7,7 @@ namespace BetaSharp.Blocks.Entities;
 public class BlockEntitySign : BlockEntity
 {
     private bool _editable = true;
-    public override BlockEntityType Type => BlockEntity.Sign;
+    public override BlockEntityType Type => Sign;
     public string[] Texts { get; set; } = ["", "", "", ""];
     public int CurrentRow { get; set; } = -1;
 
@@ -47,13 +47,7 @@ public class BlockEntitySign : BlockEntity
         return UpdateSignPacket.Get(X, Y, Z, lines);
     }
 
-    public bool IsEditable()
-    {
-        return _editable;
-    }
+    public bool IsEditable() => _editable;
 
-    public void SetEditable(bool editable)
-    {
-        _editable = editable;
-    }
+    public void SetEditable(bool editable) => _editable = editable;
 }

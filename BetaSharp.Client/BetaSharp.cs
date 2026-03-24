@@ -1271,19 +1271,19 @@ public partial class BetaSharp
         if (objectMouseOver.Type != HitResultType.MISS)
         {
             int blockId = world.Reader.GetBlockId(objectMouseOver.BlockX, objectMouseOver.BlockY, objectMouseOver.BlockZ);
-            if (blockId == Block.GrassBlock.id)
+            if (blockId == Block.GrassBlock.Id)
             {
-                blockId = Block.Dirt.id;
+                blockId = Block.Dirt.Id;
             }
 
-            if (blockId == Block.DoubleSlab.id)
+            if (blockId == Block.DoubleSlab.Id)
             {
-                blockId = Block.Slab.id;
+                blockId = Block.Slab.Id;
             }
 
-            if (blockId == Block.Bedrock.id)
+            if (blockId == Block.Bedrock.Id)
             {
-                blockId = Block.Stone.id;
+                blockId = Block.Stone.Id;
             }
 
             player.inventory.setCurrentItem(blockId, false);

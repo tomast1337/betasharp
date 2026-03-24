@@ -13,7 +13,7 @@ internal class InventoryCraftResult : IInventory
         return 1;
     }
 
-    public ItemStack getStack(int slotIndex)
+    public ItemStack? getStack(int slotIndex)
     {
         return stackResult[slotIndex];
     }

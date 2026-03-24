@@ -8,23 +8,17 @@ namespace BetaSharp.Blocks.Entities;
 
 public class BlockEntityDispenser : BlockEntity, IInventory
 {
-    public override BlockEntityType Type => BlockEntity.Dispenser;
-    private ItemStack?[] _itemStacks = new ItemStack[9];
     private readonly JavaRandom _random = new();
+    private ItemStack?[] _itemStacks = new ItemStack[9];
+    public override BlockEntityType Type => Dispenser;
 
-    public int size()
-    {
-        return 9;
-    }
+    public int size() => 9;
 
-    public ItemStack? getStack(int slot)
-    {
-        return _itemStacks[slot];
-    }
+    public ItemStack? getStack(int slot) => _itemStacks[slot];
 
     public ItemStack? removeStack(int slot, int amount)
     {
-        var item = _itemStacks[slot];
+        ItemStack? item = _itemStacks[slot];
         if (item != null)
         {
             ItemStack removedStack;
@@ -60,20 +54,11 @@ public class BlockEntityDispenser : BlockEntity, IInventory
         markDirty();
     }
 
-    public string getName()
-    {
-        return "Trap";
-    }
+    public string getName() => "Trap";
 
-    public int getMaxCountPerStack()
-    {
-        return 64;
-    }
+    public int getMaxCountPerStack() => 64;
 
-    public bool canPlayerUse(EntityPlayer player)
-    {
-        return World.Entities.GetBlockEntity<BlockEntityDispenser>(X, Y, Z) == this && player.getSquaredDistance(X + 0.5D, Y + 0.5D, Z + 0.5D) <= 64.0D;
-    }
+    public bool canPlayerUse(EntityPlayer player) => World.Entities.GetBlockEntity<BlockEntityDispenser>(X, Y, Z) == this && player.getSquaredDistance(X + 0.5D, Y + 0.5D, Z + 0.5D) <= 64.0D;
 
     public ItemStack? getItemToDispose()
     {
@@ -121,8 +106,11 @@ public class BlockEntityDispenser : BlockEntity, IInventory
 
         for (int slotIndex = 0; slotIndex < _itemStacks.Length; ++slotIndex)
         {
-            var itemStack = _itemStacks[slotIndex];
-            if (itemStack == null) continue;
+            ItemStack? itemStack = _itemStacks[slotIndex];
+            if (itemStack == null)
+            {
+                continue;
+            }
 
             NBTTagCompound itemTag = new();
             itemTag.SetByte("Slot", (sbyte)slotIndex);

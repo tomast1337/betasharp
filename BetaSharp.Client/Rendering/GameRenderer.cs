@@ -619,7 +619,7 @@ public class GameRenderer
                     float var21 = _random.NextFloat();
                     if (var19 > 0)
                     {
-                        if (Block.Blocks[var19].material == Material.Lava)
+                        if (Block.Blocks[var19].Material == Material.Lava)
                         {
                             _client.particleManager.addEffect(new EntitySmokeFX(var3, (double)(var16 + var20), (double)(var18 + 0.1F) - Block.Blocks[var19].BoundingBox.MinY, (double)(var17 + var21), 0.0D, 0.0D, 0.0D));
                         }

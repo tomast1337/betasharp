@@ -9,20 +9,20 @@ public class FluidsRenderer : IBlockRenderer
     public bool Draw(Block block, in BlockPos pos, ref BlockRenderContext ctx)
     {
         // Base fluid color tint (e.g., biome water color)
-        int colorMultiplier = block.getColorMultiplier(ctx.BlockReader, pos.x, pos.y, pos.z);
+        int colorMultiplier = block.GetColorMultiplier(ctx.BlockReader, pos.x, pos.y, pos.z);
         float tintR = (colorMultiplier >> 16 & 255) / 255.0F;
         float tintG = (colorMultiplier >> 8 & 255) / 255.0F;
         float tintB = (colorMultiplier & 255) / 255.0F;
 
         // Determine which faces are actually visible to the player
-        bool isTopVisible = block.isSideVisible(ctx.BlockReader, pos.x, pos.y + 1, pos.z, 1);
-        bool isBottomVisible = block.isSideVisible(ctx.BlockReader, pos.x, pos.y - 1, pos.z, 0);
+        bool isTopVisible = block.IsSideVisible(ctx.BlockReader, pos.x, pos.y + 1, pos.z, 1);
+        bool isBottomVisible = block.IsSideVisible(ctx.BlockReader, pos.x, pos.y - 1, pos.z, 0);
         bool[] sideVisible =
         [
-            block.isSideVisible(ctx.BlockReader, pos.x, pos.y, pos.z - 1, 2), // North
-            block.isSideVisible(ctx.BlockReader, pos.x, pos.y, pos.z + 1, 3), // South
-            block.isSideVisible(ctx.BlockReader, pos.x - 1, pos.y, pos.z, 4), // West
-            block.isSideVisible(ctx.BlockReader, pos.x + 1, pos.y, pos.z, 5) // East
+            block.IsSideVisible(ctx.BlockReader, pos.x, pos.y, pos.z - 1, 2), // North
+            block.IsSideVisible(ctx.BlockReader, pos.x, pos.y, pos.z + 1, 3), // South
+            block.IsSideVisible(ctx.BlockReader, pos.x - 1, pos.y, pos.z, 4), // West
+            block.IsSideVisible(ctx.BlockReader, pos.x + 1, pos.y, pos.z, 5) // East
         ];
 
         // Fast exit if completely surrounded
@@ -40,7 +40,7 @@ public class FluidsRenderer : IBlockRenderer
         float lightZ = 0.8F; // North/South
         float lightX = 0.6F; // East/West
 
-        Material material = block.material;
+        Material material = block.Material;
         int meta = ctx.BlockReader.GetBlockMeta(pos.x, pos.y, pos.z);
 
         // Calculate the height of the fluid at each of the 4 corners of this block
@@ -53,13 +53,13 @@ public class FluidsRenderer : IBlockRenderer
         if (ctx.RenderAllFaces || isTopVisible)
         {
             hasRendered = true;
-            int textureId = block.getTexture(1, meta);
+            int textureId = block.GetTexture(1, meta);
             float flowAngle = (float)BlockFluid.getFlowingAngle(ctx.BlockReader, pos.x, pos.y, pos.z, material);
 
             // If flowing, switch to the flowing texture variant
             if (flowAngle > -999.0F)
             {
-                textureId = block.getTexture(2, meta);
+                textureId = block.GetTexture(2, meta);
             }
 
             int texU = (textureId & 15) << 4;
@@ -83,7 +83,7 @@ public class FluidsRenderer : IBlockRenderer
             float sinAngle = MathHelper.Sin(flowAngle) * 8.0F / 256.0F;
             float cosAngle = MathHelper.Cos(flowAngle) * 8.0F / 256.0F;
 
-            float luminance = block.getLuminance(ctx.Lighting, pos.x, pos.y, pos.z);
+            float luminance = block.GetLuminance(ctx.Lighting, pos.x, pos.y, pos.z);
             ctx.Tess.setColorOpaque_F(lightTop * luminance * tintR, lightTop * luminance * tintG,
                 lightTop * luminance * tintB);
 
@@ -101,12 +101,12 @@ public class FluidsRenderer : IBlockRenderer
         // BOTTOM FACE
         if (ctx.RenderAllFaces || isBottomVisible)
         {
-            float luminance = block.getLuminance(ctx.Lighting, pos.x, pos.y - 1, pos.z);
+            float luminance = block.GetLuminance(ctx.Lighting, pos.x, pos.y - 1, pos.z);
             ctx.Tess.setColorOpaque_F(lightBottom * luminance, lightBottom * luminance, lightBottom * luminance);
 
             // Fluids don't use AO, so pass dummy colors
             FaceColors dummyColors = new FaceColors();
-            int tex = block.getTexture(0);
+            int tex = block.GetTexture(0);
 
             // Note: Fluids don't override bounds for the bottom face, so we just pass the default context
             ctx.DrawBottomFace(block, new Vec3D(pos.x, pos.y, pos.z), dummyColors, tex);
@@ -124,7 +124,7 @@ public class FluidsRenderer : IBlockRenderer
             if (side == 2) adjX = pos.x - 1; // West
             if (side == 3) adjX = pos.x + 1; // East
 
-            int textureId = block.getTexture(side + 2, meta);
+            int textureId = block.GetTexture(side + 2, meta);
             int texU = (textureId & 15) << 4;
             int texV = textureId & 240;
 
@@ -180,7 +180,7 @@ public class FluidsRenderer : IBlockRenderer
                 float minV2 = (texV + (1.0F - h2) * 16.0F) / 256.0F; // UV height match for corner 2
                 float maxV = (texV + 16 - 0.01f) / 256.0f;
 
-                float luminance = block.getLuminance(ctx.Lighting, adjX, pos.y, adjZ);
+                float luminance = block.GetLuminance(ctx.Lighting, adjX, pos.y, adjZ);
                 float shadow = (side < 2) ? lightZ : lightX;
                 luminance *= shadow;
 

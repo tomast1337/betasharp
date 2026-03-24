@@ -5,21 +5,17 @@ using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
 
-internal class BlockWeb : Block
+internal class BlockWeb(int id, int texturePosition) : Block(id, texturePosition, Material.Cobweb)
 {
-    public BlockWeb(int id, int texturePosition) : base(id, texturePosition, Material.Cobweb)
-    {
-    }
+    public override void OnEntityCollision(OnEntityCollisionEvent ctx) => ctx.Entity.slowed = true;
 
-    public override void onEntityCollision(OnEntityCollisionEvent ctx) => ctx.Entity.slowed = true;
+    public override bool IsOpaque() => false;
 
-    public override bool isOpaque() => false;
+    public override Box? GetCollisionShape(IBlockReader world, EntityManager entities, int x, int y, int z) => null;
 
-    public override Box? getCollisionShape(IBlockReader world, EntityManager entities, int x, int y, int z) => null;
+    public override BlockRendererType GetRenderType() => BlockRendererType.Reed;
 
-    public override BlockRendererType getRenderType() => BlockRendererType.Reed;
+    public override bool IsFullCube() => false;
 
-    public override bool isFullCube() => false;
-
-    public override int getDroppedItemId(int blockMeta) => Item.String.id;
+    public override int GetDroppedItemId(int blockMeta) => Item.String.id;
 }

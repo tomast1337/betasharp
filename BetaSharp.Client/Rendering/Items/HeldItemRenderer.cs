@@ -32,7 +32,7 @@ public class HeldItemRenderer
     public void renderItem(EntityLiving entity, ItemStack item)
     {
         GLManager.GL.PushMatrix();
-        if (item.itemId < 256 && BlockRenderer.IsSideLit(Block.Blocks[item.itemId].getRenderType()))
+        if (item.itemId < 256 && BlockRenderer.IsSideLit(Block.Blocks[item.itemId].GetRenderType()))
         {
             _game.textureManager.BindTexture(_game.textureManager.GetTextureId("/terrain.png"));
             BlockRenderer.RenderBlockOnInventory(Block.Blocks[item.itemId], item.getDamage(), entity.getBrightnessAtEyes(1.0F), Tessellator.instance);
@@ -324,7 +324,7 @@ public class HeldItemRenderer
             int var6 = _game.world.Reader.GetBlockId(var2, var3, var4);
             if (_game.world.Reader.ShouldSuffocate(var2, var3, var4))
             {
-                renderInsideOfBlock(var1, Block.Blocks[var6].getTexture(2));
+                renderInsideOfBlock(var1, Block.Blocks[var6].GetTexture(2));
             }
             else
             {
@@ -345,7 +345,7 @@ public class HeldItemRenderer
 
             if (Block.Blocks[var6] != null)
             {
-                renderInsideOfBlock(var1, Block.Blocks[var6].getTexture(2));
+                renderInsideOfBlock(var1, Block.Blocks[var6].GetTexture(2));
             }
         }
 
@@ -423,7 +423,7 @@ public class HeldItemRenderer
         for (int var4 = 0; var4 < 2; ++var4)
         {
             GLManager.GL.PushMatrix();
-            int var5 = Block.Fire.textureId + var4 * 16;
+            int var5 = Block.Fire.TextureId + var4 * 16;
             int var6 = (var5 & 15) << 4;
             int var7 = var5 & 240;
             float var8 = var6 / 256.0F;

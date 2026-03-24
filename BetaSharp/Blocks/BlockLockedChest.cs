@@ -5,18 +5,13 @@ namespace BetaSharp.Blocks;
 
 internal class BlockLockedChest : Block
 {
-    public BlockLockedChest(int id) : base(id, Material.Wood) => textureId = 26;
+    public BlockLockedChest(int id) : base(id, Material.Wood) => TextureId = 26;
 
-    public override int getTextureId(IBlockReader iBlockReader, int x, int y, int z, int side)
+    public override int GetTextureId(IBlockReader iBlockReader, int x, int y, int z, int side)
     {
-        if (side == 1)
+        if (side is 1 or 0)
         {
-            return textureId - 1;
-        }
-
-        if (side == 0)
-        {
-            return textureId - 1;
+            return TextureId - 1;
         }
 
         int var6 = iBlockReader.GetBlockId(x, y, z - 1);
@@ -44,12 +39,17 @@ internal class BlockLockedChest : Block
             var10 = 4;
         }
 
-        return side == var10 ? textureId + 1 : textureId;
+        return side == var10 ? TextureId + 1 : TextureId;
     }
 
-    public override int getTexture(int side) => side == 1 ? textureId - 1 : side == 0 ? textureId - 1 : side == 3 ? textureId + 1 : textureId;
+    public override int GetTexture(int side) => side switch
+    {
+        1 or 0 => TextureId - 1,
+        3 => TextureId + 1,
+        _ => TextureId
+    };
 
-    public override bool canPlaceAt(CanPlaceAtContext context) => true;
+    public override bool CanPlaceAt(CanPlaceAtContext context) => true;
 
-    public override void onTick(OnTickEvent @event) => @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
+    public override void OnTick(OnTickEvent @event) => @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
 }

@@ -103,7 +103,7 @@ public class GuiFlatPresets : GuiScreen
         private static int GetIconBlockIdFromValue(string value)
         {
             var info = FlatGeneratorInfo.CreateFromString(value);
-            return info.FlatLayers.Count > 0 ? info.FlatLayers[^1].FillBlock : Block.GrassBlock.id;
+            return info.FlatLayers.Count > 0 ? info.FlatLayers[^1].FillBlock : Block.GrassBlock.Id;
         }
 
         private static int GetIconBlockMetaFromValue(string value)
@@ -116,9 +116,9 @@ public class GuiFlatPresets : GuiScreen
     internal static List<PresetItem> PresetList { get; } =
     [
         new PresetItem("Classic Flat", "2;7,2x3,2;1;village"),
-        new PresetItem("Tunnelers' Dream", "2;7,230x1,5x3,2;1;biome_1,dungeon,decoration,stronghold,mineshaft", Block.Stone.id),
+        new PresetItem("Tunnelers' Dream", "2;7,230x1,5x3,2;1;biome_1,dungeon,decoration,stronghold,mineshaft", Block.Stone.Id),
         new PresetItem("Water World", "2;7,5x1,5x3,5x12,90x9;1;village,biome_1"),
-        new PresetItem("Overworld", "2;7,59x1,3x3,2;1;village,biome_1,decoration,stronghold,mineshaft,dungeon,lake,lava_lake", Block.DeadBush.id),
+        new PresetItem("Overworld", "2;7,59x1,3x3,2;1;village,biome_1,decoration,stronghold,mineshaft,dungeon,lake,lava_lake", Block.DeadBush.Id),
         new PresetItem("Snowy Kingdom", "2;7,59x1,3x3,2,78;1;village,biome_1"),
         new PresetItem("Bottomless Pit", "2;2x4,3x3,2;1;village,biome_1", Item.Feather.id),
         new PresetItem("Desert", "2;7,3x1,52x24,8x12;1;village,biome_1,decoration,stronghold,mineshaft,dungeon"),
@@ -175,7 +175,7 @@ public class GuiSlotFlatPresets : GuiSlot
                 Lighting.turnOn();
                 GLManager.GL.PopMatrix();
 
-                int textureId = block.getTexture(1);
+                int textureId = block.GetTexture(1);
                 s_itemRenderer.drawItemIntoGui(_parent.FontRenderer, _parent.Game.textureManager, preset.IconBlockId, preset.IconBlockMeta, textureId, x + 1, y + 1);
 
                 Lighting.turnOff();

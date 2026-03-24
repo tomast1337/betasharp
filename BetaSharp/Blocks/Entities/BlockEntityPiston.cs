@@ -7,14 +7,13 @@ namespace BetaSharp.Blocks.Entities;
 
 public class BlockEntityPiston : BlockEntity
 {
-    public override BlockEntityType Type => BlockEntity.Piston;
-    private int _pushedBlockId;
-    private int _pushedBlockData;
-    private int _facing;
-    private bool _extending;
     private readonly bool _source;
+    private bool _extending;
+    private int _facing;
     private float _lastProgess;
     private float _progress;
+    private int _pushedBlockData;
+    private int _pushedBlockId;
 
     public BlockEntityPiston()
     {
@@ -29,30 +28,17 @@ public class BlockEntityPiston : BlockEntity
         _source = source;
     }
 
-    public int getPushedBlockId()
-    {
-        return _pushedBlockId;
-    }
+    public override BlockEntityType Type => Piston;
 
-    public override int getPushedBlockData()
-    {
-        return _pushedBlockData;
-    }
+    public int getPushedBlockId() => _pushedBlockId;
 
-    public bool isExtending()
-    {
-        return _extending;
-    }
+    public override int getPushedBlockData() => _pushedBlockData;
 
-    public int getFacing()
-    {
-        return _facing;
-    }
+    public bool isExtending() => _extending;
 
-    public bool isSource()
-    {
-        return _source;
-    }
+    public int getFacing() => _facing;
+
+    public bool isSource() => _source;
 
     public float getProgress(float tickDelta)
     {
@@ -70,7 +56,7 @@ public class BlockEntityPiston : BlockEntity
 
     public float getRenderOffsetZ(float tickDelta) => _extending ? (getProgress(tickDelta) - 1.0F) * PistonConstants.HEAD_OFFSET_Z[_facing] : (1.0F - getProgress(tickDelta)) * PistonConstants.HEAD_OFFSET_Z[_facing];
 
-    private void pushEntities( EntityManager entities,float collisionShapeSizeMultiplier, float entityMoveMultiplier)
+    private void pushEntities(EntityManager entities, float collisionShapeSizeMultiplier, float entityMoveMultiplier)
     {
         if (!_extending)
         {
@@ -110,14 +96,14 @@ public class BlockEntityPiston : BlockEntity
             _progress = _lastProgess = 1.0F;
             World.Entities.RemoveBlockEntity(X, Y, Z);
             markRemoved();
-            if (World.Reader.GetBlockId(X, Y, Z) == Block.MovingPiston.id)
+            if (World.Reader.GetBlockId(X, Y, Z) == Block.MovingPiston.Id)
             {
                 World.Writer.SetBlock(X, Y, Z, _pushedBlockId, _pushedBlockData);
             }
         }
     }
 
-    public override void tick( EntityManager entities)
+    public override void tick(EntityManager entities)
     {
         _progress = _lastProgess;
         if (_progress >= 1.0F)
@@ -125,7 +111,7 @@ public class BlockEntityPiston : BlockEntity
             pushEntities(entities, 1.0F, 0.25F);
             World.Entities.RemoveBlockEntity(X, Y, Z);
             markRemoved();
-            if (World.Reader.GetBlockId(X, Y, Z) == Block.MovingPiston.id)
+            if (World.Reader.GetBlockId(X, Y, Z) == Block.MovingPiston.Id)
             {
                 World.Writer.SetBlock(X, Y, Z, _pushedBlockId, _pushedBlockData);
             }

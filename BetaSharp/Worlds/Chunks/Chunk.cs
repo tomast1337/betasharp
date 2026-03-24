@@ -283,7 +283,7 @@ public class Chunk
 
         if (notifyBlockPlaced && oldId != 0 && !World.IsRemote)
         {
-            Block.Blocks[oldId].onBreak(new OnBreakEvent(World, null, worldX, y, worldZ));
+            Block.Blocks[oldId].OnBreak(new OnBreakEvent(World, null, worldX, y, worldZ));
         }
 
         Meta.SetNibble(localX, y, localZ, meta);
@@ -308,7 +308,7 @@ public class Chunk
 
         if (notifyBlockPlaced && rawId != 0 && !World.IsRemote)
         {
-            Block.Blocks[rawId].onPlaced(new OnPlacedEvent(World, null, 0, 0, worldX, y, worldZ));
+            Block.Blocks[rawId].OnPlaced(new OnPlacedEvent(World, null, 0, 0, worldX, y, worldZ));
         }
 
         Dirty = true;
@@ -329,7 +329,7 @@ public class Chunk
 
         if (oldId != 0)
         {
-            Block.Blocks[oldId].onBreak(new OnBreakEvent(World, null, worldX, y, worldZ));
+            Block.Blocks[oldId].OnBreak(new OnBreakEvent(World, null, worldX, y, worldZ));
         }
 
         Meta.SetNibble(localX, y, localZ, 0);
@@ -349,7 +349,7 @@ public class Chunk
 
         if (notifyBlockPlaced && rawId != 0 && !World.IsRemote)
         {
-            Block.Blocks[rawId].onPlaced(new OnPlacedEvent(World, null, 0, 0, worldX, y, worldZ));
+            Block.Blocks[rawId].OnPlaced(new OnPlacedEvent(World, null, 0, 0, worldX, y, worldZ));
         }
 
         Dirty = true;

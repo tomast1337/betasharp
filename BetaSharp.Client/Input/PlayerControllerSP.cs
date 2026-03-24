@@ -46,7 +46,7 @@ public class PlayerControllerSP : PlayerController
 
         if (var7 && var9)
         {
-            Block.Blocks[blockId].onBreak(new OnBreakEvent(Game.world, Game.player, x, y, z));
+            Block.Blocks[blockId].OnBreak(new OnBreakEvent(Game.world, Game.player, x, y, z));
         }
 
         return var7;
@@ -58,10 +58,10 @@ public class PlayerControllerSP : PlayerController
         int var5 = Game.world.Reader.GetBlockId(var1, var2, var3);
         if (var5 > 0 && curBlockDamage == 0.0F)
         {
-            Block.Blocks[var5].onBlockBreakStart(new OnBlockBreakStartEvent(Game.world, Game.player, var1, var2, var3));
+            Block.Blocks[var5].OnBlockBreakStart(new OnBlockBreakStartEvent(Game.world, Game.player, var1, var2, var3));
         }
 
-        if (var5 > 0 && Block.Blocks[var5].getHardness(Game.player) >= 1.0F)
+        if (var5 > 0 && Block.Blocks[var5].GetHardness(Game.player) >= 1.0F)
         {
             sendBlockRemoved(var1, var2, var3, var4);
         }
@@ -91,10 +91,10 @@ public class PlayerControllerSP : PlayerController
                 }
 
                 Block var6 = Block.Blocks[var5];
-                curBlockDamage += var6.getHardness(Game.player);
+                curBlockDamage += var6.GetHardness(Game.player);
                 if (field_1069_h % 4.0F == 0.0F && var6 != null)
                 {
-                    Game.sndManager.PlaySound(var6.soundGroup.StepSound, (float)var1 + 0.5F, (float)var2 + 0.5F, (float)var3 + 0.5F, (var6.soundGroup.Volume + 1.0F) / 8.0F, var6.soundGroup.Pitch * 0.5F);
+                    Game.sndManager.PlaySound(var6.SoundGroup.StepSound, (float)var1 + 0.5F, (float)var2 + 0.5F, (float)var3 + 0.5F, (var6.SoundGroup.Volume + 1.0F) / 8.0F, var6.SoundGroup.Pitch * 0.5F);
                 }
 
                 ++field_1069_h;

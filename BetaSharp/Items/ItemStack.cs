@@ -23,11 +23,11 @@ public class ItemStack
         this.count = count;
     }
 
-    public ItemStack(Block block, int count) : this(block.id, count, 0)
+    public ItemStack(Block block, int count) : this(block.Id, count, 0)
     {
     }
 
-    public ItemStack(Block block, int count, int damage) : this(block.id, count, damage)
+    public ItemStack(Block block, int count, int damage) : this(block.Id, count, damage)
     {
     }
 

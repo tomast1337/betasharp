@@ -27,7 +27,7 @@ internal class InventoryLargeChest : IInventory
         return name;
     }
 
-    public ItemStack getStack(int slotIndex)
+    public ItemStack? getStack(int slotIndex)
     {
         return slotIndex >= upperChest.size() ? lowerChest.getStack(slotIndex - upperChest.size()) : upperChest.getStack(slotIndex);
     }

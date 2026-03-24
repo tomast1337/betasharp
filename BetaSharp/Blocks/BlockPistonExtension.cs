@@ -6,141 +6,148 @@ namespace BetaSharp.Blocks;
 
 public class BlockPistonExtension : Block
 {
-    private int pistonHeadSprite = -1;
+    private readonly int _pistonHeadSprite = -1;
 
     public BlockPistonExtension(int id, int textureId) : base(id, textureId, Material.Piston)
     {
         setSoundGroup(SoundStoneFootstep);
-        setHardness(0.5F);
+        SetHardness(0.5F);
     }
 
-    public void setSprite(int sprite) => pistonHeadSprite = sprite;
-
-    public void clearSprite() => pistonHeadSprite = -1;
-
-    public override void onBreak(OnBreakEvent @event)
+    public override void OnBreak(OnBreakEvent @event)
     {
-        base.onBreak(@event);
+        base.OnBreak(@event);
         int x = @event.X;
         int y = @event.Y;
         int z = @event.Z;
-        int var5 = @event.World.Reader.GetBlockMeta(x, y, z);
-        int var6 = PistonConstants.field_31057_a[getFacing(var5)];
+        int blockMeta = @event.World.Reader.GetBlockMeta(x, y, z);
+        int var6 = PistonConstants.field_31057_a[getFacing(blockMeta)];
         x += PistonConstants.HEAD_OFFSET_X[var6];
         y += PistonConstants.HEAD_OFFSET_Y[var6];
         z += PistonConstants.HEAD_OFFSET_Z[var6];
-        int var7 = @event.World.Reader.GetBlockId(x, y, z);
-        if (var7 == Piston.id || var7 == StickyPiston.id)
+        int blockId = @event.World.Reader.GetBlockId(x, y, z);
+        if (blockId != Piston.Id && blockId != StickyPiston.Id)
         {
-            var5 = @event.World.Reader.GetBlockMeta(x, y, z);
-            if (BlockPistonBase.isExtended(var5))
-            {
-                Blocks[var7].dropStacks(new OnDropEvent(@event.World, x, y, z, var5));
-                @event.World.Writer.SetBlock(x, y, z, 0);
-            }
+            return;
         }
+
+        blockMeta = @event.World.Reader.GetBlockMeta(x, y, z);
+        if (!BlockPistonBase.isExtended(blockMeta))
+        {
+            return;
+        }
+
+        Blocks[blockId]?.DropStacks(new OnDropEvent(@event.World, x, y, z, blockMeta));
+        @event.World.Writer.SetBlock(x, y, z, 0);
     }
 
-    public override int getTexture(int side, int meta)
+    public override int GetTexture(int side, int meta)
     {
         int var3 = getFacing(meta);
-        return side == var3 ? pistonHeadSprite >= 0 ? pistonHeadSprite : (meta & 8) != 0 ? textureId - 1 : textureId : side == PistonConstants.field_31057_a[var3] ? 107 : 108;
+        return side == var3 ? _pistonHeadSprite >= 0 ? _pistonHeadSprite : (meta & 8) != 0 ? TextureId - 1 : TextureId : side == PistonConstants.field_31057_a[var3] ? 107 : 108;
     }
 
-    public override BlockRendererType getRenderType() => BlockRendererType.PistonExtension;
+    public override BlockRendererType GetRenderType() => BlockRendererType.PistonExtension;
 
-    public override bool isOpaque() => false;
+    public override bool IsOpaque() => false;
 
-    public override bool isFullCube() => false;
+    public override bool IsFullCube() => false;
 
-    public override bool canPlaceAt(CanPlaceAtContext context) => false;
+    public override bool CanPlaceAt(CanPlaceAtContext context) => false;
 
-    public override int getDroppedItemCount() => 0;
+    public override int GetDroppedItemCount() => 0;
 
-    public override void addIntersectingBoundingBox(IBlockReader reader, EntityManager entities, int x, int y, int z, Box box, List<Box> boxes)
+    public override void AddIntersectingBoundingBox(IBlockReader reader, EntityManager entities, int x, int y, int z, Box box, List<Box> boxes)
     {
         int var7 = reader.GetBlockMeta(x, y, z);
         switch (getFacing(var7))
         {
             case 0:
-                setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 0.25F, 1.0F);
-                base.addIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
-                setBoundingBox(6.0F / 16.0F, 0.25F, 6.0F / 16.0F, 10.0F / 16.0F, 1.0F, 10.0F / 16.0F);
-                base.addIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
+                SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 0.25F, 1.0F);
+                base.AddIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
+                SetBoundingBox(6.0F / 16.0F, 0.25F, 6.0F / 16.0F, 10.0F / 16.0F, 1.0F, 10.0F / 16.0F);
+                base.AddIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
                 break;
             case 1:
-                setBoundingBox(0.0F, 12.0F / 16.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-                base.addIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
-                setBoundingBox(6.0F / 16.0F, 0.0F, 6.0F / 16.0F, 10.0F / 16.0F, 12.0F / 16.0F, 10.0F / 16.0F);
-                base.addIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
+                SetBoundingBox(0.0F, 12.0F / 16.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                base.AddIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
+                SetBoundingBox(6.0F / 16.0F, 0.0F, 6.0F / 16.0F, 10.0F / 16.0F, 12.0F / 16.0F, 10.0F / 16.0F);
+                base.AddIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
                 break;
             case 2:
-                setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.25F);
-                base.addIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
-                setBoundingBox(0.25F, 6.0F / 16.0F, 0.25F, 12.0F / 16.0F, 10.0F / 16.0F, 1.0F);
-                base.addIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
+                SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.25F);
+                base.AddIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
+                SetBoundingBox(0.25F, 6.0F / 16.0F, 0.25F, 12.0F / 16.0F, 10.0F / 16.0F, 1.0F);
+                base.AddIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
                 break;
             case 3:
-                setBoundingBox(0.0F, 0.0F, 12.0F / 16.0F, 1.0F, 1.0F, 1.0F);
-                base.addIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
-                setBoundingBox(0.25F, 6.0F / 16.0F, 0.0F, 12.0F / 16.0F, 10.0F / 16.0F, 12.0F / 16.0F);
-                base.addIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
+                SetBoundingBox(0.0F, 0.0F, 12.0F / 16.0F, 1.0F, 1.0F, 1.0F);
+                base.AddIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
+                SetBoundingBox(0.25F, 6.0F / 16.0F, 0.0F, 12.0F / 16.0F, 10.0F / 16.0F, 12.0F / 16.0F);
+                base.AddIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
                 break;
             case 4:
-                setBoundingBox(0.0F, 0.0F, 0.0F, 0.25F, 1.0F, 1.0F);
-                base.addIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
-                setBoundingBox(6.0F / 16.0F, 0.25F, 0.25F, 10.0F / 16.0F, 12.0F / 16.0F, 1.0F);
-                base.addIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
+                SetBoundingBox(0.0F, 0.0F, 0.0F, 0.25F, 1.0F, 1.0F);
+                base.AddIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
+                SetBoundingBox(6.0F / 16.0F, 0.25F, 0.25F, 10.0F / 16.0F, 12.0F / 16.0F, 1.0F);
+                base.AddIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
                 break;
             case 5:
-                setBoundingBox(12.0F / 16.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-                base.addIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
-                setBoundingBox(0.0F, 6.0F / 16.0F, 0.25F, 12.0F / 16.0F, 10.0F / 16.0F, 12.0F / 16.0F);
-                base.addIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
+                SetBoundingBox(12.0F / 16.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                base.AddIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
+                SetBoundingBox(0.0F, 6.0F / 16.0F, 0.25F, 12.0F / 16.0F, 10.0F / 16.0F, 12.0F / 16.0F);
+                base.AddIntersectingBoundingBox(reader, entities, x, y, z, box, boxes);
                 break;
         }
 
-        setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+        SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
     }
 
-    public override void updateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z)
+    public override void UpdateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z)
     {
         int var5 = blockReader.GetBlockMeta(x, y, z);
         switch (getFacing(var5))
         {
             case 0:
-                setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 0.25F, 1.0F);
+                SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 0.25F, 1.0F);
                 break;
             case 1:
-                setBoundingBox(0.0F, 12.0F / 16.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                SetBoundingBox(0.0F, 12.0F / 16.0F, 0.0F, 1.0F, 1.0F, 1.0F);
                 break;
             case 2:
-                setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.25F);
+                SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.25F);
                 break;
             case 3:
-                setBoundingBox(0.0F, 0.0F, 12.0F / 16.0F, 1.0F, 1.0F, 1.0F);
+                SetBoundingBox(0.0F, 0.0F, 12.0F / 16.0F, 1.0F, 1.0F, 1.0F);
                 break;
             case 4:
-                setBoundingBox(0.0F, 0.0F, 0.0F, 0.25F, 1.0F, 1.0F);
+                SetBoundingBox(0.0F, 0.0F, 0.0F, 0.25F, 1.0F, 1.0F);
                 break;
             case 5:
-                setBoundingBox(12.0F / 16.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                SetBoundingBox(12.0F / 16.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
                 break;
         }
     }
 
-    public override void neighborUpdate(OnTickEvent @event)
+    public override void NeighborUpdate(OnTickEvent @event)
     {
         int facing = getFacing(@event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z));
         int var7 = @event.World.Reader.GetBlockId(@event.X - PistonConstants.HEAD_OFFSET_X[facing], @event.Y - PistonConstants.HEAD_OFFSET_Y[facing], @event.Z - PistonConstants.HEAD_OFFSET_Z[facing]);
-        if (var7 != Piston.id && var7 != StickyPiston.id)
+        if (var7 != Piston.Id && var7 != StickyPiston.Id)
         {
             @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
         }
         else
         {
-            Blocks[var7].neighborUpdate(new OnTickEvent(@event.World, @event.X - PistonConstants.HEAD_OFFSET_X[facing], @event.Y - PistonConstants.HEAD_OFFSET_Y[facing], @event.Z - PistonConstants.HEAD_OFFSET_Z[facing],
-                @event.World.Reader.GetBlockMeta(@event.X - PistonConstants.HEAD_OFFSET_X[facing], @event.Y - PistonConstants.HEAD_OFFSET_Y[facing], @event.Z - PistonConstants.HEAD_OFFSET_Z[facing]), id));
+            Blocks[var7]!.NeighborUpdate(new OnTickEvent(@event.World,
+                @event.X - PistonConstants.HEAD_OFFSET_X[facing],
+                @event.Y - PistonConstants.HEAD_OFFSET_Y[facing],
+                @event.Z - PistonConstants.HEAD_OFFSET_Z[facing],
+                @event.World.Reader.GetBlockMeta(@event.X - PistonConstants.HEAD_OFFSET_X[facing],
+                    @event.Y - PistonConstants.HEAD_OFFSET_Y[facing],
+                    @event.Z - PistonConstants.HEAD_OFFSET_Z[facing]),
+                Id
+            ));
         }
     }
 

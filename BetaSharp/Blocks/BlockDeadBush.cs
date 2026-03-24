@@ -2,24 +2,13 @@ namespace BetaSharp.Blocks;
 
 public class BlockDeadBush : BlockPlant
 {
-    public BlockDeadBush(int i, int j) : base(i, j)
-    {
-        float halfSize = 0.4F;
-        setBoundingBox(0.5F - halfSize, 0.0F, 0.5F - halfSize, 0.5F + halfSize, 0.8F, 0.5F + halfSize);
-    }
+    public static readonly float HalfSize = 0.4F;
 
-    protected override bool canPlantOnTop(int id)
-    {
-        return id == Sand.id;
-    }
+    public BlockDeadBush(int i, int j) : base(i, j) => SetBoundingBox(0.5F - HalfSize, 0.0F, 0.5F - HalfSize, 0.5F + HalfSize, 0.8F, 0.5F + HalfSize);
 
-    public override int getTexture(int side, int meta)
-    {
-        return textureId;
-    }
+    protected override bool canPlantOnTop(int id) => id == Sand.Id;
 
-    public override int getDroppedItemId(int blockMeta)
-    {
-        return -1;
-    }
+    public override int GetTexture(int side, int meta) => TextureId;
+
+    public override int GetDroppedItemId(int blockMeta) => -1;
 }

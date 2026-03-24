@@ -33,14 +33,14 @@ public class DebugTargetedBlock : DebugComponent
         else if (blockId > 0 && blockId < Block.Blocks.Length && Block.Blocks[blockId] != null)
         {
             Block block = Block.Blocks[blockId];
-            string translatedName = block.translateBlockName();
+            string translatedName = block.TranslateBlockName();
             if (!string.IsNullOrWhiteSpace(translatedName))
             {
                 blockName = translatedName;
             }
-            else if (!string.IsNullOrWhiteSpace(block.getBlockName()))
+            else if (!string.IsNullOrWhiteSpace(block.GetBlockName()))
             {
-                blockName = block.getBlockName();
+                blockName = block.GetBlockName();
             }
         }
 

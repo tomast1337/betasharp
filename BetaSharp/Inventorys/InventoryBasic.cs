@@ -17,7 +17,7 @@ public class InventoryBasic : IInventory
         inventoryContents = new ItemStack[slotsCount];
     }
 
-    public ItemStack getStack(int slotIndex)
+    public ItemStack? getStack(int slotIndex)
     {
         return inventoryContents[slotIndex];
     }

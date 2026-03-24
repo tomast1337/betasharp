@@ -11,7 +11,7 @@ public class RedstoneEngine
     public bool IsStrongPoweringSide(int x, int y, int z, int side)
     {
         int blockId = _world.GetBlockId(x, y, z);
-        return blockId != 0 && Block.Blocks[blockId].isStrongPoweringSide(_world, x, y, z, side);
+        return blockId != 0 && Block.Blocks[blockId].IsStrongPoweringSide(_world, x, y, z, side);
     }
 
     public bool IsStrongPowered(int x, int y, int z)
@@ -52,7 +52,7 @@ public class RedstoneEngine
         }
 
         int blockId = _world.GetBlockId(x, y, z);
-        return blockId != 0 && Block.Blocks[blockId].isPoweringSide(_world, x, y, z, side);
+        return blockId != 0 && Block.Blocks[blockId].IsPoweringSide(_world, x, y, z, side);
     }
 
     public bool IsPowered(int x, int y, int z)

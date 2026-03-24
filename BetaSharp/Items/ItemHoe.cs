@@ -18,21 +18,21 @@ internal class ItemHoe : Item
     {
         int targetBlockId = world.Reader.GetBlockId(x, y, z);
         int blockAbove = world.Reader.GetBlockId(x, y + 1, z);
-        if ((meta == 0 || blockAbove != 0 || targetBlockId != Block.GrassBlock.id) && targetBlockId != Block.Dirt.id)
+        if ((meta == 0 || blockAbove != 0 || targetBlockId != Block.GrassBlock.Id) && targetBlockId != Block.Dirt.Id)
         {
             return false;
         }
         else
         {
             Block block = Block.Farmland;
-            world.Broadcaster.PlaySoundAtPos(x + 0.5F, y + 0.5F, z + 0.5F, block.soundGroup.StepSound, (block.soundGroup.Volume + 1.0F) / 2.0F, block.soundGroup.Pitch * 0.8F);
+            world.Broadcaster.PlaySoundAtPos(x + 0.5F, y + 0.5F, z + 0.5F, block.SoundGroup.StepSound, (block.SoundGroup.Volume + 1.0F) / 2.0F, block.SoundGroup.Pitch * 0.8F);
             if (world.IsRemote)
             {
                 return true;
             }
             else
             {
-                world.Writer.SetBlock(x, y, z, block.id);
+                world.Writer.SetBlock(x, y, z, block.Id);
                 itemStack.damageItem(1, entityPlayer);
                 return true;
             }

@@ -325,7 +325,7 @@ public class InventoryPlayer : IInventory
         return main.Length + 4;
     }
 
-    public ItemStack getStack(int slotIndex)
+    public ItemStack? getStack(int slotIndex)
     {
         ItemStack[] targetArray = main;
         if (slotIndex >= targetArray.Length)
@@ -355,7 +355,7 @@ public class InventoryPlayer : IInventory
 
     public bool canHarvestBlock(Block block)
     {
-        if (block.material.IsHandHarvestable)
+        if (block.Material.IsHandHarvestable)
         {
             return true;
         }

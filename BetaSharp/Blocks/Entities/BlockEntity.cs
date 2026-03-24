@@ -1,7 +1,7 @@
 using BetaSharp.NBT;
 using BetaSharp.Network.Packets;
-using BetaSharp.Worlds.Core.Systems;
 using BetaSharp.Registries;
+using BetaSharp.Worlds.Core.Systems;
 using Microsoft.Extensions.Logging;
 
 namespace BetaSharp.Blocks.Entities;
@@ -10,13 +10,6 @@ public abstract class BlockEntity
 {
     private static readonly IRegistry<BlockEntityType> s_registry = DefaultRegistries.BlockEntityTypes;
     private static readonly ILogger<BlockEntity> s_logger = Log.Instance.For<BlockEntity>();
-    public IWorldContext World;
-    protected bool Removed;
-    public abstract BlockEntityType Type { get; }
-
-    public int X;
-    public int Y;
-    public int Z;
 
     public static readonly BlockEntityType Furnace = Register(() => new BlockEntityFurnace(), "Furnace");
     public static readonly BlockEntityType Chest = Register(() => new BlockEntityChest(), "Chest");
@@ -26,10 +19,22 @@ public abstract class BlockEntity
     public static readonly BlockEntityType MobSpawner = Register(() => new BlockEntityMobSpawner(), "MobSpawner");
     public static readonly BlockEntityType Note = Register(() => new BlockEntityNote(), "Music");
     public static readonly BlockEntityType Piston = Register(() => new BlockEntityPiston(), "Piston");
+    protected bool Removed;
+    public IWorldContext World;
+
+    public int X;
+    public int Y;
+    public int Z;
+
+    static BlockEntity()
+    {
+    }
+
+    public abstract BlockEntityType Type { get; }
 
     private static BlockEntityType Register<T>(Func<T> factory, string id) where T : BlockEntity
     {
-        var type = new BlockEntityType(() => factory());
+        BlockEntityType type = new(() => factory());
         s_registry.Register(ResourceLocation.Parse(id.ToLower()), type);
         return type;
     }
@@ -57,7 +62,10 @@ public abstract class BlockEntity
     public static BlockEntity? CreateFromNbt(NBTTagCompound nbt)
     {
         string id = nbt.GetString("id");
-        if (string.IsNullOrEmpty(id)) return null;
+        if (string.IsNullOrEmpty(id))
+        {
+            return null;
+        }
 
         BlockEntityType? type = s_registry.Get(ResourceLocation.Parse(id.ToLower()));
         if (type == null)
@@ -125,8 +133,4 @@ public abstract class BlockEntity
     public void markRemoved() => Removed = true;
 
     public void cancelRemoval() => Removed = false;
-
-    static BlockEntity()
-    {
-    }
 }

@@ -23,7 +23,7 @@ public class InventoryCrafting : IInventory
         return stackList.Length;
     }
 
-    public ItemStack getStack(int slotIndex)
+    public ItemStack? getStack(int slotIndex)
     {
         return slotIndex >= size() ? null : stackList[slotIndex];
     }

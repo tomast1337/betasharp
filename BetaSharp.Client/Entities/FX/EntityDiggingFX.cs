@@ -14,8 +14,8 @@ public class EntityDiggingFX : EntityFX
     public EntityDiggingFX(IWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Block targetedBlock, int hitFace, int meta) : base(world, x, y, z, velocityX, velocityY, velocityZ)
     {
         this.targetedBlock = targetedBlock;
-        particleTextureIndex = targetedBlock.getTexture(hitFace, meta);
-        particleGravity = targetedBlock.particleFallSpeedModifier;
+        particleTextureIndex = targetedBlock.GetTexture(hitFace, meta);
+        particleGravity = targetedBlock.ParticleFallSpeedModifier;
         particleRed = particleGreen = particleBlue = 0.6F;
         particleScale /= 2.0F;
         blockMeta = meta;
@@ -29,7 +29,7 @@ public class EntityDiggingFX : EntityFX
             return this;
         }
 
-        int color = targetedBlock.getColorMultiplier(world.Reader, x, y, z, blockMeta);
+        int color = targetedBlock.GetColorMultiplier(world.Reader, x, y, z, blockMeta);
         
         particleRed *= (color >> 16 & 255) / 255.0F;
         particleGreen *= (color >> 8 & 255) / 255.0F;

@@ -9,17 +9,17 @@ public abstract class BlockWithEntity : Block
 
     protected BlockWithEntity(int id, int textureId, Material material) : base(id, textureId, material) => BlocksWithEntity[id] = true;
 
-    public override void onPlaced(OnPlacedEvent ctx)
+    public override void OnPlaced(OnPlacedEvent ctx)
     {
-        base.onPlaced(ctx);
+        base.OnPlaced(ctx);
         ctx.World.Entities.SetBlockEntity(ctx.X, ctx.Y, ctx.Z, getBlockEntity());
     }
 
-    public override void onBreak(OnBreakEvent ctx)
+    public override void OnBreak(OnBreakEvent ctx)
     {
-        base.onBreak(ctx);
+        base.OnBreak(ctx);
         ctx.World.Entities.RemoveBlockEntity(ctx.X, ctx.Y, ctx.Z);
     }
 
-    public abstract BlockEntity getBlockEntity();
+    public abstract BlockEntity? getBlockEntity();
 }

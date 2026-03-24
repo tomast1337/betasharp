@@ -105,7 +105,7 @@ public class GuiSlotFlatLayers(GuiCreateFlatWorld parent) : GuiSlot(parent.Game,
         FlatLayerInfo layer = parent.GeneratorInfo.FlatLayers[count - index - 1];
 
         Block block = Block.Blocks[layer.FillBlock];
-        string blockName = block?.translateBlockName() ?? "Unknown";
+        string blockName = block?.TranslateBlockName() ?? "Unknown";
 
         GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 1.0F);
         parent.Game.textureManager.GetTextureId("/gui/slot.png").Bind();
@@ -118,7 +118,7 @@ public class GuiSlotFlatLayers(GuiCreateFlatWorld parent) : GuiSlot(parent.Game,
             Lighting.turnOn();
             GLManager.GL.PopMatrix();
 
-            int textureId = block.getTexture(1);
+            int textureId = block.GetTexture(1);
             s_itemRenderer.drawItemIntoGui(parent.FontRenderer, parent.Game.textureManager, layer.FillBlock, layer.FillBlockMeta, textureId, x + 1, y + 1);
 
             Lighting.turnOff();

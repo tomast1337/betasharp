@@ -10,10 +10,10 @@ internal class BlockRedstoneTorch : BlockTorch
     public BlockRedstoneTorch(int id, int textureId, bool lit) : base(id, textureId)
     {
         _lit = lit;
-        setTickRandomly(true);
+        SetTickRandomly(true);
     }
 
-    public override int getTexture(int side, int meta) => side == 1 ? RedstoneWire.getTexture(side, meta) : base.getTexture(side, meta);
+    public override int GetTexture(int side, int meta) => side == 1 ? RedstoneWire.GetTexture(side, meta) : base.GetTexture(side, meta);
 
     private bool isBurnedOut(OnTickEvent ctx, bool recordUpdate)
     {
@@ -25,63 +25,63 @@ internal class BlockRedstoneTorch : BlockTorch
 
         int updateCount = 0;
 
-        for (int i = 0; i < updates.Count; ++i)
+        foreach (RedstoneUpdateInfo _ in updates.Where(updateInfo => updateInfo.x == ctx.X && updateInfo.y == ctx.Y && updateInfo.z == ctx.Z))
         {
-            RedstoneUpdateInfo updateInfo = updates[i];
-            if (updateInfo.x == ctx.X && updateInfo.y == ctx.Y && updateInfo.z == ctx.Z)
+            ++updateCount;
+            if (updateCount >= 8)
             {
-                ++updateCount;
-                if (updateCount >= 8)
-                {
-                    return true;
-                }
+                return true;
             }
         }
 
         return false;
     }
 
-    public override int getTickRate() => 2;
+    public override int GetTickRate() => 2;
 
-    public override void onPlaced(OnPlacedEvent @event)
+    public override void OnPlaced(OnPlacedEvent @event)
     {
         if (@event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z) == 0)
         {
-            base.onPlaced(@event);
+            base.OnPlaced(@event);
         }
 
-        if (_lit)
+        if (!_lit)
         {
-            @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y - 1, @event.Z, id);
-            @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y + 1, @event.Z, id);
-            @event.World.Broadcaster.NotifyNeighbors(@event.X - 1, @event.Y, @event.Z, id);
-            @event.World.Broadcaster.NotifyNeighbors(@event.X + 1, @event.Y, @event.Z, id);
-            @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y, @event.Z - 1, id);
-            @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y, @event.Z + 1, id);
+            return;
         }
+
+        @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y - 1, @event.Z, Id);
+        @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y + 1, @event.Z, Id);
+        @event.World.Broadcaster.NotifyNeighbors(@event.X - 1, @event.Y, @event.Z, Id);
+        @event.World.Broadcaster.NotifyNeighbors(@event.X + 1, @event.Y, @event.Z, Id);
+        @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y, @event.Z - 1, Id);
+        @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y, @event.Z + 1, Id);
     }
 
-    public override void onBreak(OnBreakEvent @event)
+    public override void OnBreak(OnBreakEvent @event)
     {
-        if (_lit)
+        if (!_lit)
         {
-            @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y - 1, @event.Z, id);
-            @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y + 1, @event.Z, id);
-            @event.World.Broadcaster.NotifyNeighbors(@event.X - 1, @event.Y, @event.Z, id);
-            @event.World.Broadcaster.NotifyNeighbors(@event.X + 1, @event.Y, @event.Z, id);
-            @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y, @event.Z - 1, id);
-            @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y, @event.Z + 1, id);
+            return;
         }
+
+        @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y - 1, @event.Z, Id);
+        @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y + 1, @event.Z, Id);
+        @event.World.Broadcaster.NotifyNeighbors(@event.X - 1, @event.Y, @event.Z, Id);
+        @event.World.Broadcaster.NotifyNeighbors(@event.X + 1, @event.Y, @event.Z, Id);
+        @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y, @event.Z - 1, Id);
+        @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y, @event.Z + 1, Id);
     }
 
-    public override bool isPoweringSide(IBlockReader world, int x, int y, int z, int side)
+    public override bool IsPoweringSide(IBlockReader reader, int x, int y, int z, int side)
     {
         if (!_lit)
         {
             return false;
         }
 
-        int meta = world.GetBlockMeta(x, y, z);
+        int meta = reader.GetBlockMeta(x, y, z);
         return (meta != 5 || side != 1) && (meta != 3 || side != 3) && (meta != 4 || side != 2) && (meta != 1 || side != 5) && (meta != 2 || side != 4);
     }
 
@@ -96,7 +96,7 @@ internal class BlockRedstoneTorch : BlockTorch
                (meta == 4 && redstoneEngine.IsPoweringSide(x, y, z + 1, 3)) || (meta == 1 && redstoneEngine.IsPoweringSide(x - 1, y, z, 4)) || (meta == 2 && redstoneEngine.IsPoweringSide(x + 1, y, z, 5));
     }
 
-    public override void onTick(OnTickEvent @event)
+    public override void OnTick(OnTickEvent @event)
     {
         int x = @event.X;
         int y = @event.Y;
@@ -113,7 +113,7 @@ internal class BlockRedstoneTorch : BlockTorch
         {
             if (shouldTurnOff)
             {
-                @event.World.Writer.SetBlock(x, y, z, RedstoneTorch.id, @event.World.Reader.GetBlockMeta(x, y, z));
+                @event.World.Writer.SetBlock(x, y, z, RedstoneTorch.Id, @event.World.Reader.GetBlockMeta(x, y, z));
                 if (isBurnedOut(@event, true))
                 {
                     @event.World.Broadcaster.PlaySoundAtPos(x + 0.5F, y + 0.5F, z + 0.5F, "random.fizz", 0.5F, 2.6F + (Random.Shared.NextSingle() - Random.Shared.NextSingle()) * 0.8F);
@@ -130,54 +130,52 @@ internal class BlockRedstoneTorch : BlockTorch
         }
         else if (!shouldTurnOff && !isBurnedOut(@event, false))
         {
-            @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, LitRedstoneTorch.id, @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z));
+            @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, LitRedstoneTorch.Id, @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z));
         }
     }
 
-    public override void neighborUpdate(OnTickEvent @event)
+    public override void NeighborUpdate(OnTickEvent @event)
     {
-        base.neighborUpdate(@event);
-        @event.World.TickScheduler.ScheduleBlockUpdate(@event.X, @event.Y, @event.Z, id, getTickRate());
+        base.NeighborUpdate(@event);
+        @event.World.TickScheduler.ScheduleBlockUpdate(@event.X, @event.Y, @event.Z, Id, GetTickRate());
     }
 
-    public override bool isStrongPoweringSide(IBlockReader world, int x, int y, int z, int side) => side == 0 && isPoweringSide(world, x, y, z, side);
+    public override bool IsStrongPoweringSide(IBlockReader reader, int x, int y, int z, int side) => side == 0 && IsPoweringSide(reader, x, y, z, side);
 
-    public override int getDroppedItemId(int blockMeta) => LitRedstoneTorch.id;
+    public override int GetDroppedItemId(int blockMeta) => LitRedstoneTorch.Id;
 
-    public override bool canEmitRedstonePower() => true;
+    public override bool CanEmitRedstonePower() => true;
 
-    public override void randomDisplayTick(OnTickEvent @event)
+    public override void RandomDisplayTick(OnTickEvent @event)
     {
         if (!_lit)
         {
             return;
         }
 
+        const double verticalOffset = 0.22F;
+        const double horizontalOffset = 0.27F;
         int meta = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
         double particleX = @event.X + 0.5F + (Random.Shared.NextSingle() - 0.5F) * 0.2D;
         double particleY = @event.Y + 0.7F + (Random.Shared.NextSingle() - 0.5F) * 0.2D;
         double particleZ = @event.Z + 0.5F + (Random.Shared.NextSingle() - 0.5F) * 0.2D;
-        double verticalOffset = 0.22F;
-        double horizontalOffset = 0.27F;
-        if (meta == 1)
+        switch (meta)
         {
-            @event.World.Broadcaster.AddParticle("reddust", particleX - horizontalOffset, particleY + verticalOffset, particleZ, 0.0D, 0.0D, 0.0D);
-        }
-        else if (meta == 2)
-        {
-            @event.World.Broadcaster.AddParticle("reddust", particleX + horizontalOffset, particleY + verticalOffset, particleZ, 0.0D, 0.0D, 0.0D);
-        }
-        else if (meta == 3)
-        {
-            @event.World.Broadcaster.AddParticle("reddust", particleX, particleY + verticalOffset, particleZ - horizontalOffset, 0.0D, 0.0D, 0.0D);
-        }
-        else if (meta == 4)
-        {
-            @event.World.Broadcaster.AddParticle("reddust", particleX, particleY + verticalOffset, particleZ + horizontalOffset, 0.0D, 0.0D, 0.0D);
-        }
-        else
-        {
-            @event.World.Broadcaster.AddParticle("reddust", particleX, particleY, particleZ, 0.0D, 0.0D, 0.0D);
+            case 1:
+                @event.World.Broadcaster.AddParticle("reddust", particleX - horizontalOffset, particleY + verticalOffset, particleZ, 0.0D, 0.0D, 0.0D);
+                break;
+            case 2:
+                @event.World.Broadcaster.AddParticle("reddust", particleX + horizontalOffset, particleY + verticalOffset, particleZ, 0.0D, 0.0D, 0.0D);
+                break;
+            case 3:
+                @event.World.Broadcaster.AddParticle("reddust", particleX, particleY + verticalOffset, particleZ - horizontalOffset, 0.0D, 0.0D, 0.0D);
+                break;
+            case 4:
+                @event.World.Broadcaster.AddParticle("reddust", particleX, particleY + verticalOffset, particleZ + horizontalOffset, 0.0D, 0.0D, 0.0D);
+                break;
+            default:
+                @event.World.Broadcaster.AddParticle("reddust", particleX, particleY, particleZ, 0.0D, 0.0D, 0.0D);
+                break;
         }
     }
 }

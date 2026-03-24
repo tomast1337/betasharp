@@ -2,14 +2,12 @@ using BetaSharp.Blocks.Materials;
 
 namespace BetaSharp.Blocks;
 
-internal class BlockSandStone : Block
+internal class BlockSandStone(int id) : Block(id, 192, Material.Stone)
 {
-    public BlockSandStone(int id) : base(id, 192, Material.Stone)
+    public override int GetTexture(int side) => side switch
     {
-    }
-
-    public override int getTexture(int side)
-    {
-        return side == 1 ? textureId - 16 : (side == 0 ? textureId + 16 : textureId);
-    }
+        1 => TextureId - 16,
+        0 => TextureId + 16,
+        _ => TextureId
+    };
 }

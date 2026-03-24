@@ -9,11 +9,11 @@ public class RedstoneWireRenderer : IBlockRenderer
     {
         int powerLevel = ctx.BlockReader.GetBlockMeta(pos.x, pos.y, pos.z);
 
-        int textureId = block.getTexture(1, powerLevel);
+        int textureId = block.GetTexture(1, powerLevel);
         if (ctx.OverrideTexture >= 0) textureId = ctx.OverrideTexture;
 
         // --- 1. Calculate the Glow Color ---
-        float luminance = block.getLuminance(ctx.Lighting, pos.x, pos.y, pos.z);
+        float luminance = block.GetLuminance(ctx.Lighting, pos.x, pos.y, pos.z);
         float powerPercent = powerLevel / 15.0F;
 
         // Red component increases with power
@@ -153,7 +153,7 @@ public class RedstoneWireRenderer : IBlockRenderer
 
             // West Slope
             if (ctx.BlockReader.ShouldSuffocate(pos.x - 1, pos.y, pos.z) &&
-                ctx.BlockReader.GetBlockId(pos.x - 1, pos.y + 1, pos.z) == block.id)
+                ctx.BlockReader.GetBlockId(pos.x - 1, pos.y + 1, pos.z) == block.Id)
             {
                 ctx.Tess.setColorOpaque_F(luminance * r, luminance * g, luminance * b);
                 ctx.Tess.addVertexWithUV(pos.x + 0.015625f, slopeHeight, pos.z + 1, maxU, minV);
@@ -170,7 +170,7 @@ public class RedstoneWireRenderer : IBlockRenderer
 
             // East Slope
             if (ctx.BlockReader.ShouldSuffocate(pos.x + 1, pos.y, pos.z) &&
-                ctx.BlockReader.GetBlockId(pos.x + 1, pos.y + 1, pos.z) == block.id)
+                ctx.BlockReader.GetBlockId(pos.x + 1, pos.y + 1, pos.z) == block.Id)
             {
                 ctx.Tess.setColorOpaque_F(luminance * r, luminance * g, luminance * b);
                 ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, pos.y, pos.z + 1, minU, maxV);
@@ -187,7 +187,7 @@ public class RedstoneWireRenderer : IBlockRenderer
 
             // North Slope
             if (ctx.BlockReader.ShouldSuffocate(pos.x, pos.y, pos.z - 1) &&
-                ctx.BlockReader.GetBlockId(pos.x, pos.y + 1, pos.z - 1) == block.id)
+                ctx.BlockReader.GetBlockId(pos.x, pos.y + 1, pos.z - 1) == block.Id)
             {
                 ctx.Tess.setColorOpaque_F(luminance * r, luminance * g, luminance * b);
                 ctx.Tess.addVertexWithUV(pos.x + 1, pos.y, pos.z + 0.015625f, minU, maxV);
@@ -204,7 +204,7 @@ public class RedstoneWireRenderer : IBlockRenderer
 
             // South Slope
             if (ctx.BlockReader.ShouldSuffocate(pos.x, pos.y, pos.z + 1) &&
-                ctx.BlockReader.GetBlockId(pos.x, pos.y + 1, pos.z + 1) == block.id)
+                ctx.BlockReader.GetBlockId(pos.x, pos.y + 1, pos.z + 1) == block.Id)
             {
                 ctx.Tess.setColorOpaque_F(luminance * r, luminance * g, luminance * b);
                 ctx.Tess.addVertexWithUV(pos.x + 1, slopeHeight, pos.z + 1 - 0.015625f, maxU, minV);

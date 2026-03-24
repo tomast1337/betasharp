@@ -13,62 +13,60 @@ internal class BlockSign : BlockWithEntity
 
     public BlockSign(int id, Type blockEntityType, bool standing) : base(id, Material.Wood)
     {
+        const float width = 0.25F;
+        const float height = 1.0F;
         _standing = standing;
-        textureId = 4;
+        TextureId = 4;
         _blockEntityType = blockEntityType;
-        float width = 0.25F;
-        float height = 1.0F;
-        setBoundingBox(0.5F - width, 0.0F, 0.5F - width, 0.5F + width, height, 0.5F + width);
+        SetBoundingBox(0.5F - width, 0.0F, 0.5F - width, 0.5F + width, height, 0.5F + width);
     }
 
-    public override Box? getCollisionShape(IBlockReader world, EntityManager entities, int x, int y, int z) => null;
+    public override Box? GetCollisionShape(IBlockReader world, EntityManager entities, int x, int y, int z) => null;
 
-    public override Box getBoundingBox(IBlockReader world, EntityManager entities, int x, int y, int z)
+    public override Box GetBoundingBox(IBlockReader world, EntityManager entities, int x, int y, int z)
     {
-        updateBoundingBox(world, x, y, z);
-        return base.getBoundingBox(world, entities, x, y, z);
+        UpdateBoundingBox(world, x, y, z);
+        return base.GetBoundingBox(world, entities, x, y, z);
     }
 
-    public override void updateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z)
+    public override void UpdateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z)
     {
-        if (!_standing)
+        if (_standing)
         {
-            int facing = blockReader.GetBlockMeta(x, y, z);
-            float topOffset = 9.0F / 32.0F;
-            float bottomOffset = 25.0F / 32.0F;
-            float minExtent = 0.0F;
-            float maxExtent = 1.0F;
-            float thickness = 2.0F / 16.0F;
-            setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-            if (facing == 2)
-            {
-                setBoundingBox(minExtent, topOffset, 1.0F - thickness, maxExtent, bottomOffset, 1.0F);
-            }
+            return;
+        }
 
-            if (facing == 3)
-            {
-                setBoundingBox(minExtent, topOffset, 0.0F, maxExtent, bottomOffset, thickness);
-            }
-
-            if (facing == 4)
-            {
-                setBoundingBox(1.0F - thickness, topOffset, minExtent, 1.0F, bottomOffset, maxExtent);
-            }
-
-            if (facing == 5)
-            {
-                setBoundingBox(0.0F, topOffset, minExtent, thickness, bottomOffset, maxExtent);
-            }
+        int facing = blockReader.GetBlockMeta(x, y, z);
+        const float topOffset = 9.0F / 32.0F;
+        const float bottomOffset = 25.0F / 32.0F;
+        const float minExtent = 0.0F;
+        const float maxExtent = 1.0F;
+        const float thickness = 2.0F / 16.0F;
+        SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+        switch (facing)
+        {
+            case 2:
+                SetBoundingBox(minExtent, topOffset, 1.0F - thickness, maxExtent, bottomOffset, 1.0F);
+                break;
+            case 3:
+                SetBoundingBox(minExtent, topOffset, 0.0F, maxExtent, bottomOffset, thickness);
+                break;
+            case 4:
+                SetBoundingBox(1.0F - thickness, topOffset, minExtent, 1.0F, bottomOffset, maxExtent);
+                break;
+            case 5:
+                SetBoundingBox(0.0F, topOffset, minExtent, thickness, bottomOffset, maxExtent);
+                break;
         }
     }
 
-    public override BlockRendererType getRenderType() => BlockRendererType.Entity;
+    public override BlockRendererType GetRenderType() => BlockRendererType.Entity;
 
-    public override bool isFullCube() => false;
+    public override bool IsFullCube() => false;
 
-    public override bool isOpaque() => false;
+    public override bool IsOpaque() => false;
 
-    public override BlockEntity getBlockEntity()
+    public override BlockEntity? getBlockEntity()
     {
         try
         {
@@ -80,9 +78,9 @@ internal class BlockSign : BlockWithEntity
         }
     }
 
-    public override int getDroppedItemId(int blockMeta) => Item.Sign.id;
+    public override int GetDroppedItemId(int blockMeta) => Item.Sign.id;
 
-    public override void neighborUpdate(OnTickEvent @event)
+    public override void NeighborUpdate(OnTickEvent @event)
     {
         bool shouldBreak = false;
         if (_standing)
@@ -119,10 +117,10 @@ internal class BlockSign : BlockWithEntity
 
         if (shouldBreak)
         {
-            dropStacks(new OnDropEvent(@event.World, @event.X, @event.Y, @event.Z, @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z)));
+            DropStacks(new OnDropEvent(@event.World, @event.X, @event.Y, @event.Z, @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z)));
             @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
         }
 
-        base.neighborUpdate(@event);
+        base.NeighborUpdate(@event);
     }
 }

@@ -125,13 +125,13 @@ public class WorldRegionSnapshot : IBlockReader, ILightProvider, IDisposable
     public bool ShouldSuffocate(int x, int y, int z)
     {
         Block block = Block.Blocks[GetBlockId(x, y, z)];
-        return block != null && block.material.BlocksMovement && block.isFullCube();
+        return block != null && block.Material.BlocksMovement && block.IsFullCube();
     }
 
     public bool IsOpaque(int x, int y, int z)
     {
         Block block = Block.Blocks[GetBlockId(x, y, z)];
-        return block != null && block.isOpaque();
+        return block != null && block.IsOpaque();
     }
 
     public int GetBlockMeta(int x, int y, int z) => getBlockMeta(x, y, z);
@@ -159,7 +159,7 @@ public class WorldRegionSnapshot : IBlockReader, ILightProvider, IDisposable
     public Material getMaterial(int x, int y, int z)
     {
         int blockId = GetBlockId(x, y, z);
-        return blockId == 0 ? Material.Air : Block.Blocks[blockId].material;
+        return blockId == 0 ? Material.Air : Block.Blocks[blockId].Material;
     }
 
     public int getBlockMeta(int x, int y, int z)
@@ -187,7 +187,7 @@ public class WorldRegionSnapshot : IBlockReader, ILightProvider, IDisposable
         if (checkStairs)
         {
             int blockId = GetBlockId(x, y, z);
-            if (blockId == Block.Slab.id || blockId == Block.Farmland.id || blockId == Block.WoodenStairs.id || blockId == Block.CobblestoneStairs.id)
+            if (blockId == Block.Slab.Id || blockId == Block.Farmland.Id || blockId == Block.WoodenStairs.Id || blockId == Block.CobblestoneStairs.Id)
             {
                 int maxLight = GetLightValueExt(x, y + 1, z, false);
                 maxLight = Math.Max(maxLight, GetLightValueExt(x + 1, y, z, false)); // East
@@ -231,13 +231,13 @@ public class WorldRegionSnapshot : IBlockReader, ILightProvider, IDisposable
     public bool shouldSuffocate(int x, int y, int z)
     {
         Block block = Block.Blocks[GetBlockId(x, y, z)];
-        return block != null && block.material.BlocksMovement && block.isFullCube();
+        return block != null && block.Material.BlocksMovement && block.IsFullCube();
     }
 
     public bool isOpaque(int x, int y, int z)
     {
         Block block = Block.Blocks[GetBlockId(x, y, z)];
-        return block != null && block.isOpaque();
+        return block != null && block.IsOpaque();
     }
 
     public bool getIsLit()

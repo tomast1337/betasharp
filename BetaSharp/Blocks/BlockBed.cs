@@ -10,30 +10,24 @@ public class BlockBed : Block
 {
     private static readonly int[][] s_bedOffsets = [[0, 1], [-1, 0], [0, -1], [1, 0]];
 
-    public BlockBed(int id) : base(id, 134, Material.Wool)
-    {
-        setDefaultShape();
-    }
+    public BlockBed(int id) : base(id, 134, Material.Wool) => SetDefaultShape();
 
-    public override bool onUse(OnUseEvent @event)
+    public override bool OnUse(OnUseEvent @event)
     {
-        if (@event.World.IsRemote)
-        {
-            return true;
-        }
+        if (@event.World.IsRemote) return true;
 
         int x = @event.X;
         int y = @event.Y;
         int z = @event.Z;
 
         int meta = @event.World.Reader.GetBlockMeta(x, y, z);
-        if (!isHeadOfBed(meta))
+        if (!IsHeadOfBed(meta))
         {
-            int direction = getDirection(meta);
+            int direction = GetDirection(meta);
             x += s_bedOffsets[direction][0];
             z += s_bedOffsets[direction][1];
 
-            if (@event.World.Reader.GetBlockId(x, y, z) != id)
+            if (@event.World.Reader.GetBlockId(x, y, z) != Id)
             {
                 return true;
             }
@@ -43,33 +37,30 @@ public class BlockBed : Block
 
         if (!@event.World.Dimension.HasWorldSpawn)
         {
-            double posX = x + 0.5D;
-            double posY = y + 0.5D;
-            double posZ = z + 0.5D;
             @event.World.Writer.SetBlock(x, y, z, 0);
 
-            int direction = getDirection(meta);
+            int direction = GetDirection(meta);
             x += s_bedOffsets[direction][0];
             z += s_bedOffsets[direction][1];
 
-            if (@event.World.Reader.GetBlockId(x, y, z) == id)
+            if (@event.World.Reader.GetBlockId(x, y, z) == Id)
             {
                 @event.World.Writer.SetBlock(x, y, z, 0);
-                posX = (posX + x + 0.5D) / 2.0D;
-                posY = (posY + y + 0.5D) / 2.0D;
-                posZ = (posZ + z + 0.5D) / 2.0D;
             }
 
             @event.World.CreateExplosion(null, x + 0.5F, y + 0.5F, z + 0.5F, 5.0F, true);
             return true;
         }
 
-        if (isBedOccupied(meta))
+        if (IsBedOccupied(meta))
         {
             EntityPlayer? occupant = null;
             foreach (EntityPlayer otherPlayer in @event.World.Entities.Players)
             {
-                if (!otherPlayer.isSleeping()) continue;
+                if (!otherPlayer.isSleeping())
+                {
+                    continue;
+                }
 
                 Vec3i sleepingPos = otherPlayer.sleepingPos;
                 if (sleepingPos.X == x && sleepingPos.Y == y && sleepingPos.Z == z)
@@ -84,22 +75,20 @@ public class BlockBed : Block
                 return true;
             }
 
-            updateState(@event.World.Writer, x, y, z, meta, false);
+            UpdateState(@event.World.Writer, x, y, z, meta, false);
         }
 
         SleepAttemptResult result = @event.Player.trySleep(x, y, z);
         switch (result)
         {
             case SleepAttemptResult.OK:
-                updateState(@event.World.Writer, x, y, z, meta, true);
-                return true;
+                UpdateState(@event.World.Writer, x, y, z, meta, true);
+                break;
             case SleepAttemptResult.NOT_POSSIBLE_NOW:
                 @event.Player.sendMessage("tile.bed.noSleep");
                 break;
             case SleepAttemptResult.NOT_POSSIBLE_HERE:
-                break;
             case SleepAttemptResult.TOO_FAR_AWAY:
-                break;
             case SleepAttemptResult.OTHER_PROBLEM:
                 break;
             default:
@@ -109,88 +98,58 @@ public class BlockBed : Block
         return true;
     }
 
-    public override int getTexture(int side, int meta)
+    public override int GetTexture(int side, int meta)
     {
-        if (side == 0)
-        {
-            return Planks.textureId;
-        }
+        if (side == 0) return Planks.TextureId;
 
-        int direction = getDirection(meta);
+        int direction = GetDirection(meta);
         int sideFacing = Facings.BED_FACINGS[direction][side];
-        return isHeadOfBed(meta) ? sideFacing == 2 ? textureId + 2 + 16 : sideFacing != 5 && sideFacing != 4 ? textureId + 1 : textureId + 1 + 16 :
-            sideFacing == 3 ? textureId - 1 + 16 :
-            sideFacing != 5 && sideFacing != 4 ? textureId : textureId + 16;
+        return IsHeadOfBed(meta) ? sideFacing == 2 ? TextureId + 2 + 16 : sideFacing != 5 && sideFacing != 4 ? TextureId + 1 : TextureId + 1 + 16 :
+            sideFacing == 3 ? TextureId - 1 + 16 :
+            sideFacing != 5 && sideFacing != 4 ? TextureId : TextureId + 16;
     }
 
-    public override BlockRendererType getRenderType()
-    {
-        return BlockRendererType.Bed;
-    }
+    public override BlockRendererType GetRenderType() => BlockRendererType.Bed;
 
-    public override bool isFullCube()
-    {
-        return false;
-    }
+    public override bool IsFullCube() => false;
 
-    public override bool isOpaque()
-    {
-        return false;
-    }
+    public override bool IsOpaque() => false;
 
-    public override void updateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z)
-    {
-        setDefaultShape();
-    }
+    public override void UpdateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z) => SetDefaultShape();
 
-    public override void neighborUpdate(OnTickEvent ctx)
+    public override void NeighborUpdate(OnTickEvent ctx)
     {
         int blockMeta = ctx.World.Reader.GetBlockMeta(ctx.X, ctx.Y, ctx.Z);
-        int direction = getDirection(blockMeta);
+        int direction = GetDirection(blockMeta);
 
-        if (isHeadOfBed(blockMeta))
+        if (IsHeadOfBed(blockMeta))
         {
-            if (ctx.World.Reader.GetBlockId(ctx.X - s_bedOffsets[direction][0], ctx.Y, ctx.Z - s_bedOffsets[direction][1]) != id)
+            if (ctx.World.Reader.GetBlockId(ctx.X - s_bedOffsets[direction][0], ctx.Y, ctx.Z - s_bedOffsets[direction][1]) != Id)
             {
                 ctx.World.Writer.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
             }
         }
-        else if (ctx.World.Reader.GetBlockId(ctx.X + s_bedOffsets[direction][0], ctx.Y, ctx.Z + s_bedOffsets[direction][1]) != id)
+        else if (ctx.World.Reader.GetBlockId(ctx.X + s_bedOffsets[direction][0], ctx.Y, ctx.Z + s_bedOffsets[direction][1]) != Id)
         {
             ctx.World.Writer.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
             if (!ctx.World.IsRemote)
             {
-                dropStacks(new OnDropEvent(ctx.World, ctx.X, ctx.Y, ctx.Z, blockMeta));
+                DropStacks(new OnDropEvent(ctx.World, ctx.X, ctx.Y, ctx.Z, blockMeta));
             }
         }
     }
 
-    public override int getDroppedItemId(int blockMeta)
-    {
-        return isHeadOfBed(blockMeta) ? 0 : Item.Bed.id;
-    }
+    public override int GetDroppedItemId(int blockMeta) => IsHeadOfBed(blockMeta) ? 0 : Item.Bed.id;
 
-    private void setDefaultShape()
-    {
-        setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 9.0F / 16.0F, 1.0F);
-    }
+    private void SetDefaultShape() => SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 9.0F / 16.0F, 1.0F);
 
-    public static int getDirection(int meta)
-    {
-        return meta & 3;
-    }
+    public static int GetDirection(int meta) => meta & 3;
 
-    public static bool isHeadOfBed(int meta)
-    {
-        return (meta & 8) != 0;
-    }
+    public static bool IsHeadOfBed(int meta) => (meta & 8) != 0;
 
-    public static bool isBedOccupied(int meta)
-    {
-        return (meta & 4) != 0;
-    }
+    private static bool IsBedOccupied(int meta) => (meta & 4) != 0;
 
-    public static void updateState(WorldWriter worldWrite, int x, int y, int z, int meta, bool occupied)
+    public static void UpdateState(WorldWriter worldWrite, int x, int y, int z, int meta, bool occupied)
     {
         if (occupied)
         {
@@ -204,12 +163,12 @@ public class BlockBed : Block
         worldWrite.SetBlockMeta(x, y, z, meta);
     }
 
-    public static Vec3i? findWakeUpPosition(IBlockReader reader, int x, int y, int z, int skip)
+    public static Vec3i? FindWakeUpPosition(IBlockReader reader, int x, int y, int z, int skip)
     {
         int blockMeta = reader.GetBlockMeta(x, y, z);
-        int direction = getDirection(blockMeta);
+        int direction = GetDirection(blockMeta);
 
-        if (isHeadOfBed(blockMeta))
+        if (IsHeadOfBed(blockMeta))
         {
             x -= s_bedOffsets[direction][0];
             z -= s_bedOffsets[direction][1];
@@ -229,17 +188,20 @@ public class BlockBed : Block
             {
                 for (int checkZ = searchMinZ; checkZ <= searchMaxZ; ++checkZ)
                 {
-                    if (reader.ShouldSuffocate(checkX, y - 1, checkZ) &&
-                        reader.IsAir(checkX, y, checkZ) &&
-                        reader.IsAir(checkX, y + 1, checkZ))
+                    if (!reader.ShouldSuffocate(checkX, y - 1, checkZ) ||
+                        !reader.IsAir(checkX, y, checkZ) ||
+                        !reader.IsAir(checkX, y + 1, checkZ))
                     {
-                        if (skip <= 0)
-                        {
-                            return new Vec3i(checkX, y, checkZ);
-                        }
-
-                        --skip;
+                        continue;
                     }
+
+
+                    if (skip <= 0)
+                    {
+                        return new Vec3i(checkX, y, checkZ);
+                    }
+
+                    --skip;
                 }
             }
         }
@@ -247,16 +209,13 @@ public class BlockBed : Block
         return null;
     }
 
-    public override void dropStacks(OnDropEvent @event)
+    public override void DropStacks(OnDropEvent @event)
     {
-        if (!isHeadOfBed(@event.Meta))
+        if (!IsHeadOfBed(@event.Meta))
         {
-            base.dropStacks(@event);
+            base.DropStacks(@event);
         }
     }
 
-    public override int getPistonBehavior()
-    {
-        return 1;
-    }
+    public override int GetPistonBehavior() => 1;
 }

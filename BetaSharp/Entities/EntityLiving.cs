@@ -546,7 +546,7 @@ public abstract class EntityLiving : Entity
             int var3 = world.Reader.GetBlockId(MathHelper.Floor(x), MathHelper.Floor(y - (double)0.2F - (double)standingEyeHeight), MathHelper.Floor(z));
             if (var3 > 0)
             {
-                BlockSoundGroup soundGroup = Block.Blocks[var3].soundGroup;
+                BlockSoundGroup soundGroup = Block.Blocks[var3].SoundGroup;
                 world.Broadcaster.PlaySoundAtEntity(this, soundGroup.StepSound, soundGroup.Volume * 0.5F, soundGroup.Pitch * (12.0F / 16.0F));
             }
         }
@@ -593,7 +593,7 @@ public abstract class EntityLiving : Entity
                 int groundBlockId = world.Reader.GetBlockId(MathHelper.Floor(x), MathHelper.Floor(boundingBox.MinY) - 1, MathHelper.Floor(z));
                 if (groundBlockId > 0)
                 {
-                    friction = Block.Blocks[groundBlockId].slipperiness * 0.91F;
+                    friction = Block.Blocks[groundBlockId].Slipperiness * 0.91F;
                 }
             }
 
@@ -606,7 +606,7 @@ public abstract class EntityLiving : Entity
                 int groundBlockId = world.Reader.GetBlockId(MathHelper.Floor(x), MathHelper.Floor(boundingBox.MinY) - 1, MathHelper.Floor(z));
                 if (groundBlockId > 0)
                 {
-                    friction = Block.Blocks[groundBlockId].slipperiness * 0.91F;
+                    friction = Block.Blocks[groundBlockId].Slipperiness * 0.91F;
                 }
             }
 
@@ -675,7 +675,7 @@ public abstract class EntityLiving : Entity
         int x = MathHelper.Floor(base.x);
         int y = MathHelper.Floor(boundingBox.MinY);
         int z = MathHelper.Floor(base.z);
-        return world.Reader.GetBlockId(x, y, z) == Block.Ladder.id;
+        return world.Reader.GetBlockId(x, y, z) == Block.Ladder.Id;
     }
 
     public override void writeNbt(NBTTagCompound nbt)
@@ -776,7 +776,7 @@ public abstract class EntityLiving : Entity
                 {
                     newY += highestCollisionY - boundingBox.MinY;
                 }
-                
+
                 setPosition(newX, newY, newZ);
             }
         }

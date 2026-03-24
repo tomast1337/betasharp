@@ -7,7 +7,7 @@ public class CropsRenderer : IBlockRenderer
 {
     public bool Draw(Block block, in BlockPos pos, ref BlockRenderContext ctx)
     {
-        float luminance = block.getLuminance(ctx.Lighting, pos.x, pos.y, pos.z);
+        float luminance = block.GetLuminance(ctx.Lighting, pos.x, pos.y, pos.z);
         ctx.Tess.setColorOpaque_F(luminance, luminance, luminance);
 
         int metadata = ctx.BlockReader.GetBlockMeta(pos.x, pos.y, pos.z);
@@ -22,7 +22,7 @@ public class CropsRenderer : IBlockRenderer
 
     private void RenderCropQuads(Block block, int metadata, float x, float y, float z, ref BlockRenderContext ctx)
     {
-        int textureId = block.getTexture(0, metadata);
+        int textureId = block.GetTexture(0, metadata);
 
         if (ctx.OverrideTexture >= 0)
         {

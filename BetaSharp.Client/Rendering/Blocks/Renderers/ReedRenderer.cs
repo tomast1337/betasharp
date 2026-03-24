@@ -7,8 +7,8 @@ public class ReedRenderer : IBlockRenderer
 {
     public bool Draw(Block block, in BlockPos pos, ref BlockRenderContext ctx)
     {
-        float luminance = block.getLuminance(ctx.Lighting, pos.x, pos.y, pos.z);
-        int colorMultiplier = block.getColorMultiplier(ctx.BlockReader, pos.x, pos.y, pos.z);
+        float luminance = block.GetLuminance(ctx.Lighting, pos.x, pos.y, pos.z);
+        int colorMultiplier = block.GetColorMultiplier(ctx.BlockReader, pos.x, pos.y, pos.z);
         float r = (colorMultiplier >> 16 & 255) / 255.0F;
         float g = (colorMultiplier >> 8 & 255) / 255.0F;
         float b = (colorMultiplier & 255) / 255.0F;
@@ -37,7 +37,7 @@ public class ReedRenderer : IBlockRenderer
     private void RenderCrossedSquares(Block block, int metadata, float x, float y, float z,
         ref BlockRenderContext ctx)
     {
-        int textureId = block.getTexture(0, metadata);
+        int textureId = block.GetTexture(0, metadata);
         if (ctx.OverrideTexture >= 0)
         {
             textureId = ctx.OverrideTexture;

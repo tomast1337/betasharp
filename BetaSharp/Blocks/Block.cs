@@ -22,7 +22,7 @@ public class Block
     public static readonly BlockSoundGroup SoundClothFootstep = new("cloth", 1.0F, 1.0F);
     public static readonly BlockSoundGroup SoundSandFootstep = new("sand", 1.0F, 1.0F, "step.gravel");
 
-    public static readonly Block[] Blocks = new Block[256];
+    public static readonly Block?[] Blocks = new Block[256];
     public static readonly bool[] BlocksRandomTick = new bool[256];
     public static readonly bool[] BlocksOpaque = new bool[256];
     public static readonly bool[] BlocksWithEntity = new bool[256];
@@ -31,186 +31,209 @@ public class Block
     public static readonly int[] BlocksLightLuminance = new int[256];
     public static readonly bool[] BlocksIgnoreMetaUpdate = new bool[256];
 
-    public static readonly Block Stone = new BlockStone(1, 1).setHardness(1.5F).setResistance(10.0F).setSoundGroup(SoundStoneFootstep).setBlockName("stone");
-    public static readonly BlockGrass GrassBlock = (BlockGrass)new BlockGrass(2).setHardness(0.6F).setSoundGroup(SoundGrassFootstep).setBlockName("grass");
-    public static readonly Block Dirt = new BlockDirt(3, 2).setHardness(0.5F).setSoundGroup(SoundGravelFootstep).setBlockName("dirt");
-    public static readonly Block Cobblestone = new Block(4, 16, Material.Stone).setHardness(2.0F).setResistance(10.0F).setSoundGroup(SoundStoneFootstep).setBlockName("stonebrick");
-    public static readonly Block Planks = new Block(5, 4, Material.Wood).setHardness(2.0F).setResistance(5.0F).setSoundGroup(SoundWoodFootstep).setBlockName("wood").IgnoreMetaUpdates();
-    public static readonly Block Sapling = new BlockSapling(6, 15).setHardness(0.0F).setSoundGroup(SoundGrassFootstep).setBlockName("sapling").IgnoreMetaUpdates();
-    public static readonly Block Bedrock = new Block(7, 17, Material.Stone).setUnbreakable().setResistance(6000000.0F).setSoundGroup(SoundStoneFootstep).setBlockName("bedrock").disableStats();
-    public static readonly Block FlowingWater = new BlockFlowing(8, Material.Water).setHardness(100.0F).setOpacity(3).setBlockName("water").disableStats().IgnoreMetaUpdates();
-    public static readonly Block Water = new BlockStationary(9, Material.Water).setHardness(100.0F).setOpacity(3).setBlockName("water").disableStats().IgnoreMetaUpdates();
-    public static readonly Block FlowingLava = new BlockFlowing(10, Material.Lava).setHardness(0.0F).setLuminance(1.0F).setOpacity(255).setBlockName("lava").disableStats().IgnoreMetaUpdates();
-    public static readonly Block Lava = new BlockStationary(11, Material.Lava).setHardness(100.0F).setLuminance(1.0F).setOpacity(255).setBlockName("lava").disableStats().IgnoreMetaUpdates();
-    public static readonly Block Sand = new BlockSand(12, 18).setHardness(0.5F).setSoundGroup(SoundSandFootstep).setBlockName("sand");
-    public static readonly Block Gravel = new BlockGravel(13, 19).setHardness(0.6F).setSoundGroup(SoundGravelFootstep).setBlockName("gravel");
-    public static readonly Block GoldOre = new BlockOre(14, 32).setHardness(3.0F).setResistance(5.0F).setSoundGroup(SoundStoneFootstep).setBlockName("oreGold");
-    public static readonly Block IronOre = new BlockOre(15, 33).setHardness(3.0F).setResistance(5.0F).setSoundGroup(SoundStoneFootstep).setBlockName("oreIron");
-    public static readonly Block CoalOre = new BlockOre(16, 34).setHardness(3.0F).setResistance(5.0F).setSoundGroup(SoundStoneFootstep).setBlockName("oreCoal");
-    public static readonly Block Log = new BlockLog(17).setHardness(2.0F).setSoundGroup(SoundWoodFootstep).setBlockName("log").IgnoreMetaUpdates();
-    public static readonly BlockLeaves Leaves = (BlockLeaves)new BlockLeaves(18, 52).setHardness(0.2F).setOpacity(1).setSoundGroup(SoundGrassFootstep).setBlockName("leaves").disableStats().IgnoreMetaUpdates();
-    public static readonly Block Sponge = new BlockSponge(19).setHardness(0.6F).setSoundGroup(SoundGrassFootstep).setBlockName("sponge");
-    public static readonly Block Glass = new BlockGlass(20, 49, Material.Glass, false).setHardness(0.3F).setSoundGroup(SoundGlassFootstep).setBlockName("glass");
-    public static readonly Block LapisOre = new BlockOre(21, 160).setHardness(3.0F).setResistance(5.0F).setSoundGroup(SoundStoneFootstep).setBlockName("oreLapis");
-    public static readonly Block LapisBlock = new Block(22, 144, Material.Stone).setHardness(3.0F).setResistance(5.0F).setSoundGroup(SoundStoneFootstep).setBlockName("blockLapis");
-    public static readonly Block Dispenser = new BlockDispenser(23).setHardness(3.5F).setSoundGroup(SoundStoneFootstep).setBlockName("dispenser").IgnoreMetaUpdates();
-    public static readonly Block Sandstone = new BlockSandStone(24).setSoundGroup(SoundStoneFootstep).setHardness(0.8F).setBlockName("sandStone");
-    public static readonly Block Noteblock = new BlockNote(25).setHardness(0.8F).setBlockName("musicBlock").IgnoreMetaUpdates();
-    public static readonly Block Bed = new BlockBed(26).setHardness(0.2F).setBlockName("bed").disableStats().IgnoreMetaUpdates();
-    public static readonly Block PoweredRail = new BlockRail(27, 179, true).setHardness(0.7F).setSoundGroup(SoundMetalFootstep).setBlockName("goldenRail").IgnoreMetaUpdates();
-    public static readonly Block DetectorRail = new BlockDetectorRail(28, 195).setHardness(0.7F).setSoundGroup(SoundMetalFootstep).setBlockName("detectorRail").IgnoreMetaUpdates();
-    public static readonly Block StickyPiston = new BlockPistonBase(29, 106, true).setBlockName("pistonStickyBase").IgnoreMetaUpdates();
-    public static readonly Block Cobweb = new BlockWeb(30, 11).setOpacity(1).setHardness(4.0F).setBlockName("web");
-    public static readonly BlockTallGrass Grass = (BlockTallGrass)new BlockTallGrass(31, 39).setHardness(0.0F).setSoundGroup(SoundGrassFootstep).setBlockName("tallgrass");
-    public static readonly BlockDeadBush DeadBush = (BlockDeadBush)new BlockDeadBush(32, 55).setHardness(0.0F).setSoundGroup(SoundGrassFootstep).setBlockName("deadbush");
-    public static readonly Block Piston = new BlockPistonBase(33, 107, false).setBlockName("pistonBase").IgnoreMetaUpdates();
+    public static readonly Block Stone = new BlockStone(1, 1).SetHardness(1.5F).SetResistance(10.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("stone");
+    public static readonly BlockGrass GrassBlock = (BlockGrass)new BlockGrass(2).SetHardness(0.6F).setSoundGroup(SoundGrassFootstep).SetBlockName("grass");
+    public static readonly Block Dirt = new BlockDirt(3, 2).SetHardness(0.5F).setSoundGroup(SoundGravelFootstep).SetBlockName("dirt");
+    public static readonly Block Cobblestone = new Block(4, 16, Material.Stone).SetHardness(2.0F).SetResistance(10.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("stonebrick");
+    public static readonly Block Planks = new Block(5, 4, Material.Wood).SetHardness(2.0F).SetResistance(5.0F).setSoundGroup(SoundWoodFootstep).SetBlockName("wood").IgnoreMetaUpdates();
+    public static readonly Block Sapling = new BlockSapling(6, 15).SetHardness(0.0F).setSoundGroup(SoundGrassFootstep).SetBlockName("sapling").IgnoreMetaUpdates();
+    public static readonly Block Bedrock = new Block(7, 17, Material.Stone).setUnbreakable().SetResistance(6000000.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("bedrock").DisableStats();
+    public static readonly Block FlowingWater = new BlockFlowing(8, Material.Water).SetHardness(100.0F).SetOpacity(3).SetBlockName("water").DisableStats().IgnoreMetaUpdates();
+    public static readonly Block Water = new BlockStationary(9, Material.Water).SetHardness(100.0F).SetOpacity(3).SetBlockName("water").DisableStats().IgnoreMetaUpdates();
+    public static readonly Block FlowingLava = new BlockFlowing(10, Material.Lava).SetHardness(0.0F).SetLuminance(1.0F).SetOpacity(255).SetBlockName("lava").DisableStats().IgnoreMetaUpdates();
+    public static readonly Block Lava = new BlockStationary(11, Material.Lava).SetHardness(100.0F).SetLuminance(1.0F).SetOpacity(255).SetBlockName("lava").DisableStats().IgnoreMetaUpdates();
+    public static readonly Block Sand = new BlockSand(12, 18).SetHardness(0.5F).setSoundGroup(SoundSandFootstep).SetBlockName("sand");
+    public static readonly Block Gravel = new BlockGravel(13, 19).SetHardness(0.6F).setSoundGroup(SoundGravelFootstep).SetBlockName("gravel");
+    public static readonly Block GoldOre = new BlockOre(14, 32).SetHardness(3.0F).SetResistance(5.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("oreGold");
+    public static readonly Block IronOre = new BlockOre(15, 33).SetHardness(3.0F).SetResistance(5.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("oreIron");
+    public static readonly Block CoalOre = new BlockOre(16, 34).SetHardness(3.0F).SetResistance(5.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("oreCoal");
+    public static readonly Block Log = new BlockLog(17).SetHardness(2.0F).setSoundGroup(SoundWoodFootstep).SetBlockName("log").IgnoreMetaUpdates();
+    public static readonly BlockLeaves Leaves = (BlockLeaves)new BlockLeaves(18, 52).SetHardness(0.2F).SetOpacity(1).setSoundGroup(SoundGrassFootstep).SetBlockName("leaves").DisableStats().IgnoreMetaUpdates();
+    public static readonly Block Sponge = new BlockSponge(19).SetHardness(0.6F).setSoundGroup(SoundGrassFootstep).SetBlockName("sponge");
+    public static readonly Block Glass = new BlockGlass(20, 49, Material.Glass, false).SetHardness(0.3F).setSoundGroup(SoundGlassFootstep).SetBlockName("glass");
+    public static readonly Block LapisOre = new BlockOre(21, 160).SetHardness(3.0F).SetResistance(5.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("oreLapis");
+    public static readonly Block LapisBlock = new Block(22, 144, Material.Stone).SetHardness(3.0F).SetResistance(5.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("blockLapis");
+    public static readonly Block Dispenser = new BlockDispenser(23).SetHardness(3.5F).setSoundGroup(SoundStoneFootstep).SetBlockName("dispenser").IgnoreMetaUpdates();
+    public static readonly Block Sandstone = new BlockSandStone(24).setSoundGroup(SoundStoneFootstep).SetHardness(0.8F).SetBlockName("sandStone");
+    public static readonly Block NoteBlock = new BlockNote(25).SetHardness(0.8F).SetBlockName("musicBlock").IgnoreMetaUpdates();
+    public static readonly Block Bed = new BlockBed(26).SetHardness(0.2F).SetBlockName("bed").DisableStats().IgnoreMetaUpdates();
+    public static readonly Block PoweredRail = new BlockRail(27, 179, true).SetHardness(0.7F).setSoundGroup(SoundMetalFootstep).SetBlockName("goldenRail").IgnoreMetaUpdates();
+    public static readonly Block DetectorRail = new BlockDetectorRail(28, 195).SetHardness(0.7F).setSoundGroup(SoundMetalFootstep).SetBlockName("detectorRail").IgnoreMetaUpdates();
+    public static readonly Block StickyPiston = new BlockPistonBase(29, 106, true).SetBlockName("pistonStickyBase").IgnoreMetaUpdates();
+    public static readonly Block Cobweb = new BlockWeb(30, 11).SetOpacity(1).SetHardness(4.0F).SetBlockName("web");
+    public static readonly BlockTallGrass Grass = (BlockTallGrass)new BlockTallGrass(31, 39).SetHardness(0.0F).setSoundGroup(SoundGrassFootstep).SetBlockName("tallgrass");
+    public static readonly BlockDeadBush DeadBush = (BlockDeadBush)new BlockDeadBush(32, 55).SetHardness(0.0F).setSoundGroup(SoundGrassFootstep).SetBlockName("deadbush");
+    public static readonly Block Piston = new BlockPistonBase(33, 107, false).SetBlockName("pistonBase").IgnoreMetaUpdates();
     public static readonly BlockPistonExtension PistonHead = (BlockPistonExtension)new BlockPistonExtension(34, 107).IgnoreMetaUpdates();
-    public static readonly Block Wool = new BlockCloth().setHardness(0.8F).setSoundGroup(SoundClothFootstep).setBlockName("cloth").IgnoreMetaUpdates();
+    public static readonly Block Wool = new BlockCloth().SetHardness(0.8F).setSoundGroup(SoundClothFootstep).SetBlockName("cloth").IgnoreMetaUpdates();
     public static readonly BlockPistonMoving MovingPiston = new(36);
-    public static readonly BlockPlant Dandelion = (BlockPlant)new BlockPlant(37, 13).setHardness(0.0F).setSoundGroup(SoundGrassFootstep).setBlockName("flower");
-    public static readonly BlockPlant Rose = (BlockPlant)new BlockPlant(38, 12).setHardness(0.0F).setSoundGroup(SoundGrassFootstep).setBlockName("rose");
-    public static readonly BlockPlant BrownMushroom = (BlockPlant)new BlockMushroom(39, 29).setHardness(0.0F).setSoundGroup(SoundGrassFootstep).setLuminance(2.0F / 16.0F).setBlockName("mushroom");
-    public static readonly BlockPlant RedMushroom = (BlockPlant)new BlockMushroom(40, 28).setHardness(0.0F).setSoundGroup(SoundGrassFootstep).setBlockName("mushroom");
-    public static readonly Block GoldBlock = new BlockOreStorage(41, 23).setHardness(3.0F).setResistance(10.0F).setSoundGroup(SoundMetalFootstep).setBlockName("blockGold");
-    public static readonly Block IronBlock = new BlockOreStorage(42, 22).setHardness(5.0F).setResistance(10.0F).setSoundGroup(SoundMetalFootstep).setBlockName("blockIron");
-    public static readonly Block DoubleSlab = new BlockSlab(43, true).setHardness(2.0F).setResistance(10.0F).setSoundGroup(SoundStoneFootstep).setBlockName("stoneSlab");
-    public static readonly Block Slab = new BlockSlab(44, false).setHardness(2.0F).setResistance(10.0F).setSoundGroup(SoundStoneFootstep).setBlockName("stoneSlab");
-    public static readonly Block Bricks = new Block(45, 7, Material.Stone).setHardness(2.0F).setResistance(10.0F).setSoundGroup(SoundStoneFootstep).setBlockName("brick");
-    public static readonly Block TNT = new BlockTNT(46, 8).setHardness(0.0F).setSoundGroup(SoundGrassFootstep).setBlockName("tnt");
-    public static readonly Block Bookshelf = new BlockBookshelf(47, 35).setHardness(1.5F).setSoundGroup(SoundWoodFootstep).setBlockName("bookshelf");
-    public static readonly Block MossyCobblestone = new Block(48, 36, Material.Stone).setHardness(2.0F).setResistance(10.0F).setSoundGroup(SoundStoneFootstep).setBlockName("stoneMoss");
-    public static readonly Block Obsidian = new BlockObsidian(49, 37).setHardness(10.0F).setResistance(2000.0F).setSoundGroup(SoundStoneFootstep).setBlockName("obsidian");
-    public static readonly Block Torch = new BlockTorch(50, 80).setHardness(0.0F).setLuminance(15.0F / 16.0F).setSoundGroup(SoundWoodFootstep).setBlockName("torch").IgnoreMetaUpdates();
-    public static readonly Block Fire = (BlockFire)new BlockFire(51, 31).setHardness(0.0F).setLuminance(1.0F).setSoundGroup(SoundWoodFootstep).setBlockName("fire").disableStats().IgnoreMetaUpdates();
-    public static readonly Block Spawner = new BlockMobSpawner(52, 65).setHardness(5.0F).setSoundGroup(SoundMetalFootstep).setBlockName("mobSpawner").disableStats();
-    public static readonly Block WoodenStairs = new BlockStairs(53, Planks).setBlockName("stairsWood").IgnoreMetaUpdates();
-    public static readonly Block Chest = new BlockChest(54).setHardness(2.5F).setSoundGroup(SoundWoodFootstep).setBlockName("chest").IgnoreMetaUpdates();
-    public static readonly Block RedstoneWire = new BlockRedstoneWire(55, 164).setHardness(0.0F).setSoundGroup(SoundPowderFootstep).setBlockName("redstoneDust").disableStats().IgnoreMetaUpdates();
-    public static readonly Block DiamondOre = new BlockOre(56, 50).setHardness(3.0F).setResistance(5.0F).setSoundGroup(SoundStoneFootstep).setBlockName("oreDiamond");
-    public static readonly Block DiamondBlock = new BlockOreStorage(57, 24).setHardness(5.0F).setResistance(10.0F).setSoundGroup(SoundMetalFootstep).setBlockName("blockDiamond");
-    public static readonly Block CraftingTable = new BlockWorkbench(58).setHardness(2.5F).setSoundGroup(SoundWoodFootstep).setBlockName("workbench");
-    public static readonly Block Wheat = new BlockCrops(59, 88).setHardness(0.0F).setSoundGroup(SoundGrassFootstep).setBlockName("crops").disableStats().IgnoreMetaUpdates();
-    public static readonly Block Farmland = new BlockFarmland(60).setHardness(0.6F).setSoundGroup(SoundGravelFootstep).setBlockName("farmland");
-    public static readonly Block Furnace = new BlockFurnace(61, false).setHardness(3.5F).setSoundGroup(SoundStoneFootstep).setBlockName("furnace").IgnoreMetaUpdates();
-    public static readonly Block LitFurnace = new BlockFurnace(62, true).setHardness(3.5F).setSoundGroup(SoundStoneFootstep).setLuminance(14.0F / 16.0F).setBlockName("furnace").IgnoreMetaUpdates();
-    public static readonly Block Sign = new BlockSign(63, typeof(BlockEntitySign), true).setHardness(1.0F).setSoundGroup(SoundWoodFootstep).setBlockName("sign").disableStats().IgnoreMetaUpdates();
-    public static readonly Block Door = new BlockDoor(64, Material.Wood).setHardness(3.0F).setSoundGroup(SoundWoodFootstep).setBlockName("doorWood").disableStats().IgnoreMetaUpdates();
-    public static readonly Block Ladder = new BlockLadder(65, 83).setHardness(0.4F).setSoundGroup(SoundWoodFootstep).setBlockName("ladder").IgnoreMetaUpdates();
-    public static readonly Block Rail = new BlockRail(66, 128, false).setHardness(0.7F).setSoundGroup(SoundMetalFootstep).setBlockName("rail").IgnoreMetaUpdates();
-    public static readonly Block CobblestoneStairs = new BlockStairs(67, Cobblestone).setBlockName("stairsStone").IgnoreMetaUpdates();
-    public static readonly Block WallSign = new BlockSign(68, typeof(BlockEntitySign), false).setHardness(1.0F).setSoundGroup(SoundWoodFootstep).setBlockName("sign").disableStats().IgnoreMetaUpdates();
-    public static readonly Block Lever = new BlockLever(69, 96).setHardness(0.5F).setSoundGroup(SoundWoodFootstep).setBlockName("lever").IgnoreMetaUpdates();
+    public static readonly BlockPlant Dandelion = (BlockPlant)new BlockPlant(37, 13).SetHardness(0.0F).setSoundGroup(SoundGrassFootstep).SetBlockName("flower");
+    public static readonly BlockPlant Rose = (BlockPlant)new BlockPlant(38, 12).SetHardness(0.0F).setSoundGroup(SoundGrassFootstep).SetBlockName("rose");
+    public static readonly BlockPlant BrownMushroom = (BlockPlant)new BlockMushroom(39, 29).SetHardness(0.0F).setSoundGroup(SoundGrassFootstep).SetLuminance(2.0F / 16.0F).SetBlockName("mushroom");
+    public static readonly BlockPlant RedMushroom = (BlockPlant)new BlockMushroom(40, 28).SetHardness(0.0F).setSoundGroup(SoundGrassFootstep).SetBlockName("mushroom");
+    public static readonly Block GoldBlock = new BlockOreStorage(41, 23).SetHardness(3.0F).SetResistance(10.0F).setSoundGroup(SoundMetalFootstep).SetBlockName("blockGold");
+    public static readonly Block IronBlock = new BlockOreStorage(42, 22).SetHardness(5.0F).SetResistance(10.0F).setSoundGroup(SoundMetalFootstep).SetBlockName("blockIron");
+    public static readonly Block DoubleSlab = new BlockSlab(43, true).SetHardness(2.0F).SetResistance(10.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("stoneSlab");
+    public static readonly Block Slab = new BlockSlab(44, false).SetHardness(2.0F).SetResistance(10.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("stoneSlab");
+    public static readonly Block Bricks = new Block(45, 7, Material.Stone).SetHardness(2.0F).SetResistance(10.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("brick");
+    public static readonly Block TNT = new BlockTNT(46, 8).SetHardness(0.0F).setSoundGroup(SoundGrassFootstep).SetBlockName("tnt");
+    public static readonly Block Bookshelf = new BlockBookshelf(47, 35).SetHardness(1.5F).setSoundGroup(SoundWoodFootstep).SetBlockName("bookshelf");
+    public static readonly Block MossyCobblestone = new Block(48, 36, Material.Stone).SetHardness(2.0F).SetResistance(10.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("stoneMoss");
+    public static readonly Block Obsidian = new BlockObsidian(49, 37).SetHardness(10.0F).SetResistance(2000.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("obsidian");
+    public static readonly Block Torch = new BlockTorch(50, 80).SetHardness(0.0F).SetLuminance(15.0F / 16.0F).setSoundGroup(SoundWoodFootstep).SetBlockName("torch").IgnoreMetaUpdates();
+    public static readonly Block Fire = (BlockFire)new BlockFire(51, 31).SetHardness(0.0F).SetLuminance(1.0F).setSoundGroup(SoundWoodFootstep).SetBlockName("fire").DisableStats().IgnoreMetaUpdates();
+    public static readonly Block Spawner = new BlockMobSpawner(52, 65).SetHardness(5.0F).setSoundGroup(SoundMetalFootstep).SetBlockName("mobSpawner").DisableStats();
+    public static readonly Block WoodenStairs = new BlockStairs(53, Planks).SetBlockName("stairsWood").IgnoreMetaUpdates();
+    public static readonly Block Chest = new BlockChest(54).SetHardness(2.5F).setSoundGroup(SoundWoodFootstep).SetBlockName("chest").IgnoreMetaUpdates();
+    public static readonly Block RedstoneWire = new BlockRedstoneWire(55, 164).SetHardness(0.0F).setSoundGroup(SoundPowderFootstep).SetBlockName("redstoneDust").DisableStats().IgnoreMetaUpdates();
+    public static readonly Block DiamondOre = new BlockOre(56, 50).SetHardness(3.0F).SetResistance(5.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("oreDiamond");
+    public static readonly Block DiamondBlock = new BlockOreStorage(57, 24).SetHardness(5.0F).SetResistance(10.0F).setSoundGroup(SoundMetalFootstep).SetBlockName("blockDiamond");
+    public static readonly Block CraftingTable = new BlockWorkbench(58).SetHardness(2.5F).setSoundGroup(SoundWoodFootstep).SetBlockName("workbench");
+    public static readonly Block Wheat = new BlockCrops(59, 88).SetHardness(0.0F).setSoundGroup(SoundGrassFootstep).SetBlockName("crops").DisableStats().IgnoreMetaUpdates();
+    public static readonly Block Farmland = new BlockFarmland(60).SetHardness(0.6F).setSoundGroup(SoundGravelFootstep).SetBlockName("farmland");
+    public static readonly Block Furnace = new BlockFurnace(61, false).SetHardness(3.5F).setSoundGroup(SoundStoneFootstep).SetBlockName("furnace").IgnoreMetaUpdates();
+    public static readonly Block LitFurnace = new BlockFurnace(62, true).SetHardness(3.5F).setSoundGroup(SoundStoneFootstep).SetLuminance(14.0F / 16.0F).SetBlockName("furnace").IgnoreMetaUpdates();
+    public static readonly Block Sign = new BlockSign(63, typeof(BlockEntitySign), true).SetHardness(1.0F).setSoundGroup(SoundWoodFootstep).SetBlockName("sign").DisableStats().IgnoreMetaUpdates();
+    public static readonly Block Door = new BlockDoor(64, Material.Wood).SetHardness(3.0F).setSoundGroup(SoundWoodFootstep).SetBlockName("doorWood").DisableStats().IgnoreMetaUpdates();
+    public static readonly Block Ladder = new BlockLadder(65, 83).SetHardness(0.4F).setSoundGroup(SoundWoodFootstep).SetBlockName("ladder").IgnoreMetaUpdates();
+    public static readonly Block Rail = new BlockRail(66, 128, false).SetHardness(0.7F).setSoundGroup(SoundMetalFootstep).SetBlockName("rail").IgnoreMetaUpdates();
+    public static readonly Block CobblestoneStairs = new BlockStairs(67, Cobblestone).SetBlockName("stairsStone").IgnoreMetaUpdates();
+    public static readonly Block WallSign = new BlockSign(68, typeof(BlockEntitySign), false).SetHardness(1.0F).setSoundGroup(SoundWoodFootstep).SetBlockName("sign").DisableStats().IgnoreMetaUpdates();
+    public static readonly Block Lever = new BlockLever(69, 96).SetHardness(0.5F).setSoundGroup(SoundWoodFootstep).SetBlockName("lever").IgnoreMetaUpdates();
 
-    public static readonly Block StonePressurePlate = new BlockPressurePlate(70, Stone.textureId, PressurePlateActiviationRule.MOBS, Material.Stone).setHardness(0.5F).setSoundGroup(SoundStoneFootstep).setBlockName("pressurePlate")
+    public static readonly Block StonePressurePlate = new BlockPressurePlate(70, Stone.TextureId, PressurePlateActiviationRule.MOBS, Material.Stone).SetHardness(0.5F).setSoundGroup(SoundStoneFootstep).SetBlockName("pressurePlate")
         .IgnoreMetaUpdates();
 
-    public static readonly Block IronDoor = new BlockDoor(71, Material.Metal).setHardness(5.0F).setSoundGroup(SoundMetalFootstep).setBlockName("doorIron").disableStats().IgnoreMetaUpdates();
+    public static readonly Block IronDoor = new BlockDoor(71, Material.Metal).SetHardness(5.0F).setSoundGroup(SoundMetalFootstep).SetBlockName("doorIron").DisableStats().IgnoreMetaUpdates();
 
-    public static readonly Block WoodenPressurePlate = new BlockPressurePlate(72, Planks.textureId, PressurePlateActiviationRule.EVERYTHING, Material.Wood).setHardness(0.5F).setSoundGroup(SoundWoodFootstep).setBlockName("pressurePlate")
+    public static readonly Block WoodenPressurePlate = new BlockPressurePlate(72, Planks.TextureId, PressurePlateActiviationRule.EVERYTHING, Material.Wood).SetHardness(0.5F).setSoundGroup(SoundWoodFootstep).SetBlockName("pressurePlate")
         .IgnoreMetaUpdates();
 
-    public static readonly Block RedstoneOre = new BlockRedstoneOre(73, 51, false).setHardness(3.0F).setResistance(5.0F).setSoundGroup(SoundStoneFootstep).setBlockName("oreRedstone").IgnoreMetaUpdates();
-    public static readonly Block LitRedstoneOre = new BlockRedstoneOre(74, 51, true).setLuminance(10.0F / 16.0F).setHardness(3.0F).setResistance(5.0F).setSoundGroup(SoundStoneFootstep).setBlockName("oreRedstone").IgnoreMetaUpdates();
-    public static readonly Block RedstoneTorch = new BlockRedstoneTorch(75, 115, false).setHardness(0.0F).setSoundGroup(SoundWoodFootstep).setBlockName("notGate").IgnoreMetaUpdates();
-    public static readonly Block LitRedstoneTorch = new BlockRedstoneTorch(76, 99, true).setHardness(0.0F).setLuminance(0.5F).setSoundGroup(SoundWoodFootstep).setBlockName("notGate").IgnoreMetaUpdates();
-    public static readonly Block Button = new BlockButton(77, Stone.textureId).setHardness(0.5F).setSoundGroup(SoundStoneFootstep).setBlockName("button").IgnoreMetaUpdates();
-    public static readonly Block Snow = new BlockSnow(78, 66).setHardness(0.1F).setSoundGroup(SoundClothFootstep).setBlockName("snow");
-    public static readonly Block Ice = new BlockIce(79, 67).setHardness(0.5F).setOpacity(3).setSoundGroup(SoundGlassFootstep).setBlockName("ice");
-    public static readonly Block SnowBlock = new BlockSnowBlock(80, 66).setHardness(0.2F).setSoundGroup(SoundClothFootstep).setBlockName("snow");
-    public static readonly Block Cactus = new BlockCactus(81, 70).setHardness(0.4F).setSoundGroup(SoundClothFootstep).setBlockName("cactus");
-    public static readonly Block Clay = new BlockClay(82, 72).setHardness(0.6F).setSoundGroup(SoundGravelFootstep).setBlockName("clay");
-    public static readonly Block SugarCane = new BlockReed(83, 73).setHardness(0.0F).setSoundGroup(SoundGrassFootstep).setBlockName("reeds").disableStats();
-    public static readonly Block Jukebox = new BlockJukeBox(84, 74).setHardness(2.0F).setResistance(10.0F).setSoundGroup(SoundStoneFootstep).setBlockName("jukebox").IgnoreMetaUpdates();
-    public static readonly Block Fence = new BlockFence(85, 4).setHardness(2.0F).setResistance(5.0F).setSoundGroup(SoundWoodFootstep).setBlockName("fence").IgnoreMetaUpdates();
-    public static readonly Block Pumpkin = new BlockPumpkin(86, 102, false).setHardness(1.0F).setSoundGroup(SoundWoodFootstep).setBlockName("pumpkin").IgnoreMetaUpdates();
-    public static readonly Block Netherrack = new BlockNetherrack(87, 103).setHardness(0.4F).setSoundGroup(SoundStoneFootstep).setBlockName("hellrock");
-    public static readonly Block Soulsand = new BlockSoulSand(88, 104).setHardness(0.5F).setSoundGroup(SoundSandFootstep).setBlockName("hellsand");
-    public static readonly Block Glowstone = new BlockGlowstone(89, 105, Material.Stone).setHardness(0.3F).setSoundGroup(SoundGlassFootstep).setLuminance(1.0F).setBlockName("lightgem");
-    public static readonly BlockPortal NetherPortal = (BlockPortal)new BlockPortal(90, 14).setHardness(-1.0F).setSoundGroup(SoundGlassFootstep).setLuminance(12.0F / 16.0F).setBlockName("portal");
-    public static readonly Block JackLantern = new BlockPumpkin(91, 102, true).setHardness(1.0F).setSoundGroup(SoundWoodFootstep).setLuminance(1.0F).setBlockName("litpumpkin").IgnoreMetaUpdates();
-    public static readonly Block Cake = new BlockCake(92, 121).setHardness(0.5F).setSoundGroup(SoundClothFootstep).setBlockName("cake").disableStats().IgnoreMetaUpdates();
-    public static readonly Block Repeater = new BlockRedstoneRepeater(93, false).setHardness(0.0F).setSoundGroup(SoundWoodFootstep).setBlockName("diode").disableStats().IgnoreMetaUpdates();
-    public static readonly Block PoweredRepeater = new BlockRedstoneRepeater(94, true).setHardness(0.0F).setLuminance(10.0F / 16.0F).setSoundGroup(SoundWoodFootstep).setBlockName("diode").disableStats().IgnoreMetaUpdates();
-    public static readonly Block Trapdoor = new BlockTrapDoor(96, Material.Wood).setHardness(3.0F).setSoundGroup(SoundWoodFootstep).setBlockName("trapdoor").disableStats().IgnoreMetaUpdates();
-    public readonly int id;
-    public readonly Material material;
-    private string? blockName;
+    public static readonly Block RedstoneOre = new BlockRedstoneOre(73, 51, false).SetHardness(3.0F).SetResistance(5.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("oreRedstone").IgnoreMetaUpdates();
+    public static readonly Block LitRedstoneOre = new BlockRedstoneOre(74, 51, true).SetLuminance(10.0F / 16.0F).SetHardness(3.0F).SetResistance(5.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("oreRedstone").IgnoreMetaUpdates();
+    public static readonly Block RedstoneTorch = new BlockRedstoneTorch(75, 115, false).SetHardness(0.0F).setSoundGroup(SoundWoodFootstep).SetBlockName("notGate").IgnoreMetaUpdates();
+    public static readonly Block LitRedstoneTorch = new BlockRedstoneTorch(76, 99, true).SetHardness(0.0F).SetLuminance(0.5F).setSoundGroup(SoundWoodFootstep).SetBlockName("notGate").IgnoreMetaUpdates();
+    public static readonly Block Button = new BlockButton(77, Stone.TextureId).SetHardness(0.5F).setSoundGroup(SoundStoneFootstep).SetBlockName("button").IgnoreMetaUpdates();
+    public static readonly Block Snow = new BlockSnow(78, 66).SetHardness(0.1F).setSoundGroup(SoundClothFootstep).SetBlockName("snow");
+    public static readonly Block Ice = new BlockIce(79, 67).SetHardness(0.5F).SetOpacity(3).setSoundGroup(SoundGlassFootstep).SetBlockName("ice");
+    public static readonly Block SnowBlock = new BlockSnowBlock(80, 66).SetHardness(0.2F).setSoundGroup(SoundClothFootstep).SetBlockName("snow");
+    public static readonly Block Cactus = new BlockCactus(81, 70).SetHardness(0.4F).setSoundGroup(SoundClothFootstep).SetBlockName("cactus");
+    public static readonly Block Clay = new BlockClay(82, 72).SetHardness(0.6F).setSoundGroup(SoundGravelFootstep).SetBlockName("clay");
+    public static readonly Block SugarCane = new BlockReed(83, 73).SetHardness(0.0F).setSoundGroup(SoundGrassFootstep).SetBlockName("reeds").DisableStats();
+    public static readonly Block Jukebox = new BlockJukeBox(84, 74).SetHardness(2.0F).SetResistance(10.0F).setSoundGroup(SoundStoneFootstep).SetBlockName("jukebox").IgnoreMetaUpdates();
+    public static readonly Block Fence = new BlockFence(85, 4).SetHardness(2.0F).SetResistance(5.0F).setSoundGroup(SoundWoodFootstep).SetBlockName("fence").IgnoreMetaUpdates();
+    public static readonly Block Pumpkin = new BlockPumpkin(86, 102, false).SetHardness(1.0F).setSoundGroup(SoundWoodFootstep).SetBlockName("pumpkin").IgnoreMetaUpdates();
+    public static readonly Block Netherrack = new BlockNetherrack(87, 103).SetHardness(0.4F).setSoundGroup(SoundStoneFootstep).SetBlockName("hellrock");
+    public static readonly Block SoulSand = new BlockSoulSand(88, 104).SetHardness(0.5F).setSoundGroup(SoundSandFootstep).SetBlockName("hellsand");
+    public static readonly Block Glowstone = new BlockGlowstone(89, 105, Material.Stone).SetHardness(0.3F).setSoundGroup(SoundGlassFootstep).SetLuminance(1.0F).SetBlockName("lightgem");
+    public static readonly BlockPortal NetherPortal = (BlockPortal)new BlockPortal(90, 14).SetHardness(-1.0F).setSoundGroup(SoundGlassFootstep).SetLuminance(12.0F / 16.0F).SetBlockName("portal");
+    public static readonly Block JackLantern = new BlockPumpkin(91, 102, true).SetHardness(1.0F).setSoundGroup(SoundWoodFootstep).SetLuminance(1.0F).SetBlockName("litpumpkin").IgnoreMetaUpdates();
+    public static readonly Block Cake = new BlockCake(92, 121).SetHardness(0.5F).setSoundGroup(SoundClothFootstep).SetBlockName("cake").DisableStats().IgnoreMetaUpdates();
+    public static readonly Block Repeater = new BlockRedstoneRepeater(93, false).SetHardness(0.0F).setSoundGroup(SoundWoodFootstep).SetBlockName("diode").DisableStats().IgnoreMetaUpdates();
+    public static readonly Block PoweredRepeater = new BlockRedstoneRepeater(94, true).SetHardness(0.0F).SetLuminance(10.0F / 16.0F).setSoundGroup(SoundWoodFootstep).SetBlockName("diode").DisableStats().IgnoreMetaUpdates();
+    public static readonly Block Trapdoor = new BlockTrapDoor(96, Material.Wood).SetHardness(3.0F).setSoundGroup(SoundWoodFootstep).SetBlockName("trapdoor").DisableStats().IgnoreMetaUpdates();
+    public readonly int Id;
+    public readonly Material Material;
+    private string? _blockName;
     public Box BoundingBox;
-    public float hardness;
-    public float particleFallSpeedModifier;
-    public float resistance;
-    protected bool shouldTrackStatistics;
-    public float slipperiness;
-    public BlockSoundGroup soundGroup;
-    public int textureId;
+    public float Hardness;
+    public float ParticleFallSpeedModifier;
+    public float Resistance;
+    public bool ShouldTrackStatistics;
+    public float Slipperiness;
+    public BlockSoundGroup SoundGroup;
+    public int TextureId;
+
+    static Block()
+    {
+        Item.ITEMS[Wool.Id] = new ItemCloth(Wool.Id - 256).setItemName("cloth");
+        Item.ITEMS[Log.Id] = new ItemLog(Log.Id - 256).setItemName("log");
+        Item.ITEMS[Slab.Id] = new ItemSlab(Slab.Id - 256).setItemName("stoneSlab");
+        Item.ITEMS[Sapling.Id] = new ItemSapling(Sapling.Id - 256).setItemName("sapling");
+        Item.ITEMS[Leaves.Id] = new ItemLeaves(Leaves.Id - 256).setItemName("leaves");
+        Item.ITEMS[Piston.Id] = new ItemPiston(Piston.Id - 256);
+        Item.ITEMS[StickyPiston.Id] = new ItemPiston(StickyPiston.Id - 256);
+
+        for (int blockId = 0; blockId < 256; ++blockId)
+        {
+            if (Blocks[blockId] != null && Item.ITEMS[blockId] == null)
+            {
+                Item.ITEMS[blockId] = new ItemBlock(blockId - 256);
+                Blocks[blockId]?.Init();
+            }
+        }
+
+        BlocksAllowVision[0] = true;
+        Stats.Stats.InitializeItemStats();
+    }
 
     protected Block(int id, Material material)
     {
-        shouldTrackStatistics = true;
-        soundGroup = SoundPowderFootstep;
-        particleFallSpeedModifier = 1.0F;
-        slipperiness = 0.6F;
+        ShouldTrackStatistics = true;
+        SoundGroup = SoundPowderFootstep;
+        ParticleFallSpeedModifier = 1.0F;
+        Slipperiness = 0.6F;
         if (Blocks[id] != null)
         {
             throw new ArgumentException("Slot " + id + " is already occupied by " + Blocks[id] + " when adding " + this, nameof(id));
         }
 
-        this.material = material;
+        Material = material;
         Blocks[id] = this;
-        this.id = id;
-        setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-        BlocksOpaque[id] = isOpaque();
-        BlockLightOpacity[id] = isOpaque() ? 255 : 0;
+        Id = id;
+        SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+        BlocksOpaque[id] = IsOpaque();
+        BlockLightOpacity[id] = IsOpaque() ? 255 : 0;
         BlocksAllowVision[id] = !material.BlocksVision;
         BlocksWithEntity[id] = false;
     }
 
-    protected Block(int id, int textureId, Material material) : this(id, material) => this.textureId = textureId;
+    protected Block(int id, int textureId, Material material) : this(id, material) => TextureId = textureId;
 
     protected Block IgnoreMetaUpdates()
     {
-        BlocksIgnoreMetaUpdate[id] = true;
+        BlocksIgnoreMetaUpdate[Id] = true;
         return this;
     }
 
-    protected virtual void init()
+    protected virtual void Init()
     {
     }
 
     protected Block setSoundGroup(BlockSoundGroup soundGroup)
     {
-        this.soundGroup = soundGroup;
+        SoundGroup = soundGroup;
         return this;
     }
 
-    protected Block setOpacity(int opacity)
+    protected Block SetOpacity(int opacity)
     {
-        BlockLightOpacity[id] = opacity;
+        BlockLightOpacity[Id] = opacity;
         return this;
     }
 
-    protected Block setLuminance(float fractionalValue)
+    protected Block SetLuminance(float fractionalValue)
     {
-        BlocksLightLuminance[id] = (int)(15.0F * fractionalValue);
+        BlocksLightLuminance[Id] = (int)(15.0F * fractionalValue);
         return this;
     }
 
-    protected Block setResistance(float resistance)
+    protected Block SetResistance(float resistance)
     {
-        this.resistance = resistance * 3.0F;
+        Resistance = resistance * 3.0F;
         return this;
     }
 
-    public virtual bool isFullCube() => true;
+    public virtual bool IsFullCube() => true;
 
-    public virtual BlockRendererType getRenderType() => BlockRendererType.Standard;
+    public virtual BlockRendererType GetRenderType() => BlockRendererType.Standard;
 
-    protected Block setHardness(float hardness)
+    protected Block SetHardness(float hardness)
     {
-        this.hardness = hardness;
-        if (resistance < hardness * 5.0F)
+        this.Hardness = hardness;
+        if (Resistance < hardness * 5.0F)
         {
-            resistance = hardness * 5.0F;
+            Resistance = hardness * 5.0F;
         }
 
         return this;
@@ -218,32 +241,32 @@ public class Block
 
     protected Block setUnbreakable()
     {
-        setHardness(-1.0F);
+        SetHardness(-1.0F);
         return this;
     }
 
-    public float getHardness() => hardness;
+    public float GetHardness() => Hardness;
 
-    protected Block setTickRandomly(bool tickRandomly)
+    protected Block SetTickRandomly(bool tickRandomly)
     {
-        BlocksRandomTick[id] = tickRandomly;
+        BlocksRandomTick[Id] = tickRandomly;
         return this;
     }
 
-    public void setBoundingBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) => BoundingBox = new Box(minX, minY, minZ, maxX, maxY, maxZ);
+    public void SetBoundingBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) => BoundingBox = new Box(minX, minY, minZ, maxX, maxY, maxZ);
 
-    public virtual float getLuminance(ILightProvider lighting, int x, int y, int z)
+    public virtual float GetLuminance(ILightProvider? lighting, int x, int y, int z)
     {
-        if (lighting == null)
+        if (lighting != null)
         {
-            int baseLum = BlocksLightLuminance[id];
-            return baseLum > 0 ? baseLum / 15.0f : 1.0f;
+            return lighting.GetNaturalBrightness(x, y, z, BlocksLightLuminance[Id]);
         }
 
-        return lighting.GetNaturalBrightness(x, y, z, BlocksLightLuminance[id]);
+        int baseLum = BlocksLightLuminance[Id];
+        return baseLum > 0 ? baseLum / 15.0f : 1.0f;
     }
 
-    public virtual bool isSideVisible(IBlockReader iBlockReader, int x, int y, int z, int side)
+    public virtual bool IsSideVisible(IBlockReader iBlockReader, int x, int y, int z, int side)
     {
         double minX = BoundingBox.MinX;
         double minY = BoundingBox.MinY;
@@ -251,170 +274,100 @@ public class Block
         double maxX = BoundingBox.MaxX;
         double maxY = BoundingBox.MaxY;
         double maxZ = BoundingBox.MaxZ;
-        return side == 0 && minY > 0.0D
-            ? true
-            : side == 1 && maxY < 1.0D
-                ? true
-                : side == 2 && minZ > 0.0D
-                    ? true
-                    : side == 3 && maxZ < 1.0D
-                        ? true
-                        : side == 4 && minX > 0.0D
-                            ? true
-                            : side == 5 && maxX < 1.0D
-                                ? true
-                                : !iBlockReader.IsOpaque(x, y, z);
+        return side == 0 && minY > 0.0D ||
+               side == 1 && maxY < 1.0D ||
+               side == 2 && minZ > 0.0D ||
+               side == 3 && maxZ < 1.0D ||
+               side == 4 && minX > 0.0D ||
+               side == 5 && maxX < 1.0D ||
+               !iBlockReader.IsOpaque(x, y, z);
     }
 
-    public virtual bool isSolidFace(IBlockReader iBlockReader, int x, int y, int z, int face)
-    {
-        return iBlockReader.GetMaterial(x, y, z).IsSolid;
-    }
+    public virtual bool IsSolidFace(IBlockReader iBlockReader, int x, int y, int z, int face) => iBlockReader.GetMaterial(x, y, z).IsSolid;
 
-    public virtual int getTextureId(IBlockReader iBlockReader, int x, int y, int z, int side)
-    {
-        return getTexture(side, iBlockReader.GetBlockMeta(x, y, z));
-    }
+    public virtual int GetTextureId(IBlockReader iBlockReader, int x, int y, int z, int side) => GetTexture(side, iBlockReader.GetBlockMeta(x, y, z));
 
-    public virtual int getTexture(int side, int meta)
-    {
-        return getTexture(side);
-    }
+    public virtual int GetTexture(int side, int meta) => GetTexture(side);
 
-    public virtual int getTexture(int side)
-    {
-        return textureId;
-    }
+    public virtual int GetTexture(int side) => TextureId;
 
-    public virtual Box getBoundingBox(IBlockReader world, EntityManager entities, int x, int y, int z)
-    {
-        return BoundingBox.Offset(x, y, z);
-    }
+    public virtual Box GetBoundingBox(IBlockReader world, EntityManager entities, int x, int y, int z) => BoundingBox.Offset(x, y, z);
 
-    public virtual void addIntersectingBoundingBox(IBlockReader world,EntityManager entities, int x, int y, int z, Box box, List<Box> boxes)
+    public virtual void AddIntersectingBoundingBox(IBlockReader world, EntityManager entities, int x, int y, int z, Box box, List<Box> boxes)
     {
-        Box? collisionBox = getCollisionShape(world, entities, x, y, z);
+        Box? collisionBox = GetCollisionShape(world, entities, x, y, z);
         if (collisionBox != null && box.Intersects(collisionBox.Value))
         {
             boxes.Add(collisionBox.Value);
         }
     }
 
-    public virtual Box? getCollisionShape(IBlockReader world, EntityManager entities, int x, int y, int z)
-    {
-        return BoundingBox.Offset(x, y, z);
-    }
+    public virtual Box? GetCollisionShape(IBlockReader world, EntityManager entities, int x, int y, int z) => BoundingBox.Offset(x, y, z);
 
-    public virtual bool isOpaque()
-    {
-        return true;
-    }
+    public virtual bool IsOpaque() => true;
 
-    public virtual bool hasCollision(int meta, bool allowLiquids)
-    {
-        return hasCollision();
-    }
+    public virtual bool HasCollision(int meta, bool allowLiquids) => HasCollision();
 
-    public virtual bool hasCollision()
-    {
-        return true;
-    }
+    public virtual bool HasCollision() => true;
 
-    public virtual void onTick(OnTickEvent e)
+
+    public virtual void RandomDisplayTick(OnTickEvent e)
     {
     }
 
-    public virtual void randomDisplayTick(OnTickEvent e)
+
+    public virtual void NeighborUpdate(OnTickEvent e)
     {
     }
 
-    public virtual void onMetadataChange(OnMetadataChangeEvent ctx)
-    {
-    }
+    public virtual int GetTickRate() => 10;
 
-    public virtual void neighborUpdate(OnTickEvent e)
-    {
-    }
 
-    public virtual int getTickRate()
-    {
-        return 10;
-    }
+    public virtual int GetDroppedItemCount() => 1;
 
-    public virtual void onPlaced(OnPlacedEvent e)
-    {
-    }
+    public virtual int GetDroppedItemId(int blockMeta) => Id;
 
-    public virtual void onBreak(OnBreakEvent e)
-    {
-    }
+    public float GetHardness(EntityPlayer player) => Hardness < 0.0F ? 0.0F : !player.canHarvest(this) ? 1.0F / Hardness / 100.0F : player.getBlockBreakingSpeed(this) / Hardness / 30.0F;
 
-    public virtual int getDroppedItemCount()
+    public virtual void DropStacks(OnDropEvent ctx)
     {
-        return 1;
-    }
+        if (ctx.World.IsRemote || !ctx.World.Rules.GetBool(DefaultRules.DoTileDrops)) return;
 
-    public virtual int getDroppedItemId(int blockMeta)
-    {
-        return id;
-    }
+        int dropCount = GetDroppedItemCount();
 
-    public float getHardness(EntityPlayer player)
-    {
-        return hardness < 0.0F ? 0.0F : (!player.canHarvest(this) ? 1.0F / hardness / 100.0F : player.getBlockBreakingSpeed(this) / hardness / 30.0F);
-    }
-
-    public virtual void dropStacks(OnDropEvent ctx)
-    {
-        if (!ctx.World.IsRemote && ctx.World.Rules.GetBool(DefaultRules.DoTileDrops))
+        for (int attempt = 0; attempt < dropCount; ++attempt)
         {
-            int dropCount = getDroppedItemCount();
+            if (!(Random.Shared.NextSingle() <= ctx.Luck)) continue;
 
-            for (int attempt = 0; attempt < dropCount; ++attempt)
+            int itemId = GetDroppedItemId(ctx.Meta);
+            if (itemId > 0)
             {
-                if (Random.Shared.NextSingle() <= ctx.Luck)
-                {
-                    int itemId = getDroppedItemId(ctx.Meta);
-                    if (itemId > 0)
-                    {
-                        dropStack(ctx.World, ctx.X, ctx.Y, ctx.Z, new ItemStack(itemId, 1, getDroppedItemMeta(ctx.Meta)));
-                    }
-                }
+                DropStack(ctx.World, ctx.X, ctx.Y, ctx.Z, new ItemStack(itemId, 1, GetDroppedItemMeta(ctx.Meta)));
             }
         }
     }
 
-    protected void dropStack(IWorldContext world, int x, int y, int z, ItemStack itemStack)
+    protected void DropStack(IWorldContext world, int x, int y, int z, ItemStack itemStack)
     {
-        if (!world.IsRemote && world.Rules.GetBool(DefaultRules.DoTileDrops))
-        {
-            float spreadFactor = 0.7F;
-            double offsetX = Random.Shared.NextSingle() * spreadFactor + (1.0F - spreadFactor) * 0.5D;
-            double offsetY = Random.Shared.NextSingle() * spreadFactor + (1.0F - spreadFactor) * 0.5D;
-            double offsetZ = Random.Shared.NextSingle() * spreadFactor + (1.0F - spreadFactor) * 0.5D;
-            world.SpawnItemDrop(x + offsetX, y + offsetY, z + offsetZ, itemStack);
-        }
+        if (world.IsRemote || !world.Rules.GetBool(DefaultRules.DoTileDrops)) return;
+
+        const float spreadFactor = 0.7F;
+        double offsetX = Random.Shared.NextSingle() * spreadFactor + (1.0F - spreadFactor) * 0.5D;
+        double offsetY = Random.Shared.NextSingle() * spreadFactor + (1.0F - spreadFactor) * 0.5D;
+        double offsetZ = Random.Shared.NextSingle() * spreadFactor + (1.0F - spreadFactor) * 0.5D;
+        world.SpawnItemDrop(x + offsetX, y + offsetY, z + offsetZ, itemStack);
     }
 
-    protected virtual int getDroppedItemMeta(int blockMeta)
-    {
-        return 0;
-    }
+    protected virtual int GetDroppedItemMeta(int blockMeta) => 0;
 
-    public virtual float getBlastResistance(Entity entity)
-    {
-        return resistance / 5.0F;
-    }
+    public virtual float GetBlastResistance(Entity _) => Resistance / 5.0F;
 
-    public virtual HitResult raycast(IBlockReader world, EntityManager entities, int x, int y, int z, Vec3D startPos, Vec3D endPos)
+    public virtual HitResult Raycast(IBlockReader world, EntityManager entities, int x, int y, int z, Vec3D startPos, Vec3D endPos)
     {
-        updateBoundingBox(world, entities, x, y, z);
+        UpdateBoundingBox(world, entities, x, y, z);
         Vec3D pos = new(x, y, z);
         HitResult res = BoundingBox.Raycast(startPos - pos, endPos - pos);
-        if (res.Type == HitResultType.MISS)
-        {
-            return new HitResult(HitResultType.MISS);
-        }
+        if (res.Type == HitResultType.MISS) return new HitResult(HitResultType.MISS);
 
         res.BlockX = x;
         res.BlockY = y;
@@ -423,148 +376,109 @@ public class Block
         return res;
     }
 
-    public virtual void onDestroyedByExplosion(OnDestroyedByExplosionEvent @event)
-    {
-    }
 
-    public virtual int getRenderLayer() => 0;
+    public virtual int GetRenderLayer() => 0;
 
-    public virtual bool canPlaceAt(CanPlaceAtContext evt)
+    public virtual bool CanPlaceAt(CanPlaceAtContext evt)
     {
         int blockId = evt.World.Reader.GetBlockId(evt.X, evt.Y, evt.Z);
-        return blockId == 0 || Blocks[blockId].material.IsReplaceable;
+        return blockId == 0 || Blocks[blockId]!.Material.IsReplaceable;
     }
 
-    public virtual bool onUse(OnUseEvent _)
-    {
-        return false;
-    }
-
-    public virtual void onSteppedOn(OnEntityStepEvent @event)
+    public virtual void OnTick(OnTickEvent e)
     {
     }
 
-    public virtual void onBlockBreakStart(OnBlockBreakStartEvent @event)
+    public virtual void OnMetadataChange(OnMetadataChangeEvent ctx)
     {
     }
 
-    public virtual Vec3D applyVelocity(OnApplyVelocityEvent @event)
-    {
-        return Vec3D.Zero;
-    }
 
-    public void updateBoundingBox(IBlockReader blockReader, int x, int y, int z)
-    {
-        updateBoundingBox(blockReader, null, x, y, z);
-    }
+    public virtual Vec3D ApplyVelocity(OnApplyVelocityEvent @event) => Vec3D.Zero;
 
-    public virtual void updateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z)
+    public void UpdateBoundingBox(IBlockReader blockReader, int x, int y, int z) => UpdateBoundingBox(blockReader, null, x, y, z);
+
+    public virtual void UpdateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z)
     {
     }
 
-    public virtual int getColor(int meta)
-    {
-        return 0xFFFFFF;
-    }
+    public virtual int GetColor(int meta) => 0xFFFFFF;
 
-    public virtual int getColorForFace(int meta, int face) => getColor(meta);
+    public virtual int GetColorForFace(int meta, int face) => GetColor(meta);
 
-    public virtual int getColorMultiplier(IBlockReader iBlockReader, int x, int y, int z)
-    {
-        return 0xFFFFFF;
-    }
+    public virtual int GetColorMultiplier(IBlockReader reader, int x, int y, int z) => 0xFFFFFF;
 
-    public virtual int getColorMultiplier(IBlockReader iBlockReader, int x, int y, int z, int knownMeta)
-    {
-        return getColorMultiplier(iBlockReader, x, y, z);
-    }
+    public virtual int GetColorMultiplier(IBlockReader reader, int x, int y, int z, int knownMeta) => GetColorMultiplier(reader, x, y, z);
 
-    public virtual bool isPoweringSide(IBlockReader iBlockReader, int x, int y, int z, int side)
-    {
-        return false;
-    }
+    public virtual bool IsPoweringSide(IBlockReader reader, int x, int y, int z, int side) => false;
 
-    public virtual bool canEmitRedstonePower()
-    {
-        return false;
-    }
+    public virtual bool CanEmitRedstonePower() => false;
 
-    public virtual bool isFlammable(IBlockReader iBlockReader, int x, int y, int z)
-    {
-        return false;
-    }
+    public virtual bool IsFlammable(IBlockReader iBlockReader, int x, int y, int z) => false;
 
-    public virtual void onEntityCollision(OnEntityCollisionEvent @event)
+
+    public virtual bool IsStrongPoweringSide(IBlockReader reader, int x, int y, int z, int side) => false;
+
+    public virtual void SetupRenderBoundingBox()
     {
     }
 
-    public virtual bool isStrongPoweringSide(IBlockReader world, int x, int y, int z, int side)
-    {
-        return false;
-    }
-
-    public virtual void setupRenderBoundingBox()
+    public virtual void OnPlaced(OnPlacedEvent e)
     {
     }
 
-    public virtual void onAfterBreak(OnAfterBreakEvent ctx)
-    {
-        ctx.Player.increaseStat(Stats.Stats.MineBlockStatArray[id], 1);
-        dropStacks(new OnDropEvent(ctx.World, ctx.X, ctx.Y, ctx.Z, ctx.Meta));
-    }
+    public virtual bool CanGrow(OnTickEvent ctx) => true;
 
-    public virtual bool canGrow(OnTickEvent ctx) => true;
-
-    public Block setBlockName(string name)
+    public Block SetBlockName(string name)
     {
-        blockName = "tile." + name;
+        _blockName = "tile." + name;
         return this;
     }
 
-    public string translateBlockName() => StatCollector.TranslateToLocal($"{getBlockName()}.name");
+    public string TranslateBlockName() => StatCollector.TranslateToLocal($"{GetBlockName()}.name");
 
-    public string getBlockName()
+    public string? GetBlockName() => _blockName;
+
+
+    public bool GetEnableStats() => ShouldTrackStatistics;
+
+    protected Block DisableStats()
     {
-        return blockName;
-    }
-
-    public virtual void onBlockAction(OnBlockActionEvent ctx)
-    {
-    }
-
-    public bool getEnableStats() => shouldTrackStatistics;
-
-    protected Block disableStats()
-    {
-        shouldTrackStatistics = false;
+        ShouldTrackStatistics = false;
         return this;
     }
 
-    public virtual int getPistonBehavior()
+    public virtual int GetPistonBehavior() => Material.PistonBehavior;
+
+    public virtual void OnBreak(OnBreakEvent e)
     {
-        return material.PistonBehavior;
     }
 
-    static Block()
+    public virtual void OnDestroyedByExplosion(OnDestroyedByExplosionEvent @event)
     {
-        Item.ITEMS[Wool.id] = new ItemCloth(Wool.id - 256).setItemName("cloth");
-        Item.ITEMS[Log.id] = new ItemLog(Log.id - 256).setItemName("log");
-        Item.ITEMS[Slab.id] = new ItemSlab(Slab.id - 256).setItemName("stoneSlab");
-        Item.ITEMS[Sapling.id] = new ItemSapling(Sapling.id - 256).setItemName("sapling");
-        Item.ITEMS[Leaves.id] = new ItemLeaves(Leaves.id - 256).setItemName("leaves");
-        Item.ITEMS[Piston.id] = new ItemPiston(Piston.id - 256);
-        Item.ITEMS[StickyPiston.id] = new ItemPiston(StickyPiston.id - 256);
+    }
 
-        for (int blockId = 0; blockId < 256; ++blockId)
-        {
-            if (Blocks[blockId] != null && Item.ITEMS[blockId] == null)
-            {
-                Item.ITEMS[blockId] = new ItemBlock(blockId - 256);
-                Blocks[blockId].init();
-            }
-        }
+    public virtual bool OnUse(OnUseEvent _) => false;
 
-        BlocksAllowVision[0] = true;
-        Stats.Stats.InitializeItemStats();
+    public virtual void OnSteppedOn(OnEntityStepEvent @event)
+    {
+    }
+
+    public virtual void OnBlockBreakStart(OnBlockBreakStartEvent @event)
+    {
+    }
+
+    public virtual void OnEntityCollision(OnEntityCollisionEvent @event)
+    {
+    }
+
+    public virtual void OnAfterBreak(OnAfterBreakEvent ctx)
+    {
+        ctx.Player.increaseStat(Stats.Stats.MineBlockStatArray[Id], 1);
+        DropStacks(new OnDropEvent(ctx.World, ctx.X, ctx.Y, ctx.Z, ctx.Meta));
+    }
+
+    public virtual void OnBlockAction(OnBlockActionEvent ctx)
+    {
     }
 }

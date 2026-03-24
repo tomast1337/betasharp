@@ -4,11 +4,11 @@ namespace BetaSharp.Blocks;
 
 internal class BlockSponge : Block
 {
-    public BlockSponge(int id) : base(id, Material.Sponge) => textureId = 48;
+    public BlockSponge(int id) : base(id, Material.Sponge) => TextureId = 48;
 
-    public override void onPlaced(OnPlacedEvent @event)
+    public override void OnPlaced(OnPlacedEvent @event)
     {
-        sbyte radius = 2;
+        const sbyte radius = 2;
 
         for (int checkX = @event.X - radius; checkX <= @event.X + radius; ++checkX)
         {
@@ -18,15 +18,16 @@ internal class BlockSponge : Block
                 {
                     if (@event.World.Reader.GetMaterial(checkX, checkY, checkZ) == Material.Water)
                     {
+                        // Sponges in b1.7.3 dont work :P
                     }
                 }
             }
         }
     }
 
-    public override void onBreak(OnBreakEvent @event)
+    public override void OnBreak(OnBreakEvent @event)
     {
-        sbyte radius = 2;
+        const sbyte radius = 2;
 
         for (int checkX = @event.X - radius; checkX <= @event.X + radius; ++checkX)
         {

@@ -411,7 +411,7 @@ public abstract class World : IWorldContext
                 break;
         }
 
-        if (Reader.GetBlockId(x, y, z) == Block.Fire.id)
+        if (Reader.GetBlockId(x, y, z) == Block.Fire.Id)
         {
             Broadcaster.WorldEvent(player, 1004, x, y, z, 0);
             Writer.SetBlock(x, y, z, 0);
@@ -579,16 +579,16 @@ public abstract class World : IWorldContext
                     int blockBelowId = currentChunk.GetBlockId(localX, worldY - 1, localZ);
                     int currentBlockId = currentChunk.GetBlockId(localX, worldY, localZ);
 
-                    if (Environment.IsRaining && currentBlockId == 0 && Block.Snow.canPlaceAt(new CanPlaceAtContext(this, 1, worldX, worldY, worldZ)) &&
-                        blockBelowId != 0 && blockBelowId != Block.Ice.id &&
-                        Block.Blocks[blockBelowId].material.BlocksMovement)
+                    if (Environment.IsRaining && currentBlockId == 0 && Block.Snow.CanPlaceAt(new CanPlaceAtContext(this, 1, worldX, worldY, worldZ)) &&
+                        blockBelowId != 0 && blockBelowId != Block.Ice.Id &&
+                        Block.Blocks[blockBelowId].Material.BlocksMovement)
                     {
-                        Writer.SetBlock(worldX, worldY, worldZ, Block.Snow.id);
+                        Writer.SetBlock(worldX, worldY, worldZ, Block.Snow.Id);
                     }
 
-                    if (blockBelowId == Block.Water.id && currentChunk.GetBlockMeta(localX, worldY - 1, localZ) == 0)
+                    if (blockBelowId == Block.Water.Id && currentChunk.GetBlockMeta(localX, worldY - 1, localZ) == 0)
                     {
-                        Writer.SetBlock(worldX, worldY - 1, worldZ, Block.Ice.id);
+                        Writer.SetBlock(worldX, worldY - 1, worldZ, Block.Ice.Id);
                     }
                 }
             }
@@ -604,7 +604,7 @@ public abstract class World : IWorldContext
                 int blockId = currentChunk.Blocks[(localX << 11) | (localZ << 7) | localY] & 255;
                 if (Block.BlocksRandomTick[blockId])
                 {
-                    Block.Blocks[blockId].onTick(new OnTickEvent(this, localX + worldXBase, localY, localZ + worldZBase, currentChunk.GetBlockMeta(localX, localY, localZ), blockId));
+                    Block.Blocks[blockId].OnTick(new OnTickEvent(this, localX + worldXBase, localY, localZ + worldZBase, currentChunk.GetBlockMeta(localX, localY, localZ), blockId));
                 }
             }
         }
@@ -623,7 +623,7 @@ public abstract class World : IWorldContext
             int blockId = Reader.GetBlockId(targetX, targetY, targetZ);
             if (blockId > 0)
             {
-                Block.Blocks[blockId].randomDisplayTick(new OnTickEvent(this, targetX, targetY, targetZ, Reader.GetBlockMeta(targetX, targetY, targetZ), blockId));
+                Block.Blocks[blockId].RandomDisplayTick(new OnTickEvent(this, targetX, targetY, targetZ, Reader.GetBlockMeta(targetX, targetY, targetZ), blockId));
             }
         }
     }

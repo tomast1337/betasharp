@@ -146,11 +146,11 @@ public class EntityMinecart : Entity, IInventory
                         }
                     }
 
-                    dropItem(Block.Chest.id, 1, 0.0F);
+                    dropItem(Block.Chest.Id, 1, 0.0F);
                 }
                 else if (type == 2)
                 {
-                    dropItem(Block.Furnace.id, 1, 0.0F);
+                    dropItem(Block.Furnace.Id, 1, 0.0F);
                 }
             }
 
@@ -276,7 +276,7 @@ public class EntityMinecart : Entity, IInventory
                 y = (double)floorY;
                 bool var12 = false;
                 bool var13 = false;
-                if (var9 == Block.PoweredRail.id)
+                if (var9 == Block.PoweredRail.Id)
                 {
                     var12 = (var11 & 8) != 0;
                     var13 = !var12;
@@ -901,7 +901,7 @@ public class EntityMinecart : Entity, IInventory
         return 27;
     }
 
-    public ItemStack getStack(int slotIndex)
+    public ItemStack? getStack(int slotIndex)
     {
         return cargoItems[slotIndex];
     }

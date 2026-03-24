@@ -2,13 +2,9 @@ using BetaSharp.Blocks.Materials;
 
 namespace BetaSharp.Blocks;
 
-internal class BlockGlass : BlockBreakable
+internal class BlockGlass(int id, int texture, Material material, bool bl) : BlockBreakable(id, texture, material, bl)
 {
-    public BlockGlass(int id, int texture, Material material, bool bl) : base(id, texture, material, bl)
-    {
-    }
+    public override int GetDroppedItemCount() => 0;
 
-    public override int getDroppedItemCount() => 0;
-
-    public override int getRenderLayer() => 0;
+    public override int GetRenderLayer() => 0;
 }

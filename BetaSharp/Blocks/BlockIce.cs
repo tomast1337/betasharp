@@ -7,34 +7,36 @@ internal class BlockIce : BlockBreakable
 {
     public BlockIce(int id, int textureId) : base(id, textureId, Material.Ice, false)
     {
-        slipperiness = 0.98F;
-        setTickRandomly(true);
+        Slipperiness = 0.98F;
+        SetTickRandomly(true);
     }
 
-    public override int getRenderLayer() => 1;
+    public override int GetRenderLayer() => 1;
 
-    public override bool isSideVisible(IBlockReader iBlockReader, int x, int y, int z, int side) => base.isSideVisible(iBlockReader, x, y, z, 1 - side);
+    public override bool IsSideVisible(IBlockReader iBlockReader, int x, int y, int z, int side) => base.IsSideVisible(iBlockReader, x, y, z, 1 - side);
 
-    public override void onAfterBreak(OnAfterBreakEvent @event)
+    public override void OnAfterBreak(OnAfterBreakEvent @event)
     {
-        base.onAfterBreak(@event);
+        base.OnAfterBreak(@event);
         Material materialBelow = @event.World.Reader.GetMaterial(@event.X, @event.Y - 1, @event.Z);
         if (materialBelow.BlocksMovement || materialBelow.IsFluid)
         {
-            @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, FlowingWater.id);
+            @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, FlowingWater.Id);
         }
     }
 
-    public override int getDroppedItemCount() => 0;
+    public override int GetDroppedItemCount() => 0;
 
-    public override void onTick(OnTickEvent @event)
+    public override void OnTick(OnTickEvent @event)
     {
-        if (@event.World.Lighting.GetBrightness(LightType.Block, @event.X, @event.Y, @event.Z) > 11 - BlockLightOpacity[id])
+        if (@event.World.Lighting.GetBrightness(LightType.Block, @event.X, @event.Y, @event.Z) <= 11 - BlockLightOpacity[Id])
         {
-            dropStacks(new OnDropEvent(@event.World, @event.X, @event.Y, @event.Z, @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z)));
-            @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, Water.id);
+            return;
         }
+
+        DropStacks(new OnDropEvent(@event.World, @event.X, @event.Y, @event.Z, @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z)));
+        @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, Water.Id);
     }
 
-    public override int getPistonBehavior() => 0;
+    public override int GetPistonBehavior() => 0;
 }

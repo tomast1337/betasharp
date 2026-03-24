@@ -8,33 +8,20 @@ namespace BetaSharp.Blocks.Entities;
 
 public class BlockEntityMobSpawner : BlockEntity
 {
-    public override BlockEntityType Type => BlockEntity.MobSpawner;
-    public int SpawnDelay { get; set; } = -1;
-    private string _spawnedEntityId = "Pig";
-    public double Rotation { get; set; }
-    public double LastRotation { get; set; } = 0.0D;
-
     private readonly ILogger<BlockEntityMobSpawner> _logger = Log.Instance.For<BlockEntityMobSpawner>();
+    private string _spawnedEntityId = "Pig";
 
-    public BlockEntityMobSpawner()
-    {
-        SpawnDelay = 20;
-    }
+    public BlockEntityMobSpawner() => SpawnDelay = 20;
+    public override BlockEntityType Type => MobSpawner;
+    public int SpawnDelay { get; set; } = -1;
+    public double Rotation { get; set; }
+    public double LastRotation { get; set; }
 
-    public string GetSpawnedEntityId()
-    {
-        return _spawnedEntityId;
-    }
+    public string GetSpawnedEntityId() => _spawnedEntityId;
 
-    public void SetSpawnedEntityId(string spawnedEntityId)
-    {
-        _spawnedEntityId = spawnedEntityId;
-    }
+    public void SetSpawnedEntityId(string spawnedEntityId) => _spawnedEntityId = spawnedEntityId;
 
-    public bool IsPlayerInRange()
-    {
-        return World.Entities.GetClosestPlayer(X + 0.5D, Y + 0.5D, Z + 0.5D, 16.0D) != null;
-    }
+    public bool IsPlayerInRange() => World.Entities.GetClosestPlayer(X + 0.5D, Y + 0.5D, Z + 0.5D, 16.0D) != null;
 
     public override void tick(EntityManager entities)
     {
@@ -77,7 +64,7 @@ public class BlockEntityMobSpawner : BlockEntity
 
                     int count = World.Entities
                         .CollectEntitiesOfType<EntityLiving>(new Box(X, Y, Z, X + 1, Y + 1, Z + 1)
-                        .Expand(8.0D, 4.0D, 8.0D))
+                            .Expand(8.0D, 4.0D, 8.0D))
                         .Count(e => e.GetType() == entityLiving.GetType());
                     if (count >= 6)
                     {

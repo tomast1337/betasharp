@@ -7,7 +7,7 @@ public interface IInventory
 {
     int size();
 
-    ItemStack getStack(int slotIndex);
+    ItemStack? getStack(int slotIndex);
 
     ItemStack? removeStack(int slotIndex, int amount);
 
