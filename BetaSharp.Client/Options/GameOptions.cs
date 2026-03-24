@@ -50,6 +50,7 @@ public class GameOptions
     public BoolOption ShowDebugGraphOption { get; private set; }
     public BoolOption EnvironmentAnimationOption { get; private set; }
     public BoolOption ChunkFadeOption { get; private set; }
+    public BoolOption AlternateBlocksOption { get; private set; }
     public BoolOption MenuMusicOption { get; private set; }
 
 
@@ -68,7 +69,7 @@ public class GameOptions
         RenderDistanceOption, FramerateLimitOption, VSyncOption,
         ViewBobbingOption, GuiScaleOption, AnisotropicOption,
         MipmapsOption, MsaaOption, EnvironmentAnimationOption, ChunkFadeOption,
-        ShowWTHITOption, GammaOption
+        AlternateBlocksOption, ShowWTHITOption, GammaOption
     ];
 
     public GameOption[] DebugScreenOptions => [DebugModeOption, RenderOccludedOption, ShowDebugGraphOption];
@@ -110,6 +111,7 @@ public class GameOptions
     public bool RenderOccluded => RenderOccludedOption.Value;
     public bool EnvironmentAnimation => EnvironmentAnimationOption.Value;
     public bool ChunkFade => ChunkFadeOption.Value;
+    public bool AlternateBlocksEnabled => AlternateBlocksOption.Value;
     public bool MenuMusic => MenuMusicOption.Value;
 
 
@@ -283,6 +285,11 @@ public class GameOptions
         ShowDebugGraphOption = new BoolOption("Show Debug Graph", "showDebugGraph");
         EnvironmentAnimationOption = new BoolOption("Environment Anim", "envAnimation", true);
         ChunkFadeOption = new BoolOption("Chunk Fade", "chunkFade", true);
+        AlternateBlocksOption = new BoolOption("Alternate Blocks", "alternateBlocks", true)
+        {
+            LabelOverride = "Alternate Blocks",
+            OnChanged = _ => BetaSharp.Instance?.terrainRenderer?.chunkRenderer?.MarkAllVisibleChunksDirty()
+        };
         MenuMusicOption = new BoolOption("Menu Music", "menuMusic", true);
 
         RenderDistanceOption = new FloatOption("options.renderDistance", "viewDistance", 0.2f)
@@ -349,6 +356,7 @@ public class GameOptions
         yield return RenderOccludedOption;
         yield return EnvironmentAnimationOption;
         yield return ChunkFadeOption;
+        yield return AlternateBlocksOption;
         yield return MenuMusicOption;
         yield return RenderDistanceOption;
         yield return DifficultyOption;

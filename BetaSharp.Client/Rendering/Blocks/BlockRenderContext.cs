@@ -61,6 +61,14 @@ public ref struct BlockRenderContext
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static int GetTextureRotationHash(int x, int y, int z)
+    {
+        int hash = (x * 3129871) ^ (y * 116129781) ^ (z * 3812513);
+        hash = (hash ^ (hash >> 13)) * 3129871;
+        return (Math.Abs(hash) >> 16) & 3;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static float Clamp(float value) => value < 0f ? 0f : (value > 1f ? 1f : value);
 
     internal readonly void DrawBottomFace(Block block, in Vec3D pos, in FaceColors colors, int textureId, bool flipped = false)

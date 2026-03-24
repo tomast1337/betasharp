@@ -33,14 +33,18 @@ public class BlockRenderer
 
         block.updateBoundingBox(world, pos.x, pos.y, pos.z);
 
+        int uvRotation = 0;
+        if (BetaSharp.Instance?.options?.AlternateBlocksEnabled == true && IsRotatableBlock(block.id))
+            uvRotation = BlockRenderContext.GetTextureRotationHash(pos.x, pos.y, pos.z);
+
         var ctx = new BlockRenderContext(
             tess: tess,
             world: world,
             overrideTexture: overrideTexture,
             renderAllFaces: renderAllFaces,
             flipTexture: false,
-            uvTop: 0,
-            uvBottom: 0,
+            uvTop: uvRotation,
+            uvBottom: uvRotation,
             uvNorth: 0,
             uvSouth: 0,
             uvEast: 0,
@@ -231,4 +235,8 @@ public class BlockRenderer
                renderType == BlockRendererType.Cactus ||
                renderType == BlockRendererType.PistonBase;
     }
+
+    private static bool IsRotatableBlock(int blockId) =>
+        blockId == Block.GrassBlock.id || blockId == Block.Dirt.id || blockId == Block.Sand.id ||
+        blockId == Block.Gravel.id || blockId == Block.Netherrack.id;
 }
