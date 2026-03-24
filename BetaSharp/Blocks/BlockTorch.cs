@@ -100,13 +100,16 @@ internal class BlockTorch : Block
         }
 
         int meta = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
-        bool shouldDrop = !@event.World.Reader.ShouldSuffocate(@event.X - 1, @event.Y, @event.Z) && meta == 1 ||
-            !@event.World.Reader.ShouldSuffocate(@event.X + 1, @event.Y, @event.Z) && meta == 2 ||
-            !@event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z - 1) && meta == 3 ||
-            !@event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z + 1) && meta == 4 ||
-            !canPlaceOn(@event.World.Reader, @event.X, @event.Y - 1, @event.Z) && meta == 5;
+        bool shouldDrop = (!@event.World.Reader.ShouldSuffocate(@event.X - 1, @event.Y, @event.Z) && meta == 1) ||
+                          (!@event.World.Reader.ShouldSuffocate(@event.X + 1, @event.Y, @event.Z) && meta == 2) ||
+                          (!@event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z - 1) && meta == 3) ||
+                          (!@event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z + 1) && meta == 4) ||
+                          (!canPlaceOn(@event.World.Reader, @event.X, @event.Y - 1, @event.Z) && meta == 5);
 
-        if (!shouldDrop) return;
+        if (!shouldDrop)
+        {
+            return;
+        }
 
         DropStacks(new OnDropEvent(@event.World, @event.X, @event.Y, @event.Z, @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z)));
         @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
@@ -114,7 +117,10 @@ internal class BlockTorch : Block
 
     private bool breakIfCannotPlaceAt(OnTickEvent @event, int x, int y, int z)
     {
-        if (CanPlaceAt(new CanPlaceAtContext(@event.World, 0, x, y, z))) return true;
+        if (CanPlaceAt(new CanPlaceAtContext(@event.World, 0, x, y, z)))
+        {
+            return true;
+        }
 
         DropStacks(new OnDropEvent(@event.World, x, y, z, @event.World.Reader.GetBlockMeta(x, y, z)));
         @event.World.Writer.SetBlock(x, y, z, 0);

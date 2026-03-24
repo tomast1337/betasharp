@@ -14,32 +14,33 @@ internal class BlockLockedChest : Block
             return TextureId - 1;
         }
 
-        int var6 = iBlockReader.GetBlockId(x, y, z - 1);
-        int var7 = iBlockReader.GetBlockId(x, y, z + 1);
-        int var8 = iBlockReader.GetBlockId(x - 1, y, z);
-        int var9 = iBlockReader.GetBlockId(x + 1, y, z);
-        Side var10 = Side.South;
-        if (BlocksOpaque[var6] && !BlocksOpaque[var7])
+        int blockNorth = iBlockReader.GetBlockId(x, y, z - 1);
+        int blockSouth = iBlockReader.GetBlockId(x, y, z + 1);
+        int blockWest = iBlockReader.GetBlockId(x - 1, y, z);
+        int blockEast = iBlockReader.GetBlockId(x + 1, y, z);
+
+        Side facing = Side.South;
+        if (BlocksOpaque[blockNorth] && !BlocksOpaque[blockSouth])
         {
-            var10 = Side.South;
+            facing = Side.South;
         }
 
-        if (BlocksOpaque[var7] && !BlocksOpaque[var6])
+        if (BlocksOpaque[blockSouth] && !BlocksOpaque[blockNorth])
         {
-            var10 = Side.North;
+            facing = Side.North;
         }
 
-        if (BlocksOpaque[var8] && !BlocksOpaque[var9])
+        if (BlocksOpaque[blockWest] && !BlocksOpaque[blockEast])
         {
-            var10 = Side.East;
+            facing = Side.East;
         }
 
-        if (BlocksOpaque[var9] && !BlocksOpaque[var8])
+        if (BlocksOpaque[blockEast] && !BlocksOpaque[blockWest])
         {
-            var10 = Side.West;
+            facing = Side.West;
         }
 
-        return side == var10 ? TextureId + 1 : TextureId;
+        return side == facing ? TextureId + 1 : TextureId;
     }
 
     public override int GetTexture(Side side) => side switch

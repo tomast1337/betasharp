@@ -9,7 +9,7 @@ internal class BlockReed : Block
 {
     public BlockReed(int id, int textureId) : base(id, Material.Plant)
     {
-        this.TextureId = textureId;
+        TextureId = textureId;
         const float halfWidth = 6.0F / 16.0F;
         SetBoundingBox(0.5F - halfWidth, 0.0F, 0.5F - halfWidth, 0.5F + halfWidth, 1.0F, 0.5F + halfWidth);
         SetTickRandomly(true);

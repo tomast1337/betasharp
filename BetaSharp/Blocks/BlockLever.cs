@@ -106,7 +106,9 @@ internal class BlockLever(int id, int level) : Block(id, level, Material.PistonB
     private bool breakIfCannotPlaceAt(OnTickEvent ctx)
     {
         if (CanPlaceAt(new CanPlaceAtContext(ctx.World, 0, ctx.X, ctx.Y, ctx.Z)))
+        {
             return true;
+        }
 
         DropStacks(new OnDropEvent(ctx.World, ctx.X, ctx.Y, ctx.Z, ctx.World.Reader.GetBlockMeta(ctx.X, ctx.Y, ctx.Z)));
         ctx.World.Writer.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
@@ -144,7 +146,9 @@ internal class BlockLever(int id, int level) : Block(id, level, Material.PistonB
     public override bool OnUse(OnUseEvent ctx)
     {
         if (ctx.World.IsRemote)
+        {
             return true;
+        }
 
         toggleLever(ctx.World, ctx.X, ctx.Y, ctx.Z);
         return true;

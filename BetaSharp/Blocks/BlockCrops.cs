@@ -31,8 +31,7 @@ internal class BlockCrops : BlockPlant
             return;
         }
 
-        float var7 = getAvailableMoisture(@event.World.Reader, @event.X, @event.Y, @event.Z);
-        if (Random.Shared.Next(100) / var7 != 0)
+        if (Random.Shared.Next(100) / getAvailableMoisture(@event.World.Reader, @event.X, @event.Y, @event.Z) != 0)
         {
             return;
         }

@@ -104,8 +104,8 @@ public class BlockPistonExtension : Block
 
     public override void UpdateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z)
     {
-        int var5 = blockReader.GetBlockMeta(x, y, z);
-        switch (GetFacing(var5))
+        int meta = blockReader.GetBlockMeta(x, y, z);
+        switch (GetFacing(meta))
         {
             case Side.Down:
                 SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 0.25F, 1.0F);

@@ -67,7 +67,10 @@ public class BlockRedstoneRepeater : Block
 
     public override bool IsPoweringSide(IBlockReader reader, int x, int y, int z, int side)
     {
-        if (!_lit) return false;
+        if (!_lit)
+        {
+            return false;
+        }
 
         int facing = reader.GetBlockMeta(x, y, z) & 3;
         return (facing == 0 && side == (int)Side.South) ||

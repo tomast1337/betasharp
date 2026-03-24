@@ -9,7 +9,7 @@ public class BlockPlant : Block
     public BlockPlant(int id, int textureId) : base(id, Material.Plant)
     {
         const float halfSize = 0.2F;
-        this.TextureId = textureId;
+        TextureId = textureId;
         SetTickRandomly(true);
         SetBoundingBox(0.5F - halfSize, 0.0F, 0.5F - halfSize, 0.5F + halfSize, halfSize * 3.0F, 0.5F + halfSize);
     }

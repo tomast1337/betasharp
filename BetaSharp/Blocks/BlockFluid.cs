@@ -9,9 +9,9 @@ public abstract class BlockFluid : Block
 {
     protected BlockFluid(int id, Material material) : base(id, (material == Material.Lava ? 14 : 12) * 16 + 13, material)
     {
-        float var3 = 0.0F;
-        float var4 = 0.0F;
-        SetBoundingBox(0.0F + var4, 0.0F + var3, 0.0F + var4, 1.0F + var4, 1.0F + var3, 1.0F + var4);
+        const float heightOffset = 0.0F;
+        const float widthOffset = 0.0F;
+        SetBoundingBox(0.0F + widthOffset, 0.0F + heightOffset, 0.0F + widthOffset, 1.0F + widthOffset, 1.0F + heightOffset, 1.0F + widthOffset);
         SetTickRandomly(true);
     }
 

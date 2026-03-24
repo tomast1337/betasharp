@@ -59,11 +59,11 @@ internal class BlockFarmland : Block
     {
         const sbyte cropRadius = 0;
 
-        for (int var6 = x - cropRadius; var6 <= x + cropRadius; ++var6)
+        for (int dx = x - cropRadius; dx <= x + cropRadius; ++dx)
         {
-            for (int var7 = z - cropRadius; var7 <= z + cropRadius; ++var7)
+            for (int dz = z - cropRadius; dz <= z + cropRadius; ++dz)
             {
-                if (world.GetBlockId(var6, y + 1, var7) == Wheat.Id)
+                if (world.GetBlockId(dx, y + 1, dz) == Wheat.Id)
                 {
                     return true;
                 }

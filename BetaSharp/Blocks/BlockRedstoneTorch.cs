@@ -112,11 +112,17 @@ internal class BlockRedstoneTorch : BlockTorch
 
         if (_lit)
         {
-            if (!shouldTurnOff) return;
+            if (!shouldTurnOff)
+            {
+                return;
+            }
 
             @event.World.Writer.SetBlock(x, y, z, RedstoneTorch.Id, @event.World.Reader.GetBlockMeta(x, y, z));
 
-            if (!isBurnedOut(@event, true)) return;
+            if (!isBurnedOut(@event, true))
+            {
+                return;
+            }
 
             @event.World.Broadcaster.PlaySoundAtPos(x + 0.5F, y + 0.5F, z + 0.5F, "random.fizz", 0.5F, 2.6F + (Random.Shared.NextSingle() - Random.Shared.NextSingle()) * 0.8F);
 
@@ -148,7 +154,10 @@ internal class BlockRedstoneTorch : BlockTorch
 
     public override void RandomDisplayTick(OnTickEvent @event)
     {
-        if (!_lit) return;
+        if (!_lit)
+        {
+            return;
+        }
 
         const double verticalOffset = 0.22F;
         const double horizontalOffset = 0.27F;

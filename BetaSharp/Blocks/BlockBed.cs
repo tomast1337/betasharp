@@ -14,7 +14,10 @@ public class BlockBed : Block
 
     public override bool OnUse(OnUseEvent @event)
     {
-        if (@event.World.IsRemote) return true;
+        if (@event.World.IsRemote)
+        {
+            return true;
+        }
 
         int x = @event.X;
         int y = @event.Y;
@@ -100,7 +103,10 @@ public class BlockBed : Block
 
     public override int GetTexture(Side side, int meta)
     {
-        if (side == Side.Down) return Planks.TextureId;
+        if (side == Side.Down)
+        {
+            return Planks.TextureId;
+        }
 
         int direction = GetDirection(meta);
         Side sideFacing = Facings.BedFacings[direction][side.ToInt()];

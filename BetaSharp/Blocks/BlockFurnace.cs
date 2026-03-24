@@ -104,31 +104,34 @@ internal class BlockFurnace : BlockWithEntity
 
     public override void RandomDisplayTick(OnTickEvent @event)
     {
-        if (!_lit) return;
+        if (!_lit)
+        {
+            return;
+        }
 
         const float flameOffset = 0.52F;
 
-        int var6 = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
+        Side side = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z).ToSide();
         float particleX = @event.X + 0.5F;
         float particleY = @event.Y + 0.0F + Random.Shared.NextSingle() * 6.0F / 16.0F;
         float particleZ = @event.Z + 0.5F;
         float randomOffset = Random.Shared.NextSingle() * 0.6F - 0.3F;
 
-        switch (var6)
+        switch (side)
         {
-            case (int)Side.West:
+            case Side.West:
                 @event.World.Broadcaster.AddParticle("smoke", particleX - flameOffset, particleY, particleZ + randomOffset, 0.0D, 0.0D, 0.0D);
                 @event.World.Broadcaster.AddParticle("flame", particleX - flameOffset, particleY, particleZ + randomOffset, 0.0D, 0.0D, 0.0D);
                 break;
-            case (int)Side.East:
+            case Side.East:
                 @event.World.Broadcaster.AddParticle("smoke", particleX + flameOffset, particleY, particleZ + randomOffset, 0.0D, 0.0D, 0.0D);
                 @event.World.Broadcaster.AddParticle("flame", particleX + flameOffset, particleY, particleZ + randomOffset, 0.0D, 0.0D, 0.0D);
                 break;
-            case (int)Side.North:
+            case Side.North:
                 @event.World.Broadcaster.AddParticle("smoke", particleX + randomOffset, particleY, particleZ - flameOffset, 0.0D, 0.0D, 0.0D);
                 @event.World.Broadcaster.AddParticle("flame", particleX + randomOffset, particleY, particleZ - flameOffset, 0.0D, 0.0D, 0.0D);
                 break;
-            case (int)Side.South:
+            case Side.South:
                 @event.World.Broadcaster.AddParticle("smoke", particleX + randomOffset, particleY, particleZ + flameOffset, 0.0D, 0.0D, 0.0D);
                 @event.World.Broadcaster.AddParticle("flame", particleX + randomOffset, particleY, particleZ + flameOffset, 0.0D, 0.0D, 0.0D);
                 break;
@@ -188,7 +191,10 @@ internal class BlockFurnace : BlockWithEntity
             for (int slotIndex = 0; slotIndex < furnace.size(); ++slotIndex)
             {
                 ItemStack? stack = furnace.getStack(slotIndex);
-                if (stack == null) continue;
+                if (stack == null)
+                {
+                    continue;
+                }
 
                 float offsetX = _random.NextFloat() * 0.8F + 0.1F;
                 float offsetY = _random.NextFloat() * 0.8F + 0.1F;

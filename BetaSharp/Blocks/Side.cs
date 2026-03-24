@@ -7,7 +7,7 @@ public enum Side
     North = 2,
     South = 3,
     West = 4,
-    East = 5,
+    East = 5
 }
 
 public static class SideExtensions
@@ -15,6 +15,7 @@ public static class SideExtensions
     public static bool IsValidSide(this Side v) => (uint)v <= 5u;
     public static Side ToSide(this int v) => ((Side)v).IsValidSide() ? (Side)v : throw new ArgumentException("Invalid side");
     public static int ToInt(this Side s) => (int)s;
+
     public static Side OppositeFace(Side side) => side switch
     {
         Side.Down => Side.Up,

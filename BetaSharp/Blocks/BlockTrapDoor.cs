@@ -50,7 +50,10 @@ internal class BlockTrapDoor : Block
     {
         const float height = 3.0F / 16.0F;
         SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, height, 1.0F);
-        if (!isOpen(meta)) return;
+        if (!isOpen(meta))
+        {
+            return;
+        }
 
         if ((meta & 3) == 0)
         {
@@ -98,7 +101,10 @@ internal class BlockTrapDoor : Block
         int z = ctx.Z;
         int meta = ctx.World.Reader.GetBlockMeta(x, y, z);
         bool isOpen = (meta & 4) > 0;
-        if (isOpen == open) return;
+        if (isOpen == open)
+        {
+            return;
+        }
 
         ctx.World.Writer.SetBlockMeta(x, y, z, meta ^ 4);
         ctx.World.Broadcaster.WorldEvent(1003, x, y, z, 0);
@@ -106,7 +112,10 @@ internal class BlockTrapDoor : Block
 
     public override void NeighborUpdate(OnTickEvent ctx)
     {
-        if (ctx.World.IsRemote) return;
+        if (ctx.World.IsRemote)
+        {
+            return;
+        }
 
         int meta = ctx.World.Reader.GetBlockMeta(ctx.X, ctx.Y, ctx.Z);
         int xPos = ctx.X;
@@ -137,7 +146,10 @@ internal class BlockTrapDoor : Block
             DropStacks(new OnDropEvent(ctx.World, ctx.X, ctx.Y, ctx.Z, meta));
         }
 
-        if (Id <= 0 || !Blocks[Id]!.CanEmitRedstonePower()) return;
+        if (Id <= 0 || !Blocks[Id]!.CanEmitRedstonePower())
+        {
+            return;
+        }
 
         bool isPowered = ctx.World.Redstone.IsPowered(ctx.X, ctx.Y, ctx.Z);
         setOpen(ctx, isPowered);

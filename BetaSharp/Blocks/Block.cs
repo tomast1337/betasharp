@@ -230,7 +230,7 @@ public class Block
 
     protected Block SetHardness(float hardness)
     {
-        this.Hardness = hardness;
+        Hardness = hardness;
         if (Resistance < hardness * 5.0F)
         {
             Resistance = hardness * 5.0F;
@@ -291,17 +291,18 @@ public class Block
             Side.South => maxZ < 1.0D || !iBlockReader.IsOpaque(x, y, z),
             Side.West => minX > 0.0D || !iBlockReader.IsOpaque(x, y, z),
             Side.East => maxX < 1.0D || !iBlockReader.IsOpaque(x, y, z),
-            _ => !iBlockReader.IsOpaque(x, y, z),
+            _ => !iBlockReader.IsOpaque(x, y, z)
         };
     }
 
     public virtual bool IsSolidFace(IBlockReader iBlockReader, int x, int y, int z, int face) => iBlockReader.GetMaterial(x, y, z).IsSolid;
 
-    public virtual int GetTextureId(IBlockReader iBlockReader, int x, int y, int z, int side) => GetTextureId( iBlockReader, x, y, z, side.ToSide());
+    public virtual int GetTextureId(IBlockReader iBlockReader, int x, int y, int z, int side) => GetTextureId(iBlockReader, x, y, z, side.ToSide());
     public virtual int GetTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side) => GetTexture(side, iBlockReader.GetBlockMeta(x, y, z));
 
     [Obsolete("Use GetTexture(Side side, int meta) or GetTexture(Side side)")]
     public virtual int GetTexture(int side, int meta) => GetTexture(side);
+
     public virtual int GetTexture(Side side, int meta) => GetTexture(side);
 
     public virtual int GetTexture(int side) => GetTexture(side.ToSide());
@@ -347,13 +348,19 @@ public class Block
 
     public virtual void DropStacks(OnDropEvent ctx)
     {
-        if (ctx.World.IsRemote || !ctx.World.Rules.GetBool(DefaultRules.DoTileDrops)) return;
+        if (ctx.World.IsRemote || !ctx.World.Rules.GetBool(DefaultRules.DoTileDrops))
+        {
+            return;
+        }
 
         int dropCount = GetDroppedItemCount();
 
         for (int attempt = 0; attempt < dropCount; ++attempt)
         {
-            if (!(Random.Shared.NextSingle() <= ctx.Luck)) continue;
+            if (!(Random.Shared.NextSingle() <= ctx.Luck))
+            {
+                continue;
+            }
 
             int itemId = GetDroppedItemId(ctx.Meta);
             if (itemId > 0)
@@ -365,7 +372,10 @@ public class Block
 
     protected void DropStack(IWorldContext world, int x, int y, int z, ItemStack itemStack)
     {
-        if (world.IsRemote || !world.Rules.GetBool(DefaultRules.DoTileDrops)) return;
+        if (world.IsRemote || !world.Rules.GetBool(DefaultRules.DoTileDrops))
+        {
+            return;
+        }
 
         const float spreadFactor = 0.7F;
         double offsetX = Random.Shared.NextSingle() * spreadFactor + (1.0F - spreadFactor) * 0.5D;
@@ -383,7 +393,10 @@ public class Block
         UpdateBoundingBox(world, entities, x, y, z);
         Vec3D pos = new(x, y, z);
         HitResult res = BoundingBox.Raycast(startPos - pos, endPos - pos);
-        if (res.Type == HitResultType.MISS) return new HitResult(HitResultType.MISS);
+        if (res.Type == HitResultType.MISS)
+        {
+            return new HitResult(HitResultType.MISS);
+        }
 
         res.BlockX = x;
         res.BlockY = y;

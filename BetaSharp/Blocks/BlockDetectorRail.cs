@@ -14,7 +14,10 @@ internal class BlockDetectorRail : BlockRail
 
     public override void OnEntityCollision(OnEntityCollisionEvent @event)
     {
-        if (@event.World.IsRemote) return;
+        if (@event.World.IsRemote)
+        {
+            return;
+        }
 
         int meta = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
         if ((meta & 8) == 0)
@@ -25,7 +28,10 @@ internal class BlockDetectorRail : BlockRail
 
     public override void OnTick(OnTickEvent @event)
     {
-        if (@event.World.IsRemote) return;
+        if (@event.World.IsRemote)
+        {
+            return;
+        }
 
         int meta = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
         if ((meta & 8) != 0)

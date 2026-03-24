@@ -71,7 +71,10 @@ internal class BlockCake : Block
 
     public override void OnBlockBreakStart(OnBlockBreakStartEvent @event)
     {
-        if (@event.Player.health >= 20) return;
+        if (@event.Player.health >= 20)
+        {
+            return;
+        }
 
         @event.Player.heal(3);
         int slicesEaten = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z) + 1;
@@ -90,7 +93,10 @@ internal class BlockCake : Block
 
     public override void NeighborUpdate(OnTickEvent @event)
     {
-        if (canGrow(@event.World.Reader, @event.X, @event.Y, @event.Z)) return;
+        if (canGrow(@event.World.Reader, @event.X, @event.Y, @event.Z))
+        {
+            return;
+        }
 
         DropStacks(new OnDropEvent(@event.World, @event.X, @event.Y, @event.Z, @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z)));
         @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);

@@ -108,16 +108,16 @@ internal class BlockFire : Block
                                 int burnChance = getBurnChance(@event.World.Reader, checkX, checkY, checkZ);
                                 if (burnChance > 0)
                                 {
-                                    int var13 = (burnChance + 40) / (fireAge + 30);
-                                    if (var13 > 0 &&
-                                        @event.World.Random.NextInt(spreadDifficulty) <= var13 &&
+                                    int spreadChance = (burnChance + 40) / (fireAge + 30);
+                                    if (spreadChance > 0 &&
+                                        @event.World.Random.NextInt(spreadDifficulty) <= spreadChance &&
                                         (!@event.World.Environment.IsRaining || !@event.World.Environment.IsRainingAt(checkX, checkY, checkZ)) &&
                                         !@event.World.Environment.IsRainingAt(checkX - 1, checkY, checkZ) &&
                                         !@event.World.Environment.IsRainingAt(checkX + 1, checkY, checkZ) &&
                                         !@event.World.Environment.IsRainingAt(checkX, checkY - 1, checkZ) &&
                                         !@event.World.Environment.IsRainingAt(checkX, checkY + 1, checkZ))
                                     {
-                                        int spreadChance = fireAge + @event.World.Random.NextInt(5) / 4;
+                                        spreadChance = fireAge + @event.World.Random.NextInt(5) / 4;
                                         if (spreadChance > 15)
                                         {
                                             spreadChance = 15;
@@ -205,14 +205,18 @@ internal class BlockFire : Block
     public override void NeighborUpdate(OnTickEvent ctx)
     {
         if (!ctx.World.Reader.ShouldSuffocate(ctx.X, ctx.Y - 1, ctx.Z) && !areBlocksAroundFlammable(ctx.World.Reader, ctx.X, ctx.Y, ctx.Z))
+        {
             ctx.World.Writer.SetBlock(ctx.X, ctx.Y, ctx.Z, 0);
+        }
     }
 
     public override void OnPlaced(OnPlacedEvent ctx)
     {
         if (ctx.World.Reader.GetBlockId(ctx.X, ctx.Y - 1, ctx.Z) == Obsidian.Id &&
             NetherPortal.create(ctx.World.Reader, ctx.World.Writer, ctx.X, ctx.Y, ctx.Z))
+        {
             return;
+        }
 
 
         if (!ctx.World.Reader.ShouldSuffocate(ctx.X, ctx.Y - 1, ctx.Z) && !areBlocksAroundFlammable(ctx.World.Reader, ctx.X, ctx.Y, ctx.Z))

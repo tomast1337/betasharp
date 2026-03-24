@@ -87,13 +87,13 @@ public class BlockPistonMoving : BlockWithEntity
             return null;
         }
 
-        float var6 = piston.getProgress(0.0F);
+        float progress = piston.getProgress(0.0F);
         if (piston.isExtending())
         {
-            var6 = 1.0F - var6;
+            progress = 1.0F - progress;
         }
 
-        return getPushedBlockCollisionShape(iBlockReader, entities, x, y, z, piston.getPushedBlockId(), var6, piston.getFacing());
+        return getPushedBlockCollisionShape(iBlockReader, entities, x, y, z, piston.getPushedBlockId(), progress, piston.getFacing());
     }
 
     public override void UpdateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z)
@@ -122,8 +122,8 @@ public class BlockPistonMoving : BlockWithEntity
             progress = 1.0F - progress;
         }
 
-        int var8 = piston.getFacing();
-        BoundingBox = BoundingBox.Offset(-(double)(PistonConstants.HeadOffsetX(var8) * progress), -(double)(PistonConstants.HeadOffsetY(var8) * progress), -(double)(PistonConstants.HeadOffsetZ(var8) * progress));
+        int facing = piston.getFacing();
+        BoundingBox = BoundingBox.Offset(-(double)(PistonConstants.HeadOffsetX(facing) * progress), -(double)(PistonConstants.HeadOffsetY(facing) * progress), -(double)(PistonConstants.HeadOffsetZ(facing) * progress));
     }
 
     public Box? getPushedBlockCollisionShape(IBlockReader world, EntityManager entities, int x, int y, int z, int blockId, float sizeMultiplier, int facing)

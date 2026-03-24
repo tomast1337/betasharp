@@ -45,11 +45,17 @@ internal class BlockJukeBox(int id, int textureId) : BlockWithEntity(id, texture
 
     public void tryEjectRecord(IWorldContext level, int x, int y, int z)
     {
-        if (level.IsRemote) return;
+        if (level.IsRemote)
+        {
+            return;
+        }
 
         BlockEntityRecordPlayer? jukebox = level.Entities.GetBlockEntity<BlockEntityRecordPlayer>(x, y, z);
         int recordId = jukebox?.recordId ?? 0;
-        if (recordId == 0) return;
+        if (recordId == 0)
+        {
+            return;
+        }
 
         level.Broadcaster.WorldEvent(1005, x, y, z, 0);
         level.Broadcaster.PlayStreamingAtPos(null, x, y, z);
@@ -77,7 +83,9 @@ internal class BlockJukeBox(int id, int textureId) : BlockWithEntity(id, texture
     public override void DropStacks(OnDropEvent @event)
     {
         if (!@event.World.IsRemote)
+        {
             base.DropStacks(@event);
+        }
     }
 
     public override BlockEntity? getBlockEntity() => new BlockEntityRecordPlayer();

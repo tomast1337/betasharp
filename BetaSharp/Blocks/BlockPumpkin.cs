@@ -9,7 +9,7 @@ internal class BlockPumpkin : Block
 
     public BlockPumpkin(int id, int textureId, bool lit) : base(id, Material.Pumpkin)
     {
-        this.TextureId = textureId;
+        TextureId = textureId;
         SetTickRandomly(true);
         _lit = lit;
     }
@@ -49,7 +49,10 @@ internal class BlockPumpkin : Block
 
     public override void OnPlaced(OnPlacedEvent @event)
     {
-        if (@event.Placer == null) return;
+        if (@event.Placer == null)
+        {
+            return;
+        }
 
         int direction = MathHelper.Floor(@event.Placer.yaw * 4.0F / 360.0F + 2.5D) & 3;
         @event.World.Writer.SetBlockMeta(@event.X, @event.Y, @event.Z, direction);

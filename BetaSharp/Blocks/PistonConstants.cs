@@ -2,7 +2,7 @@ namespace BetaSharp.Blocks;
 
 internal static class PistonConstants
 {
-    /// <summary>Unit step from piston base toward the head block, per <see cref="Side"/>.</summary>
+    /// <summary>Unit step from piston base toward the head block, per <see cref="Side" />.</summary>
     public static int HeadOffsetX(Side facing) => facing switch
     {
         Side.West => -1,
@@ -10,7 +10,7 @@ internal static class PistonConstants
         _ => 0
     };
 
-    /// <summary>Unit step from piston base toward the head block, per <see cref="Side"/>.</summary>
+    /// <summary>Unit step from piston base toward the head block, per <see cref="Side" />.</summary>
     public static int HeadOffsetY(Side facing) => facing switch
     {
         Side.Down => -1,
@@ -18,7 +18,7 @@ internal static class PistonConstants
         _ => 0
     };
 
-    /// <summary>Unit step from piston base toward the head block, per <see cref="Side"/>.</summary>
+    /// <summary>Unit step from piston base toward the head block, per <see cref="Side" />.</summary>
     public static int HeadOffsetZ(Side facing) => facing switch
     {
         Side.North => -1,

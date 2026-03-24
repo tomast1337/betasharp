@@ -151,10 +151,10 @@ public class BlockPortal(int id, int textureId) : BlockBreakable(id, textureId, 
         bool edgeSouth = iBlockReader.GetBlockId(x, y, z + 1) == Id && iBlockReader.GetBlockId(x, y, z + 2) != Id;
         bool extendsInX = edgeWest || edgeEast;
         bool extendsInZ = edgeNorth || edgeSouth;
-        return extendsInX && side == Side.West ||
-               extendsInX && side == Side.East ||
-               extendsInZ && side == Side.North ||
-               extendsInZ && side == Side.South;
+        return (extendsInX && side == Side.West) ||
+               (extendsInX && side == Side.East) ||
+               (extendsInZ && side == Side.North) ||
+               (extendsInZ && side == Side.South);
     }
 
     public override int GetDroppedItemCount() => 0;
@@ -163,7 +163,10 @@ public class BlockPortal(int id, int textureId) : BlockBreakable(id, textureId, 
 
     public override void OnEntityCollision(OnEntityCollisionEvent @event)
     {
-        if (@event.Entity.vehicle == null && @event.Entity.passenger == null) @event.Entity.tickPortalCooldown();
+        if (@event.Entity.vehicle == null && @event.Entity.passenger == null)
+        {
+            @event.Entity.tickPortalCooldown();
+        }
     }
 
     public override void RandomDisplayTick(OnTickEvent @event)
