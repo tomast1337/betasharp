@@ -10,7 +10,7 @@ public class PistonTests
     public void CanMoveBlock_ReturnsFalseForObsidian()
     {
         FakeWorld world = new();
-        MethodInfo? method = typeof(BlockPistonBase).GetMethod("canMoveBlock", BindingFlags.NonPublic | BindingFlags.Static);
+        MethodInfo? method = typeof(BlockPistonBase).GetMethod("CanMoveBlock", BindingFlags.NonPublic | BindingFlags.Static);
 
         bool result = (bool)method!.Invoke(null, new object[] { Block.Obsidian.Id, world, 0, 64, 0, true })!;
 
@@ -21,7 +21,7 @@ public class PistonTests
     public void CanMoveBlock_ReturnsFalseForBedrock()
     {
         FakeWorld world = new();
-        MethodInfo? method = typeof(BlockPistonBase).GetMethod("canMoveBlock", BindingFlags.NonPublic | BindingFlags.Static);
+        MethodInfo? method = typeof(BlockPistonBase).GetMethod("CanMoveBlock", BindingFlags.NonPublic | BindingFlags.Static);
 
         bool result = (bool)method!.Invoke(null, new object[] { Block.Bedrock.Id, world, 0, 64, 0, true })!;
 
@@ -32,7 +32,7 @@ public class PistonTests
     public void CanMoveBlock_ReturnsTrueForStone()
     {
         FakeWorld world = new();
-        MethodInfo? method = typeof(BlockPistonBase).GetMethod("canMoveBlock", BindingFlags.NonPublic | BindingFlags.Static);
+        MethodInfo? method = typeof(BlockPistonBase).GetMethod("CanMoveBlock", BindingFlags.NonPublic | BindingFlags.Static);
 
         bool result = (bool)method!.Invoke(null, new object[] { Block.Stone.Id, world, 0, 64, 0, true })!;
 
@@ -50,8 +50,8 @@ public class PistonTests
             world.SetBlock(0, 64, z, Block.Stone.Id);
         }
 
-        MethodInfo? method = typeof(BlockPistonBase).GetMethod("canExtend", BindingFlags.NonPublic | BindingFlags.Static);
-        bool result = (bool)method!.Invoke(null, new object[] { world, 0, 64, 0, 2 })!; // 2 = North
+        MethodInfo? method = typeof(BlockPistonBase).GetMethod("CanExtend", BindingFlags.NonPublic | BindingFlags.Static);
+        bool result = (bool)method!.Invoke(null, new object[] { world, 0, 64, 0, (Side)2 })!; // 2 = North
 
         Assert.True(result);
     }
@@ -67,8 +67,8 @@ public class PistonTests
             world.SetBlock(0, 64, z, Block.Stone.Id);
         }
 
-        MethodInfo? method = typeof(BlockPistonBase).GetMethod("canExtend", BindingFlags.NonPublic | BindingFlags.Static);
-        bool result = (bool)method!.Invoke(null, new object[] { world, 0, 64, 0, 2 })!; // 2 = North
+        MethodInfo? method = typeof(BlockPistonBase).GetMethod("CanExtend", BindingFlags.NonPublic | BindingFlags.Static);
+        bool result = (bool)method!.Invoke(null, new object[] { world, 0, 64, 0, (Side)2 })!; // 2 = North
 
         Assert.False(result);
     }
