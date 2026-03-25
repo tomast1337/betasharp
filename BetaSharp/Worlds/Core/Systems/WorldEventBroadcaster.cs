@@ -6,7 +6,7 @@ using BetaSharp.Util.Maths;
 
 namespace BetaSharp.Worlds.Core.Systems;
 
-public class WorldEventBroadcaster(List<IWorldEventListener> eventListeners, IBlockReader reader, World worldContext)
+public class WorldEventBroadcaster(List<IWorldEventListener> eventListeners, IBlockReader reader, IWorldContext worldContext)
 {
     public bool isRemote => worldContext.IsRemote;
     public RuleSet Rules => worldContext.Rules;
