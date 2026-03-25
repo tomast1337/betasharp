@@ -249,6 +249,8 @@ public class AssetManager
 
         defineEmbeddedAsset("shaders/chunk.vert", AssetType.Text);
         defineEmbeddedAsset("shaders/chunk.frag", AssetType.Text);
+        defineEmbeddedAsset("shaders/particle.vert", AssetType.Text);
+        defineEmbeddedAsset("shaders/particle.frag", AssetType.Text);
     }
 
     public Asset getAsset(string assetPath)

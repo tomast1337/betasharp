@@ -17,6 +17,7 @@ public sealed class SkinManager : IDisposable
     private readonly ConcurrentDictionary<string, Image<Rgba32>> _downloadedImages = new();
     private readonly ConcurrentDictionary<string, TextureHandle> _textureHandles = new();
     private readonly ConcurrentDictionary<string, bool> _downloading = new();
+    private bool _disposed;
 
     public SkinManager(TextureManager textureManager)
     {
@@ -78,9 +79,16 @@ public sealed class SkinManager : IDisposable
 
                 _logger.LogInformation("Skin downloaded successfully for {Name}: ({W}x{H})", username, image.Width, image.Height);
             }
+            catch (OperationCanceledException) when (_disposed)
+            {
+                // Silently ignore cancellations during disposal
+            }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Failed to download skin for {Name}", username);
+                if (!_disposed)
+                {
+                    _logger.LogWarning(ex, "Failed to download skin for {Name}", username);
+                }
             }
             finally
             {
@@ -134,6 +142,9 @@ public sealed class SkinManager : IDisposable
 
     public void Dispose()
     {
+        if (_disposed) return;
+        _disposed = true;
+
         _httpClient.Dispose();
 
         foreach (Image<Rgba32> image in _downloadedImages.Values)

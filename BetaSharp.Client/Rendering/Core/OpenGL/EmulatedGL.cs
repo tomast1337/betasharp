@@ -524,6 +524,29 @@ public unsafe class EmulatedGL : LegacyGL
             Matrix4X4<float> m = _projectionStack.Top;
             System.Buffer.MemoryCopy(&m, data, 64, 64);
         }
+        else if (pname == GLEnum.FogColor)
+        {
+            data[0] = _fogState.FogColorR;
+            data[1] = _fogState.FogColorG;
+            data[2] = _fogState.FogColorB;
+            data[3] = _fogState.FogColorA;
+        }
+        else if (pname == GLEnum.FogStart)
+        {
+            data[0] = _fogState.FogStart;
+        }
+        else if (pname == GLEnum.FogEnd)
+        {
+            data[0] = _fogState.FogEnd;
+        }
+        else if (pname == GLEnum.FogDensity)
+        {
+            data[0] = _fogState.FogDensity;
+        }
+        else if (pname == GLEnum.FogMode)
+        {
+            data[0] = _fogState.FogMode == 0 ? (float)GLEnum.Linear : (float)GLEnum.Exp;
+        }
     }
 
     public override void GetFloat(GLEnum pname, Span<float> data)
@@ -543,6 +566,29 @@ public unsafe class EmulatedGL : LegacyGL
             {
                 System.Buffer.MemoryCopy(&m, dst, 64, 64);
             }
+        }
+        else if (pname == GLEnum.FogColor)
+        {
+            data[0] = _fogState.FogColorR;
+            data[1] = _fogState.FogColorG;
+            data[2] = _fogState.FogColorB;
+            data[3] = _fogState.FogColorA;
+        }
+        else if (pname == GLEnum.FogStart)
+        {
+            data[0] = _fogState.FogStart;
+        }
+        else if (pname == GLEnum.FogEnd)
+        {
+            data[0] = _fogState.FogEnd;
+        }
+        else if (pname == GLEnum.FogDensity)
+        {
+            data[0] = _fogState.FogDensity;
+        }
+        else if (pname == GLEnum.FogMode)
+        {
+            data[0] = _fogState.FogMode == 0 ? (float)GLEnum.Linear : (float)GLEnum.Exp;
         }
     }
 

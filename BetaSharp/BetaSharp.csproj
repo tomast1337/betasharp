@@ -26,6 +26,8 @@
   <ItemGroup>
     <EmbeddedResource Include="shaders/chunk.vert" />
     <EmbeddedResource Include="shaders/chunk.frag" />
+    <EmbeddedResource Include="shaders/particle.vert" />
+    <EmbeddedResource Include="shaders/particle.frag" />
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="BetaSharp.Tests" />
