@@ -29,14 +29,14 @@ internal class BlockFarmland : Block
             return;
         }
 
-        if (!isWaterNearby(@event.World.Reader, @event.X, @event.Y, @event.Z) && !@event.World.Environment.IsRaining)
+        if (!IsWaterNearby(@event.World.Reader, @event.X, @event.Y, @event.Z) && !@event.World.Environment.IsRaining)
         {
             int meta = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
             if (meta > 0)
             {
                 @event.World.Writer.SetBlockMeta(@event.X, @event.Y, @event.Z, meta - 1);
             }
-            else if (!hasCrop(@event.World.Reader, @event.X, @event.Y, @event.Z))
+            else if (!HasCrop(@event.World.Reader, @event.X, @event.Y, @event.Z))
             {
                 @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, Dirt.Id);
             }
@@ -55,7 +55,7 @@ internal class BlockFarmland : Block
         }
     }
 
-    private static bool hasCrop(IBlockReader world, int x, int y, int z)
+    private static bool HasCrop(IBlockReader world, int x, int y, int z)
     {
         const sbyte cropRadius = 0;
 
@@ -73,7 +73,7 @@ internal class BlockFarmland : Block
         return false;
     }
 
-    private static bool isWaterNearby(IBlockReader reader, int x, int y, int z)
+    private static bool IsWaterNearby(IBlockReader reader, int x, int y, int z)
     {
         for (int checkX = x - 4; checkX <= x + 4; ++checkX)
         {

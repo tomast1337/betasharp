@@ -16,28 +16,28 @@ internal class BlockEntityChest : BlockEntity, IInventory
 
     public ItemStack? removeStack(int slot, int amount)
     {
-        if (_inventory[slot] != null)
+        if (_inventory[slot] == null)
         {
-            ItemStack itemStack;
-            if (_inventory[slot].count <= amount)
-            {
-                itemStack = _inventory[slot];
-                _inventory[slot] = null;
-                markDirty();
-                return itemStack;
-            }
+            return null;
+        }
 
-            itemStack = _inventory[slot].split(amount);
-            if (_inventory[slot].count == 0)
-            {
-                _inventory[slot] = null;
-            }
-
+        ItemStack? itemStack;
+        if (_inventory[slot]!.count <= amount)
+        {
+            itemStack = _inventory[slot];
+            _inventory[slot] = null;
             markDirty();
             return itemStack;
         }
 
-        return null;
+        itemStack = _inventory[slot]!.split(amount);
+        if (_inventory[slot]!.count == 0)
+        {
+            _inventory[slot] = null;
+        }
+
+        markDirty();
+        return itemStack;
     }
 
     public void setStack(int slot, ItemStack? stack)
@@ -57,9 +57,9 @@ internal class BlockEntityChest : BlockEntity, IInventory
 
     public bool canPlayerUse(EntityPlayer player) => World.Entities.GetBlockEntity<BlockEntityChest>(X, Y, Z) == this && player.getSquaredDistance(X + 0.5D, Y + 0.5D, Z + 0.5D) <= 64.0D;
 
-    public override void readNbt(NBTTagCompound nbt)
+    public override void ReadNbt(NBTTagCompound nbt)
     {
-        base.readNbt(nbt);
+        base.ReadNbt(nbt);
         NBTTagList itemList = nbt.GetTagList("Items");
         _inventory = new ItemStack[size()];
 
@@ -74,9 +74,9 @@ internal class BlockEntityChest : BlockEntity, IInventory
         }
     }
 
-    public override void writeNbt(NBTTagCompound nbt)
+    public override void WriteNbt(NBTTagCompound nbt)
     {
-        base.writeNbt(nbt);
+        base.WriteNbt(nbt);
         NBTTagList itemList = new();
 
         for (int slotIndex = 0; slotIndex < _inventory.Length; ++slotIndex)
@@ -85,7 +85,7 @@ internal class BlockEntityChest : BlockEntity, IInventory
             {
                 NBTTagCompound itemsTag = new();
                 itemsTag.SetByte("Slot", (sbyte)slotIndex);
-                _inventory[slotIndex].writeToNBT(itemsTag);
+                _inventory[slotIndex]!.writeToNBT(itemsTag);
                 itemList.SetTag(itemsTag);
             }
         }

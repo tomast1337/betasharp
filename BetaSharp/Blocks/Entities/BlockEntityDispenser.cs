@@ -19,28 +19,28 @@ public class BlockEntityDispenser : BlockEntity, IInventory
     public ItemStack? removeStack(int slot, int amount)
     {
         ItemStack? item = _itemStacks[slot];
-        if (item != null)
+        if (item == null)
         {
-            ItemStack removedStack;
-            if (item.count <= amount)
-            {
-                removedStack = item;
-                _itemStacks[slot] = null;
-                markDirty();
-                return removedStack;
-            }
+            return null;
+        }
 
-            removedStack = item.split(amount);
-            if (item.count == 0)
-            {
-                _itemStacks[slot] = null;
-            }
-
+        ItemStack removedStack;
+        if (item.count <= amount)
+        {
+            removedStack = item;
+            _itemStacks[slot] = null;
             markDirty();
             return removedStack;
         }
 
-        return null;
+        removedStack = item.split(amount);
+        if (item.count == 0)
+        {
+            _itemStacks[slot] = null;
+        }
+
+        markDirty();
+        return removedStack;
     }
 
     public void setStack(int slot, ItemStack? stack)
@@ -81,9 +81,9 @@ public class BlockEntityDispenser : BlockEntity, IInventory
         return null;
     }
 
-    public override void readNbt(NBTTagCompound nbt)
+    public override void ReadNbt(NBTTagCompound nbt)
     {
-        base.readNbt(nbt);
+        base.ReadNbt(nbt);
         NBTTagList itemList = nbt.GetTagList("Items");
         _itemStacks = new ItemStack[size()];
 
@@ -98,11 +98,10 @@ public class BlockEntityDispenser : BlockEntity, IInventory
         }
     }
 
-    public override void writeNbt(NBTTagCompound nbt)
+    public override void WriteNbt(NBTTagCompound nbt)
     {
-        base.writeNbt(nbt);
+        base.WriteNbt(nbt);
         NBTTagList itemList = new();
-
 
         for (int slotIndex = 0; slotIndex < _itemStacks.Length; ++slotIndex)
         {

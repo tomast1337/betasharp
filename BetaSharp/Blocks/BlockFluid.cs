@@ -17,7 +17,7 @@ public abstract class BlockFluid : Block
 
     public override int GetColorMultiplier(IBlockReader reader, int x, int y, int z) => 0xFFFFFF;
 
-    public static float getFluidHeightFromMeta(int meta)
+    public static float GetFluidHeightFromMeta(int meta)
     {
         if (meta >= 8)
         {
@@ -30,9 +30,9 @@ public abstract class BlockFluid : Block
 
     public override int GetTexture(Side side) => side != Side.Down && side != Side.Up ? TextureId + 1 : TextureId;
 
-    protected int getLiquidState(IBlockReader reader, int x, int y, int z) => reader.GetMaterial(x, y, z) != Material ? -1 : reader.GetBlockMeta(x, y, z);
+    protected int GetLiquidState(IBlockReader reader, int x, int y, int z) => reader.GetMaterial(x, y, z) != Material ? -1 : reader.GetBlockMeta(x, y, z);
 
-    private int getLiquidDepth(IBlockReader iBlockReader, int x, int y, int z)
+    private int GetLiquidDepth(IBlockReader iBlockReader, int x, int y, int z)
     {
         if (iBlockReader.GetMaterial(x, y, z) != Material)
         {
@@ -74,10 +74,10 @@ public abstract class BlockFluid : Block
 
     public override int GetDroppedItemCount() => 0;
 
-    private Vector3D<double> getFlow(IBlockReader iBlockReader, int x, int y, int z)
+    private Vector3D<double> GetFlow(IBlockReader iBlockReader, int x, int y, int z)
     {
         Vector3D<double> flowVector = new(0.0);
-        int depth = getLiquidDepth(iBlockReader, x, y, z);
+        int depth = GetLiquidDepth(iBlockReader, x, y, z);
 
         for (int direction = 0; direction < 4; ++direction)
         {
@@ -99,25 +99,29 @@ public abstract class BlockFluid : Block
                     break;
             }
 
-            int neighborDepth = getLiquidDepth(iBlockReader, neighborX, y, neighborZ);
+            int neighborDepth = GetLiquidDepth(iBlockReader, neighborX, y, neighborZ);
             int depthDiff;
             if (neighborDepth < 0)
             {
-                if (!iBlockReader.GetMaterial(neighborX, y, neighborZ).BlocksMovement)
+                if (iBlockReader.GetMaterial(neighborX, y, neighborZ).BlocksMovement)
                 {
-                    neighborDepth = getLiquidDepth(iBlockReader, neighborX, y - 1, neighborZ);
-                    if (neighborDepth >= 0)
-                    {
-                        depthDiff = neighborDepth - (depth - 8);
-                        flowVector += new Vector3D<double>((neighborX - x) * depthDiff, (y - y) * depthDiff, (neighborZ - z) * depthDiff);
-                    }
+                    continue;
                 }
+
+                neighborDepth = GetLiquidDepth(iBlockReader, neighborX, y - 1, neighborZ);
+                if (neighborDepth < 0)
+                {
+                    continue;
+                }
+
+                depthDiff = neighborDepth - (depth - 8);
             }
             else
             {
                 depthDiff = neighborDepth - depth;
-                flowVector += new Vector3D<double>((neighborX - x) * depthDiff, (y - y) * depthDiff, (neighborZ - z) * depthDiff);
             }
+
+            flowVector += new Vector3D<double>((neighborX - x) * depthDiff, (y - y) * depthDiff, (neighborZ - z) * depthDiff);
         }
 
         if (iBlockReader.GetBlockMeta(x, y, z) >= 8)
@@ -175,7 +179,7 @@ public abstract class BlockFluid : Block
 
     public override Vec3D ApplyVelocity(OnApplyVelocityEvent @event)
     {
-        Vector3D<double> flowVec = getFlow(@event.World.Reader, @event.X, @event.Y, @event.Z);
+        Vector3D<double> flowVec = GetFlow(@event.World.Reader, @event.X, @event.Y, @event.Z);
         return new Vec3D(flowVec.X, flowVec.Y, flowVec.Z);
     }
 
@@ -228,32 +232,32 @@ public abstract class BlockFluid : Block
         Vector3D<double> flowVec = new(0.0);
         if (material == Material.Water)
         {
-            flowVec = ((BlockFluid)FlowingWater).getFlow(iBlockReader, x, y, z);
+            flowVec = ((BlockFluid)FlowingWater).GetFlow(iBlockReader, x, y, z);
         }
         else if (material == Material.Lava)
         {
-            flowVec = ((BlockFluid)FlowingLava).getFlow(iBlockReader, x, y, z);
+            flowVec = ((BlockFluid)FlowingLava).GetFlow(iBlockReader, x, y, z);
         }
 
         return flowVec is { X: 0.0D, Z: 0.0D } ? -1000.0D : Math.Atan2(flowVec.Z, flowVec.X) - Math.PI * 0.5D;
     }
 
-    public override void OnPlaced(OnPlacedEvent @event)
-    {
-        CheckBlockCollisions(@event.World.Reader, @event.World.Writer, @event.World.Broadcaster, @event.X, @event.Y, @event.Z);
-    }
+    public override void OnPlaced(OnPlacedEvent @event) => CheckBlockCollisions(@event.World.Reader, @event.World.Writer, @event.World.Broadcaster, @event.X, @event.Y, @event.Z);
 
-    public override void NeighborUpdate(OnTickEvent @event)
-    {
-        CheckBlockCollisions(@event.World.Reader, @event.World.Writer, @event.World.Broadcaster, @event.X, @event.Y, @event.Z);
-    }
+    public override void NeighborUpdate(OnTickEvent @event) => CheckBlockCollisions(@event.World.Reader, @event.World.Writer, @event.World.Broadcaster, @event.X, @event.Y, @event.Z);
 
     private void CheckBlockCollisions(IBlockReader reader, IBlockWriter writer, WorldEventBroadcaster broadcaster, int x, int y, int z)
     {
-        if (reader.GetBlockId(x, y, z) != Id) return;
+        if (reader.GetBlockId(x, y, z) != Id)
+        {
+            return;
+        }
 
 
-        if (Material != Material.Lava) return;
+        if (Material != Material.Lava)
+        {
+            return;
+        }
 
         bool hasWaterAdjacent = false;
 

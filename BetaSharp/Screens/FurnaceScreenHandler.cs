@@ -40,9 +40,9 @@ public class FurnaceScreenHandler : ScreenHandler
     public override void AddListener(ScreenHandlerListener listener)
     {
         base.AddListener(listener);
-        listener.onPropertyUpdate(this, 0, furnaceBlockEntity.cookTime);
-        listener.onPropertyUpdate(this, 1, furnaceBlockEntity.burnTime);
-        listener.onPropertyUpdate(this, 2, furnaceBlockEntity.fuelTime);
+        listener.onPropertyUpdate(this, 0, furnaceBlockEntity.CookTime);
+        listener.onPropertyUpdate(this, 1, furnaceBlockEntity.BurnTime);
+        listener.onPropertyUpdate(this, 2, furnaceBlockEntity.FuelTime);
     }
 
     public override void SendContentUpdates()
@@ -52,42 +52,42 @@ public class FurnaceScreenHandler : ScreenHandler
         for (int var1 = 0; var1 < Listeners.Count; ++var1)
         {
             ScreenHandlerListener var2 = Listeners[var1];
-            if (cookTime != furnaceBlockEntity.cookTime)
+            if (cookTime != furnaceBlockEntity.CookTime)
             {
-                var2.onPropertyUpdate(this, 0, furnaceBlockEntity.cookTime);
+                var2.onPropertyUpdate(this, 0, furnaceBlockEntity.CookTime);
             }
 
-            if (burnTime != furnaceBlockEntity.burnTime)
+            if (burnTime != furnaceBlockEntity.BurnTime)
             {
-                var2.onPropertyUpdate(this, 1, furnaceBlockEntity.burnTime);
+                var2.onPropertyUpdate(this, 1, furnaceBlockEntity.BurnTime);
             }
 
-            if (fuelTime != furnaceBlockEntity.fuelTime)
+            if (fuelTime != furnaceBlockEntity.FuelTime)
             {
-                var2.onPropertyUpdate(this, 2, furnaceBlockEntity.fuelTime);
+                var2.onPropertyUpdate(this, 2, furnaceBlockEntity.FuelTime);
             }
         }
 
-        cookTime = furnaceBlockEntity.cookTime;
-        burnTime = furnaceBlockEntity.burnTime;
-        fuelTime = furnaceBlockEntity.fuelTime;
+        cookTime = furnaceBlockEntity.CookTime;
+        burnTime = furnaceBlockEntity.BurnTime;
+        fuelTime = furnaceBlockEntity.FuelTime;
     }
 
     public override void setProperty(int id, int value)
     {
         if (id == 0)
         {
-            furnaceBlockEntity.cookTime = value;
+            furnaceBlockEntity.CookTime = value;
         }
 
         if (id == 1)
         {
-            furnaceBlockEntity.burnTime = value;
+            furnaceBlockEntity.BurnTime = value;
         }
 
         if (id == 2)
         {
-            furnaceBlockEntity.fuelTime = value;
+            furnaceBlockEntity.FuelTime = value;
         }
 
     }

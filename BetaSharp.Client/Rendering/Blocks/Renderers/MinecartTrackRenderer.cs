@@ -19,7 +19,7 @@ public class MinecartTrackRenderer : IBlockRenderer
         }
 
         // Powered/Detector rails use bit 3 for state, but the first 8 shapes are identical
-        if (rail.isAlwaysStraight())
+        if (rail.IsAlwaysStraight())
         {
             metadata &= 7;
         }

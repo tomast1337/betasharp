@@ -426,7 +426,7 @@ public class WorldReader : IBlockReader
                     Block? block = Block.Blocks[GetBlockId(x, y, z)];
                     if (block != null && block.Material == fluidMaterial)
                     {
-                        double fluidSurfaceY = y + 1 - BlockFluid.getFluidHeightFromMeta(GetBlockMeta(x, y, z));
+                        double fluidSurfaceY = y + 1 - BlockFluid.GetFluidHeightFromMeta(GetBlockMeta(x, y, z));
 
                         if (maxY >= fluidSurfaceY)
                         {

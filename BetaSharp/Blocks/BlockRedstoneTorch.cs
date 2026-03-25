@@ -15,7 +15,7 @@ internal class BlockRedstoneTorch : BlockTorch
 
     public override int GetTexture(Side side, int meta) => side == Side.Up ? RedstoneWire.GetTexture(side, meta) : base.GetTexture(side, meta);
 
-    private bool isBurnedOut(OnTickEvent ctx, bool recordUpdate)
+    private static bool IsBurnedOut(OnTickEvent ctx, bool recordUpdate)
     {
         List<RedstoneUpdateInfo> updates = s_torchUpdates.Value!;
         if (recordUpdate)
@@ -85,7 +85,7 @@ internal class BlockRedstoneTorch : BlockTorch
         return (meta != 5 || side != (int)Side.Up) && (meta != 3 || side != (int)Side.South) && (meta != 4 || side != (int)Side.North) && (meta != 1 || side != (int)Side.East) && (meta != 2 || side != (int)Side.West);
     }
 
-    private bool shouldUnpower(OnTickEvent @event)
+    private static bool ShouldUnpower(OnTickEvent @event)
     {
         int x = @event.X;
         int y = @event.Y;
@@ -102,7 +102,7 @@ internal class BlockRedstoneTorch : BlockTorch
         int x = @event.X;
         int y = @event.Y;
         int z = @event.Z;
-        bool shouldTurnOff = shouldUnpower(@event);
+        bool shouldTurnOff = ShouldUnpower(@event);
         List<RedstoneUpdateInfo> updates = s_torchUpdates.Value!;
 
         while (updates.Count > 0 && @event.World.GetTime() - updates[0].updateTime > 100L)
@@ -119,7 +119,7 @@ internal class BlockRedstoneTorch : BlockTorch
 
             @event.World.Writer.SetBlock(x, y, z, RedstoneTorch.Id, @event.World.Reader.GetBlockMeta(x, y, z));
 
-            if (!isBurnedOut(@event, true))
+            if (!IsBurnedOut(@event, true))
             {
                 return;
             }
@@ -134,7 +134,7 @@ internal class BlockRedstoneTorch : BlockTorch
                 @event.World.Broadcaster.AddParticle("smoke", particleX, particleY, particleZ, 0.0D, 0.0D, 0.0D);
             }
         }
-        else if (!shouldTurnOff && !isBurnedOut(@event, false))
+        else if (!shouldTurnOff && !IsBurnedOut(@event, false))
         {
             @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, LitRedstoneTorch.Id, @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z));
         }

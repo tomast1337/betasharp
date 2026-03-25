@@ -17,14 +17,14 @@ internal class BlockSand(int id, int textureId) : Block(id, textureId, Material.
 
     public override void NeighborUpdate(OnTickEvent ctx) => ctx.World.TickScheduler.ScheduleBlockUpdate(ctx.X, ctx.Y, ctx.Z, Id, GetTickRate());
 
-    public override void OnTick(OnTickEvent @event) => processFall(@event);
+    public override void OnTick(OnTickEvent @event) => ProcessFall(@event);
 
-    private void processFall(OnTickEvent @event)
+    private void ProcessFall(OnTickEvent @event)
     {
         int x = @event.X;
         int y = @event.Y;
         int z = @event.Z;
-        if (y <= 0 || !canFallThrough(new OnTickEvent(@event.World, x, y - 1, z, 0, @event.BlockId)))
+        if (y <= 0 || !CanFallThrough(new OnTickEvent(@event.World, x, y - 1, z, 0, @event.BlockId)))
         {
             return;
         }
@@ -39,7 +39,7 @@ internal class BlockSand(int id, int textureId) : Block(id, textureId, Material.
         {
             @event.World.Writer.SetBlock(x, y, z, 0);
 
-            while (canFallThrough(new OnTickEvent(@event.World, x, y - 1, z, 0, @event.BlockId)) && y > 0)
+            while (CanFallThrough(new OnTickEvent(@event.World, x, y - 1, z, 0, @event.BlockId)) && y > 0)
             {
                 --y;
             }
@@ -53,7 +53,7 @@ internal class BlockSand(int id, int textureId) : Block(id, textureId, Material.
 
     public override int GetTickRate() => 3;
 
-    public static bool canFallThrough(OnTickEvent ctx)
+    public static bool CanFallThrough(OnTickEvent ctx)
     {
         int blockId = ctx.World.Reader.GetBlockId(ctx.X, ctx.Y, ctx.Z);
         if (blockId == 0)

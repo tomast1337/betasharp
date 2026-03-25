@@ -17,7 +17,7 @@ internal class BlockCloth() : Block(35, 64, Material.Wool)
 
     protected override int GetDroppedItemMeta(int blockMeta) => blockMeta;
 
-    public static int getBlockMeta(int itemMeta) => ~itemMeta & 15;
+    public static int GetBlockMeta(int itemMeta) => ~itemMeta & 15;
 
-    public static int getItemMeta(int blockMeta) => ~blockMeta & 15;
+    public static int GetItemMeta(int blockMeta) => ~blockMeta & 15;
 }

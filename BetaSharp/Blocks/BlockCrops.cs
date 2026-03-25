@@ -15,7 +15,7 @@ public class BlockCrops : BlockPlant
         SetBoundingBox(0.5F - halfWidth, 0.0F, 0.5F - halfWidth, 0.5F + halfWidth, 0.25F, 0.5F + halfWidth);
     }
 
-    protected override bool canPlantOnTop(int id) => id == Farmland.Id;
+    protected override bool CanPlantOnTop(int id) => id == Farmland.Id;
 
     public override void OnTick(OnTickEvent @event)
     {
@@ -31,7 +31,7 @@ public class BlockCrops : BlockPlant
             return;
         }
 
-        if (Random.Shared.Next(100) / getAvailableMoisture(@event.World.Reader, @event.X, @event.Y, @event.Z) != 0)
+        if (Random.Shared.Next(100) / GetAvailableMoisture(@event.World.Reader, @event.X, @event.Y, @event.Z) != 0)
         {
             return;
         }
@@ -40,9 +40,9 @@ public class BlockCrops : BlockPlant
         @event.World.Writer.SetBlockMeta(@event.X, @event.Y, @event.Z, meta);
     }
 
-    public void applyFullGrowth(IWorldContext world, int x, int y, int z) => world.Writer.SetBlockMeta(x, y, z, 7);
+    public static void ApplyFullGrowth(IWorldContext world, int x, int y, int z) => world.Writer.SetBlockMeta(x, y, z, 7);
 
-    private float getAvailableMoisture(IBlockReader read, int x, int y, int z)
+    private float GetAvailableMoisture(IBlockReader read, int x, int y, int z)
     {
         float totalMoisture = 1.0F;
         int blockNorth = read.GetBlockId(x, y, z - 1);

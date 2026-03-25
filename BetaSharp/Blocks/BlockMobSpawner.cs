@@ -5,7 +5,7 @@ namespace BetaSharp.Blocks;
 
 internal class BlockMobSpawner(int id, int textureId) : BlockWithEntity(id, textureId, Material.Stone)
 {
-    public override BlockEntity? getBlockEntity() => new BlockEntityMobSpawner();
+    public override BlockEntity? GetBlockEntity() => new BlockEntityMobSpawner();
 
     public override int GetDroppedItemId(int blockMeta) => 0;
 

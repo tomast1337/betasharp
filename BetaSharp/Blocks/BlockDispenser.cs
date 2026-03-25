@@ -39,18 +39,18 @@ internal class BlockDispenser : BlockWithEntity
         }
         else
         {
-            updateDirection(@event);
+            UpdateDirection(@event);
         }
     }
 
-    private void updateDirection(OnPlacedEvent @event)
+    private static void UpdateDirection(OnPlacedEvent @event)
     {
         if (@event.World.IsRemote)
         {
             return;
         }
 
-        var reader = @event.World.Reader;
+        IBlockReader reader = @event.World.Reader;
         int x = @event.X, y = @event.Y, z = @event.Z;
 
         bool isNorthOpaque = BlocksOpaque[reader.GetBlockId(x, y, z - 1)];
@@ -114,7 +114,7 @@ internal class BlockDispenser : BlockWithEntity
         return true;
     }
 
-    private void dispense(OnTickEvent @event)
+    private static void Dispense(OnTickEvent @event)
     {
         int meta = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
         int dirX = 0;
@@ -212,11 +212,11 @@ internal class BlockDispenser : BlockWithEntity
     {
         if (@event.World.Redstone.IsPowered(@event.X, @event.Y, @event.Z) || @event.World.Redstone.IsPowered(@event.X, @event.Y + 1, @event.Z))
         {
-            dispense(@event);
+            Dispense(@event);
         }
     }
 
-    public override BlockEntity? getBlockEntity() => new BlockEntityDispenser();
+    public override BlockEntity? GetBlockEntity() => new BlockEntityDispenser();
 
     public override void OnBreak(OnBreakEvent @event)
     {

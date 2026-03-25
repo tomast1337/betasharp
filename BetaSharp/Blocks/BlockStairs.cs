@@ -13,7 +13,7 @@ internal class BlockStairs : Block
         _baseBlock = block;
         SetHardness(block.Hardness);
         SetResistance(block.Resistance / 3.0F);
-        setSoundGroup(block.SoundGroup);
+        SetSoundGroup(block.SoundGroup);
         SetOpacity(255);
     }
 

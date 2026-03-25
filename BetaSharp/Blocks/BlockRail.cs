@@ -15,15 +15,15 @@ public class BlockRail : Block
         SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 2.0F / 16.0F, 1.0F);
     }
 
-    public static bool isRail(IWorldContext level, int x, int y, int z)
+    public static bool IsRail(IWorldContext level, int x, int y, int z)
     {
         int blockId = level.Reader.GetBlockId(x, y, z);
         return blockId == Rail.Id || blockId == PoweredRail.Id || blockId == DetectorRail.Id;
     }
 
-    public static bool isRail(int blockId) => blockId == Rail.Id || blockId == PoweredRail.Id || blockId == DetectorRail.Id;
+    public static bool IsRail(int blockId) => blockId == Rail.Id || blockId == PoweredRail.Id || blockId == DetectorRail.Id;
 
-    public bool isAlwaysStraight() => _alwaysStraight;
+    public bool IsAlwaysStraight() => _alwaysStraight;
 
     public override Box? GetCollisionShape(IBlockReader world, EntityManager entities, int x, int y, int z) => null;
 
@@ -78,7 +78,7 @@ public class BlockRail : Block
             return;
         }
 
-        updateShape(@event.World, @event.X, @event.Y, @event.Z, true);
+        UpdateShape(@event.World, @event.X, @event.Y, @event.Z, true);
         if (Id != PoweredRail.Id)
         {
             return;
@@ -116,7 +116,7 @@ public class BlockRail : Block
         else if (Id == PoweredRail.Id)
         {
             bool isPowered = @event.World.Redstone.IsPowered(@event.X, @event.Y, @event.Z) || @event.World.Redstone.IsPowered(@event.X, @event.Y + 1, @event.Z);
-            isPowered = isPowered || isPoweredByConnectedRails(@event.World, @event.X, @event.Y, @event.Z, meta, true, 0) || isPoweredByConnectedRails(@event.World, @event.X, @event.Y, @event.Z, meta, false, 0);
+            isPowered = isPowered || IsPoweredByConnectedRails(@event.World, @event.X, @event.Y, @event.Z, meta, true, 0) || IsPoweredByConnectedRails(@event.World, @event.X, @event.Y, @event.Z, meta, false, 0);
             bool stateChanged = false;
             switch (isPowered)
             {
@@ -137,11 +137,11 @@ public class BlockRail : Block
         }
         else if (Id > 0 && Blocks[Id]!.CanEmitRedstonePower() && !_alwaysStraight && RailLogic.GetNAdjacentTracks(new RailLogic(this, @event.World, new Vec3i(@event.X, @event.Y, @event.Z))) == 3)
         {
-            updateShape(@event.World, @event.X, @event.Y, @event.Z, false);
+            UpdateShape(@event.World, @event.X, @event.Y, @event.Z, false);
         }
     }
 
-    private void updateShape(IWorldContext level, int x, int y, int z, bool force)
+    private void UpdateShape(IWorldContext level, int x, int y, int z, bool force)
     {
         if (level.IsRemote)
         {
@@ -151,7 +151,7 @@ public class BlockRail : Block
         new RailLogic(this, level, new Vec3i(x, y, z)).UpdateState(level.Redstone.IsPowered(x, y, z), force);
     }
 
-    private bool isPoweredByConnectedRails(IWorldContext level, int x, int y, int z, int meta, bool towardsNegative, int depth)
+    private bool IsPoweredByConnectedRails(IWorldContext level, int x, int y, int z, int meta, bool towardsNegative, int depth)
     {
         if (depth >= 8)
         {
@@ -242,11 +242,11 @@ public class BlockRail : Block
                 break;
         }
 
-        return isPoweredByRail(level, x, y, z, towardsNegative, depth, shape) || (isSameY &&
-                                                                                  isPoweredByRail(level, x, y - 1, z, towardsNegative, depth, shape));
+        return IsPoweredByRail(level, x, y, z, towardsNegative, depth, shape) || (isSameY &&
+                                                                                  IsPoweredByRail(level, x, y - 1, z, towardsNegative, depth, shape));
     }
 
-    private bool isPoweredByRail(IWorldContext level, int x, int y, int z, bool towardsNegative, int depth, int shape)
+    private bool IsPoweredByRail(IWorldContext level, int x, int y, int z, bool towardsNegative, int depth, int shape)
     {
         int blockId = level.Reader.GetBlockId(x, y, z);
         if (blockId != PoweredRail.Id)
@@ -270,7 +270,7 @@ public class BlockRail : Block
 
         if (!level.Redstone.IsPowered(x, y, z) && !level.Redstone.IsPowered(x, y + 1, z))
         {
-            return isPoweredByConnectedRails(level, x, y, z, meta, towardsNegative, depth + 1);
+            return IsPoweredByConnectedRails(level, x, y, z, meta, towardsNegative, depth + 1);
         }
 
         return true;

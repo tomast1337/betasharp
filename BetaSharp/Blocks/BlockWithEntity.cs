@@ -12,7 +12,7 @@ public abstract class BlockWithEntity : Block
     public override void OnPlaced(OnPlacedEvent ctx)
     {
         base.OnPlaced(ctx);
-        ctx.World.Entities.SetBlockEntity(ctx.X, ctx.Y, ctx.Z, getBlockEntity());
+        ctx.World.Entities.SetBlockEntity(ctx.X, ctx.Y, ctx.Z, GetBlockEntity());
     }
 
     public override void OnBreak(OnBreakEvent ctx)
@@ -21,5 +21,5 @@ public abstract class BlockWithEntity : Block
         ctx.World.Entities.RemoveBlockEntity(ctx.X, ctx.Y, ctx.Z);
     }
 
-    public abstract BlockEntity? getBlockEntity();
+    public abstract BlockEntity? GetBlockEntity();
 }

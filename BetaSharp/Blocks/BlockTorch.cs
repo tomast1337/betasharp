@@ -28,30 +28,27 @@ internal class BlockTorch : Block
 
     public override void OnPlaced(OnPlacedEvent @event)
     {
-        int meta = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
-        if (@event.Direction == Side.Up && canPlaceOn(@event.World.Reader, @event.X, @event.Y - 1, @event.Z))
+        int meta;
+        switch (@event.Direction)
         {
-            meta = 5;
-        }
-
-        if (@event.Direction == Side.North && @event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z + 1))
-        {
-            meta = 4;
-        }
-
-        if (@event.Direction == Side.South && @event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z - 1))
-        {
-            meta = 3;
-        }
-
-        if (@event.Direction == Side.West && @event.World.Reader.ShouldSuffocate(@event.X + 1, @event.Y, @event.Z))
-        {
-            meta = 2;
-        }
-
-        if (@event.Direction == Side.East && @event.World.Reader.ShouldSuffocate(@event.X - 1, @event.Y, @event.Z))
-        {
-            meta = 1;
+            case Side.Up when canPlaceOn(@event.World.Reader, @event.X, @event.Y - 1, @event.Z):
+                meta = 5;
+                break;
+            case Side.North when @event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z + 1):
+                meta = 4;
+                break;
+            case Side.South when @event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z - 1):
+                meta = 3;
+                break;
+            case Side.West when @event.World.Reader.ShouldSuffocate(@event.X + 1, @event.Y, @event.Z):
+                meta = 2;
+                break;
+            case Side.East when @event.World.Reader.ShouldSuffocate(@event.X - 1, @event.Y, @event.Z):
+                meta = 1;
+                break;
+            default:
+                meta = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
+                break;
         }
 
         @event.World.Writer.SetBlockMeta(@event.X, @event.Y, @event.Z, meta);

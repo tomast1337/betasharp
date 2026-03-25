@@ -13,7 +13,7 @@ internal class ItemCloth : ItemBlock
 
     public override int getTextureId(int meta)
     {
-        return Block.Wool.GetTexture(2, BlockCloth.getBlockMeta(meta));
+        return Block.Wool.GetTexture(2, BlockCloth.GetBlockMeta(meta));
     }
 
     public override int getPlacementMetadata(int meta)
@@ -23,6 +23,6 @@ internal class ItemCloth : ItemBlock
 
     public override String getItemNameIS(ItemStack itemStack)
     {
-        return base.getItemName() + "." + ItemDye.DyeColorNames[BlockCloth.getBlockMeta(itemStack.getDamage())];
+        return base.getItemName() + "." + ItemDye.DyeColorNames[BlockCloth.GetBlockMeta(itemStack.getDamage())];
     }
 }

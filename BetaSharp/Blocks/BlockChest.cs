@@ -264,5 +264,5 @@ internal class BlockChest : BlockWithEntity
         return true;
     }
 
-    public override BlockEntity? getBlockEntity() => new BlockEntityChest();
+    public override BlockEntity? GetBlockEntity() => new BlockEntityChest();
 }

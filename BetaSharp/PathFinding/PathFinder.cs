@@ -266,7 +266,7 @@ public class PathFinder
                         else
                         {
                             int meta = _worldMap.GetBlockMeta(ix, iy, iz);
-                            if (!BlockDoor.isOpen(meta))
+                            if (!BlockDoor.IsOpen(meta))
                             {
                                 return 0;
                             }

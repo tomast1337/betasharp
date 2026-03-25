@@ -6,8 +6,8 @@ namespace BetaSharp.Blocks;
 
 internal class BlockCake : Block
 {
-    public static readonly float EdgeInset = 1.0F / 16.0F;
-    public static readonly float Height = 0.5F;
+    public const float EdgeInset = 1.0F / 16.0F;
+    public const float Height = 0.5F;
 
     public BlockCake(int id, int textureId) : base(id, textureId, Material.Cake) => SetTickRandomly(true);
 
@@ -89,11 +89,11 @@ internal class BlockCake : Block
         }
     }
 
-    public override bool CanPlaceAt(CanPlaceAtContext evt) => base.CanPlaceAt(evt) && canGrow(evt.World.Reader, evt.X, evt.Y, evt.Z);
+    public override bool CanPlaceAt(CanPlaceAtContext evt) => base.CanPlaceAt(evt) && CanGrow(evt.World.Reader, evt.X, evt.Y, evt.Z);
 
     public override void NeighborUpdate(OnTickEvent @event)
     {
-        if (canGrow(@event.World.Reader, @event.X, @event.Y, @event.Z))
+        if (CanGrow(@event.World.Reader, @event.X, @event.Y, @event.Z))
         {
             return;
         }
@@ -102,9 +102,9 @@ internal class BlockCake : Block
         @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
     }
 
-    public override bool CanGrow(OnTickEvent @event) => canGrow(@event.World.Reader, @event.X, @event.Y, @event.Z);
+    public override bool CanGrow(OnTickEvent @event) => CanGrow(@event.World.Reader, @event.X, @event.Y, @event.Z);
 
-    private static bool canGrow(IBlockReader world, int x, int y, int z) => world.GetMaterial(x, y - 1, z).IsSolid;
+    private static bool CanGrow(IBlockReader world, int x, int y, int z) => world.GetMaterial(x, y - 1, z).IsSolid;
 
     public override int GetDroppedItemCount() => 0;
 

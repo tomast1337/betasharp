@@ -37,32 +37,32 @@ public class RedstoneWireRenderer : IBlockRenderer
         float maxV = (texV + 15.99F) / 256.0F;
 
         // --- 3. Connection Logic ---
-        bool connectsWest = BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x - 1, pos.y, pos.z, 1) ||
+        bool connectsWest = BlockRedstoneWire.IsPowerProviderOrWire(ctx.BlockReader, pos.x - 1, pos.y, pos.z, 1) ||
                             (!ctx.BlockReader.ShouldSuffocate(pos.x - 1, pos.y, pos.z) &&
-                             BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x - 1, pos.y - 1, pos.z, -1));
-        bool connectsEast = BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x + 1, pos.y, pos.z, 3) ||
+                             BlockRedstoneWire.IsPowerProviderOrWire(ctx.BlockReader, pos.x - 1, pos.y - 1, pos.z, -1));
+        bool connectsEast = BlockRedstoneWire.IsPowerProviderOrWire(ctx.BlockReader, pos.x + 1, pos.y, pos.z, 3) ||
                             (!ctx.BlockReader.ShouldSuffocate(pos.x + 1, pos.y, pos.z) &&
-                             BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x + 1, pos.y - 1, pos.z, -1));
-        bool connectsNorth = BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y, pos.z - 1, 2) ||
+                             BlockRedstoneWire.IsPowerProviderOrWire(ctx.BlockReader, pos.x + 1, pos.y - 1, pos.z, -1));
+        bool connectsNorth = BlockRedstoneWire.IsPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y, pos.z - 1, 2) ||
                              (!ctx.BlockReader.ShouldSuffocate(pos.x, pos.y, pos.z - 1) &&
-                              BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y - 1, pos.z - 1, -1));
-        bool connectsSouth = BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y, pos.z + 1, 0) ||
+                              BlockRedstoneWire.IsPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y - 1, pos.z - 1, -1));
+        bool connectsSouth = BlockRedstoneWire.IsPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y, pos.z + 1, 0) ||
                              (!ctx.BlockReader.ShouldSuffocate(pos.x, pos.y, pos.z + 1) &&
-                              BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y - 1, pos.z + 1, -1));
+                              BlockRedstoneWire.IsPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y - 1, pos.z + 1, -1));
 
         if (!ctx.BlockReader.ShouldSuffocate(pos.x, pos.y + 1, pos.z))
         {
             if (ctx.BlockReader.ShouldSuffocate(pos.x - 1, pos.y, pos.z) &&
-                BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x - 1, pos.y + 1, pos.z, -1))
+                BlockRedstoneWire.IsPowerProviderOrWire(ctx.BlockReader, pos.x - 1, pos.y + 1, pos.z, -1))
                 connectsWest = true;
             if (ctx.BlockReader.ShouldSuffocate(pos.x + 1, pos.y, pos.z) &&
-                BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x + 1, pos.y + 1, pos.z, -1))
+                BlockRedstoneWire.IsPowerProviderOrWire(ctx.BlockReader, pos.x + 1, pos.y + 1, pos.z, -1))
                 connectsEast = true;
             if (ctx.BlockReader.ShouldSuffocate(pos.x, pos.y, pos.z - 1) &&
-                BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y + 1, pos.z - 1, -1))
+                BlockRedstoneWire.IsPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y + 1, pos.z - 1, -1))
                 connectsNorth = true;
             if (ctx.BlockReader.ShouldSuffocate(pos.x, pos.y, pos.z + 1) &&
-                BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y + 1, pos.z + 1, -1))
+                BlockRedstoneWire.IsPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y + 1, pos.z + 1, -1))
                 connectsSouth = true;
         }
 

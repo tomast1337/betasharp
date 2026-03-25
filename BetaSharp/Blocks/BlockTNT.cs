@@ -64,7 +64,8 @@ internal class BlockTNT(int id, int textureId) : Block(id, textureId, Material.T
 
     public override void OnBlockBreakStart(OnBlockBreakStartEvent ctx)
     {
-        if (ctx.Player.getHand() != null && ctx.Player.getHand().itemId == Item.FlintAndSteel.id)
+        ItemStack? itemStack = ctx.Player.getHand();
+        if (itemStack != null && itemStack.itemId == Item.FlintAndSteel.id)
         {
             ctx.World.Writer.SetBlockMetaWithoutNotifyingNeighbors(ctx.X, ctx.Y, ctx.Z, 1);
         }

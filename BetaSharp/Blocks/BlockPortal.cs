@@ -30,7 +30,7 @@ public class BlockPortal(int id, int textureId) : BlockBreakable(id, textureId, 
 
     public override bool IsFullCube() => false;
 
-    public bool create(IBlockReader reader, IBlockWriter writer, int x, int y, int z)
+    public static bool Create(IBlockReader reader, IBlockWriter writer, int x, int y, int z)
     {
         sbyte extendsInZ = 0;
         sbyte extendsInX = 0;
@@ -121,12 +121,9 @@ public class BlockPortal(int id, int textureId) : BlockBreakable(id, textureId, 
             {
                 bool hasXNeighbors = @event.World.Reader.GetBlockId(@event.X - 1, @event.Y, @event.Z) == Id || @event.World.Reader.GetBlockId(@event.X + 1, @event.Y, @event.Z) == Id;
                 bool hasZNeighbors = @event.World.Reader.GetBlockId(@event.X, @event.Y, @event.Z - 1) == Id || @event.World.Reader.GetBlockId(@event.X, @event.Y, @event.Z + 1) == Id;
-                if (hasXNeighbors && hasZNeighbors)
-                {
-                    @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
-                }
-                else if ((@event.World.Reader.GetBlockId(@event.X + offsetX, @event.Y, @event.Z + offsetZ) != Obsidian.Id || @event.World.Reader.GetBlockId(@event.X - offsetX, @event.Y, @event.Z - offsetZ) != Id) &&
-                         (@event.World.Reader.GetBlockId(@event.X - offsetX, @event.Y, @event.Z - offsetZ) != Obsidian.Id || @event.World.Reader.GetBlockId(@event.X + offsetX, @event.Y, @event.Z + offsetZ) != Id))
+                if ((hasXNeighbors && hasZNeighbors) ||
+                    ((@event.World.Reader.GetBlockId(@event.X + offsetX, @event.Y, @event.Z + offsetZ) != Obsidian.Id || @event.World.Reader.GetBlockId(@event.X - offsetX, @event.Y, @event.Z - offsetZ) != Id) &&
+                     (@event.World.Reader.GetBlockId(@event.X - offsetX, @event.Y, @event.Z - offsetZ) != Obsidian.Id || @event.World.Reader.GetBlockId(@event.X + offsetX, @event.Y, @event.Z + offsetZ) != Id)))
                 {
                     @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
                 }

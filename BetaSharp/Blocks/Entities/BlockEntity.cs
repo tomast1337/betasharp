@@ -34,19 +34,19 @@ public abstract class BlockEntity
 
     private static BlockEntityType Register<T>(Func<T> factory, string id) where T : BlockEntity
     {
-        var type = new BlockEntityType(() => factory(), id);
+        BlockEntityType type = new(() => factory(), id);
         s_registry.Register(ResourceLocation.Parse(id.ToLower()), type);
         return type;
     }
 
-    public virtual void readNbt(NBTTagCompound nbt)
+    public virtual void ReadNbt(NBTTagCompound nbt)
     {
         X = nbt.GetInteger("x");
         Y = nbt.GetInteger("y");
         Z = nbt.GetInteger("z");
     }
 
-    public virtual void writeNbt(NBTTagCompound nbt)
+    public virtual void WriteNbt(NBTTagCompound nbt)
     {
         nbt.SetString("id", Type.Id);
         nbt.SetInteger("x", X);
@@ -54,7 +54,7 @@ public abstract class BlockEntity
         nbt.SetInteger("z", Z);
     }
 
-    public virtual void tick(EntityManager entities)
+    public virtual void Tick(EntityManager entities)
     {
     }
 
@@ -76,7 +76,7 @@ public abstract class BlockEntity
         try
         {
             BlockEntity blockEntity = type.Create();
-            blockEntity.readNbt(nbt);
+            blockEntity.ReadNbt(nbt);
             return blockEntity;
         }
         catch (Exception exception)
@@ -86,11 +86,11 @@ public abstract class BlockEntity
         }
     }
 
-    public virtual int getPushedBlockData() => World.Reader.GetBlockMeta(X, Y, Z);
+    public virtual int GetPushedBlockData() => World.Reader.GetBlockMeta(X, Y, Z);
 
     public void markDirty()
     {
-        if (World == null || World.IsRemote)
+        if (World.IsRemote)
         {
             return;
         }
@@ -98,7 +98,7 @@ public abstract class BlockEntity
         World.Broadcaster.UpdateBlockEntity(X, Y, Z, this);
     }
 
-    public double distanceFrom(double x, double y, double z)
+    public double DistanceFrom(double x, double y, double z)
     {
         double dx = X + 0.5D - x;
         double dy = Y + 0.5D - y;
@@ -106,30 +106,22 @@ public abstract class BlockEntity
         return dx * dx + dy * dy + dz * dz;
     }
 
-    public Block getBlock() => Block.Blocks[World.Reader.GetBlockId(X, Y, Z)];
+    public Block GetBlock() => Block.Blocks[World.Reader.GetBlockId(X, Y, Z)];
 
-    public virtual Packet createUpdatePacket() => null;
+    public virtual Packet CreateUpdatePacket() => null;
 
-    public bool isRemoved()
+    public bool IsRemoved()
     {
         if (Removed)
         {
             return true;
         }
 
-        if (World != null)
-        {
-            int id = World.Reader.GetBlockId(X, Y, Z);
-            if (id == 0 || !Block.BlocksWithEntity[id])
-            {
-                return true;
-            }
-        }
-
-        return false;
+        int id = World.Reader.GetBlockId(X, Y, Z);
+        return id == 0 || !Block.BlocksWithEntity[id];
     }
 
-    public void markRemoved() => Removed = true;
+    public void MarkRemoved() => Removed = true;
 
-    public void cancelRemoval() => Removed = false;
+    public void CancelRemoval() => Removed = false;
 }

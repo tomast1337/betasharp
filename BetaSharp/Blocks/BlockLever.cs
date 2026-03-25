@@ -81,7 +81,7 @@ internal class BlockLever(int id, int level) : Block(id, level, Material.PistonB
 
     public override void NeighborUpdate(OnTickEvent @event)
     {
-        if (!breakIfCannotPlaceAt(@event))
+        if (!BreakIfCannotPlaceAt(@event))
         {
             return;
         }
@@ -103,7 +103,7 @@ internal class BlockLever(int id, int level) : Block(id, level, Material.PistonB
         @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
     }
 
-    private bool breakIfCannotPlaceAt(OnTickEvent ctx)
+    private bool BreakIfCannotPlaceAt(OnTickEvent ctx)
     {
         if (CanPlaceAt(new CanPlaceAtContext(ctx.World, 0, ctx.X, ctx.Y, ctx.Z)))
         {
@@ -141,7 +141,7 @@ internal class BlockLever(int id, int level) : Block(id, level, Material.PistonB
         }
     }
 
-    public override void OnBlockBreakStart(OnBlockBreakStartEvent ctx) => toggleLever(ctx.World, ctx.X, ctx.Y, ctx.Z);
+    public override void OnBlockBreakStart(OnBlockBreakStartEvent ctx) => ToggleLever(ctx.World, ctx.X, ctx.Y, ctx.Z);
 
     public override bool OnUse(OnUseEvent ctx)
     {
@@ -150,11 +150,11 @@ internal class BlockLever(int id, int level) : Block(id, level, Material.PistonB
             return true;
         }
 
-        toggleLever(ctx.World, ctx.X, ctx.Y, ctx.Z);
+        ToggleLever(ctx.World, ctx.X, ctx.Y, ctx.Z);
         return true;
     }
 
-    private void toggleLever(IWorldContext world, int x, int y, int z)
+    private void ToggleLever(IWorldContext world, int x, int y, int z)
     {
         int meta = world.Reader.GetBlockMeta(x, y, z);
         int direction = meta & 7;

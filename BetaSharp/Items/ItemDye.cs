@@ -72,7 +72,7 @@ internal class ItemDye : Item
             {
                 if (!world.IsRemote)
                 {
-                    ((BlockSapling)Block.Sapling).generate(world, x, y, z);
+                    ((BlockSapling)Block.Sapling).Generate(world, x, y, z);
                     --itemStack.count;
                 }
                 return true;
@@ -81,7 +81,7 @@ internal class ItemDye : Item
             {
                 if (!world.IsRemote)
                 {
-                    ((BlockCrops)Block.Wheat).applyFullGrowth(world, x, y, z);
+                    BlockCrops.ApplyFullGrowth(world, x, y, z);
                     --itemStack.count;
                 }
                 return true;
@@ -138,7 +138,7 @@ internal class ItemDye : Item
         if (entityLiving is EntitySheep)
         {
             EntitySheep sheep = (EntitySheep)entityLiving;
-            int woolColor = BlockCloth.getBlockMeta(itemStack.getDamage());
+            int woolColor = BlockCloth.GetBlockMeta(itemStack.getDamage());
             if (!sheep.getSheared() && sheep.getFleeceColor() != woolColor)
             {
                 sheep.setFleeceColor(woolColor);

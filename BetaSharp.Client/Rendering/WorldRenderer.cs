@@ -179,7 +179,7 @@ public class WorldRenderer : IWorldEventListener
 
     public void loadRenderers()
     {
-        Block.Leaves.setGraphicsLevel(true);
+        Block.Leaves.SetGraphicsLevel(true);
         renderDistance = _game.options.renderDistance;
 
         chunkRenderer?.Dispose();
@@ -267,7 +267,7 @@ public class WorldRenderer : IWorldEventListener
             for (var6 = 0; var6 < world.Entities.BlockEntities.Count; ++var6)
             {
                 BlockEntity entity = world.Entities.BlockEntities[var6];
-                if (!entity.isRemoved() && culler.isBoundingBoxInFrustum(new Box(entity.X, entity.Y, entity.Z, entity.X + 1, entity.Y + 1, entity.Z + 1)))
+                if (!entity.IsRemoved() && culler.isBoundingBoxInFrustum(new Box(entity.X, entity.Y, entity.Z, entity.X + 1, entity.Y + 1, entity.Z + 1)))
                 {
                     BlockEntityRenderer.Instance.RenderTileEntity(entity, var3);
                 }

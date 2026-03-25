@@ -19,8 +19,8 @@ public class BlockEntityRendererPiston : BlockEntitySpecialRenderer
             throw new ArgumentException("BlockEntity is not a Piston");
         }
 
-        Block block = Block.Blocks[piston.getPushedBlockId()];
-        if (piston.getProgress(tickDelta) < 1.0F)
+        Block block = Block.Blocks[piston.GetPushedBlockId()];
+        if (piston.GetProgress(tickDelta) < 1.0F)
         {
             Tessellator tess = Tessellator.instance;
             bindTextureByName("/terrain.png");
@@ -33,9 +33,9 @@ public class BlockEntityRendererPiston : BlockEntitySpecialRenderer
 
             tess.startDrawingQuads();
             tess.setTranslationD(
-                x - piston.X + piston.getRenderOffsetX(tickDelta),
-                y - piston.Y + piston.getRenderOffsetY(tickDelta),
-                z - piston.Z + piston.getRenderOffsetZ(tickDelta)
+                x - piston.X + piston.GetRenderOffsetX(tickDelta),
+                y - piston.Y + piston.GetRenderOffsetY(tickDelta),
+                z - piston.Z + piston.GetRenderOffsetZ(tickDelta)
             );
 
             tess.setColorOpaque(1, 1, 1);
@@ -50,14 +50,14 @@ public class BlockEntityRendererPiston : BlockEntitySpecialRenderer
 
             BlockPos pos = new(piston.X, piston.Y, piston.Z);
 
-            if (block == Block.PistonHead && piston.getProgress(tickDelta) < 0.5F)
+            if (block == Block.PistonHead && piston.GetProgress(tickDelta) < 0.5F)
             {
                 var ctx = baseCtx with { CustomFlag = true };
                 _pistonExtensionRenderer.Draw(block, pos, ref ctx);
             }
-            else if (piston.isSource() && !piston.isExtending())
+            else if (piston.IsSource() && !piston.IsExtending())
             {
-                var headCtx = baseCtx with { OverrideTexture = ((BlockPistonBase)block).getTopTexture(), CustomFlag = piston.getProgress(tickDelta) < 0.5F };
+                var headCtx = baseCtx with { OverrideTexture = ((BlockPistonBase)block).GetTopTexture(), CustomFlag = piston.GetProgress(tickDelta) < 0.5F };
 
                 _pistonExtensionRenderer.Draw(Block.PistonHead, pos, ref headCtx);
 

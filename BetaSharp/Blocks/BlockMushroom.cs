@@ -30,9 +30,9 @@ public class BlockMushroom : BlockPlant
         }
     }
 
-    protected override bool canPlantOnTop(int id) => id == GrassBlock.Id || id == Dirt.Id || id == Stone.Id || id == Gravel.Id || id == Cobblestone.Id;
+    protected override bool CanPlantOnTop(int id) => id == GrassBlock.Id || id == Dirt.Id || id == Stone.Id || id == Gravel.Id || id == Cobblestone.Id;
 
     public override bool CanGrow(OnTickEvent ctx) => ctx.Y is >= 0 and < 128 &&
                                                      ctx.World.Reader.GetBrightness(ctx.X, ctx.Y, ctx.Z) < 13 &&
-                                                     canPlantOnTop(ctx.World.Reader.GetBlockId(ctx.X, ctx.Y - 1, ctx.Z));
+                                                     CanPlantOnTop(ctx.World.Reader.GetBlockId(ctx.X, ctx.Y - 1, ctx.Z));
 }

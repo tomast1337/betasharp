@@ -14,34 +14,34 @@ public class BlockPistonBase : Block
     public BlockPistonBase(int id, int textureId, bool sticky) : base(id, textureId, Material.Piston)
     {
         _sticky = sticky;
-        setSoundGroup(SoundStoneFootstep);
+        SetSoundGroup(SoundStoneFootstep);
         SetHardness(0.5F);
     }
 
-    public int getTopTexture() => _sticky ? 106 : 107;
+    public int GetTopTexture() => _sticky ? 106 : 107;
 
     public override int GetTexture(Side side) =>
         side switch
         {
-            Side.Up => getTopTexture(),
+            Side.Up => GetTopTexture(),
             Side.Down => 109,
             _ => 108
         };
 
     public override int GetTexture(Side side, int meta)
     {
-        int facing = getFacing(meta);
-        if (facing > 5)
+        Side facing = GetFacing(meta);
+        if (facing.ToInt() > 5)
         {
             return TextureId;
         }
 
-        if (side != facing.ToSide())
+        if (side != facing)
         {
-            return side == SideExtensions.OppositeFace(facing.ToSide()) ? 109 : 108;
+            return side == SideExtensions.OppositeFace(facing) ? 109 : 108;
         }
 
-        if (isExtended(meta) ||
+        if (IsExtended(meta) ||
             BoundingBox is
                 not
                 {
@@ -72,12 +72,12 @@ public class BlockPistonBase : Block
             return;
         }
 
-        int facing = getFacingForPlacement(@event.World, @event.X, @event.Y, @event.Z, player);
-        @event.World.Writer.SetBlockMeta(@event.X, @event.Y, @event.Z, facing);
+        Side facing = GetFacingForPlacement(@event.X, @event.Y, @event.Z, player);
+        @event.World.Writer.SetBlockMeta(@event.X, @event.Y, @event.Z, facing.ToInt());
 
         if (!@event.World.IsRemote)
         {
-            checkExtended(@event.World, @event.X, @event.Y, @event.Z);
+            CheckExtended(@event.World, @event.X, @event.Y, @event.Z);
         }
     }
 
@@ -85,43 +85,45 @@ public class BlockPistonBase : Block
     {
         if (!@event.World.IsRemote && @event.World.Entities.GetBlockEntity<BlockEntity>(@event.X, @event.Y, @event.Z) == null)
         {
-            checkExtended(@event.World, @event.X, @event.Y, @event.Z);
+            CheckExtended(@event.World, @event.X, @event.Y, @event.Z);
         }
     }
 
-    private void checkExtended(IWorldContext ctx, int x, int y, int z)
+    private void CheckExtended(IWorldContext ctx, int x, int y, int z)
     {
         int meta = ctx.Reader.GetBlockMeta(x, y, z);
-        int facing = getFacing(meta);
+        Side facing = GetFacing(meta);
         if (meta == 7)
         {
             return;
         }
 
-        switch (shouldExtend(ctx, x, y, z, facing))
+        switch (ShouldExtend(ctx, x, y, z, facing))
         {
-            case true when !isExtended(meta):
+            case true when !IsExtended(meta):
                 {
-                    if (canExtend(ctx, x, y, z, facing))
+                    if (CanExtend(ctx, x, y, z, facing))
                     {
-                        ctx.Writer.SetBlockMetaWithoutNotifyingNeighbors(x, y, z, facing | 8);
-                        ctx.Broadcaster.PlayNote(x, y, z, 0, facing); // 0 = Extending
+                        ctx.Writer.SetBlockMetaWithoutNotifyingNeighbors(x, y, z, facing.ToInt() | 8);
+                        ctx.Broadcaster.PlayNote(x, y, z, 0, facing.ToInt()); // 0 = Extending
                     }
 
                     break;
                 }
-            case false when isExtended(meta):
-                ctx.Writer.SetBlockMetaWithoutNotifyingNeighbors(x, y, z, facing);
-                ctx.Broadcaster.PlayNote(x, y, z, 1, facing); // 1 = Retracting
+            case false when IsExtended(meta):
+                ctx.Writer.SetBlockMetaWithoutNotifyingNeighbors(x, y, z, facing.ToInt());
+                ctx.Broadcaster.PlayNote(x, y, z, 1, facing.ToInt()); // 1 = Retracting
                 break;
         }
     }
 
-    private bool shouldExtend(IWorldContext ctx, int x, int y, int z, int facing) =>
-        (facing != 0 && ctx.Redstone.IsPoweringSide(x, y - 1, z, 0)) || (facing != 1 && ctx.Redstone.IsPoweringSide(x, y + 1, z, 1)) || (facing != 2 && ctx.Redstone.IsPoweringSide(x, y, z - 1, 2)) ||
-        (facing != 3 && ctx.Redstone.IsPoweringSide(x, y, z + 1, 3)) ||
-        (facing != 5 && ctx.Redstone.IsPoweringSide(x + 1, y, z, 5)) ||
-        (facing != 4 && ctx.Redstone.IsPoweringSide(x - 1, y, z, 4)) ||
+    private static bool ShouldExtend(IWorldContext ctx, int x, int y, int z, Side facing) =>
+        (facing != Side.Down && ctx.Redstone.IsPoweringSide(x, y - 1, z, 0)) ||
+        (facing != Side.Up && ctx.Redstone.IsPoweringSide(x, y + 1, z, 1)) ||
+        (facing != Side.North && ctx.Redstone.IsPoweringSide(x, y, z - 1, 2)) ||
+        (facing != Side.South && ctx.Redstone.IsPoweringSide(x, y, z + 1, 3)) ||
+        (facing != Side.East && ctx.Redstone.IsPoweringSide(x + 1, y, z, 5)) ||
+        (facing != Side.West && ctx.Redstone.IsPoweringSide(x - 1, y, z, 4)) ||
         ctx.Redstone.IsPoweringSide(x, y, z, 0) || ctx.Redstone.IsPoweringSide(x, y + 2, z, 1) ||
         ctx.Redstone.IsPoweringSide(x, y + 1, z - 1, 2) ||
         ctx.Redstone.IsPoweringSide(x, y + 1, z + 1, 3) ||
@@ -132,91 +134,100 @@ public class BlockPistonBase : Block
     {
         _deaf = true;
         int actionId = @event.Data1;
-        int facing = @event.Data2;
+        Side facing = @event.Data2.ToSide();
 
-        if (actionId == 0) // Extending
+        switch (actionId)
         {
-            if (push(@event.World, @event.X, @event.Y, @event.Z, facing))
-            {
-                @event.World.Writer.SetBlockMeta(@event.X, @event.Y, @event.Z, facing | 8);
-                @event.World.Broadcaster.PlaySoundAtPos(@event.X + 0.5D, @event.Y + 0.5D, @event.Z + 0.5D, "tile.piston.out", 0.5F, Random.Shared.NextSingle() * 0.25F + 0.6F);
-            }
-        }
-        else if (actionId == 1) // Retracting
-        {
-            int headX = @event.X + PistonConstants.HeadOffsetX(facing);
-            int headY = @event.Y + PistonConstants.HeadOffsetY(facing);
-            int headZ = @event.Z + PistonConstants.HeadOffsetZ(facing);
-
-            BlockEntity? entityAtHead = @event.World.Entities.GetBlockEntity<BlockEntityPiston>(headX, headY, headZ);
-            if (entityAtHead is BlockEntityPiston extendingPiston)
-            {
-                extendingPiston.finish();
-            }
-
-            @event.World.Writer.SetBlockWithoutNotifyingNeighbors(@event.X, @event.Y, @event.Z, MovingPiston.Id, facing);
-            @event.World.Entities.SetBlockEntity(@event.X, @event.Y, @event.Z, BlockPistonMoving.createPistonBlockEntity(Id, facing, facing, false, true));
-
-            if (_sticky)
-            {
-                int targetX = @event.X + PistonConstants.HeadOffsetX(facing) * 2;
-                int targetY = @event.Y + PistonConstants.HeadOffsetY(facing) * 2;
-                int targetZ = @event.Z + PistonConstants.HeadOffsetZ(facing) * 2;
-
-                int targetId = @event.World.Reader.GetBlockId(targetX, targetY, targetZ);
-                int targetMeta = @event.World.Reader.GetBlockMeta(targetX, targetY, targetZ);
-                bool wasRetractingMovingBlock = false;
-
-                if (targetId == MovingPiston.Id)
+            // Extending
+            case 0:
                 {
-                    BlockEntity? movingTarget = @event.World.Entities.GetBlockEntity<BlockEntityPiston>(targetX, targetY, targetZ);
-                    if (movingTarget is BlockEntityPiston movingPistonTarget)
+                    if (Push(@event.World, @event.X, @event.Y, @event.Z, facing))
                     {
-                        if (movingPistonTarget.getFacing() == facing && movingPistonTarget.isExtending())
+                        @event.World.Writer.SetBlockMeta(@event.X, @event.Y, @event.Z, facing.ToInt() | 8);
+                        @event.World.Broadcaster.PlaySoundAtPos(@event.X + 0.5D, @event.Y + 0.5D, @event.Z + 0.5D, "tile.piston.out", 0.5F, Random.Shared.NextSingle() * 0.25F + 0.6F);
+                    }
+
+                    break;
+                }
+            // Retracting
+            case 1:
+                {
+                    int headX = @event.X + PistonConstants.HeadOffsetX(facing);
+                    int headY = @event.Y + PistonConstants.HeadOffsetY(facing);
+                    int headZ = @event.Z + PistonConstants.HeadOffsetZ(facing);
+
+                    BlockEntity? entityAtHead = @event.World.Entities.GetBlockEntity<BlockEntityPiston>(headX, headY, headZ);
+                    if (entityAtHead is BlockEntityPiston extendingPiston)
+                    {
+                        extendingPiston.Finish();
+                    }
+
+                    @event.World.Writer.SetBlockWithoutNotifyingNeighbors(@event.X, @event.Y, @event.Z, MovingPiston.Id, facing.ToInt());
+                    @event.World.Entities.SetBlockEntity(@event.X, @event.Y, @event.Z, BlockPistonMoving.CreatePistonBlockEntity(Id, facing.ToInt(), facing, false, true));
+
+                    if (_sticky)
+                    {
+                        int targetX = @event.X + PistonConstants.HeadOffsetX(facing) * 2;
+                        int targetY = @event.Y + PistonConstants.HeadOffsetY(facing) * 2;
+                        int targetZ = @event.Z + PistonConstants.HeadOffsetZ(facing) * 2;
+
+                        int targetId = @event.World.Reader.GetBlockId(targetX, targetY, targetZ);
+                        int targetMeta = @event.World.Reader.GetBlockMeta(targetX, targetY, targetZ);
+                        bool wasRetractingMovingBlock = false;
+
+                        if (targetId == MovingPiston.Id)
                         {
-                            movingPistonTarget.finish();
-                            targetId = movingPistonTarget.getPushedBlockId();
-                            targetMeta = movingPistonTarget.getPushedBlockData();
-                            wasRetractingMovingBlock = true;
+                            BlockEntity? movingTarget = @event.World.Entities.GetBlockEntity<BlockEntityPiston>(targetX, targetY, targetZ);
+                            if (movingTarget is BlockEntityPiston movingPistonTarget)
+                            {
+                                if (movingPistonTarget.GetFacing() == facing && movingPistonTarget.IsExtending())
+                                {
+                                    movingPistonTarget.Finish();
+                                    targetId = movingPistonTarget.GetPushedBlockId();
+                                    targetMeta = movingPistonTarget.GetPushedBlockData();
+                                    wasRetractingMovingBlock = true;
+                                }
+                            }
+                        }
+
+                        if (wasRetractingMovingBlock || targetId <= 0 || !CanMoveBlock(targetId, @event.World, targetX, targetY, targetZ, false) ||
+                            (Blocks[targetId]!.GetPistonBehavior() != 0 && targetId != Piston.Id && targetId != StickyPiston.Id))
+                        {
+                            if (!wasRetractingMovingBlock)
+                            {
+                                _deaf = false;
+                                @event.World.Writer.SetBlock(headX, headY, headZ, 0);
+                                _deaf = true;
+                            }
+                        }
+                        else
+                        {
+                            _deaf = false;
+                            @event.World.Writer.SetBlock(targetX, targetY, targetZ, 0);
+                            _deaf = true;
+
+                            int x = @event.X;
+                            int y = @event.Y;
+                            int z = @event.Z;
+
+                            x += PistonConstants.HeadOffsetX(facing);
+                            y += PistonConstants.HeadOffsetY(facing);
+                            z += PistonConstants.HeadOffsetZ(facing);
+
+                            @event.World.Writer.SetBlockWithoutNotifyingNeighbors(x, y, z, MovingPiston.Id, targetMeta);
+                            @event.World.Entities.SetBlockEntity(x, y, z, BlockPistonMoving.CreatePistonBlockEntity(targetId, targetMeta, facing, false, false));
                         }
                     }
-                }
-
-                if (wasRetractingMovingBlock || targetId <= 0 || !canMoveBlock(targetId, @event.World, targetX, targetY, targetZ, false) || (Blocks[targetId].GetPistonBehavior() != 0 && targetId != Piston.Id && targetId != StickyPiston.Id))
-                {
-                    if (!wasRetractingMovingBlock)
+                    else
                     {
                         _deaf = false;
                         @event.World.Writer.SetBlock(headX, headY, headZ, 0);
                         _deaf = true;
                     }
+
+                    @event.World.Broadcaster.PlaySoundAtPos(@event.X + 0.5D, @event.Y + 0.5D, @event.Z + 0.5D, "tile.piston.in", 0.5F, Random.Shared.NextSingle() * 0.15F + 0.6F);
+                    break;
                 }
-                else
-                {
-                    _deaf = false;
-                    @event.World.Writer.SetBlock(targetX, targetY, targetZ, 0);
-                    _deaf = true;
-
-                    int x = @event.X;
-                    int y = @event.Y;
-                    int z = @event.Z;
-
-                    x += PistonConstants.HeadOffsetX(facing);
-                    y += PistonConstants.HeadOffsetY(facing);
-                    z += PistonConstants.HeadOffsetZ(facing);
-
-                    @event.World.Writer.SetBlockWithoutNotifyingNeighbors(x, y, z, MovingPiston.Id, targetMeta);
-                    @event.World.Entities.SetBlockEntity(x, y, z, BlockPistonMoving.createPistonBlockEntity(targetId, targetMeta, facing, false, false));
-                }
-            }
-            else
-            {
-                _deaf = false;
-                @event.World.Writer.SetBlock(headX, headY, headZ, 0);
-                _deaf = true;
-            }
-
-            @event.World.Broadcaster.PlaySoundAtPos(@event.X + 0.5D, @event.Y + 0.5D, @event.Z + 0.5D, "tile.piston.in", 0.5F, Random.Shared.NextSingle() * 0.15F + 0.6F);
         }
 
         _deaf = false;
@@ -225,16 +236,16 @@ public class BlockPistonBase : Block
     public override void UpdateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z)
     {
         int meta = blockReader.GetBlockMeta(x, y, z);
-        if (isExtended(meta))
+        if (IsExtended(meta))
         {
-            switch (getFacing(meta))
+            switch (GetFacing(meta))
             {
-                case (int)Side.Down: SetBoundingBox(0.0F, 0.25F, 0.0F, 1.0F, 1.0F, 1.0F); break;
-                case (int)Side.Up: SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 12.0F / 16.0F, 1.0F); break;
-                case (int)Side.North: SetBoundingBox(0.0F, 0.0F, 0.25F, 1.0F, 1.0F, 1.0F); break;
-                case (int)Side.South: SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 12.0F / 16.0F); break;
-                case (int)Side.West: SetBoundingBox(0.25F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F); break;
-                case (int)Side.East: SetBoundingBox(0.0F, 0.0F, 0.0F, 12.0F / 16.0F, 1.0F, 1.0F); break;
+                case Side.Down: SetBoundingBox(0.0F, 0.25F, 0.0F, 1.0F, 1.0F, 1.0F); break;
+                case Side.Up: SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 12.0F / 16.0F, 1.0F); break;
+                case Side.North: SetBoundingBox(0.0F, 0.0F, 0.25F, 1.0F, 1.0F, 1.0F); break;
+                case Side.South: SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 12.0F / 16.0F); break;
+                case Side.West: SetBoundingBox(0.25F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F); break;
+                case Side.East: SetBoundingBox(0.0F, 0.0F, 0.0F, 12.0F / 16.0F, 1.0F, 1.0F); break;
             }
         }
         else
@@ -253,18 +264,18 @@ public class BlockPistonBase : Block
 
     public override bool IsFullCube() => false;
 
-    public static int getFacing(int meta) => meta & 7;
+    public static Side GetFacing(int meta) => (meta & 7).ToSide();
 
-    public static bool isExtended(int meta) => (meta & 8) != 0;
+    public static bool IsExtended(int meta) => (meta & 8) != 0;
 
-    private static int getFacingForPlacement(IWorldContext world, int x, int y, int z, EntityPlayer player)
+    private static Side GetFacingForPlacement(int x, int y, int z, EntityPlayer player)
     {
         if (MathF.Abs((float)player.x - x) < 2.0F && MathF.Abs((float)player.z - z) < 2.0F)
         {
             double diffY = player.y + 1.82D - player.standingEyeHeight;
             if (diffY - y > 2.0D)
             {
-                return (int)Side.Up;
+                return Side.Up;
             }
 
             if (y - diffY > 0.0D)
@@ -276,15 +287,15 @@ public class BlockPistonBase : Block
         int playerYaw = MathHelper.Floor(player.yaw * 4.0F / 360.0F + 0.5D) & 3;
         return playerYaw switch
         {
-            0 => (int)Side.North,
-            1 => (int)Side.East,
-            2 => (int)Side.South,
-            3 => (int)Side.West,
-            _ => (int)Side.Down
+            0 => Side.North,
+            1 => Side.East,
+            2 => Side.South,
+            3 => Side.West,
+            _ => Side.Down
         };
     }
 
-    private static bool canMoveBlock(int id, IWorldContext ctx, int x, int y, int z, bool allowBreaking)
+    private static bool CanMoveBlock(int id, IWorldContext ctx, int x, int y, int z, bool allowBreaking)
     {
         if (id == Obsidian.Id)
         {
@@ -293,7 +304,7 @@ public class BlockPistonBase : Block
 
         if (id != Piston.Id && id != StickyPiston.Id)
         {
-            if (Blocks[id]!.GetHardness() == -1.0F)
+            if (Math.Abs(Blocks[id]!.GetHardness() - -1.0F) < 0.001F)
             {
                 return false;
             }
@@ -308,7 +319,7 @@ public class BlockPistonBase : Block
                 return false;
             }
         }
-        else if (isExtended(ctx.Reader.GetBlockMeta(x, y, z)))
+        else if (IsExtended(ctx.Reader.GetBlockMeta(x, y, z)))
         {
             return false;
         }
@@ -317,7 +328,7 @@ public class BlockPistonBase : Block
         return targetEntity == null;
     }
 
-    private static bool canExtend(IWorldContext ctx, int x, int y, int z, int dir)
+    private static bool CanExtend(IWorldContext ctx, int x, int y, int z, Side dir)
     {
         int checkX = x + PistonConstants.HeadOffsetX(dir);
         int checkY = y + PistonConstants.HeadOffsetY(dir);
@@ -342,7 +353,7 @@ public class BlockPistonBase : Block
                 return true;
             }
 
-            if (!canMoveBlock(blockId, ctx, checkX, checkY, checkZ, true))
+            if (!CanMoveBlock(blockId, ctx, checkX, checkY, checkZ, true))
             {
                 return false;
             }
@@ -364,7 +375,7 @@ public class BlockPistonBase : Block
         }
     }
 
-    private bool push(IWorldContext ctx, int x, int y, int z, int dir)
+    private bool Push(IWorldContext ctx, int x, int y, int z, Side dir)
     {
         int nextX = x + PistonConstants.HeadOffsetX(dir);
         int nextY = y + PistonConstants.HeadOffsetY(dir);
@@ -383,7 +394,7 @@ public class BlockPistonBase : Block
                 int blockId = ctx.Reader.GetBlockId(nextX, nextY, nextZ);
                 if (blockId != 0)
                 {
-                    if (!canMoveBlock(blockId, ctx, nextX, nextY, nextZ, true))
+                    if (!CanMoveBlock(blockId, ctx, nextX, nextY, nextZ, true))
                     {
                         return false;
                     }
@@ -418,13 +429,13 @@ public class BlockPistonBase : Block
 
                 if (prevBlockId == Id && prevX == x && prevY == y && prevZ == z)
                 {
-                    ctx.Writer.SetBlockWithoutNotifyingNeighbors(nextX, nextY, nextZ, MovingPiston.Id, dir | (_sticky ? 8 : 0));
-                    ctx.Entities.SetBlockEntity(nextX, nextY, nextZ, BlockPistonMoving.createPistonBlockEntity(PistonHead.Id, dir | (_sticky ? 8 : 0), dir, true, false));
+                    ctx.Writer.SetBlockWithoutNotifyingNeighbors(nextX, nextY, nextZ, MovingPiston.Id, dir.ToInt() | (_sticky ? 8 : 0));
+                    ctx.Entities.SetBlockEntity(nextX, nextY, nextZ, BlockPistonMoving.CreatePistonBlockEntity(PistonHead.Id, dir.ToInt() | (_sticky ? 8 : 0), dir, true, false));
                 }
                 else
                 {
                     ctx.Writer.SetBlockWithoutNotifyingNeighbors(nextX, nextY, nextZ, MovingPiston.Id, prevMeta);
-                    ctx.Entities.SetBlockEntity(nextX, nextY, nextZ, BlockPistonMoving.createPistonBlockEntity(prevBlockId, prevMeta, dir, true, false));
+                    ctx.Entities.SetBlockEntity(nextX, nextY, nextZ, BlockPistonMoving.CreatePistonBlockEntity(prevBlockId, prevMeta, dir, true, false));
                 }
 
                 nextX = prevX;

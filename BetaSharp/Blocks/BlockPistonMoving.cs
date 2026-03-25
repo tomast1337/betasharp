@@ -9,7 +9,7 @@ public class BlockPistonMoving : BlockWithEntity
 {
     public BlockPistonMoving(int id) : base(id, Material.Piston) => SetHardness(-1.0F);
 
-    public override BlockEntity? getBlockEntity() => null;
+    public override BlockEntity? GetBlockEntity() => null;
 
     public override void OnPlaced(OnPlacedEvent @event)
     {
@@ -20,7 +20,7 @@ public class BlockPistonMoving : BlockWithEntity
         BlockEntity? blockEntity = @event.World.Entities.GetBlockEntity<BlockEntity>(@event.X, @event.Y, @event.Z);
         if (blockEntity is BlockEntityPiston piston)
         {
-            piston.finish();
+            piston.Finish();
         }
         else
         {
@@ -61,11 +61,11 @@ public class BlockPistonMoving : BlockWithEntity
         BlockEntityPiston? piston = world.Entities.GetBlockEntity<BlockEntityPiston>(i, y, z);
         if (piston != null)
         {
-            Blocks[piston.getPushedBlockId()]!.DropStacks(new OnDropEvent(world,
+            Blocks[piston.GetPushedBlockId()]!.DropStacks(new OnDropEvent(world,
                 i,
                 y,
                 z,
-                piston.getPushedBlockData()
+                piston.GetPushedBlockData()
             ));
         }
     }
@@ -77,7 +77,7 @@ public class BlockPistonMoving : BlockWithEntity
         }
     }
 
-    public static BlockEntity createPistonBlockEntity(int blockId, int blockMeta, int facing, bool extending, bool source) => new BlockEntityPiston(blockId, blockMeta, facing, extending, source);
+    public static BlockEntity CreatePistonBlockEntity(int blockId, int blockMeta, Side facing, bool extending, bool source) => new BlockEntityPiston(blockId, blockMeta, facing, extending, source);
 
     public override Box? GetCollisionShape(IBlockReader iBlockReader, EntityManager entities, int x, int y, int z)
     {
@@ -87,13 +87,13 @@ public class BlockPistonMoving : BlockWithEntity
             return null;
         }
 
-        float progress = piston.getProgress(0.0F);
-        if (piston.isExtending())
+        float progress = piston.GetProgress(0.0F);
+        if (piston.IsExtending())
         {
             progress = 1.0F - progress;
         }
 
-        return getPushedBlockCollisionShape(iBlockReader, entities, x, y, z, piston.getPushedBlockId(), progress, piston.getFacing());
+        return GetPushedBlockCollisionShape(iBlockReader, entities, x, y, z, piston.GetPushedBlockId(), progress, piston.GetFacing());
     }
 
     public override void UpdateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z)
@@ -109,24 +109,24 @@ public class BlockPistonMoving : BlockWithEntity
             return;
         }
 
-        Block? block = Blocks[piston.getPushedBlockId()];
+        Block? block = Blocks[piston.GetPushedBlockId()];
         if (block == null || block == this)
         {
             return;
         }
 
         block.UpdateBoundingBox(blockReader, entities, x, y, z);
-        float progress = piston.getProgress(0.0F);
-        if (piston.isExtending())
+        float progress = piston.GetProgress(0.0F);
+        if (piston.IsExtending())
         {
             progress = 1.0F - progress;
         }
 
-        int facing = piston.getFacing();
+        Side facing = piston.GetFacing();
         BoundingBox = BoundingBox.Offset(-(double)(PistonConstants.HeadOffsetX(facing) * progress), -(double)(PistonConstants.HeadOffsetY(facing) * progress), -(double)(PistonConstants.HeadOffsetZ(facing) * progress));
     }
 
-    public Box? getPushedBlockCollisionShape(IBlockReader world, EntityManager entities, int x, int y, int z, int blockId, float sizeMultiplier, int facing)
+    public Box? GetPushedBlockCollisionShape(IBlockReader world, EntityManager entities, int x, int y, int z, int blockId, float sizeMultiplier, Side facing)
     {
         if (blockId == 0 || blockId == Id)
         {

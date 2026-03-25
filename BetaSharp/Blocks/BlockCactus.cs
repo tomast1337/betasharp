@@ -62,7 +62,7 @@ internal class BlockCactus : Block
 
     public override BlockRendererType GetRenderType() => BlockRendererType.Cactus;
 
-    public override bool CanPlaceAt(CanPlaceAtContext evt) => base.CanPlaceAt(evt) && canGrow(evt.World.Reader, evt.X, evt.Y, evt.Z);
+    public override bool CanPlaceAt(CanPlaceAtContext evt) => base.CanPlaceAt(evt) && CanGrow(evt.World.Reader, evt.X, evt.Y, evt.Z);
 
 
     public override void NeighborUpdate(OnTickEvent @event)
@@ -76,9 +76,9 @@ internal class BlockCactus : Block
         @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
     }
 
-    public override bool CanGrow(OnTickEvent @event) => canGrow(@event.World.Reader, @event.X, @event.Y, @event.Z);
+    public override bool CanGrow(OnTickEvent @event) => CanGrow(@event.World.Reader, @event.X, @event.Y, @event.Z);
 
-    private static bool canGrow(IBlockReader world, int x, int y, int z)
+    private static bool CanGrow(IBlockReader world, int x, int y, int z)
     {
         if (world.GetMaterial(x - 1, y, z).IsSolid)
         {

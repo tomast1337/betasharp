@@ -6,64 +6,66 @@ namespace BetaSharp.Blocks.Entities;
 
 internal class BlockEntityNote : BlockEntity
 {
-    public sbyte note;
-    public bool powered = false;
-    public override BlockEntityType Type => Note;
+    public sbyte Note;
+    public bool Powered = false;
+    public override BlockEntityType Type => BlockEntity.Note;
 
-    public override void writeNbt(NBTTagCompound nbt)
+    public override void WriteNbt(NBTTagCompound nbt)
     {
-        base.writeNbt(nbt);
-        nbt.SetByte("note", note);
+        base.WriteNbt(nbt);
+        nbt.SetByte("note", Note);
     }
 
-    public override void readNbt(NBTTagCompound nbt)
+    public override void ReadNbt(NBTTagCompound nbt)
     {
-        base.readNbt(nbt);
-        note = nbt.GetByte("note");
-        if (note < 0)
+        base.ReadNbt(nbt);
+        Note = nbt.GetByte("note");
+        if (Note < 0)
         {
-            note = 0;
+            Note = 0;
         }
 
-        if (note > 24)
+        if (Note > 24)
         {
-            note = 24;
+            Note = 24;
         }
     }
 
-    public void cycleNote()
+    public void CycleNote()
     {
-        note = (sbyte)((note + 1) % 25);
+        Note = (sbyte)((Note + 1) % 25);
         markDirty();
     }
 
-    public void playNote(IWorldContext level, int x, int y, int z)
+    public void PlayNote(IWorldContext level, int x, int y, int z)
     {
-        if (level.Reader.GetMaterial(x, y + 1, z) == Material.Air)
+        if (level.Reader.GetMaterial(x, y + 1, z) != Material.Air)
         {
-            Material material = level.Reader.GetMaterial(x, y - 1, z);
-            byte instrument = 0;
-            if (material == Material.Stone)
-            {
-                instrument = 1;
-            }
-
-            if (material == Material.Sand)
-            {
-                instrument = 2;
-            }
-
-            if (material == Material.Glass)
-            {
-                instrument = 3;
-            }
-
-            if (material == Material.Wood)
-            {
-                instrument = 4;
-            }
-
-            level.Broadcaster.PlayNote(x, y, z, instrument, note);
+            return;
         }
+
+        Material material = level.Reader.GetMaterial(x, y - 1, z);
+        byte instrument = 0;
+        if (material == Material.Stone)
+        {
+            instrument = 1;
+        }
+
+        if (material == Material.Sand)
+        {
+            instrument = 2;
+        }
+
+        if (material == Material.Glass)
+        {
+            instrument = 3;
+        }
+
+        if (material == Material.Wood)
+        {
+            instrument = 4;
+        }
+
+        level.Broadcaster.PlayNote(x, y, z, instrument, Note);
     }
 }

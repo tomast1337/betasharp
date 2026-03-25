@@ -10,7 +10,7 @@ public class BlockPistonExtension : Block
 
     public BlockPistonExtension(int id, int textureId) : base(id, textureId, Material.Piston)
     {
-        setSoundGroup(SoundStoneFootstep);
+        SetSoundGroup(SoundStoneFootstep);
         SetHardness(0.5F);
     }
 
@@ -32,7 +32,7 @@ public class BlockPistonExtension : Block
         }
 
         blockMeta = @event.World.Reader.GetBlockMeta(x, y, z);
-        if (!BlockPistonBase.isExtended(blockMeta))
+        if (!BlockPistonBase.IsExtended(blockMeta))
         {
             return;
         }

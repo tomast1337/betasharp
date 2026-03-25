@@ -30,7 +30,7 @@ internal class ChunkSnapshot : IDisposable
             if (pos.y is < 0 or >= 128) continue;
 
             NBTTagCompound nbt = new();
-            entity.writeNbt(nbt);
+            entity.WriteNbt(nbt);
 
             int localX = pos.x & 15;
             int localZ = pos.z & 15;

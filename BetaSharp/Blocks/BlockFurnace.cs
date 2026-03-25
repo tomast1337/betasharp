@@ -162,7 +162,7 @@ internal class BlockFurnace : BlockWithEntity
         return true;
     }
 
-    public static void updateLitState(bool lit, IWorldContext world, int x, int y, int z)
+    public static void UpdateLitState(bool lit, IWorldContext world, int x, int y, int z)
     {
         int meta = world.Reader.GetBlockMeta(x, y, z);
         BlockEntity? furnace = world.Entities.GetBlockEntity<BlockEntity>(x, y, z);
@@ -170,11 +170,11 @@ internal class BlockFurnace : BlockWithEntity
         world.Writer.SetBlock(x, y, z, lit ? LitFurnace.Id : Furnace.Id);
         s_ignoreBlockRemoval.Value = false;
         world.Writer.SetBlockMeta(x, y, z, meta);
-        furnace?.cancelRemoval();
+        furnace?.CancelRemoval();
         world.Entities.SetBlockEntity(x, y, z, furnace!);
     }
 
-    public override BlockEntity? getBlockEntity() => new BlockEntityFurnace();
+    public override BlockEntity? GetBlockEntity() => new BlockEntityFurnace();
 
     public override void OnBreak(OnBreakEvent @event)
     {
@@ -196,13 +196,13 @@ internal class BlockFurnace : BlockWithEntity
                     continue;
                 }
 
-                float offsetX = _random.NextFloat() * 0.8F + 0.1F;
-                float offsetY = _random.NextFloat() * 0.8F + 0.1F;
-                float offsetZ = _random.NextFloat() * 0.8F + 0.1F;
+                float offsetX = Random.Shared.NextSingle() * 0.8F + 0.1F;
+                float offsetY = Random.Shared.NextSingle() * 0.8F + 0.1F;
+                float offsetZ = Random.Shared.NextSingle() * 0.8F + 0.1F;
 
                 while (stack.count > 0)
                 {
-                    int count = _random.NextInt(21) + 10;
+                    int count = Random.Shared.Next(21) + 10;
                     if (count > stack.count)
                     {
                         count = stack.count;

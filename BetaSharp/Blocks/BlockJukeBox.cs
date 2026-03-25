@@ -20,11 +20,11 @@ internal class BlockJukeBox(int id, int textureId) : BlockWithEntity(id, texture
             return false;
         }
 
-        tryEjectRecord(@event.World, @event.X, @event.Y, @event.Z);
+        TryEjectRecord(@event.World, @event.X, @event.Y, @event.Z);
         return true;
     }
 
-    public void insertRecord(IWorldContext world, int x, int y, int z, int id)
+    public static void InsertRecord(IWorldContext world, int x, int y, int z, int id)
     {
         if (world.IsRemote)
         {
@@ -38,12 +38,12 @@ internal class BlockJukeBox(int id, int textureId) : BlockWithEntity(id, texture
             return;
         }
 
-        jukebox.recordId = id;
+        jukebox.RecordId = id;
         jukebox.markDirty();
         world.Writer.SetBlockMeta(x, y, z, 1);
     }
 
-    public void tryEjectRecord(IWorldContext level, int x, int y, int z)
+    private static void TryEjectRecord(IWorldContext level, int x, int y, int z)
     {
         if (level.IsRemote)
         {
@@ -51,7 +51,7 @@ internal class BlockJukeBox(int id, int textureId) : BlockWithEntity(id, texture
         }
 
         BlockEntityRecordPlayer? jukebox = level.Entities.GetBlockEntity<BlockEntityRecordPlayer>(x, y, z);
-        int recordId = jukebox?.recordId ?? 0;
+        int recordId = jukebox?.RecordId ?? 0;
         if (recordId == 0)
         {
             return;
@@ -59,7 +59,7 @@ internal class BlockJukeBox(int id, int textureId) : BlockWithEntity(id, texture
 
         level.Broadcaster.WorldEvent(1005, x, y, z, 0);
         level.Broadcaster.PlayStreamingAtPos(null, x, y, z);
-        jukebox!.recordId = 0;
+        jukebox!.RecordId = 0;
         jukebox.markDirty();
         level.Writer.SetBlockMeta(x, y, z, 0);
 
@@ -76,7 +76,7 @@ internal class BlockJukeBox(int id, int textureId) : BlockWithEntity(id, texture
 
     public override void OnBreak(OnBreakEvent @event)
     {
-        tryEjectRecord(@event.World, @event.X, @event.Y, @event.Z);
+        TryEjectRecord(@event.World, @event.X, @event.Y, @event.Z);
         base.OnBreak(@event);
     }
 
@@ -88,5 +88,5 @@ internal class BlockJukeBox(int id, int textureId) : BlockWithEntity(id, texture
         }
     }
 
-    public override BlockEntity? getBlockEntity() => new BlockEntityRecordPlayer();
+    public override BlockEntity? GetBlockEntity() => new BlockEntityRecordPlayer();
 }

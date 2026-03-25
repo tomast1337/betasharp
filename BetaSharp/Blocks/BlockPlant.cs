@@ -14,19 +14,19 @@ public class BlockPlant : Block
         SetBoundingBox(0.5F - halfSize, 0.0F, 0.5F - halfSize, 0.5F + halfSize, halfSize * 3.0F, 0.5F + halfSize);
     }
 
-    public override bool CanPlaceAt(CanPlaceAtContext context) => base.CanPlaceAt(context) && canPlantOnTop(context.World.Reader.GetBlockId(context.X, context.Y - 1, context.Z));
+    public override bool CanPlaceAt(CanPlaceAtContext context) => base.CanPlaceAt(context) && CanPlantOnTop(context.World.Reader.GetBlockId(context.X, context.Y - 1, context.Z));
 
-    protected virtual bool canPlantOnTop(int id) => id == GrassBlock.Id || id == Dirt.Id || id == Farmland.Id;
+    protected virtual bool CanPlantOnTop(int id) => id == GrassBlock.Id || id == Dirt.Id || id == Farmland.Id;
 
     public override void NeighborUpdate(OnTickEvent @event)
     {
         base.NeighborUpdate(@event);
-        breakIfCannotGrow(@event.World, @event.X, @event.Y, @event.Z);
+        BreakIfCannotGrow(@event.World, @event.X, @event.Y, @event.Z);
     }
 
-    public override void OnTick(OnTickEvent @event) => breakIfCannotGrow(@event.World, @event.X, @event.Y, @event.Z);
+    public override void OnTick(OnTickEvent @event) => BreakIfCannotGrow(@event.World, @event.X, @event.Y, @event.Z);
 
-    protected void breakIfCannotGrow(IWorldContext level, int x, int y, int z)
+    private void BreakIfCannotGrow(IWorldContext level, int x, int y, int z)
     {
         if (CanGrow(new OnTickEvent(level, x, y, z, level.Reader.GetBlockMeta(x, y, z), level.Reader.GetBlockId(x, y, z))))
         {
@@ -39,7 +39,7 @@ public class BlockPlant : Block
 
     public override bool CanGrow(OnTickEvent ctx) =>
         (ctx.World.Reader.GetBrightness(ctx.X, ctx.Y, ctx.Z) >= 8 || ctx.World.Lighting.HasSkyLight(ctx.X, ctx.Y, ctx.Z)) &&
-        canPlantOnTop(ctx.World.Reader.GetBlockId(ctx.X, ctx.Y - 1, ctx.Z));
+        CanPlantOnTop(ctx.World.Reader.GetBlockId(ctx.X, ctx.Y - 1, ctx.Z));
 
     public override Box? GetCollisionShape(IBlockReader world, EntityManager entities, int x, int y, int z) => null;
 

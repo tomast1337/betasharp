@@ -36,7 +36,7 @@ internal class BlockSapling : BlockPlant
         }
         else
         {
-            generate(@event.World, @event.X, @event.Y, @event.Z);
+            Generate(@event.World, @event.X, @event.Y, @event.Z);
         }
     }
 
@@ -51,7 +51,7 @@ internal class BlockSapling : BlockPlant
         };
     }
 
-    public void generate(IWorldContext world, int x, int y, int z)
+    public void Generate(IWorldContext world, int x, int y, int z)
     {
         int saplingType = world.Reader.GetBlockMeta(x, y, z) & 3;
         world.Writer.SetBlock(x, y, z, 0);

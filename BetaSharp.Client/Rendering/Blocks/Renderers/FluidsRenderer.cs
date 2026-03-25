@@ -230,7 +230,7 @@ public class FluidsRenderer : IBlockRenderer
             else
             {
                 int neighborMeta = ctx.BlockReader.GetBlockMeta(checkX, y, checkZ);
-                float fluidDepth = BlockFluid.getFluidHeightFromMeta(neighborMeta);
+                float fluidDepth = BlockFluid.GetFluidHeightFromMeta(neighborMeta);
 
                 // Meta >= 8 (falling fluid) or Meta == 0 (source block)
                 if (neighborMeta >= 8 || neighborMeta == 0)

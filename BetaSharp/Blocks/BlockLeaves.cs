@@ -180,11 +180,11 @@ public class BlockLeaves : BlockLeavesBase
         }
         else
         {
-            breakLeaves(@event.World, @event.X, @event.Y, @event.Z);
+            BreakLeaves(@event.World, @event.X, @event.Y, @event.Z);
         }
     }
 
-    private void breakLeaves(IWorldContext level, int x, int y, int z)
+    private void BreakLeaves(IWorldContext level, int x, int y, int z)
     {
         DropStacks(new OnDropEvent(level, x, y, z, level.Reader.GetBlockMeta(x, y, z)));
         level.Writer.SetBlock(x, y, z, 0);
@@ -213,7 +213,7 @@ public class BlockLeaves : BlockLeavesBase
 
     public override int GetTexture(Side side, int meta) => (meta & 3) == 1 ? TextureId + 80 : TextureId;
 
-    public void setGraphicsLevel(bool bl)
+    public void SetGraphicsLevel(bool bl)
     {
         GraphicsLevel = bl;
         TextureId = _spriteIndex + (bl ? 0 : 1);

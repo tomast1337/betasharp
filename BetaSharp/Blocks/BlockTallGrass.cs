@@ -44,7 +44,6 @@ public class BlockTallGrass : BlockPlant
         long positionSeed = x * 3129871 + z * 6129781 + y;
         positionSeed = positionSeed * positionSeed * 42317861L + positionSeed * 11L;
         int bx = (int)(x + ((positionSeed >> 14) & 31L));
-        int by = (int)(y + ((positionSeed >> 19) & 31L));
         int bz = (int)(z + ((positionSeed >> 24) & 31L));
         reader.GetBiomeSource().GetBiomesInArea(bx, bz, 1, 1);
         double temperature = reader.GetBiomeSource().TemperatureMap[0];

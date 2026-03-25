@@ -22,25 +22,25 @@ internal class BlockRedstoneOre : Block
 
     public override void OnBlockBreakStart(OnBlockBreakStartEvent @event)
     {
-        light(@event.World.Writer, @event.World.Reader, @event.World.Broadcaster, @event.X, @event.Y, @event.Z);
+        Light(@event.World.Writer, @event.World.Reader, @event.World.Broadcaster, @event.X, @event.Y, @event.Z);
         base.OnBlockBreakStart(@event);
     }
 
     public override void OnSteppedOn(OnEntityStepEvent @event)
     {
-        light(@event.World.Writer, @event.World.Reader, @event.World.Broadcaster, @event.X, @event.Y, @event.Z);
+        Light(@event.World.Writer, @event.World.Reader, @event.World.Broadcaster, @event.X, @event.Y, @event.Z);
         base.OnSteppedOn(@event);
     }
 
     public override bool OnUse(OnUseEvent @event)
     {
-        light(@event.World.Writer, @event.World.Reader, @event.World.Broadcaster, @event.X, @event.Y, @event.Z);
+        Light(@event.World.Writer, @event.World.Reader, @event.World.Broadcaster, @event.X, @event.Y, @event.Z);
         return base.OnUse(@event);
     }
 
-    private void light(IBlockWriter writer, IBlockReader worldRead, WorldEventBroadcaster broadcaster, int x, int y, int z)
+    private void Light(IBlockWriter writer, IBlockReader worldRead, WorldEventBroadcaster broadcaster, int x, int y, int z)
     {
-        spawnParticles(worldRead, broadcaster, x, y, z);
+        SpawnParticles(worldRead, broadcaster, x, y, z);
         if (worldRead.GetBlockId(x, y, z) == RedstoneOre.Id)
         {
             writer.SetBlock(x, y, z, LitRedstoneOre.Id);
@@ -63,11 +63,11 @@ internal class BlockRedstoneOre : Block
     {
         if (_lit)
         {
-            spawnParticles(ctx.World.Reader, ctx.World.Broadcaster, ctx.X, ctx.Y, ctx.Z);
+            SpawnParticles(ctx.World.Reader, ctx.World.Broadcaster, ctx.X, ctx.Y, ctx.Z);
         }
     }
 
-    private void spawnParticles(IBlockReader reader, WorldEventBroadcaster broadcaster, int x, int y, int z)
+    private static void SpawnParticles(IBlockReader reader, WorldEventBroadcaster broadcaster, int x, int y, int z)
     {
         const double faceOffset = 1.0D / 16.0D;
         for (int direction = 0; direction < 6; ++direction)

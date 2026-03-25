@@ -22,7 +22,7 @@ internal class BlockDetectorRail : BlockRail
         int meta = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
         if ((meta & 8) == 0)
         {
-            updatePoweredStatus(@event.World, @event.X, @event.Y, @event.Z, Id, meta);
+            UpdatePoweredStatus(@event.World, @event.X, @event.Y, @event.Z, Id, meta);
         }
     }
 
@@ -36,7 +36,7 @@ internal class BlockDetectorRail : BlockRail
         int meta = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
         if ((meta & 8) != 0)
         {
-            updatePoweredStatus(@event.World, @event.X, @event.Y, @event.Z, Id, meta);
+            UpdatePoweredStatus(@event.World, @event.X, @event.Y, @event.Z, Id, meta);
         }
     }
 
@@ -44,7 +44,7 @@ internal class BlockDetectorRail : BlockRail
 
     public override bool IsStrongPoweringSide(IBlockReader reader, int x, int y, int z, int side) => (reader.GetBlockMeta(x, y, z) & 8) != 0 && side == (int)Side.Up;
 
-    private void updatePoweredStatus(IWorldContext context, int x, int y, int z, int id, int meta)
+    private void UpdatePoweredStatus(IWorldContext context, int x, int y, int z, int id, int meta)
     {
         const float detectionInset = 2.0F / 16.0F;
         List<EntityMinecart> minecartsOnRail = context.Entities.CollectEntitiesOfType<EntityMinecart>(new Box(x + detectionInset, y, z + detectionInset, x + 1 - detectionInset, y + 0.25D, z + 1 - detectionInset));

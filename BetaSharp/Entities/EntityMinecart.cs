@@ -260,7 +260,7 @@ public class EntityMinecart : Entity, IInventory
             int floorX = MathHelper.Floor(x);
             int floorY = MathHelper.Floor(y);
             int floorZ = MathHelper.Floor(z);
-            if (BlockRail.isRail(world, floorX, floorY - 1, floorZ))
+            if (BlockRail.IsRail(world, floorX, floorY - 1, floorZ))
             {
                 --floorY;
             }
@@ -269,7 +269,7 @@ public class EntityMinecart : Entity, IInventory
             bool var6 = false;
             var7 = 1.0D / 128.0D;
             int var9 = world.Reader.GetBlockId(floorX, floorY, floorZ);
-            if (BlockRail.isRail(var9))
+            if (BlockRail.IsRail(var9))
             {
                 Vec3D? var10 = func_514_g(x, y, z);
                 int var11 = world.Reader.GetBlockMeta(floorX, floorY, floorZ);
@@ -282,7 +282,7 @@ public class EntityMinecart : Entity, IInventory
                     var13 = !var12;
                 }
 
-                if (((BlockRail)Block.Blocks[var9]).isAlwaysStraight())
+                if (((BlockRail)Block.Blocks[var9]).IsAlwaysStraight())
                 {
                     var11 &= 7;
                 }
@@ -630,20 +630,20 @@ public class EntityMinecart : Entity, IInventory
         int var9 = MathHelper.Floor(x);
         int var10 = MathHelper.Floor(y);
         int var11 = MathHelper.Floor(z);
-        if (BlockRail.isRail(world, var9, var10 - 1, var11))
+        if (BlockRail.IsRail(world, var9, var10 - 1, var11))
         {
             --var10;
         }
 
         int var12 = world.Reader.GetBlockId(var9, var10, var11);
-        if (!BlockRail.isRail(var12))
+        if (!BlockRail.IsRail(var12))
         {
             return null;
         }
         else
         {
             int var13 = world.Reader.GetBlockMeta(var9, var10, var11);
-            if (((BlockRail)Block.Blocks[var12]).isAlwaysStraight())
+            if (((BlockRail)Block.Blocks[var12]).IsAlwaysStraight())
             {
                 var13 &= 7;
             }
@@ -680,17 +680,17 @@ public class EntityMinecart : Entity, IInventory
         int floorX = MathHelper.Floor(x);
         int floorY = MathHelper.Floor(y);
         int floorZ = MathHelper.Floor(z);
-        if (BlockRail.isRail(world, floorX, floorY - 1, floorZ))
+        if (BlockRail.IsRail(world, floorX, floorY - 1, floorZ))
         {
             --floorY;
         }
 
         int blockId = world.Reader.GetBlockId(floorX, floorY, floorZ);
-        if (BlockRail.isRail(blockId))
+        if (BlockRail.IsRail(blockId))
         {
             int meta = world.Reader.GetBlockMeta(floorX, floorY, floorZ);
             y = (double)floorY;
-            if (((BlockRail)Block.Blocks[blockId]).isAlwaysStraight())
+            if (((BlockRail)Block.Blocks[blockId]).IsAlwaysStraight())
             {
                 meta &= 7;
             }

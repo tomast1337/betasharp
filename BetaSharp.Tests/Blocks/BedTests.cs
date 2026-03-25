@@ -10,7 +10,7 @@ public class BedTests
     {
         BlockBed bed = (BlockBed)Block.Bed;
         int droppedItem = bed.GetDroppedItemId(8); // Meta with bit 8 set indicates head of bed
-        
+
         Assert.Equal(0, droppedItem);
     }
 
@@ -19,7 +19,7 @@ public class BedTests
     {
         BlockBed bed = (BlockBed)Block.Bed;
         int droppedItem = bed.GetDroppedItemId(0);
-        
+
         Assert.Equal(Item.Bed.id, droppedItem);
     }
 

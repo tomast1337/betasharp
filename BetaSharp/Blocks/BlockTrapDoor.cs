@@ -38,41 +38,37 @@ internal class BlockTrapDoor : Block
         return base.GetCollisionShape(world, entities, x, y, z);
     }
 
-    public override void UpdateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z) => updateBoundingBox(blockReader.GetBlockMeta(x, y, z));
+    public override void UpdateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z) => UpdateBoundingBox(blockReader.GetBlockMeta(x, y, z));
 
     public override void SetupRenderBoundingBox()
     {
-        float height = 3.0F / 16.0F;
+        const float height = 3.0F / 16.0F;
         SetBoundingBox(0.0F, 0.5F - height / 2.0F, 0.0F, 1.0F, 0.5F + height / 2.0F, 1.0F);
     }
 
-    public void updateBoundingBox(int meta)
+    private void UpdateBoundingBox(int meta)
     {
         const float height = 3.0F / 16.0F;
         SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, height, 1.0F);
-        if (!isOpen(meta))
+        if (!IsOpen(meta))
         {
             return;
         }
 
-        if ((meta & 3) == 0)
+        switch (meta & 3)
         {
-            SetBoundingBox(0.0F, 0.0F, 1.0F - height, 1.0F, 1.0F, 1.0F);
-        }
-
-        if ((meta & 3) == 1)
-        {
-            SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, height);
-        }
-
-        if ((meta & 3) == 2)
-        {
-            SetBoundingBox(1.0F - height, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-        }
-
-        if ((meta & 3) == 3)
-        {
-            SetBoundingBox(0.0F, 0.0F, 0.0F, height, 1.0F, 1.0F);
+            case 0:
+                SetBoundingBox(0.0F, 0.0F, 1.0F - height, 1.0F, 1.0F, 1.0F);
+                break;
+            case 1:
+                SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, height);
+                break;
+            case 2:
+                SetBoundingBox(1.0F - height, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                break;
+            case 3:
+                SetBoundingBox(0.0F, 0.0F, 0.0F, height, 1.0F, 1.0F);
+                break;
         }
     }
 
@@ -94,7 +90,7 @@ internal class BlockTrapDoor : Block
 
     public override bool OnUse(OnUseEvent ctx) => UpdateState(ctx.World.Reader, ctx.World.Writer, ctx.World.Broadcaster, ctx.X, ctx.Y, ctx.Z);
 
-    public void setOpen(OnTickEvent ctx, bool open)
+    private void SetOpen(OnTickEvent ctx, bool open)
     {
         int x = ctx.X;
         int y = ctx.Y;
@@ -152,7 +148,7 @@ internal class BlockTrapDoor : Block
         }
 
         bool isPowered = ctx.World.Redstone.IsPowered(ctx.X, ctx.Y, ctx.Z);
-        setOpen(ctx, isPowered);
+        SetOpen(ctx, isPowered);
     }
 
     public override HitResult Raycast(IBlockReader world, EntityManager entities, int x, int y, int z, Vec3D startPos, Vec3D endPos)
@@ -198,10 +194,12 @@ internal class BlockTrapDoor : Block
             case Side.East:
                 --x;
                 break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(context), context.Direction.ToString());
         }
 
         return context.World.Reader.ShouldSuffocate(x, y, z);
     }
 
-    public static bool isOpen(int meta) => (meta & 4) != 0;
+    private static bool IsOpen(int meta) => (meta & 4) != 0;
 }

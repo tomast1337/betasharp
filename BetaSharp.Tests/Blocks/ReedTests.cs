@@ -10,10 +10,10 @@ public class ReedTests
     {
         FakeWorld world = new();
         world.SetBlock(0, -1, 0, Block.Dirt.Id);
-        
+
         BlockReed reed = (BlockReed)Block.SugarCane;
         OnTickEvent tickEvent = new(world, 0, 0, 0, 0, reed.Id);
-        
+
         Assert.False(reed.CanGrow(tickEvent));
     }
 
@@ -23,10 +23,10 @@ public class ReedTests
         FakeWorld world = new();
         world.SetBlock(0, -1, 0, Block.Dirt.Id);
         world.SetBlock(1, -1, 0, Block.Water.Id); // Adjacent water
-        
+
         BlockReed reed = (BlockReed)Block.SugarCane;
         OnTickEvent tickEvent = new(world, 0, 0, 0, 0, reed.Id);
-        
+
         Assert.True(reed.CanGrow(tickEvent));
     }
 
@@ -35,10 +35,10 @@ public class ReedTests
     {
         FakeWorld world = new();
         world.SetBlock(0, -1, 0, Block.SugarCane.Id);
-        
+
         BlockReed reed = (BlockReed)Block.SugarCane;
         OnTickEvent tickEvent = new(world, 0, 0, 0, 0, reed.Id);
-        
+
         Assert.True(reed.CanGrow(tickEvent));
     }
 }

@@ -103,16 +103,16 @@ public class GuiEditSign : GuiScreen
         GLManager.GL.Scale(-scale, -scale, -scale);
         GLManager.GL.Rotate(180.0F, 0.0F, 1.0F, 0.0F);
 
-        Block signBlock = _entitySign.getBlock();
+        Block signBlock = _entitySign.GetBlock();
         if (signBlock == Block.Sign)
         {
-            float rotation = _entitySign.getPushedBlockData() * 360 / 16.0F;
+            float rotation = _entitySign.GetPushedBlockData() * 360 / 16.0F;
             GLManager.GL.Rotate(rotation, 0.0F, 1.0F, 0.0F);
             GLManager.GL.Translate(0.0F, -1.0625F, 0.0F);
         }
         else
         {
-            int rotationIndex = _entitySign.getPushedBlockData();
+            int rotationIndex = _entitySign.GetPushedBlockData();
             float angle = 0.0F;
             if (rotationIndex == 2) angle = 180.0F;
             if (rotationIndex == 4) angle = 90.0F;

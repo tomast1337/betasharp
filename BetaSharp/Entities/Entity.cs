@@ -683,7 +683,7 @@ public abstract class Entity
         int var7 = world.Reader.GetBlockId(var4, var5, var6);
         if (var7 != 0 && Block.Blocks[var7].Material == var1)
         {
-            float var8 = BlockFluid.getFluidHeightFromMeta(world.Reader.GetBlockMeta(var4, var5, var6)) - 1.0F / 9.0F;
+            float var8 = BlockFluid.GetFluidHeightFromMeta(world.Reader.GetBlockMeta(var4, var5, var6)) - 1.0F / 9.0F;
             float var9 = (float)(var5 + 1) - var8;
             return var2 < (double)var9;
         }

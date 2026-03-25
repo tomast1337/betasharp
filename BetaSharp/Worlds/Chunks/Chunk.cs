@@ -431,7 +431,7 @@ public class Chunk
 
         if (BlockEntities.TryGetValue(pos, out BlockEntity? entity))
         {
-            if (entity != null && !entity.isRemoved())
+            if (entity != null && !entity.IsRemoved())
             {
                 return entity;
             }
@@ -470,7 +470,7 @@ public class Chunk
         int id = GetBlockId(localX, y, localZ);
         if (id != 0 && Block.Blocks[id] is BlockWithEntity)
         {
-            blockEntity.cancelRemoval();
+            blockEntity.CancelRemoval();
             BlockEntities[pos] = blockEntity;
         }
         else
@@ -484,7 +484,7 @@ public class Chunk
         BlockPos pos = new(localX, y, localZ);
         if (Loaded && BlockEntities.Remove(pos, out BlockEntity? entity))
         {
-            entity.markRemoved();
+            entity.MarkRemoved();
         }
     }
 
@@ -505,7 +505,7 @@ public class Chunk
 
         foreach (BlockEntity var2 in BlockEntities.Values)
         {
-            var2.markRemoved();
+            var2.MarkRemoved();
         }
 
         for (int var3 = 0; var3 < Entities.Length; ++var3)

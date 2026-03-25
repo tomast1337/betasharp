@@ -53,7 +53,7 @@ internal class BlockPressurePlate : Block
 
         if (@event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z) != 0)
         {
-            updatePlateState(@event.World, @event.X, @event.Y, @event.Z);
+            UpdatePlateState(@event.World, @event.X, @event.Y, @event.Z);
         }
     }
 
@@ -66,11 +66,11 @@ internal class BlockPressurePlate : Block
 
         if (@event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z) != 1)
         {
-            updatePlateState(@event.World, @event.X, @event.Y, @event.Z);
+            UpdatePlateState(@event.World, @event.X, @event.Y, @event.Z);
         }
     }
 
-    private void updatePlateState(IWorldContext ctx, int x, int y, int z)
+    private void UpdatePlateState(IWorldContext ctx, int x, int y, int z)
     {
         const float detectionInset = 2.0F / 16.0F;
         bool wasPressed = ctx.Reader.GetBlockMeta(x, y, z) == 1;

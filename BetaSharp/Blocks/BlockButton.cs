@@ -16,7 +16,7 @@ internal class BlockButton : Block
 
     public override bool IsFullCube() => false;
 
-    private bool IsValidPlacementSide(IBlockReader read, int x, int y, int z, Side side = Side.Down)
+    private static bool IsValidPlacementSide(IBlockReader read, int x, int y, int z, Side side = Side.Down)
     {
         if (side == Side.North)
         {
@@ -41,18 +41,18 @@ internal class BlockButton : Block
             Side.South when evt.World.Reader.ShouldSuffocate(evt.X, evt.Y, evt.Z - 1) => 3,
             Side.West when evt.World.Reader.ShouldSuffocate(evt.X + 1, evt.Y, evt.Z) => 2,
             Side.East when evt.World.Reader.ShouldSuffocate(evt.X - 1, evt.Y, evt.Z) => 1,
-            _ => getPlacementSide(evt.World.Reader, evt.X, evt.Y, evt.Z)
+            _ => GetPlacementSide(evt.World.Reader, evt.X, evt.Y, evt.Z)
         };
 
         evt.World.Writer.SetBlockMeta(evt.X, evt.Y, evt.Z, facing + pressedBit);
     }
 
-    private int getPlacementSide(IBlockReader world, int x, int y, int z) =>
+    private static int GetPlacementSide(IBlockReader world, int x, int y, int z) =>
         world.ShouldSuffocate(x - 1, y, z) ? 1 : world.ShouldSuffocate(x + 1, y, z) ? 2 : world.ShouldSuffocate(x, y, z - 1) ? 3 : world.ShouldSuffocate(x, y, z + 1) ? 4 : 1;
 
     public override void NeighborUpdate(OnTickEvent @event)
     {
-        if (!breakIfCannotPlaceAt(@event))
+        if (!BreakIfCannotPlaceAt(@event))
         {
             return;
         }
@@ -72,16 +72,16 @@ internal class BlockButton : Block
         @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
     }
 
-    private bool breakIfCannotPlaceAt(OnTickEvent @event)
+    private bool BreakIfCannotPlaceAt(OnTickEvent @event)
     {
-        if (!IsValidPlacementSide(@event.World.Reader, @event.X, @event.Y, @event.Z))
+        if (IsValidPlacementSide(@event.World.Reader, @event.X, @event.Y, @event.Z))
         {
-            DropStacks(new OnDropEvent(@event.World, @event.X, @event.Y, @event.Z, @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z)));
-            @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
-            return false;
+            return true;
         }
 
-        return true;
+        DropStacks(new OnDropEvent(@event.World, @event.X, @event.Y, @event.Z, @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z)));
+        @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
+        return false;
     }
 
     public override void UpdateBoundingBox(IBlockReader blockReader, EntityManager entities, int x, int y, int z)
@@ -98,26 +98,25 @@ internal class BlockButton : Block
             thickness = 1.0F / 16.0F;
         }
 
-        if (facing == 1)
+        switch (facing)
         {
-            SetBoundingBox(0.0F, minY, 0.5F - halfWidth, thickness, maxY, 0.5F + halfWidth);
-        }
-        else if (facing == 2)
-        {
-            SetBoundingBox(1.0F - thickness, minY, 0.5F - halfWidth, 1.0F, maxY, 0.5F + halfWidth);
-        }
-        else if (facing == 3)
-        {
-            SetBoundingBox(0.5F - halfWidth, minY, 0.0F, 0.5F + halfWidth, maxY, thickness);
-        }
-        else if (facing == 4)
-        {
-            SetBoundingBox(0.5F - halfWidth, minY, 1.0F - thickness, 0.5F + halfWidth, maxY, 1.0F);
+            case 1:
+                SetBoundingBox(0.0F, minY, 0.5F - halfWidth, thickness, maxY, 0.5F + halfWidth);
+                break;
+            case 2:
+                SetBoundingBox(1.0F - thickness, minY, 0.5F - halfWidth, 1.0F, maxY, 0.5F + halfWidth);
+                break;
+            case 3:
+                SetBoundingBox(0.5F - halfWidth, minY, 0.0F, 0.5F + halfWidth, maxY, thickness);
+                break;
+            case 4:
+                SetBoundingBox(0.5F - halfWidth, minY, 1.0F - thickness, 0.5F + halfWidth, maxY, 1.0F);
+                break;
         }
     }
 
 
-    private bool updateState(IWorldContext level, int x, int y, int z)
+    private bool UpdateState(IWorldContext level, int x, int y, int z)
     {
         int meta = level.Reader.GetBlockMeta(x, y, z);
         int facing = meta & 7;
@@ -156,9 +155,9 @@ internal class BlockButton : Block
         return true;
     }
 
-    public override void OnBlockBreakStart(OnBlockBreakStartEvent @event) => updateState(@event.World, @event.X, @event.Y, @event.Z);
+    public override void OnBlockBreakStart(OnBlockBreakStartEvent @event) => UpdateState(@event.World, @event.X, @event.Y, @event.Z);
 
-    public override bool OnUse(OnUseEvent @event) => updateState(@event.World, @event.X, @event.Y, @event.Z);
+    public override bool OnUse(OnUseEvent @event) => UpdateState(@event.World, @event.X, @event.Y, @event.Z);
 
     public override void OnBreak(OnBreakEvent @event)
     {
@@ -220,42 +219,42 @@ internal class BlockButton : Block
         }
 
         int meta = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
-        if ((meta & 8) != 0)
+        if ((meta & 8) == 0)
         {
-            @event.World.Writer.SetBlockMeta(@event.X, @event.Y, @event.Z, meta & 7);
-            @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y, @event.Z, Id);
-            int facing = meta & 7;
-            if (facing == 1)
-            {
-                @event.World.Broadcaster.NotifyNeighbors(@event.X - 1, @event.Y, @event.Z, Id);
-            }
-            else if (facing == 2)
-            {
-                @event.World.Broadcaster.NotifyNeighbors(@event.X + 1, @event.Y, @event.Z, Id);
-            }
-            else if (facing == 3)
-            {
-                @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y, @event.Z - 1, Id);
-            }
-            else if (facing == 4)
-            {
-                @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y, @event.Z + 1, Id);
-            }
-            else
-            {
-                @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y - 1, @event.Z, Id);
-            }
-
-            @event.World.Broadcaster.PlaySoundAtPos(@event.X + 0.5D, @event.Y + 0.5D, @event.Z + 0.5D, "random.click", 0.3F, 0.5F);
-            @event.World.Broadcaster.SetBlocksDirty(@event.X, @event.Y, @event.Z);
+            return;
         }
+
+        @event.World.Writer.SetBlockMeta(@event.X, @event.Y, @event.Z, meta & 7);
+        @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y, @event.Z, Id);
+        int facing = meta & 7;
+        switch (facing)
+        {
+            case 1:
+                @event.World.Broadcaster.NotifyNeighbors(@event.X - 1, @event.Y, @event.Z, Id);
+                break;
+            case 2:
+                @event.World.Broadcaster.NotifyNeighbors(@event.X + 1, @event.Y, @event.Z, Id);
+                break;
+            case 3:
+                @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y, @event.Z - 1, Id);
+                break;
+            case 4:
+                @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y, @event.Z + 1, Id);
+                break;
+            default:
+                @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y - 1, @event.Z, Id);
+                break;
+        }
+
+        @event.World.Broadcaster.PlaySoundAtPos(@event.X + 0.5D, @event.Y + 0.5D, @event.Z + 0.5D, "random.click", 0.3F, 0.5F);
+        @event.World.Broadcaster.SetBlocksDirty(@event.X, @event.Y, @event.Z);
     }
 
     public override void SetupRenderBoundingBox()
     {
-        float halfWidth = 3.0F / 16.0F;
-        float halfHeight = 2.0F / 16.0F;
-        float halfDepth = 2.0F / 16.0F;
+        const float halfWidth = 3.0F / 16.0F;
+        const float halfHeight = 2.0F / 16.0F;
+        const float halfDepth = 2.0F / 16.0F;
         SetBoundingBox(0.5F - halfWidth, 0.5F - halfHeight, 0.5F - halfDepth, 0.5F + halfWidth, 0.5F + halfHeight, 0.5F + halfDepth);
     }
 }

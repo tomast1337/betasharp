@@ -41,22 +41,21 @@ internal class BlockSnow : Block
 
     public override void NeighborUpdate(OnTickEvent @event) => breakIfCannotPlace(@event);
 
-    private bool breakIfCannotPlace(OnTickEvent @event)
+    private void breakIfCannotPlace(OnTickEvent @event)
     {
         if (CanPlaceAt(new CanPlaceAtContext(@event.World, 0, @event.X, @event.Y, @event.Z)))
         {
-            return true;
+            return;
         }
 
         DropStacks(new OnDropEvent(@event.World, @event.X, @event.Y, @event.Z, @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z)));
         @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
-        return false;
     }
 
     public override void OnAfterBreak(OnAfterBreakEvent @event)
     {
+        const float spreadFactor = 0.7F;
         int snowballId = Item.Snowball.id;
-        float spreadFactor = 0.7F;
         double offsetX = Random.Shared.NextSingle() * spreadFactor + (1.0F - spreadFactor) * 0.5D;
         double offsetY = Random.Shared.NextSingle() * spreadFactor + (1.0F - spreadFactor) * 0.5D;
         double offsetZ = Random.Shared.NextSingle() * spreadFactor + (1.0F - spreadFactor) * 0.5D;
