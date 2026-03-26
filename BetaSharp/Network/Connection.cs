@@ -104,7 +104,7 @@ public class Connection
 
     public virtual void tick()
     {
-        if (_sendQueue.Count > 1048576 || _delayedSendQueue.Count > 1048576)
+        if (_sendQueue.Count > 1048576 || _delayedSendQueue.Count > 1048576 || readQueue.Count > 20000)
         {
             disconnect("disconnect.overflow");
         }
@@ -180,14 +180,16 @@ public class Connection
                 if (packet is not null)
                 {
                     readQueue.Enqueue(packet);
+                    if (readQueue.Count > 1000)
+                    {
+                        await Task.Delay(10);
+                    }
                 }
                 else
                 {
                     disconnect("disconnect.endOfStream");
                     break;
                 }
-
-                await Task.Delay(10);
             }
             catch (Exception exception)
             {
@@ -241,7 +243,7 @@ public class Connection
                 if (wrotePacket)
                 {
                     _networkStream.Flush();
-                    await Task.Delay(0);
+                    await Task.Yield();
                 }
                 else
                 {
