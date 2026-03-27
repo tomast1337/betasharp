@@ -33,9 +33,16 @@ public class BlockRenderer
 
         block.updateBoundingBox(world, pos.x, pos.y, pos.z);
 
-        int uvRotation = 0;
-        if (BetaSharp.Instance?.options?.AlternateBlocksEnabled == true && IsRotatableBlock(block.id))
-            uvRotation = BlockRenderContext.GetTextureRotationHash(pos.x, pos.y, pos.z);
+        var flags = block.TextureVarianceFlags;
+        bool doVariance = BetaSharp.Instance?.options?.AlternateBlocksEnabled == true
+                          && flags != FaceVarianceFlags.None;
+
+        int topRot    = doVariance && flags.HasFlag(FaceVarianceFlags.Top)
+                        ? BlockRenderContext.GetTextureRotationHash(pos.x, pos.y,     pos.z) : 0;
+        int bottomRot = doVariance && flags.HasFlag(FaceVarianceFlags.Bottom)
+                        ? BlockRenderContext.GetTextureRotationHash(pos.x, pos.y - 1, pos.z) : 0;
+        int sideRot   = doVariance && flags.HasFlag(FaceVarianceFlags.Sides)
+                        ? BlockRenderContext.GetTextureRotationHash(pos.x, pos.y,     pos.z) : 0;
 
         var ctx = new BlockRenderContext(
             tess: tess,
@@ -43,12 +50,12 @@ public class BlockRenderer
             overrideTexture: overrideTexture,
             renderAllFaces: renderAllFaces,
             flipTexture: false,
-            uvTop: uvRotation,
-            uvBottom: uvRotation,
-            uvNorth: 0,
-            uvSouth: 0,
-            uvEast: 0,
-            uvWest: 0,
+            uvTop:    topRot,
+            uvBottom: bottomRot,
+            uvNorth:  sideRot,
+            uvSouth:  sideRot,
+            uvEast:   sideRot,
+            uvWest:   sideRot,
             aoBlendMode: 1,
             customFlag: type == BlockRendererType.PistonExtension
         );
@@ -235,8 +242,4 @@ public class BlockRenderer
                renderType == BlockRendererType.Cactus ||
                renderType == BlockRendererType.PistonBase;
     }
-
-    private static bool IsRotatableBlock(int blockId) =>
-        blockId == Block.GrassBlock.id || blockId == Block.Dirt.id || blockId == Block.Sand.id ||
-        blockId == Block.Gravel.id || blockId == Block.Netherrack.id;
 }

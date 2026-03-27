@@ -34,7 +34,7 @@ public class Block
     public static readonly Block Stone = new BlockStone(1, 1).setHardness(1.5F).setResistance(10.0F).setSoundGroup(SoundStoneFootstep).setBlockName("stone");
     public static readonly BlockGrass GrassBlock = (BlockGrass)new BlockGrass(2).setHardness(0.6F).setSoundGroup(SoundGrassFootstep).setBlockName("grass");
     public static readonly Block Dirt = new BlockDirt(3, 2).setHardness(0.5F).setSoundGroup(SoundGravelFootstep).setBlockName("dirt");
-    public static readonly Block Cobblestone = new Block(4, 16, Material.Stone).setHardness(2.0F).setResistance(10.0F).setSoundGroup(SoundStoneFootstep).setBlockName("stonebrick");
+    public static readonly Block Cobblestone = new BlockCobblestone(4, 16, Material.Stone).setHardness(2.0F).setResistance(10.0F).setSoundGroup(SoundStoneFootstep).setBlockName("stonebrick");
     public static readonly Block Planks = new Block(5, 4, Material.Wood).setHardness(2.0F).setResistance(5.0F).setSoundGroup(SoundWoodFootstep).setBlockName("wood").ignoreMetaUpdates();
     public static readonly Block Sapling = new BlockSapling(6, 15).setHardness(0.0F).setSoundGroup(SoundGrassFootstep).setBlockName("sapling").ignoreMetaUpdates();
     public static readonly Block Bedrock = new Block(7, 17, Material.Stone).setUnbreakable().setResistance(6000000.0F).setSoundGroup(SoundStoneFootstep).setBlockName("bedrock").disableStats();
@@ -209,6 +209,13 @@ public class Block
     {
         return BlockRendererType.Standard;
     }
+
+    /// <summary>
+    /// Declares which faces of this block may receive random per-block UV rotation
+    /// when the client's "Alternate Blocks" option is enabled.
+    /// Override in subclasses that have a noisy/tileable texture that benefits from variation.
+    /// </summary>
+    public virtual FaceVarianceFlags TextureVarianceFlags => FaceVarianceFlags.None;
 
     protected Block setHardness(float hardness)
     {

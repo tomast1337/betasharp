@@ -13,6 +13,8 @@ public class BlockGrass : Block
         setTickRandomly(true);
     }
 
+    public override FaceVarianceFlags TextureVarianceFlags => FaceVarianceFlags.TopBottom;
+
     public override int getTexture(int side)
     {
         if (side == 1) return 0;  // top: grass green

@@ -7,7 +7,7 @@ namespace BetaSharp.Blocks;
 
 internal class BlockPumpkin : Block
 {
-
+    public override FaceVarianceFlags TextureVarianceFlags => FaceVarianceFlags.Top;
     private bool lit;
 
     public BlockPumpkin(int id, int textureId, bool lit) : base(id, Material.Pumpkin)

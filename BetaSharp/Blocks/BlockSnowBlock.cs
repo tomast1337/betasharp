@@ -7,7 +7,7 @@ namespace BetaSharp.Blocks;
 
 internal class BlockSnowBlock : Block
 {
-
+    public override FaceVarianceFlags TextureVarianceFlags => FaceVarianceFlags.All;
     public BlockSnowBlock(int id, int textureId) : base(id, textureId, Material.SnowBlock)
     {
         setTickRandomly(true);

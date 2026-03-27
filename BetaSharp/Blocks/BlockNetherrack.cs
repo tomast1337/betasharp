@@ -8,4 +8,6 @@ internal class BlockNetherrack : Block
     public BlockNetherrack(int id, int textureId) : base(id, textureId, Material.Stone)
     {
     }
+
+    public override FaceVarianceFlags TextureVarianceFlags => FaceVarianceFlags.All;
 }

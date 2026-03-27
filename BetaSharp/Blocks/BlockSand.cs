@@ -19,6 +19,8 @@ internal class BlockSand : Block
     {
     }
 
+    public override FaceVarianceFlags TextureVarianceFlags => FaceVarianceFlags.All;
+
     public override void onPlaced(World world, int x, int y, int z)
     {
         world.ScheduleBlockUpdate(x, y, z, id, getTickRate());

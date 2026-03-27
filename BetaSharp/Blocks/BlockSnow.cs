@@ -8,7 +8,7 @@ namespace BetaSharp.Blocks;
 
 internal class BlockSnow : Block
 {
-
+    public override FaceVarianceFlags TextureVarianceFlags => FaceVarianceFlags.All;
     public BlockSnow(int id, int textureId) : base(id, textureId, Material.SnowLayer)
     {
         setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 2.0F / 16.0F, 1.0F);
