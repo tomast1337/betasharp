@@ -7,6 +7,4 @@ internal class BlockDirt : Block
     public BlockDirt(int id, int textureId) : base(id, textureId, Material.Soil)
     {
     }
-
-    public override FaceVarianceFlags TextureVarianceFlags => FaceVarianceFlags.All;
 }

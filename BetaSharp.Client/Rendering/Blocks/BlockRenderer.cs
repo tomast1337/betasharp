@@ -35,16 +35,19 @@ public class BlockRenderer
 
         block.updateBoundingBox(world, pos.x, pos.y, pos.z);
 
-        var flags = block.TextureVarianceFlags;
-        bool doVariance = BetaSharp.Instance?.options?.AlternateBlocksEnabled == true
-                          && flags != FaceVarianceFlags.None;
+        bool doVariance = BetaSharp.Instance?.options?.AlternateBlocksEnabled == true;
 
-        int topRot    = doVariance && flags.HasFlag(FaceVarianceFlags.Top)
-                        ? BlockRenderContext.GetTextureRotationHash(pos.x, pos.y,     pos.z) : 0;
-        int bottomRot = doVariance && flags.HasFlag(FaceVarianceFlags.Bottom)
-                        ? BlockRenderContext.GetTextureRotationHash(pos.x, pos.y - 1, pos.z) : 0;
-        int sideRot   = doVariance && flags.HasFlag(FaceVarianceFlags.Sides)
-                        ? BlockRenderContext.GetTextureRotationHash(pos.x, pos.y,     pos.z) : 0;
+        TextureVariance topRule = doVariance ? block.TopVariance : TextureVariance.None;
+        TextureVariance botRule = doVariance ? block.BottomVariance : TextureVariance.None;
+        TextureVariance sideRule = doVariance ? block.SideVariance : TextureVariance.None;
+
+        int topHash = topRule != TextureVariance.None ? BlockRenderContext.GetTextureVarianceHash(pos.x, pos.y, pos.z) : 0;
+        int botHash = botRule != TextureVariance.None ? BlockRenderContext.GetTextureVarianceHash(pos.x, pos.y - 1, pos.z) : 0;
+        int sideHash = sideRule != TextureVariance.None ? BlockRenderContext.GetTextureVarianceHash(pos.x, pos.y, pos.z) : 0;
+
+        int topRot = BlockRenderContext.ApplyVariance(topHash, topRule, out int flipTop);
+        int botRot = BlockRenderContext.ApplyVariance(botHash, botRule, out int flipBot);
+        int sideRot = BlockRenderContext.ApplyVariance(sideHash, sideRule, out int flipSide);
 
         var ctx = new BlockRenderContext(
             tess: tess,
@@ -53,12 +56,18 @@ public class BlockRenderer
             overrideTexture: overrideTexture,
             renderAllFaces: renderAllFaces,
             flipTexture: false,
-            uvTop:    topRot,
-            uvBottom: bottomRot,
-            uvNorth:  sideRot,
-            uvSouth:  sideRot,
-            uvEast:   sideRot,
-            uvWest:   sideRot,
+            uvTop: topRot,
+            uvBottom: botRot,
+            uvNorth: sideRot,
+            uvSouth: sideRot,
+            uvEast: sideRot,
+            uvWest: sideRot,
+            flipTop: flipTop,
+            flipBottom: flipBot,
+            flipNorth: flipSide,
+            flipSouth: flipSide,
+            flipEast: flipSide,
+            flipWest: flipSide,
             aoBlendMode: 1,
             customFlag: type == BlockRendererType.PistonExtension
         );
@@ -195,7 +204,7 @@ public class BlockRenderer
 
         var entityCtx = new BlockRenderContext(
             blockReader: world.Reader,
-            lighting:world.Lighting,
+            lighting: world.Lighting,
             tess: tess,
             renderAllFaces: true,
             enableAo: false

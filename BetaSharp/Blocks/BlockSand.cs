@@ -5,8 +5,6 @@ namespace BetaSharp.Blocks;
 
 internal class BlockSand : Block
 {
-    public override FaceVarianceFlags TextureVarianceFlags => FaceVarianceFlags.All;
-
     private static readonly ThreadLocal<bool> s_fallInstantly = new(() => false);
 
     public BlockSand(int id, int textureId) : base(id, textureId, Material.Sand)

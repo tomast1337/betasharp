@@ -5,7 +5,6 @@ namespace BetaSharp.Blocks;
 
 internal class BlockIce : BlockBreakable
 {
-    public override FaceVarianceFlags TextureVarianceFlags => FaceVarianceFlags.All;
     public BlockIce(int id, int textureId) : base(id, textureId, Material.Ice, false)
     {
         slipperiness = 0.98F;
