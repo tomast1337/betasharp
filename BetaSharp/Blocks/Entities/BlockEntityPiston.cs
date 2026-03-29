@@ -77,22 +77,23 @@ public class BlockEntityPiston : BlockEntity
 
     private void FinalizeBlock()
     {
+        if (World.Reader.GetBlockId(X, Y, Z) == Block.MovingPiston.id)
+        {
+            World.Writer.SetBlock(X, Y, Z, PushedBlockId, PushedBlockData);
+            if (!World.IsRemote)
+            {
+                World.Broadcaster.NotifyNeighbors(X, Y, Z, PushedBlockId);
+                World.Broadcaster.BlockUpdateEvent(X, Y, Z);
+
+                if (PushedBlockId == Block.Piston.id || PushedBlockId == Block.StickyPiston.id)
+                {
+                    World.TickScheduler.ScheduleBlockUpdate(X, Y, Z, PushedBlockId, 1);
+                }
+            }
+        }
+
         World.Entities.RemoveBlockEntity(X, Y, Z);
         markRemoved();
-
-        if (World.Reader.GetBlockId(X, Y, Z) != Block.MovingPiston.id) return;
-
-        World.Writer.SetBlock(X, Y, Z, PushedBlockId, PushedBlockData);
-
-        World.Broadcaster.NotifyNeighbors(X, Y, Z, PushedBlockId);
-        World.Broadcaster.BlockUpdateEvent(X, Y, Z);
-
-        if (PushedBlockId != Block.Piston.id && PushedBlockId != Block.StickyPiston.id) return;
-
-        if (!World.IsRemote)
-        {
-            World.TickScheduler.ScheduleBlockUpdate(X, Y, Z, PushedBlockId, 1);
-        }
     }
 
     public void AbandonExtensionToStaticBlock() => FinalizeBlock();
