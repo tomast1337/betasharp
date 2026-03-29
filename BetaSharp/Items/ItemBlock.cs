@@ -90,7 +90,7 @@ internal class ItemBlock : Item
             {
                 Block.Blocks[blockID].OnPlaced(new OnPlacedEvent(world, entityPlayer, meta.ToSide(), meta.ToSide(), x, y, z));
                 world.Broadcaster.PlaySoundAtPos(x + 0.5F, y + 0.5F, z + 0.5F, block.SoundGroup.StepSound, (block.SoundGroup.Volume + 1.0F) / 2.0F, block.SoundGroup.Pitch * 0.8F);
-                --itemStack.count;
+                itemStack.ConsumeItem(entityPlayer);
             }
 
             return true;

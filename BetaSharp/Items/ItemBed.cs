@@ -44,7 +44,7 @@ internal class ItemBed : Item
         world.Writer.SetBlock(x + offsetX, y, z + offsetZ, Block.Bed.Id, dir + 8);
         world.Broadcaster.NotifyNeighbors(x, y, z, Block.Bed.Id);
         world.Broadcaster.NotifyNeighbors(x + offsetX, y, z + offsetZ, Block.Bed.Id);
-        --itemStack.count;
+        itemStack.ConsumeItem(entityPlayer);
         return true;
     }
 

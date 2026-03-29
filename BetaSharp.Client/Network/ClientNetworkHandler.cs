@@ -32,7 +32,6 @@ public class ClientNetworkHandler : NetHandler
 {
     private readonly ILogger<ClientNetworkHandler> _logger = Log.Instance.For<ClientNetworkHandler>();
 
-    private static readonly HttpClient _httpClient = new();
 
     private bool disconnected;
     private readonly Connection netManager;
@@ -503,35 +502,7 @@ public class ClientNetworkHandler : NetHandler
 
     public override void onHandshake(HandshakePacket packet)
     {
-        if (packet.username.Equals("-"))
-        {
-            addToSendQueue(new LoginHelloPacket(_game.session.username, 14, LoginHelloPacket.BETASHARP_CLIENT_SIGNATURE, 0));
-        }
-        else
-        {
-            try
-            {
-                //TODO: AUTH
-                string authUrl = "http://www.minecraft.net/game/joinserver.jsp?user=" + _game.session.username + "&sessionId=" + _game.session.sessionId + "&serverId=" + packet.username;
-
-                string? response = _httpClient.GetStringAsync(authUrl).GetAwaiter().GetResult();
-                response = response?.Trim();
-
-                if (string.IsNullOrEmpty(response) || response.Equals("ok", StringComparison.OrdinalIgnoreCase))
-                {
-                    addToSendQueue(new LoginHelloPacket(_game.session.username, 14, LoginHelloPacket.BETASHARP_CLIENT_SIGNATURE, 0));
-                }
-                else
-                {
-                    netManager.disconnect("disconnect.loginFailedInfo", response);
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, e.Message);
-                netManager.disconnect("disconnect.genericReason", "Internal client error: " + e.Message);
-            }
-        }
+        addToSendQueue(new LoginHelloPacket(_game.session.username, 14, LoginHelloPacket.BETASHARP_CLIENT_SIGNATURE, 0));
     }
 
     public void disconnect()
@@ -640,6 +611,8 @@ public class ClientNetworkHandler : NetHandler
 
     public override void onOpenScreen(OpenScreenS2CPacket packet)
     {
+        if (!_game.player.GameMode.CanInteract) return;
+
         if (packet.screenHandlerId == 0)
         {
             InventoryBasic inventory = new(packet.name, packet.slotsCount);
@@ -846,6 +819,11 @@ public class ClientNetworkHandler : NetHandler
             Entity? ent = worldClient.GetEntity(packet.entityId);
             EntityRenderDispatcher.instance.skinManager?.Release(packet.name);
         }
+    }
+
+    public override void onPlayerGameModeUpdate(PlayerGameModeUpdateS2CPacket packet)
+    {
+        _game.player.GameMode = packet.GameMode;
     }
 
     public override bool isServerSide()

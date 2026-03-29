@@ -249,24 +249,20 @@ internal class BlockFlowing(int id, Material material) : BlockFluid(id, material
             distanceToGap[direction] = 1000;
             neighborX = x;
             int neighborZ = z;
-            if (direction == 0)
+            switch (direction)
             {
-                neighborX = x - 1;
-            }
-
-            if (direction == 1)
-            {
-                ++neighborX;
-            }
-
-            if (direction == 2)
-            {
-                neighborZ = z - 1;
-            }
-
-            if (direction == 3)
-            {
-                ++neighborZ;
+                case 0:
+                    neighborX = x - 1;
+                    break;
+                case 1:
+                    ++neighborX;
+                    break;
+                case 2:
+                    neighborZ = z - 1;
+                    break;
+                case 3:
+                    ++neighborZ;
+                    break;
             }
 
             if (IsLiquidBreaking(world, neighborX, y, neighborZ) || (world.GetMaterial(neighborX, y, neighborZ) == Material && world.GetBlockMeta(neighborX, y, neighborZ) == 0))
@@ -307,7 +303,7 @@ internal class BlockFlowing(int id, Material material) : BlockFluid(id, material
     {
         if (x < -32000000 || z < -32000000 || x >= 32000000 || z > 32000000 || y < 0 || y >= 128)
         {
-            return true;
+            return false;
         }
 
         if (!reader.IsPosLoaded(x, y, z))

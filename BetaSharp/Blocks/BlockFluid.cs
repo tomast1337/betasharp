@@ -9,9 +9,7 @@ public abstract class BlockFluid : Block
 {
     protected BlockFluid(int id, Material material) : base(id, (material == Material.Lava ? 14 : 12) * 16 + 13, material)
     {
-        const float heightOffset = 0.0F;
-        const float widthOffset = 0.0F;
-        SetBoundingBox(0.0F + widthOffset, 0.0F + heightOffset, 0.0F + widthOffset, 1.0F + widthOffset, 1.0F + heightOffset, 1.0F + widthOffset);
+        SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         SetTickRandomly(true);
     }
 
@@ -103,17 +101,9 @@ public abstract class BlockFluid : Block
             int depthDiff;
             if (neighborDepth < 0)
             {
-                if (iBlockReader.GetMaterial(neighborX, y, neighborZ).BlocksMovement)
-                {
-                    continue;
-                }
-
+                if (iBlockReader.GetMaterial(neighborX, y, neighborZ).BlocksMovement) continue;
                 neighborDepth = GetLiquidDepth(iBlockReader, neighborX, y - 1, neighborZ);
-                if (neighborDepth < 0)
-                {
-                    continue;
-                }
-
+                if (neighborDepth < 0) continue;
                 depthDiff = neighborDepth - (depth - 8);
             }
             else
@@ -126,46 +116,15 @@ public abstract class BlockFluid : Block
 
         if (iBlockReader.GetBlockMeta(x, y, z) >= 8)
         {
-            bool hasAdjacentSolid = false;
-            if (hasAdjacentSolid || IsSolidFace(iBlockReader, x, y, z - 1, (int)Side.North))
-            {
-                hasAdjacentSolid = true;
-            }
-
-            if (hasAdjacentSolid || IsSolidFace(iBlockReader, x, y, z + 1, (int)Side.South))
-            {
-                hasAdjacentSolid = true;
-            }
-
-            if (hasAdjacentSolid || IsSolidFace(iBlockReader, x - 1, y, z, (int)Side.West))
-            {
-                hasAdjacentSolid = true;
-            }
-
-            if (hasAdjacentSolid || IsSolidFace(iBlockReader, x + 1, y, z, (int)Side.East))
-            {
-                hasAdjacentSolid = true;
-            }
-
-            if (hasAdjacentSolid || IsSolidFace(iBlockReader, x, y + 1, z - 1, (int)Side.North))
-            {
-                hasAdjacentSolid = true;
-            }
-
-            if (hasAdjacentSolid || IsSolidFace(iBlockReader, x, y + 1, z + 1, (int)Side.South))
-            {
-                hasAdjacentSolid = true;
-            }
-
-            if (hasAdjacentSolid || IsSolidFace(iBlockReader, x - 1, y + 1, z, (int)Side.West))
-            {
-                hasAdjacentSolid = true;
-            }
-
-            if (hasAdjacentSolid || IsSolidFace(iBlockReader, x + 1, y + 1, z, (int)Side.East))
-            {
-                hasAdjacentSolid = true;
-            }
+            bool hasAdjacentSolid =
+                IsSolidFace(iBlockReader, x, y, z - 1, 2) ||
+                IsSolidFace(iBlockReader, x, y, z + 1, 3) ||
+                IsSolidFace(iBlockReader, x - 1, y, z, 4) ||
+                IsSolidFace(iBlockReader, x + 1, y, z, 5) ||
+                IsSolidFace(iBlockReader, x, y + 1, z - 1, 2) ||
+                IsSolidFace(iBlockReader, x, y + 1, z + 1, 3) ||
+                IsSolidFace(iBlockReader, x - 1, y + 1, z, 4) ||
+                IsSolidFace(iBlockReader, x + 1, y + 1, z, 5);
 
             if (hasAdjacentSolid)
             {
@@ -253,43 +212,16 @@ public abstract class BlockFluid : Block
             return;
         }
 
+        if (Material != Material.Lava) return;
 
-        if (Material != Material.Lava)
-        {
-            return;
-        }
+        bool hasWaterAdjacent =
+            reader.GetMaterial(x, y, z - 1) == Material.Water ||
+            reader.GetMaterial(x, y, z + 1) == Material.Water ||
+            reader.GetMaterial(x - 1, y, z) == Material.Water ||
+            reader.GetMaterial(x + 1, y, z) == Material.Water ||
+            reader.GetMaterial(x, y + 1, z) == Material.Water;
 
-        bool hasWaterAdjacent = false;
-
-        if (hasWaterAdjacent || reader.GetMaterial(x, y, z - 1) == Material.Water)
-        {
-            hasWaterAdjacent = true;
-        }
-
-        if (hasWaterAdjacent || reader.GetMaterial(x, y, z + 1) == Material.Water)
-        {
-            hasWaterAdjacent = true;
-        }
-
-        if (hasWaterAdjacent || reader.GetMaterial(x - 1, y, z) == Material.Water)
-        {
-            hasWaterAdjacent = true;
-        }
-
-        if (hasWaterAdjacent || reader.GetMaterial(x + 1, y, z) == Material.Water)
-        {
-            hasWaterAdjacent = true;
-        }
-
-        if (hasWaterAdjacent || reader.GetMaterial(x, y + 1, z) == Material.Water)
-        {
-            hasWaterAdjacent = true;
-        }
-
-        if (!hasWaterAdjacent)
-        {
-            return;
-        }
+        if (!hasWaterAdjacent) return;
 
         int meta = reader.GetBlockMeta(x, y, z);
         switch (meta)

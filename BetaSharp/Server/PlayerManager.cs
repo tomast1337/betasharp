@@ -52,6 +52,7 @@ public class PlayerManager
 
     public void updatePlayerAfterDimensionChange(ServerPlayerEntity player)
     {
+        player.ResetChunkStreamingState();
         player.activeChunks.Clear();
         player.ChunksTerrainSentToClient.Clear();
         GetChunkMap(player.dimensionId).addPlayer(player);
@@ -82,6 +83,7 @@ public class PlayerManager
     public void addPlayer(ServerPlayerEntity player)
     {
         players.Add(player);
+        player.ResetChunkStreamingState();
         ServerWorld var2 = _server.getWorld(player.dimensionId);
         var2.ChunkCache.LoadChunk((int)player.x >> 4, (int)player.z >> 4);
 
@@ -296,6 +298,14 @@ public class PlayerManager
         }
     }
 
+    public void flushPendingChunkUpdates()
+    {
+        for (int i = 0; i < players.Count; i++)
+        {
+            players[i].FlushPendingChunkUpdates();
+        }
+    }
+
     public void markDirty(int x, int y, int z, int dimensionId)
     {
         GetChunkMap(dimensionId).markBlockForUpdate(x, y, z);
@@ -408,7 +418,7 @@ public class PlayerManager
         return ops.Contains(name.Trim().ToLower());
     }
 
-    public ServerPlayerEntity getPlayer(string name)
+    public ServerPlayerEntity? getPlayer(string name)
     {
         for (int var2 = 0; var2 < players.Count; var2++)
         {
