@@ -12,7 +12,7 @@ internal class BlockFarmland : Block
 
     public BlockFarmland(int id) : base(id, Material.Soil)
     {
-        TextureId = 87;
+        TextureId = BlockTextures.FarmlandDry;
         SetTickRandomly(true);
         SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 15.0F / 16.0F, 1.0F);
         SetOpacity(255);
@@ -21,7 +21,12 @@ internal class BlockFarmland : Block
     public override Box? GetCollisionShape(IBlockReader world, EntityManager entities, int x, int y, int z) => new Box(x + 0, y + 0, z + 0, x + 1, y + 1, z + 1);
 
 
-    public override int GetTexture(Side side, int meta) => side == Side.Up && meta > 0 ? TextureId - 1 : side == Side.Up ? TextureId : 2;
+    public override int GetTexture(Side side, int meta) => side switch
+    {
+        Side.Up when meta > 0 => BlockTextures.FarmlandWet,
+        Side.Up => TextureId,
+        _ => BlockTextures.Dirt
+    };
 
     public override void OnTick(OnTickEvent @event)
     {

@@ -18,42 +18,38 @@ public class BlockPistonBase : Block
         SetHardness(0.5F);
     }
 
-    public int GetTopTexture() => _sticky ? 106 : 107;
+    public int GetTopTexture() => _sticky ? BlockTextures.PistonTopSticky : BlockTextures.PistonTopNormal;
 
-    public override int GetTexture(Side side) =>
-        side switch
-        {
-            Side.Up => GetTopTexture(),
-            Side.Down => 109,
-            _ => 108
-        };
+    public override int GetTexture(Side side) => side switch
+    {
+        Side.Up => GetTopTexture(),
+        Side.Down => BlockTextures.PistonBottom,
+        _ => BlockTextures.PistonSide
+    };
 
     public override int GetTexture(Side side, int meta)
     {
         Side facing = GetFacing(meta);
-        if (facing.ToInt() > 5)
-        {
-            return TextureId;
-        }
+
+        if (!facing.IsValidSide()) return TextureId;
 
         if (side != facing)
         {
-            return side == SideExtensions.OppositeFace(facing) ? 109 : 108;
+            return side == SideExtensions.OppositeFace(facing) ? BlockTextures.PistonBottom : BlockTextures.PistonSide;
         }
 
         if (IsExtended(meta) ||
-            BoundingBox is
-                not
-                {
-                    MinX: <= 0.0D,
-                    MinY: <= 0.0D,
-                    MinZ: <= 0.0D,
-                    MaxX: >= 1.0D,
-                    MaxY: >= 1.0D,
-                    MaxZ: >= 1.0D
-                })
+            BoundingBox is not
+            {
+                MinX: <= 0.0D,
+                MinY: <= 0.0D,
+                MinZ: <= 0.0D,
+                MaxX: >= 1.0D,
+                MaxY: >= 1.0D,
+                MaxZ: >= 1.0D
+            })
         {
-            return 110;
+            return BlockTextures.PistonExtensionSide;
         }
 
         return TextureId;

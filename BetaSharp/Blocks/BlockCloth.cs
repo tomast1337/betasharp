@@ -9,7 +9,7 @@ internal class BlockCloth() : Block(35, 64, Material.Wool)
         if (meta == 0) return TextureId;
 
         meta = ~(meta & 15);
-        return 113 + ((meta & 8) >> 3) + (meta & 7) * 16;
+        return BlockTextures.WoolColoredPaletteBase + ((meta & 8) >> 3) + (meta & 7) * 16;
     }
 
     protected override int GetDroppedItemMeta(int blockMeta) => blockMeta;

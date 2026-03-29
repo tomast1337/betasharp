@@ -40,7 +40,17 @@ internal class BlockLog : Block
         }
     }
 
-    public override int GetTexture(Side side, int meta) => side == Side.Up ? 21 : side == Side.Down ? 21 : meta == 1 ? 116 : meta == 2 ? 117 : 20;
+    public override int GetTexture(Side side, int meta)
+    {
+        if (side is Side.Up or Side.Down) return BlockTextures.LogTop;
+
+        return meta switch
+        {
+            1 => BlockTextures.LogPineSide,
+            2 => BlockTextures.LogBirchSide,
+            _ => BlockTextures.LogOakSide
+        };
+    }
 
     protected override int GetDroppedItemMeta(int blockMeta) => blockMeta;
 }

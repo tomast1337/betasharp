@@ -18,7 +18,7 @@ internal class BlockSign : BlockWithEntity
         const float width = 0.25F;
         const float height = 1.0F;
         _standing = standing;
-        TextureId = 4;
+        TextureId = BlockTextures.OakPlanks;
         _blockEntityType = blockEntityType;
         SetBoundingBox(0.5F - width, 0.0F, 0.5F - width, 0.5F + width, height, 0.5F + width);
     }

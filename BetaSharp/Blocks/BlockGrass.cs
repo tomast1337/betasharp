@@ -15,9 +15,9 @@ public class BlockGrass : Block
     public override int GetTexture(Side side) =>
         side switch
         {
-            Side.Up => 0,
-            Side.Down => 2,
-            _ => 3
+            Side.Up => BlockTextures.GrassTop,
+            Side.Down => BlockTextures.Dirt,
+            _ => BlockTextures.GrassSide
         };
 
     public override int GetColorForFace(int meta, Side face) => face == Side.Up ? GrassColors.getDefaultColor() : 0xFFFFFF;
@@ -27,13 +27,15 @@ public class BlockGrass : Block
         switch (side)
         {
             case Side.Up:
-                return 0;
+                return BlockTextures.GrassTop;
             case Side.Down:
-                return 2;
+                return BlockTextures.Dirt;
             default:
                 {
                     Material materialAbove = iBlockReader.GetMaterial(x, y + 1, z);
-                    return materialAbove != Material.SnowLayer && materialAbove != Material.SnowBlock ? 3 : 68;
+                    return (materialAbove != Material.SnowLayer && materialAbove != Material.SnowBlock) ?
+                        BlockTextures.GrassSide:
+                        BlockTextures.GrassSideSnowy;
                 }
         }
     }

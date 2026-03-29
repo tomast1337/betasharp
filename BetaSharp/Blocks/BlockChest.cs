@@ -17,103 +17,73 @@ internal class BlockChest : BlockWithEntity
 
     public override int GetTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side)
     {
-        if (side is Side.Up or Side.Down) return TextureId - 1;
+        if (side is Side.Up or Side.Down) return BlockTextures.ChestTopBottom;
 
         int blockNorth = iBlockReader.GetBlockId(x, y, z - 1);
         int blockSouth = iBlockReader.GetBlockId(x, y, z + 1);
         int blockWest = iBlockReader.GetBlockId(x - 1, y, z);
         int blockEast = iBlockReader.GetBlockId(x + 1, y, z);
-        int textureOffset;
-        int cornerBlock1;
-        int cornerBlock2;
-        Side facingSide;
-        if (blockNorth != Id && blockSouth != Id)
+
+        bool isDoubleEw = blockWest == Id || blockEast == Id;
+        bool isDoubleNs = blockNorth == Id || blockSouth == Id;
+
+        if (!isDoubleNs && !isDoubleEw)
         {
-            if (blockWest != Id && blockEast != Id)
-            {
-                Side facing = Side.South;
-                if (BlocksOpaque[blockNorth] && !BlocksOpaque[blockSouth])
-                {
-                    facing = Side.South;
-                }
+            Side facing = Side.South;
+            if (BlocksOpaque[blockNorth] && !BlocksOpaque[blockSouth]) facing = Side.South;
+            if (BlocksOpaque[blockSouth] && !BlocksOpaque[blockNorth]) facing = Side.North;
+            if (BlocksOpaque[blockWest] && !BlocksOpaque[blockEast]) facing = Side.East;
+            if (BlocksOpaque[blockEast] && !BlocksOpaque[blockWest]) facing = Side.West;
 
-                if (BlocksOpaque[blockSouth] && !BlocksOpaque[blockNorth])
-                {
-                    facing = Side.North;
-                }
-
-                if (BlocksOpaque[blockWest] && !BlocksOpaque[blockEast])
-                {
-                    facing = Side.East;
-                }
-
-                if (BlocksOpaque[blockEast] && !BlocksOpaque[blockWest])
-                {
-                    facing = Side.West;
-                }
-
-                return side == facing ? TextureId + 1 : TextureId;
-            }
-
-            if (side is Side.West or Side.East)
-            {
-                return TextureId;
-            }
-
-            textureOffset = 0;
-            if (blockWest == Id)
-            {
-                textureOffset = -1;
-            }
-
-            cornerBlock1 = iBlockReader.GetBlockId(blockWest == Id ? x - 1 : x + 1, y, z - 1);
-            cornerBlock2 = iBlockReader.GetBlockId(blockWest == Id ? x - 1 : x + 1, y, z + 1);
-            if (side == Side.South)
-            {
-                textureOffset = -1 - textureOffset;
-            }
-
-            facingSide = Side.South;
-            if ((BlocksOpaque[blockNorth] || BlocksOpaque[cornerBlock1]) && !BlocksOpaque[blockSouth] && !BlocksOpaque[cornerBlock2])
-            {
-                facingSide = Side.South;
-            }
-
-            if ((BlocksOpaque[blockSouth] || BlocksOpaque[cornerBlock2]) && !BlocksOpaque[blockNorth] && !BlocksOpaque[cornerBlock1])
-            {
-                facingSide = Side.North;
-            }
-
-            return (side == facingSide ? TextureId + 16 : TextureId + 32) + textureOffset;
+            return side == facing ? BlockTextures.ChestSingleFront : BlockTextures.ChestSingleSide;
         }
 
-        if (side is Side.North or Side.South) return TextureId;
-
-        textureOffset = 0;
-        if (blockNorth == Id)
+        if (isDoubleEw)
         {
-            textureOffset = -1;
+            if (side is Side.West or Side.East) return BlockTextures.ChestSingleSide;
+
+            bool isWestPartner = blockWest == Id;
+            int corner1 = iBlockReader.GetBlockId(isWestPartner ? x - 1 : x + 1, y, z - 1);
+            int corner2 = iBlockReader.GetBlockId(isWestPartner ? x - 1 : x + 1, y, z + 1);
+
+            Side facing = Side.South;
+            if ((BlocksOpaque[blockNorth] || BlocksOpaque[corner1]) && !BlocksOpaque[blockSouth] && !BlocksOpaque[corner2]) facing = Side.South;
+            if ((BlocksOpaque[blockSouth] || BlocksOpaque[corner2]) && !BlocksOpaque[blockNorth] && !BlocksOpaque[corner1]) facing = Side.North;
+
+            bool isRightHalf = facing == Side.South ? isWestPartner : !isWestPartner;
+
+            return GetDoubleChestTexture(side, facing, isRightHalf);
         }
 
-        cornerBlock1 = iBlockReader.GetBlockId(x - 1, y, blockNorth == Id ? z - 1 : z + 1);
-        cornerBlock2 = iBlockReader.GetBlockId(x + 1, y, blockNorth == Id ? z - 1 : z + 1);
-        if (side == Side.West)
+        if (isDoubleNs)
         {
-            textureOffset = -1 - textureOffset;
+            if (side is Side.North or Side.South) return BlockTextures.ChestSingleSide;
+
+            bool isNorthPartner = blockNorth == Id;
+            int corner1 = iBlockReader.GetBlockId(x - 1, y, isNorthPartner ? z - 1 : z + 1);
+            int corner2 = iBlockReader.GetBlockId(x + 1, y, isNorthPartner ? z - 1 : z + 1);
+
+            Side facing = Side.East;
+            if ((BlocksOpaque[blockWest] || BlocksOpaque[corner1]) && !BlocksOpaque[blockEast] && !BlocksOpaque[corner2]) facing = Side.East;
+            if ((BlocksOpaque[blockEast] || BlocksOpaque[corner2]) && !BlocksOpaque[blockWest] && !BlocksOpaque[corner1]) facing = Side.West;
+
+            bool isRightHalf = facing == Side.East ? isNorthPartner : !isNorthPartner;
+
+            return GetDoubleChestTexture(side, facing, isRightHalf);
         }
 
-        facingSide = Side.East;
-        if ((BlocksOpaque[blockWest] || BlocksOpaque[cornerBlock1]) && !BlocksOpaque[blockEast] && !BlocksOpaque[cornerBlock2])
-        {
-            facingSide = Side.East;
-        }
+        return BlockTextures.ChestSingleSide;
+    }
 
-        if ((BlocksOpaque[blockEast] || BlocksOpaque[cornerBlock2]) && !BlocksOpaque[blockWest] && !BlocksOpaque[cornerBlock1])
-        {
-            facingSide = Side.West;
-        }
+    private static int GetDoubleChestTexture(Side renderSide, Side frontFacing, bool isRightHalf)
+    {
+        bool isFront = renderSide == frontFacing;
 
-        return (side == facingSide ? TextureId + 16 : TextureId + 32) + textureOffset;
+        if (isFront)
+        {
+            return isRightHalf ? BlockTextures.ChestDoubleFrontRight : BlockTextures.ChestDoubleFrontLeft;
+        }
+        return isRightHalf ? BlockTextures.ChestDoubleBackLeft : BlockTextures.ChestDoubleBackRight;
     }
 
     public override int GetTexture(Side side) => side switch

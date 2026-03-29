@@ -8,7 +8,7 @@ internal class BlockSapling : BlockPlant
 {
     private readonly JavaRandom _random;
 
-    public BlockSapling(int i, int j) : base(i, j)
+    public BlockSapling(int id, int textureId) : base(id, textureId)
     {
         _random = new JavaRandom();
         const float halfSize = 0.4F;
@@ -36,11 +36,12 @@ internal class BlockSapling : BlockPlant
 
     public override int GetTexture(Side side, int meta)
     {
-        meta &= 3;
-        return meta switch
+        int treeType = meta & 3;
+
+        return treeType switch
         {
-            1 => 63,
-            2 => 79,
+            1 => BlockTextures.SaplingPine,
+            2 => BlockTextures.SaplingBirch,
             _ => base.GetTexture(side, meta)
         };
     }

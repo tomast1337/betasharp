@@ -9,6 +9,7 @@ public class BlockRail : Block
 {
     private readonly bool _alwaysStraight;
     public override PistonBehavior PistonBehavior => 0;
+
     public BlockRail(int id, int textureId, bool alwaysStraight) : base(id, textureId, Material.PistonBreakable)
     {
         _alwaysStraight = alwaysStraight;
@@ -50,12 +51,21 @@ public class BlockRail : Block
 
     public override int GetTexture(Side side, int meta)
     {
-        if (_alwaysStraight && Id == PoweredRail.Id && (meta & 8) == 0 || meta >= 6)
+        switch (_alwaysStraight)
         {
-            return TextureId - 16;
+            case true when Id == PoweredRail.Id:
+                {
+                    bool isPowered = (meta & 0b1000) != 0;
+                    return isPowered ? BlockTextures.PoweredRailOn : BlockTextures.PoweredRailOff;
+                }
+            case true:
+                return TextureId;
+            default:
+                {
+                    bool isCorner = meta >= 6;
+                    return isCorner ? BlockTextures.RailCorner : BlockTextures.RailStraight;
+                }
         }
-
-        return TextureId;
     }
 
     public override bool IsFullCube => false;
@@ -232,7 +242,7 @@ public class BlockRail : Block
         int railMeta = meta & 7;
 
         if ((shape == 1 && railMeta is 0 or 4 or 5) || (shape == 0 && railMeta is 1 or 2 or 3)) return false;
-        if ((meta & 8) == 0)  return false;
+        if ((meta & 8) == 0) return false;
 
         if (!level.Redstone.IsPowered(x, y, z) && !level.Redstone.IsPowered(x, y + 1, z))
         {

@@ -16,13 +16,16 @@ internal class BlockSlab : Block
         SetOpacity(255);
     }
 
-    public override int GetTexture(Side side, int meta) => meta switch
+    public override int GetTexture(Side side, int meta) => (meta, side) switch
     {
-        0 => side <= Side.Up ? 6 : 5,
-        1 => side == Side.Down ? 208 : side == Side.Up ? 176 : 192,
-        2 => 4,
-        3 => 16,
-        _ => 6
+        (0, Side.Up or Side.Down) => BlockTextures.StoneSlabTop,
+        (0, _) => BlockTextures.StoneSlabSide,
+        (1, Side.Up) => BlockTextures.SandstoneTop,
+        (1, Side.Down) => BlockTextures.SandstoneBottom,
+        (1, _) => BlockTextures.SandstoneSide,
+        (2, _) => BlockTextures.OakPlanks,
+        (3, _) => BlockTextures.Cobblestone,
+        _ => BlockTextures.StoneSlabTop
     };
 
     public override int GetTexture(Side side) => GetTexture(side, 0);

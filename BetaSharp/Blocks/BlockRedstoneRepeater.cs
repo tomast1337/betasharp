@@ -11,7 +11,7 @@ public class BlockRedstoneRepeater : Block
     private static readonly int[] s_delay = [1, 2, 3, 4];
     private readonly bool _lit;
 
-    public BlockRedstoneRepeater(int id, bool lit) : base(id, 6, Material.PistonBreakable)
+    public BlockRedstoneRepeater(int id, bool lit) : base(id, BlockTextures.StoneSlabSide, Material.PistonBreakable)
     {
         _lit = lit;
         SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 2.0F / 16.0F, 1.0F);
@@ -52,9 +52,9 @@ public class BlockRedstoneRepeater : Block
 
     public override int GetTexture(Side side, int meta) => side switch
     {
-        Side.Down => _lit ? 99 : 115,
-        Side.Up => _lit ? 147 : 131,
-        _ => 5
+        Side.Down => _lit ? BlockTextures.RedstoneTorchLit : BlockTextures.RedstoneTorchUnlit,
+        Side.Up => _lit ? BlockTextures.RepeaterTopLit : BlockTextures.RepeaterTopUnlit,
+        _ => BlockTextures.StoneSlabSide
     };
 
     public override bool IsSideVisible(IBlockReader iBlockReader, int x, int y, int z, Side side) => side != Side.Down && side != Side.Up;

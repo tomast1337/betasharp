@@ -98,7 +98,13 @@ public class BlockBed : Block
 
     public override int GetTexture(Side side, int meta)
     {
-        if (side == Side.Down) return Planks.TextureId;
+        switch (side)
+        {
+            case Side.Down:
+                return BlockTextures.OakPlanks;
+            case Side.Up:
+                return IsHeadOfBed(meta) ? BlockTextures.BedTopHead : BlockTextures.BedTopFoot;
+        }
 
         int direction = GetDirection(meta);
         Side sideFacing = Facings.BedFacings[direction][side.ToInt()];
@@ -107,17 +113,17 @@ public class BlockBed : Block
         {
             return sideFacing switch
             {
-                Side.North => TextureId + 2 + 16,
-                Side.East or Side.West => TextureId + 1 + 16,
-                _ => TextureId + 1
+                Side.North => BlockTextures.BedEndHead,
+                Side.East or Side.West => BlockTextures.BedSideHead,
+                _ => BlockTextures.BedTopHead
             };
         }
 
         return sideFacing switch
         {
-            Side.South => TextureId - 1 + 16,
-            Side.East or Side.West => TextureId + 16,
-            _ => TextureId
+            Side.South => BlockTextures.BedEndFoot,
+            Side.East or Side.West => BlockTextures.BedSideFoot,
+            _ => BlockTextures.BedTopFoot
         };
     }
 

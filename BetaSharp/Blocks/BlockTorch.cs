@@ -17,21 +17,21 @@ internal class BlockTorch : Block
 
     public override BlockRendererType GetRenderType() => BlockRendererType.Torch;
 
-    private bool canPlaceOn(IBlockReader world, int x, int y, int z) => world.ShouldSuffocate(x, y, z) || world.GetBlockId(x, y, z) == Fence.Id;
+    private bool CanPlaceOn(IBlockReader world, int x, int y, int z) => world.ShouldSuffocate(x, y, z) || world.GetBlockId(x, y, z) == Fence.Id;
 
     public override bool CanPlaceAt(CanPlaceAtContext context) =>
         context.World.Reader.ShouldSuffocate(context.X - 1, context.Y, context.Z) ||
         context.World.Reader.ShouldSuffocate(context.X + 1, context.Y, context.Z) ||
         context.World.Reader.ShouldSuffocate(context.X, context.Y, context.Z - 1) ||
         context.World.Reader.ShouldSuffocate(context.X, context.Y, context.Z + 1) ||
-        canPlaceOn(context.World.Reader, context.X, context.Y - 1, context.Z);
+        CanPlaceOn(context.World.Reader, context.X, context.Y - 1, context.Z);
 
     public override void OnPlaced(OnPlacedEvent @event)
     {
         int meta;
         switch (@event.Direction)
         {
-            case Side.Up when canPlaceOn(@event.World.Reader, @event.X, @event.Y - 1, @event.Z):
+            case Side.Up when CanPlaceOn(@event.World.Reader, @event.X, @event.Y - 1, @event.Z):
                 meta = 5;
                 break;
             case Side.North when @event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z + 1):
@@ -81,7 +81,7 @@ internal class BlockTorch : Block
         {
             @event.World.Writer.SetBlockMeta(@event.X, @event.Y, @event.Z, 4);
         }
-        else if (canPlaceOn(@event.World.Reader, @event.X, @event.Y - 1, @event.Z))
+        else if (CanPlaceOn(@event.World.Reader, @event.X, @event.Y - 1, @event.Z))
         {
             @event.World.Writer.SetBlockMeta(@event.X, @event.Y, @event.Z, 5);
         }
@@ -98,7 +98,7 @@ internal class BlockTorch : Block
                           (!@event.World.Reader.ShouldSuffocate(@event.X + 1, @event.Y, @event.Z) && meta == 2) ||
                           (!@event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z - 1) && meta == 3) ||
                           (!@event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z + 1) && meta == 4) ||
-                          (!canPlaceOn(@event.World.Reader, @event.X, @event.Y - 1, @event.Z) && meta == 5);
+                          (!CanPlaceOn(@event.World.Reader, @event.X, @event.Y - 1, @event.Z) && meta == 5);
 
         if (!shouldDrop) return;
 

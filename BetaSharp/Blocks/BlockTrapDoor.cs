@@ -11,8 +11,8 @@ internal class BlockTrapDoor : Block
     {
         const float halfWidth = 0.5F;
         const float fullHeight = 1.0F;
-        TextureId = 84;
-        if (material == Material.Metal) ++TextureId;
+
+        TextureId = material == Material.Metal ? BlockTextures.TrapdoorIron : BlockTextures.TrapdoorWood;
 
         SetBoundingBox(0.5F - halfWidth, 0.0F, 0.5F - halfWidth, 0.5F + halfWidth, fullHeight, 0.5F + halfWidth);
     }
@@ -68,10 +68,7 @@ internal class BlockTrapDoor : Block
 
     private bool UpdateState(IBlockReader worldRead, IBlockWriter worldWriter, WorldEventBroadcaster broadcaster, int x, int y, int z)
     {
-        if (Material == Material.Metal)
-        {
-            return true;
-        }
+        if (Material == Material.Metal) return true;
 
         int meta = worldRead.GetBlockMeta(x, y, z);
         worldWriter.SetBlockMeta(x, y, z, meta ^ 4);
@@ -84,17 +81,14 @@ internal class BlockTrapDoor : Block
 
     public override bool OnUse(OnUseEvent ctx) => UpdateState(ctx.World.Reader, ctx.World.Writer, ctx.World.Broadcaster, ctx.X, ctx.Y, ctx.Z);
 
-    private void SetOpen(OnTickEvent ctx, bool open)
+    private static void SetOpen(OnTickEvent ctx, bool open)
     {
         int x = ctx.X;
         int y = ctx.Y;
         int z = ctx.Z;
         int meta = ctx.World.Reader.GetBlockMeta(x, y, z);
         bool isOpen = (meta & 4) > 0;
-        if (isOpen == open)
-        {
-            return;
-        }
+        if (isOpen == open) return;
 
         ctx.World.Writer.SetBlockMeta(x, y, z, meta ^ 4);
         ctx.World.Broadcaster.WorldEvent(1003, x, y, z, 0);
@@ -102,32 +96,26 @@ internal class BlockTrapDoor : Block
 
     public override void NeighborUpdate(OnTickEvent ctx)
     {
-        if (ctx.World.IsRemote)
-        {
-            return;
-        }
+        if (ctx.World.IsRemote) return;
 
-        int meta = ctx.World.Reader.GetBlockMeta(ctx.X, ctx.Y, ctx.Z);
+        int meta = ctx.World.Reader.GetBlockMeta(ctx.X, ctx.Y, ctx.Z) & 3;
         int xPos = ctx.X;
         int zPos = ctx.Z;
-        if ((meta & 3) == 0)
-        {
-            zPos = ctx.Z + 1;
-        }
 
-        if ((meta & 3) == 1)
+        switch (meta)
         {
-            --zPos;
-        }
-
-        if ((meta & 3) == 2)
-        {
-            xPos = ctx.X + 1;
-        }
-
-        if ((meta & 3) == 3)
-        {
-            --xPos;
+            case 0:
+                zPos = ctx.Z + 1;
+                break;
+            case 1:
+                --zPos;
+                break;
+            case 2:
+                xPos = ctx.X + 1;
+                break;
+            case 3:
+                --xPos;
+                break;
         }
 
         if (!ctx.World.Reader.ShouldSuffocate(xPos, ctx.Y, zPos))
@@ -136,10 +124,7 @@ internal class BlockTrapDoor : Block
             DropStacks(new OnDropEvent(ctx.World, ctx.X, ctx.Y, ctx.Z, meta));
         }
 
-        if (Id <= 0 || !Blocks[Id]!.CanEmitRedstonePower)
-        {
-            return;
-        }
+        if (Id <= 0 || !Blocks[Id]!.CanEmitRedstonePower) return;
 
         bool isPowered = ctx.World.Redstone.IsPowered(ctx.X, ctx.Y, ctx.Z);
         SetOpen(ctx, isPowered);

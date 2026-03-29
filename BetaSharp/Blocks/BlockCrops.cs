@@ -9,9 +9,9 @@ public class BlockCrops : BlockPlant
 {
     private const float HalfWidth = 0.5F;
 
-    public BlockCrops(int i, int j) : base(i, j)
+    public BlockCrops(int id, int textureId) : base(id, textureId)
     {
-        TextureId = j;
+        TextureId = textureId;
         SetTickRandomly(true);
         SetBoundingBox(0.5F - HalfWidth, 0.0F, 0.5F - HalfWidth, 0.5F + HalfWidth, 0.25F, 0.5F + HalfWidth);
     }
@@ -85,9 +85,22 @@ public class BlockCrops : BlockPlant
 
     public override int GetTexture(Side side, int meta)
     {
-        if (meta < 0) meta = 7;
+        if (meta is < 0 or > 7)
+        {
+            meta = 7;
+        }
 
-        return TextureId + meta;
+        return meta switch
+        {
+            0 => BlockTextures.WheatStage0,
+            1 => BlockTextures.WheatStage1,
+            2 => BlockTextures.WheatStage2,
+            3 => BlockTextures.WheatStage3,
+            4 => BlockTextures.WheatStage4,
+            5 => BlockTextures.WheatStage5,
+            6 => BlockTextures.WheatStage6,
+            _ => BlockTextures.WheatStage7
+        };
     }
 
     public override BlockRendererType GetRenderType() => BlockRendererType.Crops;

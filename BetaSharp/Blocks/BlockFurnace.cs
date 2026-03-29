@@ -19,7 +19,7 @@ internal class BlockFurnace : BlockWithEntity
     public BlockFurnace(int id, bool lit) : base(id, Material.Stone)
     {
         _lit = lit;
-        TextureId = 45;
+        TextureId = BlockTextures.FurnaceSide;
     }
 
     public override int GetDroppedItemId(int blockMeta) => Furnace.Id;
@@ -136,8 +136,8 @@ internal class BlockFurnace : BlockWithEntity
 
     public override int GetTexture(Side side) => side switch
     {
-        Side.Up or Side.Down => TextureId + 17,
-        Side.South => TextureId - 1,
+        Side.Up or Side.Down => BlockTextures.FurnaceTop,
+        Side.South => BlockTextures.FurnaceFrontUnlit,
         _ => TextureId
     };
 

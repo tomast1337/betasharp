@@ -11,7 +11,7 @@ internal class BlockDispenser : BlockWithEntity
 {
     private static readonly ThreadLocal<JavaRandom> s_random = new(() => new JavaRandom());
 
-    public BlockDispenser(int id) : base(id, Material.Stone) => TextureId = 45;
+    public BlockDispenser(int id) : base(id, Material.Stone) => TextureId = BlockTextures.DispenserFront;
 
     public override int TickRate => 4;
 

@@ -11,7 +11,11 @@ internal class BlockJukeBox(int id, int textureId) : BlockWithEntity(id, texture
 {
     private static readonly ILogger<BlockJukeBox> s_logger = BetaSharp.Log.Instance.For<BlockJukeBox>();
 
-    public override int GetTexture(Side side) => TextureId + (side == Side.Up ? 1 : 0);
+    public override int GetTexture(Side side) => side switch
+    {
+        Side.Up => BlockTextures.JukeboxTop,
+        _ => BlockTextures.NoteBlock
+    };
 
     public override bool OnUse(OnUseEvent @event)
     {

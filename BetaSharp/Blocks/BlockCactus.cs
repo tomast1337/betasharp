@@ -10,20 +10,12 @@ internal class BlockCactus : Block
 
     public override void OnTick(OnTickEvent @event)
     {
-        if (!@event.World.Reader.IsAir(@event.X, @event.Y + 1, @event.Z))
-        {
-            return;
-        }
+        if (!@event.World.Reader.IsAir(@event.X, @event.Y + 1, @event.Z)) return;
 
-        int heightBelow;
-        for (heightBelow = 1; @event.World.Reader.GetBlockId(@event.X, @event.Y - heightBelow, @event.Z) == Id; ++heightBelow)
-        {
-        }
+        int heightBelow = 1;
+        while (@event.World.Reader.GetBlockId(@event.X, @event.Y - heightBelow, @event.Z) == Id) heightBelow++;
 
-        if (heightBelow >= 3)
-        {
-            return;
-        }
+        if (heightBelow >= 3) return;
 
         int growthStage = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
         if (growthStage == 15)
@@ -51,8 +43,8 @@ internal class BlockCactus : Block
 
     public override int GetTexture(Side side) => side switch
     {
-        Side.Up => TextureId - 1,
-        Side.Down => TextureId + 1,
+        Side.Up => BlockTextures.CactusTop,
+        Side.Down => BlockTextures.CactusBottom,
         _ => TextureId
     };
 

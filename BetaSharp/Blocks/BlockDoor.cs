@@ -17,10 +17,10 @@ internal class BlockDoor : Block
 
     public BlockDoor(int id, Material material) : base(id, material)
     {
-        TextureId = 97;
+        TextureId = BlockTextures.DoorWood;
         if (material == Material.Metal)
         {
-            ++TextureId;
+            TextureId = BlockTextures.DoorIron;
         }
 
         SetBoundingBox(0.5F - HalfWidth, 0.0F, 0.5F - HalfWidth, 0.5F + HalfWidth, Height, 0.5F + HalfWidth);
@@ -29,23 +29,24 @@ internal class BlockDoor : Block
 
     public override int GetTexture(Side side, int meta)
     {
-        if (side is Side.Down or Side.Up) return TextureId;
+        if (side is Side.Up or Side.Down) return TextureId;
 
         int facing = SetOpen(meta);
-        if (facing is 0 or 2 ^ (side.ToInt() <= 3))
-        {
-            return TextureId;
-        }
+        bool isDoorNorthSouth = facing is 0 or 2;
+        bool isSideNorthSouth = side is Side.North or Side.South;
 
-        int textureIndex = facing / 2 + ((side.ToInt() & 1) ^ facing);
-        textureIndex += (meta & 4) / 4;
-        int texture = TextureId - (meta & 8) * 2;
-        if ((textureIndex & 1) != 0)
-        {
-            texture = -texture;
-        }
+        if (isDoorNorthSouth != isSideNorthSouth) return TextureId;
 
-        return texture;
+
+        int flipCalculator = facing / 2 + ((side.ToInt() & 1) ^ facing);
+
+        bool isOpen = (meta & 4) != 0;
+        if (isOpen) flipCalculator += 1;
+
+        bool needsHorizontalFlip = (flipCalculator & 1) != 0;
+        bool isTopHalf = (meta & 8) != 0;
+        int faceTexture = isTopHalf ? TextureId - 16 : TextureId;
+        return needsHorizontalFlip ? -faceTexture : faceTexture;
     }
 
 
