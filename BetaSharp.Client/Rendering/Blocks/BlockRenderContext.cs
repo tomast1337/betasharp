@@ -80,18 +80,21 @@ public ref struct BlockRenderContext
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static int ApplyVariance(int hash, TextureVariance allowed, out int flipMask)
+    internal static int ApplyVariance(int hash, TextureVariance variance, out int flipMask)
     {
         flipMask = 0;
+        byte allowed = (byte)variance;
 
-        if (allowed.HasFlag(TextureVariance.FlipU) && (hash & 4) != 0) flipMask |= 1;
-        if (allowed.HasFlag(TextureVariance.FlipV) && (hash & 8) != 0) flipMask |= 2;
+        if ((allowed & (byte)TextureVariance.FlipU) != 0 && (hash & 4) != 0) flipMask |= 1;
+        if ((allowed & (byte)TextureVariance.FlipV) != 0 && (hash & 8) != 0) flipMask |= 2;
 
-        return (hash & 3) switch
+        int rot = hash & 3;
+        if (rot == 0) return 0;
+        return rot switch
         {
-            1 when allowed.HasFlag(TextureVariance.Rotate90) => 1,
-            2 when allowed.HasFlag(TextureVariance.Rotate180) => 2,
-            3 when allowed.HasFlag(TextureVariance.Rotate270) => 3,
+            1 when (allowed & (byte)TextureVariance.Rotate90) != 0 => 1,
+            2 when (allowed & (byte)TextureVariance.Rotate180) != 0 => 2,
+            3 when (allowed & (byte)TextureVariance.Rotate270) != 0 => 3,
             _ => 0
         };
     }
