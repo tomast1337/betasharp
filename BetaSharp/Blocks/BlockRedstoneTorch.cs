@@ -6,7 +6,10 @@ internal class BlockRedstoneTorch : BlockTorch
 {
     private const double VerticalOffset = 0.22F;
     private const double HorizontalOffset = 0.27F;
-    private static readonly ThreadLocal<List<RedstoneUpdateInfo>> s_torchUpdates = new(() => []);
+
+    private static readonly List<RedstoneUpdateInfo> s_torchUpdates = [];
+    private static readonly Lock _updateLock = new();
+
     private readonly bool _lit;
 
     public BlockRedstoneTorch(int id, int textureId, bool lit) : base(id, textureId)
@@ -17,25 +20,27 @@ internal class BlockRedstoneTorch : BlockTorch
 
     public override int getTexture(int side, int meta) => side == 1 ? RedstoneWire.getTexture(side, meta) : base.getTexture(side, meta);
 
-    private static bool isBurnedOut(OnTickEvent ctx, bool recordUpdate)
+    private static bool isBurnedOut(OnTickEvent ctx, bool recordUpdate, long currentTime)
     {
-        List<RedstoneUpdateInfo> updates = s_torchUpdates.Value!;
-        if (recordUpdate)
+        lock (_updateLock)
         {
-            updates.Add(new RedstoneUpdateInfo(ctx.X, ctx.Y, ctx.Z, ctx.World.GetTime()));
+            if (recordUpdate)
+            {
+                s_torchUpdates.Add(new RedstoneUpdateInfo(ctx.X, ctx.Y, ctx.Z, currentTime));
+            }
+
+            int updateCount = 0;
+
+            foreach (var updateInfo in s_torchUpdates)
+            {
+                if (updateInfo.x != ctx.X || updateInfo.y != ctx.Y || updateInfo.z != ctx.Z) continue;
+
+                ++updateCount;
+                if (updateCount >= 8) return true;
+            }
+
+            return false;
         }
-
-        int updateCount = 0;
-
-        foreach (var updateInfo in updates)
-        {
-            if (updateInfo.x != ctx.X || updateInfo.y != ctx.Y || updateInfo.z != ctx.Z) continue;
-
-            ++updateCount;
-            if (updateCount >= 8) return true;
-        }
-
-        return false;
     }
 
     public override int getTickRate() => 2;
@@ -91,11 +96,15 @@ internal class BlockRedstoneTorch : BlockTorch
         int y = @event.Y;
         int z = @event.Z;
         bool shouldTurnOff = shouldUnpower(@event);
-        List<RedstoneUpdateInfo> updates = s_torchUpdates.Value!;
 
-        while (updates.Count > 0 && @event.World.GetTime() - updates[0].updateTime > 100L)
+        long currentTime = @event.World.GetTime();
+
+        lock (_updateLock)
         {
-            updates.RemoveAt(0);
+            while (s_torchUpdates.Count > 0 && currentTime - s_torchUpdates[0].updateTime > 60L)
+            {
+                s_torchUpdates.RemoveAt(0);
+            }
         }
 
         if (_lit)
@@ -103,7 +112,8 @@ internal class BlockRedstoneTorch : BlockTorch
             if (!shouldTurnOff) return;
 
             @event.World.Writer.SetBlock(x, y, z, RedstoneTorch.id, @event.World.Reader.GetBlockMeta(x, y, z));
-            if (!isBurnedOut(@event, true)) return;
+
+            if (!isBurnedOut(@event, true, currentTime)) return;
 
             @event.World.Broadcaster.PlaySoundAtPos(x + 0.5F, y + 0.5F, z + 0.5F, "random.fizz", 0.5F, 2.6F + (Random.Shared.NextSingle() - Random.Shared.NextSingle()) * 0.8F);
 
@@ -115,9 +125,9 @@ internal class BlockRedstoneTorch : BlockTorch
                 @event.World.Broadcaster.AddParticle("smoke", particleX, particleY, particleZ, 0.0D, 0.0D, 0.0D);
             }
 
-            @event.World.TickScheduler.ScheduleBlockUpdate(x, y, z, RedstoneTorch.id, 160); // this is intentional Behavior https://minecraft.wiki/w/Redstone_Torch#Redstone_component
+            @event.World.TickScheduler.ScheduleBlockUpdate(x, y, z, RedstoneTorch.id, 160);
         }
-        else if (!shouldTurnOff && !isBurnedOut(@event, false))
+        else if (!shouldTurnOff && !isBurnedOut(@event, false, currentTime))
         {
             @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, LitRedstoneTorch.id, @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z));
         }
