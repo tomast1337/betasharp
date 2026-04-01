@@ -13,7 +13,7 @@ public class BlockRedstoneWire : Block
 
     public override int getTexture(int var1, int var2) => textureId;
 
-    public override Box? getCollisionShape(IBlockReader var1, EntityManager entities, int var2, int var3, int var4) => null;
+    public override Box? getCollisionShape(IBlockReader var1, EntityManager entities, int x, int y, int z) => null;
 
     public override bool isOpaque() => false;
 
@@ -21,393 +21,361 @@ public class BlockRedstoneWire : Block
 
     public override BlockRendererType getRenderType() => BlockRendererType.RedstoneWire;
 
-    public override int getColorMultiplier(IBlockReader var1, int var2, int var3, int var4) => 8388608;
+    public override int getColorMultiplier(IBlockReader reader, int x, int y, int z) => 8388608;
 
     public override bool canPlaceAt(CanPlaceAtContext context) => context.World.Reader.ShouldSuffocate(context.X, context.Y - 1, context.Z);
 
-    private void updateAndPropagateCurrentStrength(IWorldContext level, int x, int y, int z)
+    private void updateAndPropagateCurrentStrength(IWorldContext level, int startX, int startY, int startZ)
     {
-        HashSet<BlockPos> neighbors = [];
-        CalculateCurrentChanges(level, x, y, z, x, y, z, neighbors);
+        Queue<BlockPos> updateQueue = new();
+        HashSet<BlockPos> inQueue = [];
+        HashSet<BlockPos> blocksChanged = [];
 
-        List<BlockPos> neighborsCopy = [.. neighbors];
-        neighbors.Clear();
+        BlockPos startPos = new(startX, startY, startZ);
+        updateQueue.Enqueue(startPos);
+        inQueue.Add(startPos);
 
-        foreach (BlockPos n in neighborsCopy)
+        while (updateQueue.Count > 0)
         {
-            level.Broadcaster.NotifyNeighbors(n.x, n.y, n.z, id);
+            BlockPos current = updateQueue.Dequeue();
+            inQueue.Remove(current);
+
+            int oldMeta = level.Reader.GetBlockMeta(current.x, current.y, current.z);
+            int newMeta = CalculateIdealPower(level, current.x, current.y, current.z);
+
+            if (oldMeta == newMeta) continue;
+
+            level.Writer.SetBlockMetaWithoutNotifyingNeighbors(current.x, current.y, current.z, newMeta);
+            blocksChanged.Add(current);
+
+            foreach (BlockPos adj in GetConnectedWires(level, current.x, current.y, current.z))
+            {
+                if (inQueue.Contains(adj)) continue;
+
+                updateQueue.Enqueue(adj);
+                inQueue.Add(adj);
+            }
+        }
+
+        foreach (BlockPos pos in blocksChanged)
+        {
+            level.Broadcaster.BlockUpdateEvent(pos.x, pos.y, pos.z);
+            level.Broadcaster.SetBlocksDirty(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z);
+
+            NotifyWireNeighborsOfNeighborChange(level, pos.x, pos.y, pos.z);
         }
     }
 
-    private void CalculateCurrentChanges(IWorldContext level, int x, int y, int z, int srcX, int srcY, int srcZ, HashSet<BlockPos> neighbors)
+    private int CalculateIdealPower(IWorldContext level, int x, int y, int z)
     {
-        int oldMeta = level.Reader.GetBlockMeta(x, y, z);
-        int newMeta = 0;
-
         s_wiresProvidePower.Value = false;
         bool isPowered = level.Redstone.IsPowered(x, y, z);
         s_wiresProvidePower.Value = true;
 
-        if (isPowered)
+        if (isPowered) return 15;
+
+        int maxNeighborPower = 0;
+
+        for (int dir = 0; dir < 4; ++dir)
         {
-            newMeta = 15;
-        }
-        else
-        {
-            for (int dir = 0; dir < 4; ++dir)
+            int nx = x;
+            int nz = z;
+
+            switch (dir)
             {
-                int nx = x;
-                int nz = z;
-
-                if (dir == 0) nx = x - 1;
-                if (dir == 1) ++nx;
-                if (dir == 2) nz = z - 1;
-                if (dir == 3) ++nz;
-
-                if (nx != srcX || y != srcY || nz != srcZ)
-                {
-                    newMeta = getMaxCurrentStrength(level.Reader, nx, y, nz, newMeta);
-                }
-
-                if (level.Reader.ShouldSuffocate(nx, y, nz) && !level.Reader.ShouldSuffocate(x, y + 1, z))
-                {
-                    if (nx != srcX || y + 1 != srcY || nz != srcZ)
-                    {
-                        newMeta = getMaxCurrentStrength(level.Reader, nx, y + 1, nz, newMeta);
-                    }
-                }
-                else if (!level.Reader.ShouldSuffocate(nx, y, nz) && (nx != srcX || y - 1 != srcY || nz != srcZ))
-                {
-                    newMeta = getMaxCurrentStrength(level.Reader, nx, y - 1, nz, newMeta);
-                }
+                case 0:
+                    nx = x - 1;
+                    break;
+                case 1:
+                    ++nx;
+                    break;
+                case 2:
+                    nz = z - 1;
+                    break;
+                case 3:
+                    ++nz;
+                    break;
             }
 
-            if (newMeta > 0)
+            maxNeighborPower = getMaxCurrentStrength(level.Reader, nx, y, nz, maxNeighborPower);
+
+            if (!level.Reader.ShouldSuffocate(nx, y, nz))
             {
-                --newMeta;
+                maxNeighborPower = getMaxCurrentStrength(level.Reader, nx, y - 1, nz, maxNeighborPower);
             }
-            else
+            else if (!level.Reader.ShouldSuffocate(x, y + 1, z))
             {
-                newMeta = 0;
+                maxNeighborPower = getMaxCurrentStrength(level.Reader, nx, y + 1, nz, maxNeighborPower);
             }
         }
 
-        if (oldMeta != newMeta)
+        return maxNeighborPower > 0 ? maxNeighborPower - 1 : 0;
+    }
+
+    private IEnumerable<BlockPos> GetConnectedWires(IWorldContext level, int x, int y, int z)
+    {
+        for (int dir = 0; dir < 4; ++dir)
         {
-            level.Writer.SetBlockMetaWithoutNotifyingNeighbors(x, y, z, newMeta);
-            level.Broadcaster.BlockUpdateEvent(x, y, z);
-            level.Broadcaster.SetBlocksDirty(x, y, z, x, y, z);
+            int nx = x;
+            int nz = z;
 
-            for (int dir = 0; dir < 4; ++dir)
+            switch (dir)
             {
-                int nx = x;
-                int nz = z;
-                int ny = y - 1;
-
-                if (dir == 0) nx = x - 1;
-                if (dir == 1) ++nx;
-                if (dir == 2) nz = z - 1;
-                if (dir == 3) ++nz;
-
-                if (level.Reader.ShouldSuffocate(nx, y, nz))
-                {
-                    ny += 2;
-                }
-
-                int neighborMeta = getMaxCurrentStrength(level.Reader, nx, y, nz, -1);
-                newMeta = level.Reader.GetBlockMeta(x, y, z);
-                if (newMeta > 0)
-                {
-                    --newMeta;
-                }
-
-                if (neighborMeta >= 0 && neighborMeta != newMeta)
-                {
-                    CalculateCurrentChanges(level, nx, y, nz, x, y, z, neighbors);
-                }
-
-                neighborMeta = getMaxCurrentStrength(level.Reader, nx, ny, nz, -1);
-                newMeta = level.Reader.GetBlockMeta(x, y, z);
-                if (newMeta > 0)
-                {
-                    --newMeta;
-                }
-
-                if (neighborMeta >= 0 && neighborMeta != newMeta)
-                {
-                    CalculateCurrentChanges(level, nx, ny, nz, x, y, z, neighbors);
-                }
+                case 0:
+                    nx = x - 1;
+                    break;
+                case 1:
+                    ++nx;
+                    break;
+                case 2:
+                    nz = z - 1;
+                    break;
+                case 3:
+                    ++nz;
+                    break;
             }
 
-            if (oldMeta == 0 || newMeta == 0)
+            if (level.Reader.GetBlockId(nx, y, nz) == id) yield return new BlockPos(nx, y, nz);
+
+            if (!level.Reader.ShouldSuffocate(nx, y, nz))
             {
-                neighbors.Add(new BlockPos(x, y, z));
-                neighbors.Add(new BlockPos(x - 1, y, z));
-                neighbors.Add(new BlockPos(x + 1, y, z));
-                neighbors.Add(new BlockPos(x, y - 1, z));
-                neighbors.Add(new BlockPos(x, y + 1, z));
-                neighbors.Add(new BlockPos(x, y, z - 1));
-                neighbors.Add(new BlockPos(x, y, z + 1));
+                if (level.Reader.GetBlockId(nx, y - 1, nz) == id) yield return new BlockPos(nx, y - 1, nz);
+            }
+            else if (!level.Reader.ShouldSuffocate(x, y + 1, z))
+            {
+                if (level.Reader.GetBlockId(nx, y + 1, nz) == id) yield return new BlockPos(nx, y + 1, nz);
             }
         }
     }
 
-    private void NotifyWireNeighborsOfNeighborChange(IWorldContext level, int var2, int var3, int var4)
+    private void NotifyWireNeighborsOfNeighborChange(IWorldContext level, int x, int y, int z)
     {
-        if (level.Reader.GetBlockId(var2, var3, var4) == id)
-        {
-            level.Broadcaster.NotifyNeighbors(var2, var3, var4, id);
-            level.Broadcaster.NotifyNeighbors(var2 - 1, var3, var4, id);
-            level.Broadcaster.NotifyNeighbors(var2 + 1, var3, var4, id);
-            level.Broadcaster.NotifyNeighbors(var2, var3, var4 - 1, id);
-            level.Broadcaster.NotifyNeighbors(var2, var3, var4 + 1, id);
-            level.Broadcaster.NotifyNeighbors(var2, var3 - 1, var4, id);
-            level.Broadcaster.NotifyNeighbors(var2, var3 + 1, var4, id);
-        }
+        if (level.Reader.GetBlockId(x, y, z) != id) return;
+
+        level.Broadcaster.NotifyNeighbors(x, y, z, id);
+        level.Broadcaster.NotifyNeighbors(x - 1, y, z, id);
+        level.Broadcaster.NotifyNeighbors(x + 1, y, z, id);
+        level.Broadcaster.NotifyNeighbors(x, y, z - 1, id);
+        level.Broadcaster.NotifyNeighbors(x, y, z + 1, id);
+        level.Broadcaster.NotifyNeighbors(x, y - 1, z, id);
+        level.Broadcaster.NotifyNeighbors(x, y + 1, z, id);
     }
 
     public override void onPlaced(OnPlacedEvent @event)
     {
         base.onPlaced(@event);
-        if (!@event.World.IsRemote)
+        if (@event.World.IsRemote) return;
+
+        updateAndPropagateCurrentStrength(@event.World, @event.X, @event.Y, @event.Z);
+        @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y + 1, @event.Z, id);
+        @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y - 1, @event.Z, id);
+        NotifyWireNeighborsOfNeighborChange(@event.World, @event.X - 1, @event.Y, @event.Z);
+        NotifyWireNeighborsOfNeighborChange(@event.World, @event.X + 1, @event.Y, @event.Z);
+        NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y, @event.Z - 1);
+        NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y, @event.Z + 1);
+        if (@event.World.Reader.ShouldSuffocate(@event.X - 1, @event.Y, @event.Z))
         {
-            updateAndPropagateCurrentStrength(@event.World, @event.X, @event.Y, @event.Z);
-            @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y + 1, @event.Z, id);
-            @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y - 1, @event.Z, id);
-            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X - 1, @event.Y, @event.Z);
-            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X + 1, @event.Y, @event.Z);
-            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y, @event.Z - 1);
-            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y, @event.Z + 1);
-            if (@event.World.Reader.ShouldSuffocate(@event.X - 1, @event.Y, @event.Z))
-            {
-                NotifyWireNeighborsOfNeighborChange(@event.World, @event.X - 1, @event.Y + 1, @event.Z);
-            }
-            else
-            {
-                NotifyWireNeighborsOfNeighborChange(@event.World, @event.X - 1, @event.Y - 1, @event.Z);
-            }
+            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X - 1, @event.Y + 1, @event.Z);
+        }
+        else
+        {
+            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X - 1, @event.Y - 1, @event.Z);
+        }
 
-            if (@event.World.Reader.ShouldSuffocate(@event.X + 1, @event.Y, @event.Z))
-            {
-                NotifyWireNeighborsOfNeighborChange(@event.World, @event.X + 1, @event.Y + 1, @event.Z);
-            }
-            else
-            {
-                NotifyWireNeighborsOfNeighborChange(@event.World, @event.X + 1, @event.Y - 1, @event.Z);
-            }
+        if (@event.World.Reader.ShouldSuffocate(@event.X + 1, @event.Y, @event.Z))
+        {
+            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X + 1, @event.Y + 1, @event.Z);
+        }
+        else
+        {
+            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X + 1, @event.Y - 1, @event.Z);
+        }
 
-            if (@event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z - 1))
-            {
-                NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y + 1, @event.Z - 1);
-            }
-            else
-            {
-                NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y - 1, @event.Z - 1);
-            }
+        if (@event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z - 1))
+        {
+            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y + 1, @event.Z - 1);
+        }
+        else
+        {
+            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y - 1, @event.Z - 1);
+        }
 
-            if (@event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z + 1))
-            {
-                NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y + 1, @event.Z + 1);
-            }
-            else
-            {
-                NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y - 1, @event.Z + 1);
-            }
+        if (@event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z + 1))
+        {
+            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y + 1, @event.Z + 1);
+        }
+        else
+        {
+            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y - 1, @event.Z + 1);
         }
     }
 
     public override void onBreak(OnBreakEvent @event)
     {
         base.onBreak(@event);
-        if (!@event.World.IsRemote)
+        if (@event.World.IsRemote) return;
+
+        @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y + 1, @event.Z, id);
+        @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y - 1, @event.Z, id);
+        updateAndPropagateCurrentStrength(@event.World, @event.X, @event.Y, @event.Z);
+        NotifyWireNeighborsOfNeighborChange(@event.World, @event.X - 1, @event.Y, @event.Z);
+        NotifyWireNeighborsOfNeighborChange(@event.World, @event.X + 1, @event.Y, @event.Z);
+        NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y, @event.Z - 1);
+        NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y, @event.Z + 1);
+        if (@event.World.Reader.ShouldSuffocate(@event.X - 1, @event.Y, @event.Z))
         {
-            @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y + 1, @event.Z, id);
-            @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y - 1, @event.Z, id);
-            updateAndPropagateCurrentStrength(@event.World, @event.X, @event.Y, @event.Z);
-            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X - 1, @event.Y, @event.Z);
-            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X + 1, @event.Y, @event.Z);
-            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y, @event.Z - 1);
-            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y, @event.Z + 1);
-            if (@event.World.Reader.ShouldSuffocate(@event.X - 1, @event.Y, @event.Z))
-            {
-                NotifyWireNeighborsOfNeighborChange(@event.World, @event.X - 1, @event.Y + 1, @event.Z);
-            }
-            else
-            {
-                NotifyWireNeighborsOfNeighborChange(@event.World, @event.X - 1, @event.Y - 1, @event.Z);
-            }
+            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X - 1, @event.Y + 1, @event.Z);
+        }
+        else
+        {
+            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X - 1, @event.Y - 1, @event.Z);
+        }
 
-            if (@event.World.Reader.ShouldSuffocate(@event.X + 1, @event.Y, @event.Z))
-            {
-                NotifyWireNeighborsOfNeighborChange(@event.World, @event.X + 1, @event.Y + 1, @event.Z);
-            }
-            else
-            {
-                NotifyWireNeighborsOfNeighborChange(@event.World, @event.X + 1, @event.Y - 1, @event.Z);
-            }
+        if (@event.World.Reader.ShouldSuffocate(@event.X + 1, @event.Y, @event.Z))
+        {
+            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X + 1, @event.Y + 1, @event.Z);
+        }
+        else
+        {
+            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X + 1, @event.Y - 1, @event.Z);
+        }
 
-            if (@event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z - 1))
-            {
-                NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y + 1, @event.Z - 1);
-            }
-            else
-            {
-                NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y - 1, @event.Z - 1);
-            }
+        if (@event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z - 1))
+        {
+            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y + 1, @event.Z - 1);
+        }
+        else
+        {
+            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y - 1, @event.Z - 1);
+        }
 
-            if (@event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z + 1))
-            {
-                NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y + 1, @event.Z + 1);
-            }
-            else
-            {
-                NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y - 1, @event.Z + 1);
-            }
+        if (@event.World.Reader.ShouldSuffocate(@event.X, @event.Y, @event.Z + 1))
+        {
+            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y + 1, @event.Z + 1);
+        }
+        else
+        {
+            NotifyWireNeighborsOfNeighborChange(@event.World, @event.X, @event.Y - 1, @event.Z + 1);
         }
     }
 
-    private int getMaxCurrentStrength(IBlockReader var1, int var2, int var3, int var4, int var5)
+    private int getMaxCurrentStrength(IBlockReader reader, int x, int y, int z, int power)
     {
-        if (var1.GetBlockId(var2, var3, var4) != id)
-        {
-            return var5;
-        }
-
-        int var6 = var1.GetBlockMeta(var2, var3, var4);
-        return var6 > var5 ? var6 : var5;
+        if (reader.GetBlockId(x, y, z) != id) return power;
+        int currentStrength = reader.GetBlockMeta(x, y, z);
+        return currentStrength > power ? currentStrength : power;
     }
 
     public override void neighborUpdate(OnTickEvent @event)
     {
-        if (!@event.World.IsRemote)
-        {
-            int var6 = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
-            bool var7 = canPlaceAt(new CanPlaceAtContext(@event.World, 0, @event.X, @event.Y, @event.Z));
-            if (!var7)
-            {
-                dropStacks(new OnDropEvent(@event.World, @event.X, @event.Y, @event.Z, var6));
-                @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
-            }
-            else
-            {
-                updateAndPropagateCurrentStrength(@event.World, @event.X, @event.Y, @event.Z);
-            }
+        if (@event.World.IsRemote) return;
 
-            base.neighborUpdate(@event);
+        int meta = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
+        bool var7 = canPlaceAt(new CanPlaceAtContext(@event.World, 0, @event.X, @event.Y, @event.Z));
+        if (!var7)
+        {
+            dropStacks(new OnDropEvent(@event.World, @event.X, @event.Y, @event.Z, meta));
+            @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
         }
+        else
+        {
+            updateAndPropagateCurrentStrength(@event.World, @event.X, @event.Y, @event.Z);
+        }
+
+        base.neighborUpdate(@event);
     }
 
     public override int getDroppedItemId(int var1) => Item.Redstone.id;
 
-    public override bool isStrongPoweringSide(IBlockReader var1, int var2, int var3, int var4, int var5) => !s_wiresProvidePower.Value ? false : isPoweringSide(var1, var2, var3, var4, var5);
+    public override bool isStrongPoweringSide(IBlockReader reader, int x, int y, int z, int side) => s_wiresProvidePower.Value && isPoweringSide(reader, x, y, z, side);
 
-    public override bool isPoweringSide(IBlockReader var1, int var2, int var3, int var4, int var5)
+    public override bool isPoweringSide(IBlockReader reader, int x, int y, int z, int side)
     {
-        if (!s_wiresProvidePower.Value)
+        if (!s_wiresProvidePower.Value) return false;
+        if (reader.GetBlockMeta(x, y, z) == 0) return false;
+        if (side == 1) return true;
+
+        bool var6 = isPowerProviderOrWire(reader, x - 1, y, z, 1) || (!reader.ShouldSuffocate(x - 1, y, z) && isPowerProviderOrWire(reader, x - 1, y - 1, z, -1));
+        bool var7 = isPowerProviderOrWire(reader, x + 1, y, z, 3) || (!reader.ShouldSuffocate(x + 1, y, z) && isPowerProviderOrWire(reader, x + 1, y - 1, z, -1));
+        bool var8 = isPowerProviderOrWire(reader, x, y, z - 1, 2) || (!reader.ShouldSuffocate(x, y, z - 1) && isPowerProviderOrWire(reader, x, y - 1, z - 1, -1));
+        bool var9 = isPowerProviderOrWire(reader, x, y, z + 1, 0) || (!reader.ShouldSuffocate(x, y, z + 1) && isPowerProviderOrWire(reader, x, y - 1, z + 1, -1));
+        if (reader.ShouldSuffocate(x, y + 1, z))
         {
-            return false;
+            return !var8 && !var7 && !var6 && !var9 && side is >= 2 and <= 5 ||
+                   side == 2 && var8 && !var6 && !var7 ||
+                   side == 3 && var9 && !var6 && !var7 ||
+                   side == 4 && var6 && !var8 && !var9 ||
+                   side == 5 && var7 && !var8 && !var9;
         }
 
-        if (var1.GetBlockMeta(var2, var3, var4) == 0)
+        if (reader.ShouldSuffocate(x - 1, y, z) && isPowerProviderOrWire(reader, x - 1, y + 1, z, -1))
         {
-            return false;
+            var6 = true;
         }
 
-        if (var5 == 1)
+        if (reader.ShouldSuffocate(x + 1, y, z) && isPowerProviderOrWire(reader, x + 1, y + 1, z, -1))
         {
-            return true;
+            var7 = true;
         }
 
-        bool var6 = isPowerProviderOrWire(var1, var2 - 1, var3, var4, 1) || (!var1.ShouldSuffocate(var2 - 1, var3, var4) && isPowerProviderOrWire(var1, var2 - 1, var3 - 1, var4, -1));
-        bool var7 = isPowerProviderOrWire(var1, var2 + 1, var3, var4, 3) || (!var1.ShouldSuffocate(var2 + 1, var3, var4) && isPowerProviderOrWire(var1, var2 + 1, var3 - 1, var4, -1));
-        bool var8 = isPowerProviderOrWire(var1, var2, var3, var4 - 1, 2) || (!var1.ShouldSuffocate(var2, var3, var4 - 1) && isPowerProviderOrWire(var1, var2, var3 - 1, var4 - 1, -1));
-        bool var9 = isPowerProviderOrWire(var1, var2, var3, var4 + 1, 0) || (!var1.ShouldSuffocate(var2, var3, var4 + 1) && isPowerProviderOrWire(var1, var2, var3 - 1, var4 + 1, -1));
-        if (!var1.ShouldSuffocate(var2, var3 + 1, var4))
+        if (reader.ShouldSuffocate(x, y, z - 1) && isPowerProviderOrWire(reader, x, y + 1, z - 1, -1))
         {
-            if (var1.ShouldSuffocate(var2 - 1, var3, var4) && isPowerProviderOrWire(var1, var2 - 1, var3 + 1, var4, -1))
-            {
-                var6 = true;
-            }
-
-            if (var1.ShouldSuffocate(var2 + 1, var3, var4) && isPowerProviderOrWire(var1, var2 + 1, var3 + 1, var4, -1))
-            {
-                var7 = true;
-            }
-
-            if (var1.ShouldSuffocate(var2, var3, var4 - 1) && isPowerProviderOrWire(var1, var2, var3 + 1, var4 - 1, -1))
-            {
-                var8 = true;
-            }
-
-            if (var1.ShouldSuffocate(var2, var3, var4 + 1) && isPowerProviderOrWire(var1, var2, var3 + 1, var4 + 1, -1))
-            {
-                var9 = true;
-            }
+            var8 = true;
         }
 
-        return !var8 && !var7 && !var6 && !var9 && var5 >= 2 && var5 <= 5 ? true :
-            var5 == 2 && var8 && !var6 && !var7 ? true :
-            var5 == 3 && var9 && !var6 && !var7 ? true :
-            var5 == 4 && var6 && !var8 && !var9 ? true : var5 == 5 && var7 && !var8 && !var9;
+        if (reader.ShouldSuffocate(x, y, z + 1) && isPowerProviderOrWire(reader, x, y + 1, z + 1, -1))
+        {
+            var9 = true;
+        }
+
+        return !var8 && !var7 && !var6 && !var9 && side is >= 2 and <= 5 ||
+               side == 2 && var8 && !var6 && !var7 ||
+               side == 3 && var9 && !var6 && !var7 ||
+               side == 4 && var6 && !var8 && !var9 ||
+               side == 5 && var7 && !var8 && !var9;
     }
 
     public override bool canEmitRedstonePower() => s_wiresProvidePower.Value;
 
     public override void randomDisplayTick(OnTickEvent @event)
     {
-        int var6 = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
-        if (var6 > 0)
+        int meta = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
+        if (meta <= 0) return;
+
+        double x = @event.X + 0.5D + (@event.World.Random.NextFloat() - 0.5D) * 0.2D;
+        double y = @event.Y + 1.0F / 16.0F;
+        double z = @event.Z + 0.5D + (@event.World.Random.NextFloat() - 0.5D) * 0.2D;
+        float var13 = meta / 15.0F;
+        float xVel = var13 * 0.6F + 0.4F;
+        if (meta == 0)
         {
-            double x = @event.X + 0.5D + (@event.World.Random.NextFloat() - 0.5D) * 0.2D;
-            double y = @event.Y + 1.0F / 16.0F;
-            double z = @event.Z + 0.5D + (@event.World.Random.NextFloat() - 0.5D) * 0.2D;
-            float var13 = var6 / 15.0F;
-            float xVel = var13 * 0.6F + 0.4F;
-            if (var6 == 0)
-            {
-                xVel = 0.0F;
-            }
-
-            float yVle = var13 * var13 * 0.7F - 0.5F;
-            float zVel = var13 * var13 * 0.6F - 0.7F;
-            if (yVle < 0.0F)
-            {
-                yVle = 0.0F;
-            }
-
-            if (zVel < 0.0F)
-            {
-                zVel = 0.0F;
-            }
-
-            @event.World.Broadcaster.AddParticle("reddust", x, y, z, xVel, yVle, zVel);
+            xVel = 0.0F;
         }
+
+        float yVle = var13 * var13 * 0.7F - 0.5F;
+        float zVel = var13 * var13 * 0.6F - 0.7F;
+        if (yVle < 0.0F)
+        {
+            yVle = 0.0F;
+        }
+
+        if (zVel < 0.0F)
+        {
+            zVel = 0.0F;
+        }
+
+        @event.World.Broadcaster.AddParticle("reddust", x, y, z, xVel, yVle, zVel);
     }
 
-    public static bool isPowerProviderOrWire(IBlockReader var0, int var1, int var2, int var3, int var4)
+    public static bool isPowerProviderOrWire(IBlockReader reader, int x, int y, int z, int var4)
     {
-        int var5 = var0.GetBlockId(var1, var2, var3);
-        if (var5 == RedstoneWire.id)
-        {
-            return true;
-        }
+        int blockId = reader.GetBlockId(x, y, z);
+        if (blockId == RedstoneWire.id) return true;
+        if (blockId == 0) return false;
+        if (Blocks[blockId].canEmitRedstonePower()) return true;
+        if (blockId != Repeater.id && blockId != PoweredRepeater.id) return false;
 
-        if (var5 == 0)
-        {
-            return false;
-        }
-
-        if (Blocks[var5].canEmitRedstonePower())
-        {
-            return true;
-        }
-
-        if (var5 != Repeater.id && var5 != PoweredRepeater.id)
-        {
-            return false;
-        }
-
-        int var6 = var0.GetBlockMeta(var1, var2, var3);
-        return var4 == Facings.OPPOSITE[var6 & 3];
+        int meta = reader.GetBlockMeta(x, y, z);
+        return var4 == Facings.OPPOSITE[meta & 3];
     }
 }
