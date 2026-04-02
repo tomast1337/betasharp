@@ -125,7 +125,8 @@ internal class BlockRedstoneTorch : BlockTorch
                 @event.World.Broadcaster.AddParticle("smoke", particleX, particleY, particleZ, 0.0D, 0.0D, 0.0D);
             }
 
-            @event.World.TickScheduler.ScheduleBlockUpdate(x, y, z, RedstoneTorch.id, 160);
+            int spatialBias = (x + y + z) % 3;
+            @event.World.TickScheduler.ScheduleBlockUpdate(x, y, z, RedstoneTorch.id, 160 + spatialBias);
         }
         else if (!shouldTurnOff && !isBurnedOut(@event, false, currentTime))
         {
