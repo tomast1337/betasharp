@@ -58,23 +58,10 @@ internal class BlockDispenser : BlockWithEntity
         bool isEastOpaque = BlocksOpaque[reader.GetBlockId(x + 1, y, z)];
 
         byte direction = 3;
-        if (isNorthOpaque && !isSouthOpaque)
-        {
-            direction = 3;
-        }
-        else if (isSouthOpaque && !isNorthOpaque)
-        {
-            direction = 2;
-        }
-
-        if (isWestOpaque && !isEastOpaque)
-        {
-            direction = 5;
-        }
-        else if (isEastOpaque && !isWestOpaque)
-        {
-            direction = 4;
-        }
+        if (isNorthOpaque && !isSouthOpaque) direction = 3;
+        else if (isSouthOpaque && !isNorthOpaque) direction = 2;
+        if (isWestOpaque && !isEastOpaque) direction = 5;
+        else if (isEastOpaque && !isWestOpaque) direction = 4;
 
         @event.World.Writer.SetBlockMeta(x, y, z, direction);
     }
@@ -82,23 +69,22 @@ internal class BlockDispenser : BlockWithEntity
     public override int getTextureId(IBlockReader iBlockReader, int x, int y, int z, int side)
     {
         if (side is 1 or 0) return textureId + 17;
-
         int meta = iBlockReader.GetBlockMeta(x, y, z);
         return side != meta ? textureId : textureId + 1;
     }
 
-    public override int getTexture(int side) => side == 1 ? textureId + 17 : side == 0 ? textureId + 17 : side == 3 ? textureId + 1 : textureId;
+    public override int getTexture(int side) => side switch
+    {
+        1 or 0 => textureId + 17,
+        3 => textureId + 1,
+        _ => textureId
+    };
 
     public override bool onUse(OnUseEvent @event)
     {
         if (@event.World.IsRemote) return true;
-
         BlockEntityDispenser? dispenser = @event.World.Entities.GetBlockEntity<BlockEntityDispenser>(@event.X, @event.Y, @event.Z);
-        if (dispenser != null)
-        {
-            @event.Player.openDispenserScreen(dispenser);
-        }
-
+        if (dispenser != null) @event.Player.openDispenserScreen(dispenser);
         return true;
     }
 
@@ -181,12 +167,15 @@ internal class BlockDispenser : BlockWithEntity
 
     public override void neighborUpdate(OnTickEvent @event)
     {
+        bool emits = @event.BlockId > 0 && Blocks[@event.BlockId].canEmitRedstonePower();
         bool isPowered = @event.World.Redstone.IsPowered(@event.X, @event.Y, @event.Z) ||
                          @event.World.Redstone.IsPowered(@event.X, @event.Y + 1, @event.Z);
 
-        if (isPowered)
+        Console.WriteLine($"[Dispenser Check] Triggered By ID: {@event.BlockId} | Emits Power: {emits} | Grid Powered: {isPowered}");
 
-            @event.World.TickScheduler.ScheduleBlockUpdate(@event.X, @event.Y, @event.Z, id, getTickRate());
+        if (@event.BlockId <= 0 || !Blocks[@event.BlockId].canEmitRedstonePower()) return;
+
+        if (isPowered) @event.World.TickScheduler.ScheduleBlockUpdate(@event.X, @event.Y, @event.Z, id, getTickRate());
     }
 
     public override void onTick(OnTickEvent @event)
