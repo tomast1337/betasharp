@@ -144,80 +144,82 @@ public class RedstoneWireRenderer : IBlockRenderer
         ctx.Tess.addVertexWithUV(renderMinX, groundY, renderMaxZ, u4, v4 + shroudVOffset);
 
         // --- 6. Render Slopes ---
-        if (!ctx.BlockReader.ShouldSuffocate(pos.x, pos.y + 1, pos.z))
+        if (ctx.BlockReader.ShouldSuffocate(pos.x, pos.y + 1, pos.z)) return true;
+
+        // Reset to the straight texture variant for slopes
+        minU = (texU + 16) / 256.0F;
+        maxU = (texU + 16 + 15.99F) / 256.0F;
+        minV = texV / 256.0F;
+        maxV = (texV + 15.99F) / 256.0F;
+
+        float slopeHeight = pos.y + 1.021875F;
+
+        // West Slope
+        if (ctx.BlockReader.ShouldSuffocate(pos.x - 1, pos.y, pos.z) &&
+            ctx.BlockReader.GetBlockId(pos.x - 1, pos.y + 1, pos.z) == block.id)
         {
-            // Reset to the straight texture variant for slopes
-            minU = (texU + 16) / 256.0F;
-            maxU = (texU + 16 + 15.99F) / 256.0F;
-            float slopeHeight = pos.y + 1.021875F;
+            ctx.Tess.setColorOpaque_F(luminance * r, luminance * g, luminance * b);
+            ctx.Tess.addVertexWithUV(pos.x + 0.015625f, slopeHeight, pos.z + 1, maxU, minV);
+            ctx.Tess.addVertexWithUV(pos.x + 0.015625f, pos.y, pos.z + 1, minU, minV);
+            ctx.Tess.addVertexWithUV(pos.x + 0.015625f, pos.y, pos.z + 0, minU, maxV);
+            ctx.Tess.addVertexWithUV(pos.x + 0.015625f, slopeHeight, pos.z + 0, maxU, maxV);
 
-            // West Slope
-            if (ctx.BlockReader.ShouldSuffocate(pos.x - 1, pos.y, pos.z) &&
-                ctx.BlockReader.GetBlockId(pos.x - 1, pos.y + 1, pos.z) == block.id)
-            {
-                ctx.Tess.setColorOpaque_F(luminance * r, luminance * g, luminance * b);
-                ctx.Tess.addVertexWithUV(pos.x + 0.015625f, slopeHeight, pos.z + 1, maxU, minV);
-                ctx.Tess.addVertexWithUV(pos.x + 0.015625f, pos.y, pos.z + 1, minU, minV);
-                ctx.Tess.addVertexWithUV(pos.x + 0.015625f, pos.y, pos.z + 0, minU, maxV);
-                ctx.Tess.addVertexWithUV(pos.x + 0.015625f, slopeHeight, pos.z + 0, maxU, maxV);
+            ctx.Tess.setColorOpaque_F(luminance, luminance, luminance);
+            ctx.Tess.addVertexWithUV(pos.x + 0.015625f, slopeHeight, pos.z + 1, maxU, minV + shroudVOffset);
+            ctx.Tess.addVertexWithUV(pos.x + 0.015625f, pos.y, pos.z + 1, minU, minV + shroudVOffset);
+            ctx.Tess.addVertexWithUV(pos.x + 0.015625f, pos.y, pos.z + 0, minU, maxV + shroudVOffset);
+            ctx.Tess.addVertexWithUV(pos.x + 0.015625f, slopeHeight, pos.z + 0, maxU, maxV + shroudVOffset);
+        }
 
-                ctx.Tess.setColorOpaque_F(luminance, luminance, luminance);
-                ctx.Tess.addVertexWithUV(pos.x + 0.015625f, slopeHeight, pos.z + 1, maxU, minV + shroudVOffset);
-                ctx.Tess.addVertexWithUV(pos.x + 0.015625f, pos.y, pos.z + 1, minU, minV + shroudVOffset);
-                ctx.Tess.addVertexWithUV(pos.x + 0.015625f, pos.y, pos.z + 0, minU, maxV + shroudVOffset);
-                ctx.Tess.addVertexWithUV(pos.x + 0.015625f, slopeHeight, pos.z + 0, maxU, maxV + shroudVOffset);
-            }
+        // East Slope
+        if (ctx.BlockReader.ShouldSuffocate(pos.x + 1, pos.y, pos.z) &&
+            ctx.BlockReader.GetBlockId(pos.x + 1, pos.y + 1, pos.z) == block.id)
+        {
+            ctx.Tess.setColorOpaque_F(luminance * r, luminance * g, luminance * b);
+            ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, pos.y, pos.z + 1, minU, maxV);
+            ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, slopeHeight, pos.z + 1, maxU, maxV);
+            ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, slopeHeight, pos.z + 0, maxU, minV);
+            ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, pos.y, pos.z + 0, minU, minV);
 
-            // East Slope
-            if (ctx.BlockReader.ShouldSuffocate(pos.x + 1, pos.y, pos.z) &&
-                ctx.BlockReader.GetBlockId(pos.x + 1, pos.y + 1, pos.z) == block.id)
-            {
-                ctx.Tess.setColorOpaque_F(luminance * r, luminance * g, luminance * b);
-                ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, pos.y, pos.z + 1, minU, maxV);
-                ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, slopeHeight, pos.z + 1, maxU, maxV);
-                ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, slopeHeight, pos.z + 0, maxU, minV);
-                ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, pos.y, pos.z + 0, minU, minV);
+            ctx.Tess.setColorOpaque_F(luminance, luminance, luminance);
+            ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, pos.y, pos.z + 1, minU, maxV + shroudVOffset);
+            ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, slopeHeight, pos.z + 1, maxU, maxV + shroudVOffset);
+            ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, slopeHeight, pos.z + 0, maxU, minV + shroudVOffset);
+            ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, pos.y, pos.z + 0, minU, minV + shroudVOffset);
+        }
 
-                ctx.Tess.setColorOpaque_F(luminance, luminance, luminance);
-                ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, pos.y, pos.z + 1, minU, maxV + shroudVOffset);
-                ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, slopeHeight, pos.z + 1, maxU, maxV + shroudVOffset);
-                ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, slopeHeight, pos.z + 0, maxU, minV + shroudVOffset);
-                ctx.Tess.addVertexWithUV(pos.x + 1 - 0.015625f, pos.y, pos.z + 0, minU, minV + shroudVOffset);
-            }
+        // North Slope
+        if (ctx.BlockReader.ShouldSuffocate(pos.x, pos.y, pos.z - 1) &&
+            ctx.BlockReader.GetBlockId(pos.x, pos.y + 1, pos.z - 1) == block.id)
+        {
+            ctx.Tess.setColorOpaque_F(luminance * r, luminance * g, luminance * b);
+            ctx.Tess.addVertexWithUV(pos.x + 1, pos.y, pos.z + 0.015625f, minU, maxV);
+            ctx.Tess.addVertexWithUV(pos.x + 1, slopeHeight, pos.z + 0.015625f, maxU, maxV);
+            ctx.Tess.addVertexWithUV(pos.x + 0, slopeHeight, pos.z + 0.015625f, maxU, minV);
+            ctx.Tess.addVertexWithUV(pos.x + 0, pos.y, pos.z + 0.015625f, minU, minV);
 
-            // North Slope
-            if (ctx.BlockReader.ShouldSuffocate(pos.x, pos.y, pos.z - 1) &&
-                ctx.BlockReader.GetBlockId(pos.x, pos.y + 1, pos.z - 1) == block.id)
-            {
-                ctx.Tess.setColorOpaque_F(luminance * r, luminance * g, luminance * b);
-                ctx.Tess.addVertexWithUV(pos.x + 1, pos.y, pos.z + 0.015625f, minU, maxV);
-                ctx.Tess.addVertexWithUV(pos.x + 1, slopeHeight, pos.z + 0.015625f, maxU, maxV);
-                ctx.Tess.addVertexWithUV(pos.x + 0, slopeHeight, pos.z + 0.015625f, maxU, minV);
-                ctx.Tess.addVertexWithUV(pos.x + 0, pos.y, pos.z + 0.015625f, minU, minV);
+            ctx.Tess.setColorOpaque_F(luminance, luminance, luminance);
+            ctx.Tess.addVertexWithUV(pos.x + 1, pos.y, pos.z + 0.015625f, minU, maxV + shroudVOffset);
+            ctx.Tess.addVertexWithUV(pos.x + 1, slopeHeight, pos.z + 0.015625f, maxU, maxV + shroudVOffset);
+            ctx.Tess.addVertexWithUV(pos.x + 0, slopeHeight, pos.z + 0.015625f, maxU, minV + shroudVOffset);
+            ctx.Tess.addVertexWithUV(pos.x + 0, pos.y, pos.z + 0.015625f, minU, minV + shroudVOffset);
+        }
 
-                ctx.Tess.setColorOpaque_F(luminance, luminance, luminance);
-                ctx.Tess.addVertexWithUV(pos.x + 1, pos.y, pos.z + 0.015625f, minU, maxV + shroudVOffset);
-                ctx.Tess.addVertexWithUV(pos.x + 1, slopeHeight, pos.z + 0.015625f, maxU, maxV + shroudVOffset);
-                ctx.Tess.addVertexWithUV(pos.x + 0, slopeHeight, pos.z + 0.015625f, maxU, minV + shroudVOffset);
-                ctx.Tess.addVertexWithUV(pos.x + 0, pos.y, pos.z + 0.015625f, minU, minV + shroudVOffset);
-            }
+        // South Slope
+        if (ctx.BlockReader.ShouldSuffocate(pos.x, pos.y, pos.z + 1) &&
+            ctx.BlockReader.GetBlockId(pos.x, pos.y + 1, pos.z + 1) == block.id)
+        {
+            ctx.Tess.setColorOpaque_F(luminance * r, luminance * g, luminance * b);
+            ctx.Tess.addVertexWithUV(pos.x + 1, slopeHeight, pos.z + 1 - 0.015625f, maxU, minV);
+            ctx.Tess.addVertexWithUV(pos.x + 1, pos.y, pos.z + 1 - 0.015625f, minU, minV);
+            ctx.Tess.addVertexWithUV(pos.x + 0, pos.y, pos.z + 1 - 0.015625f, minU, maxV);
+            ctx.Tess.addVertexWithUV(pos.x + 0, slopeHeight, pos.z + 1 - 0.015625f, maxU, maxV);
 
-            // South Slope
-            if (ctx.BlockReader.ShouldSuffocate(pos.x, pos.y, pos.z + 1) &&
-                ctx.BlockReader.GetBlockId(pos.x, pos.y + 1, pos.z + 1) == block.id)
-            {
-                ctx.Tess.setColorOpaque_F(luminance * r, luminance * g, luminance * b);
-                ctx.Tess.addVertexWithUV(pos.x + 1, slopeHeight, pos.z + 1 - 0.015625f, maxU, minV);
-                ctx.Tess.addVertexWithUV(pos.x + 1, pos.y, pos.z + 1 - 0.015625f, minU, minV);
-                ctx.Tess.addVertexWithUV(pos.x + 0, pos.y, pos.z + 1 - 0.015625f, minU, maxV);
-                ctx.Tess.addVertexWithUV(pos.x + 0, slopeHeight, pos.z + 1 - 0.015625f, maxU, maxV);
-
-                ctx.Tess.setColorOpaque_F(luminance, luminance, luminance);
-                ctx.Tess.addVertexWithUV(pos.x + 1, slopeHeight, pos.z + 1 - 0.015625f, maxU, minV + shroudVOffset);
-                ctx.Tess.addVertexWithUV(pos.x + 1, pos.y, pos.z + 1 - 0.015625f, minU, minV + shroudVOffset);
-                ctx.Tess.addVertexWithUV(pos.x + 0, pos.y, pos.z + 1 - 0.015625f, minU, maxV + shroudVOffset);
-                ctx.Tess.addVertexWithUV(pos.x + 0, slopeHeight, pos.z + 1 - 0.015625f, maxU, maxV + shroudVOffset);
-            }
+            ctx.Tess.setColorOpaque_F(luminance, luminance, luminance);
+            ctx.Tess.addVertexWithUV(pos.x + 1, slopeHeight, pos.z + 1 - 0.015625f, maxU, minV + shroudVOffset);
+            ctx.Tess.addVertexWithUV(pos.x + 1, pos.y, pos.z + 1 - 0.015625f, minU, minV + shroudVOffset);
+            ctx.Tess.addVertexWithUV(pos.x + 0, pos.y, pos.z + 1 - 0.015625f, minU, maxV + shroudVOffset);
+            ctx.Tess.addVertexWithUV(pos.x + 0, slopeHeight, pos.z + 1 - 0.015625f, maxU, maxV + shroudVOffset);
         }
 
         return true;
