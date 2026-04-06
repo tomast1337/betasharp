@@ -15,14 +15,14 @@ public class FluidsRenderer : IBlockRenderer
         float tintB = (colorMultiplier & 255) / 255.0F;
 
         // Determine which faces are actually visible to the player
-        bool isTopVisible = block.isSideVisible(ctx.BlockReader, pos.x, pos.y + 1, pos.z, 1);
+        bool isTopVisible = block.isSideVisible(ctx.BlockReader, pos.x, pos.y + 1, pos.z, Side.Up);
         bool isBottomVisible = block.isSideVisible(ctx.BlockReader, pos.x, pos.y - 1, pos.z, 0);
         bool[] sideVisible =
         [
-            block.isSideVisible(ctx.BlockReader, pos.x, pos.y, pos.z - 1, 2), // North
-            block.isSideVisible(ctx.BlockReader, pos.x, pos.y, pos.z + 1, 3), // South
-            block.isSideVisible(ctx.BlockReader, pos.x - 1, pos.y, pos.z, 4), // West
-            block.isSideVisible(ctx.BlockReader, pos.x + 1, pos.y, pos.z, 5) // East
+            block.isSideVisible(ctx.BlockReader, pos.x, pos.y, pos.z - 1, Side.North),
+            block.isSideVisible(ctx.BlockReader, pos.x, pos.y, pos.z + 1, Side.South),
+            block.isSideVisible(ctx.BlockReader, pos.x - 1, pos.y, pos.z, Side.West),
+            block.isSideVisible(ctx.BlockReader, pos.x + 1, pos.y, pos.z, Side.East)
         ];
 
         // Fast exit if completely surrounded
@@ -35,10 +35,10 @@ public class FluidsRenderer : IBlockRenderer
         bool hasRendered = false;
 
         // Directional shading
-        float lightBottom = 0.5F;
-        float lightTop = 1.0F;
-        float lightZ = 0.8F; // North/South
-        float lightX = 0.6F; // East/West
+        const float lightBottom = 0.5F;
+        const float lightTop = 1.0F;
+        const float lightZ = 0.8F; // North/South
+        const float lightX = 0.6F; // East/West
 
         Material material = block.material;
         int meta = ctx.BlockReader.GetBlockMeta(pos.x, pos.y, pos.z);
@@ -53,13 +53,13 @@ public class FluidsRenderer : IBlockRenderer
         if (ctx.RenderAllFaces || isTopVisible)
         {
             hasRendered = true;
-            int textureId = block.getTexture(1, meta);
+            int textureId = block.getTexture(Side.Up, meta);
             float flowAngle = (float)BlockFluid.getFlowingAngle(ctx.BlockReader, pos.x, pos.y, pos.z, material);
 
             // If flowing, switch to the flowing texture variant
             if (flowAngle > -999.0F)
             {
-                textureId = block.getTexture(2, meta);
+                textureId = block.getTexture(Side.North, meta);
             }
 
             int texU = (textureId & 15) << 4;
@@ -124,7 +124,7 @@ public class FluidsRenderer : IBlockRenderer
             if (side == 2) adjX = pos.x - 1; // West
             if (side == 3) adjX = pos.x + 1; // East
 
-            int textureId = block.getTexture(side + 2, meta);
+            int textureId = block.getTexture((side + 2).ToSide(), meta);
             int texU = (textureId & 15) << 4;
             int texV = textureId & 240;
 
