@@ -66,14 +66,14 @@ internal class BlockDispenser : BlockWithEntity
         @event.World.Writer.SetBlockMeta(x, y, z, direction);
     }
 
-    public override int getTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side)
+    public override int GetTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side)
     {
         if (side is Side.Up or Side.Down) return TextureId + 17;
         Side meta = iBlockReader.GetBlockMeta(x, y, z).ToSide();
         return side != meta ? TextureId : TextureId + 1;
     }
 
-    public override int getTexture(Side side) => side switch
+    public override int GetTexture(Side side) => side switch
     {
         Side.Up or 0 => TextureId + 17,
         Side.South => TextureId + 1,

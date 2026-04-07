@@ -23,7 +23,7 @@ public class BedRenderer : IBlockRenderer
         ctx.Tess.setColorOpaque_F(lightBottom * centerLuminance, lightBottom * centerLuminance,
             lightBottom * centerLuminance);
 
-        int texBottom = block.getTextureId(ctx.BlockReader, pos.x, pos.y, pos.z, 0);
+        int texBottom = block.GetTextureId(ctx.BlockReader, pos.x, pos.y, pos.z, 0);
         int texU = (texBottom & 15) << 4;
         int texV = texBottom & 240;
 
@@ -47,7 +47,7 @@ public class BedRenderer : IBlockRenderer
         float topLuminance = block.getLuminance(ctx.Lighting, pos.x, pos.y + 1, pos.z);
         ctx.Tess.setColorOpaque_F(lightTop * topLuminance, lightTop * topLuminance, lightTop * topLuminance);
 
-        int texTop = block.getTextureId(ctx.BlockReader, pos.x, pos.y, pos.z, Side.Up);
+        int texTop = block.GetTextureId(ctx.BlockReader, pos.x, pos.y, pos.z, Side.Up);
         texU = (texTop & 15) << 4;
         texV = texTop & 240;
 
@@ -124,7 +124,7 @@ public class BedRenderer : IBlockRenderer
 
             flatCtx.FlipTexture = textureFlipDir == 2;
             flatCtx.DrawEastFace(block, new Vec3D(pos.x, pos.y, pos.z), new FaceColors(),
-                block.getTextureId(ctx.BlockReader, pos.x, pos.y, pos.z, Side.North));
+                block.GetTextureId(ctx.BlockReader, pos.x, pos.y, pos.z, Side.North));
         }
 
         // West Face (Z + 1)
@@ -137,7 +137,7 @@ public class BedRenderer : IBlockRenderer
 
             flatCtx.FlipTexture = textureFlipDir == 3;
             flatCtx.DrawWestFace(block, new Vec3D(pos.x, pos.y, pos.z), new FaceColors(),
-                block.getTextureId(ctx.BlockReader, pos.x, pos.y, pos.z, Side.South));
+                block.GetTextureId(ctx.BlockReader, pos.x, pos.y, pos.z, Side.South));
         }
 
         // North Face (X - 1)
@@ -150,7 +150,7 @@ public class BedRenderer : IBlockRenderer
 
             flatCtx.FlipTexture = textureFlipDir == 4;
             flatCtx.DrawNorthFace(block, new Vec3D(pos.x, pos.y, pos.z), new FaceColors(),
-                block.getTextureId(ctx.BlockReader, pos.x, pos.y, pos.z, Side.West));
+                block.GetTextureId(ctx.BlockReader, pos.x, pos.y, pos.z, Side.West));
         }
 
         // South Face (X + 1)
@@ -163,7 +163,7 @@ public class BedRenderer : IBlockRenderer
 
             flatCtx.FlipTexture = textureFlipDir == 5;
             flatCtx.DrawSouthFace(block, new Vec3D(pos.x, pos.y, pos.z), new FaceColors(),
-                block.getTextureId(ctx.BlockReader, pos.x, pos.y, pos.z, Side.East));
+                block.GetTextureId(ctx.BlockReader, pos.x, pos.y, pos.z, Side.East));
         }
 
         return true;

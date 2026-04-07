@@ -6,7 +6,7 @@ namespace BetaSharp.Blocks;
 
 internal class BlockTNT(int id, int textureId) : Block(id, textureId, Material.Tnt)
 {
-    public override int getTexture(Side side) => side switch
+    public override int GetTexture(Side side) => side switch
     {
         Side.Down => TextureId + 2,
         Side.Up => TextureId + 1,

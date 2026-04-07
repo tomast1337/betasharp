@@ -21,7 +21,7 @@ internal class BlockFarmland : Block
 
     public override bool isFullCube() => false;
 
-    public override int getTexture(Side side, int meta) => side switch
+    public override int GetTexture(Side side, int meta) => side switch
     {
         Side.Up when meta > 0 => TextureId - 1,
         Side.Up => TextureId,

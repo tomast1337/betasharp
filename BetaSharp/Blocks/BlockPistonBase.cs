@@ -20,7 +20,7 @@ public class BlockPistonBase : Block
 
     public int getTopTexture() => _sticky ? 106 : 107;
 
-    public override int getTexture(Side side) =>
+    public override int GetTexture(Side side) =>
         side switch
         {
             Side.Up => getTopTexture(),
@@ -28,7 +28,7 @@ public class BlockPistonBase : Block
             _ => 108
         };
 
-    public override int getTexture(Side side, int meta)
+    public override int GetTexture(Side side, int meta)
     {
         Side facing = getFacing(meta).ToSide();
         if (facing > Side.East) return TextureId;

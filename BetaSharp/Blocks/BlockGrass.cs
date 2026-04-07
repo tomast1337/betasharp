@@ -12,7 +12,7 @@ public class BlockGrass : Block
         setTickRandomly(true);
     }
 
-    public override int getTexture(Side side) =>
+    public override int GetTexture(Side side) =>
         side switch
         {
             Side.Up => 0,
@@ -22,7 +22,7 @@ public class BlockGrass : Block
 
     public override int getColorForFace(int meta, int face) => face == 1 ? GrassColors.getDefaultColor() : 0xFFFFFF;
 
-    public override int getTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side)
+    public override int GetTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side)
     {
         switch (side)
         {

@@ -13,7 +13,7 @@ internal class ItemSlab : ItemBlock
 
     public override int getTextureId(int meta)
     {
-        return Block.Slab.getTexture(2.ToSide(), meta);
+        return Block.Slab.GetTexture(2.ToSide(), meta);
     }
 
     public override int getPlacementMetadata(int meta)

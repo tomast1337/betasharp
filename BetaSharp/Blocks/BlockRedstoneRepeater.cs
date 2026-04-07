@@ -48,7 +48,7 @@ public class BlockRedstoneRepeater : Block
         }
     }
 
-    public override int getTexture(Side side, int meta) => side switch
+    public override int GetTexture(Side side, int meta) => side switch
     {
         0 => _lit ? 99 : 115,
         Side.Up => _lit ? 147 : 131,
@@ -59,7 +59,7 @@ public class BlockRedstoneRepeater : Block
 
     public override BlockRendererType getRenderType() => BlockRendererType.Repeater;
 
-    public override int getTexture(Side side) => getTexture(side, 0);
+    public override int GetTexture(Side side) => GetTexture(side, 0);
 
     public override bool isStrongPoweringSide(IBlockReader world, int x, int y, int z, int side) => isPoweringSide(world, x, y, z, side);
 

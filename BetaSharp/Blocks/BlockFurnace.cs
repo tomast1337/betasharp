@@ -81,7 +81,7 @@ internal class BlockFurnace : BlockWithEntity
         @event.World.Writer.SetBlockMeta(x, y, z, direction);
     }
 
-    public override int getTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side)
+    public override int GetTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side)
     {
         if (side is Side.Up or Side.Down) return TextureId + 17;
 
@@ -121,7 +121,7 @@ internal class BlockFurnace : BlockWithEntity
         }
     }
 
-    public override int getTexture(Side side) => side switch
+    public override int GetTexture(Side side) => side switch
     {
         Side.Up or Side.Down => TextureId + 17,
         Side.South => TextureId - 1,

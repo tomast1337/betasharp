@@ -324,7 +324,7 @@ public class HeldItemRenderer
             int var6 = _game.World.Reader.GetBlockId(var2, var3, var4);
             if (_game.World.Reader.ShouldSuffocate(var2, var3, var4))
             {
-                renderInsideOfBlock(var1, Block.Blocks[var6].getTexture(2.ToSide()));
+                renderInsideOfBlock(var1, Block.Blocks[var6].GetTexture(Side.North));
             }
             else
             {
@@ -345,7 +345,7 @@ public class HeldItemRenderer
 
             if (Block.Blocks[var6] != null)
             {
-                renderInsideOfBlock(var1, Block.Blocks[var6].getTexture(2.ToSide()));
+                renderInsideOfBlock(var1, Block.Blocks[var6].GetTexture(Side.North));
             }
         }
 

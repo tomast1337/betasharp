@@ -26,7 +26,7 @@ public abstract class BlockFluid : Block
         return height;
     }
 
-    public override int getTexture(Side side) => side != 0 && side != Side.Up ? TextureId + 1 : TextureId;
+    public override int GetTexture(Side side) => side != 0 && side != Side.Up ? TextureId + 1 : TextureId;
 
     protected int getLiquidState(IBlockReader reader, int x, int y, int z) => reader.GetMaterial(x, y, z) != material ? -1 : reader.GetBlockMeta(x, y, z);
 

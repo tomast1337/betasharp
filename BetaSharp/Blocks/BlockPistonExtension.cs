@@ -35,7 +35,7 @@ public class BlockPistonExtension : Block
         @event.World.Writer.SetBlock(x, y, z, 0);
     }
 
-    public override int getTexture(Side side, int meta)
+    public override int GetTexture(Side side, int meta)
     {
         Side facing = getFacing(meta);
         if (side == facing)

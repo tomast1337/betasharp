@@ -40,7 +40,7 @@ internal class BlockLog : Block
         }
     }
 
-    public override int getTexture(Side side, int meta) => side switch
+    public override int GetTexture(Side side, int meta) => side switch
     {
         Side.Up or Side.Down => 21,
         _ => meta == 1 ? 116 : meta == 2 ? 117 : 20

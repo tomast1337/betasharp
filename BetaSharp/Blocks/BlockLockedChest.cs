@@ -7,7 +7,7 @@ internal class BlockLockedChest : Block
 {
     public BlockLockedChest(int id) : base(id, Material.Wood) => TextureId = 26;
 
-    public override int getTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side)
+    public override int GetTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side)
     {
         if (side is Side.Up or Side.Down) return TextureId - 1;
 
@@ -24,7 +24,7 @@ internal class BlockLockedChest : Block
         return side == facing ? TextureId + 1 : TextureId;
     }
 
-    public override int getTexture(Side side) => side switch
+    public override int GetTexture(Side side) => side switch
     {
         Side.Up or Side.Down => TextureId - 1,
         Side.South => TextureId + 1,

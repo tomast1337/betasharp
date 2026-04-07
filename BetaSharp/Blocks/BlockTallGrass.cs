@@ -10,7 +10,7 @@ public class BlockTallGrass : BlockPlant
 
     public BlockTallGrass(int i, int j) : base(i, j) => setBoundingBox(0.5F - HalfSize, 0.0F, 0.5F - HalfSize, 0.5F + HalfSize, 0.8F, 0.5F + HalfSize);
 
-    public override int getTexture(Side side, int meta) => meta switch
+    public override int GetTexture(Side side, int meta) => meta switch
     {
         1 => TextureId,
         2 => TextureId + 16 + 1,

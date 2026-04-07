@@ -23,7 +23,7 @@ internal class BlockDoor : Block
         setBoundingBox(0.5F - HalfWidth, 0.0F, 0.5F - HalfWidth, 0.5F + HalfWidth, Height, 0.5F + HalfWidth);
     }
 
-    public override int getTexture(Side side, int meta)
+    public override int GetTexture(Side side, int meta)
     {
         if (side is Side.Up or Side.Down)
         {

@@ -115,7 +115,7 @@ public class BlockBed : Block
         return true;
     }
 
-    public override int getTexture(Side side, int meta)
+    public override int GetTexture(Side side, int meta)
     {
         int direction = getDirection(meta);
         Side sideFacing = BedFacings[direction][side.ToInt()];

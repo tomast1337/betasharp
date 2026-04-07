@@ -6,12 +6,12 @@ internal class BlockWorkbench : Block
 {
     public BlockWorkbench(int id) : base(id, Material.Wood) => TextureId = 59;
 
-    public override int getTexture(Side side)
+    public override int GetTexture(Side side)
     {
         return side switch
         {
             Side.Up => TextureId - 16,
-            Side.Down => Planks.getTexture(0),
+            Side.Down => Planks.GetTexture(0),
             _ => side != Side.North && side != Side.West ? TextureId : TextureId + 1
         };
     }

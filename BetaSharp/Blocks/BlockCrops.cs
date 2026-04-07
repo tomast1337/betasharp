@@ -83,7 +83,7 @@ internal class BlockCrops : BlockPlant
         return totalMoisture;
     }
 
-    public override int getTexture(Side side, int meta)
+    public override int GetTexture(Side side, int meta)
     {
         if (meta < 0)
         {

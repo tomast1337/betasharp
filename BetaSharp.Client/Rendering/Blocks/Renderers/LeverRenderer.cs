@@ -73,7 +73,7 @@ public class LeverRenderer : IBlockRenderer
         );
 
         // Determine texture for the handle itself
-        int handleTextureId = handleCtx.OverrideTexture >= 0 ? handleCtx.OverrideTexture : block.getTexture(0);
+        int handleTextureId = handleCtx.OverrideTexture >= 0 ? handleCtx.OverrideTexture : block.GetTexture(0);
 
         int texU = (handleTextureId & 15) << 4;
         int texV = handleTextureId & 240;

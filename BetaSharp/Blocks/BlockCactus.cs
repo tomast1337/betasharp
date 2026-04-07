@@ -35,7 +35,7 @@ internal class BlockCactus : Block
 
     public override Box getBoundingBox(IBlockReader world, EntityManager entities, int x, int y, int z) => new(x + EdgeInset, y, z + EdgeInset, x + 1 - EdgeInset, y + 1, z + 1 - EdgeInset);
 
-    public override int getTexture(Side side) => side switch
+    public override int GetTexture(Side side) => side switch
     {
         Side.Up => TextureId - 1,
         Side.Down => TextureId + 1,

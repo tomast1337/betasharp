@@ -4,7 +4,7 @@ namespace BetaSharp.Blocks;
 
 internal class BlockSandStone(int id) : Block(id, 192, Material.Stone)
 {
-    public override int getTexture(Side side) =>
+    public override int GetTexture(Side side) =>
         side switch
         {
             Side.Up => TextureId - 16,

@@ -14,7 +14,7 @@ internal class BlockPumpkin : Block
         _lit = lit;
     }
 
-    public override int getTexture(Side side, int meta)
+    public override int GetTexture(Side side, int meta)
     {
         if (side is Side.Up or Side.Down) return TextureId;
 
@@ -30,7 +30,7 @@ internal class BlockPumpkin : Block
             meta == 1 && side == Side.West ? faceTexture : TextureId + 16;
     }
 
-    public override int getTexture(Side side) => side switch
+    public override int GetTexture(Side side) => side switch
     {
         Side.Up or Side.Down => TextureId,
         Side.South => TextureId + 1 + 16,

@@ -333,11 +333,11 @@ public class Block
 
     public virtual bool isSolidFace(IBlockReader iBlockReader, int x, int y, int z, int face) => iBlockReader.GetMaterial(x, y, z).IsSolid;
 
-    public virtual int getTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side) => getTexture(side, iBlockReader.GetBlockMeta(x, y, z));
+    public virtual int GetTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side) => GetTexture(side, iBlockReader.GetBlockMeta(x, y, z));
 
-    public virtual int getTexture(Side side, int meta) => getTexture(side);
+    public virtual int GetTexture(Side side, int meta) => GetTexture(side);
 
-    public virtual int getTexture(Side side) => TextureId;
+    public virtual int GetTexture(Side side) => TextureId;
 
     public virtual Box getBoundingBox(IBlockReader world, EntityManager entities, int x, int y, int z) => BoundingBox.Offset(x, y, z);
 

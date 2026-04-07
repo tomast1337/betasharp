@@ -53,13 +53,13 @@ public class FluidsRenderer : IBlockRenderer
         if (ctx.RenderAllFaces || isTopVisible)
         {
             hasRendered = true;
-            int textureId = block.getTexture(Side.Up, meta);
+            int textureId = block.GetTexture(Side.Up, meta);
             float flowAngle = (float)BlockFluid.getFlowingAngle(ctx.BlockReader, pos.x, pos.y, pos.z, material);
 
             // If flowing, switch to the flowing texture variant
             if (flowAngle > -999.0F)
             {
-                textureId = block.getTexture(Side.North, meta);
+                textureId = block.GetTexture(Side.North, meta);
             }
 
             int texU = (textureId & 15) << 4;
@@ -106,7 +106,7 @@ public class FluidsRenderer : IBlockRenderer
 
             // Fluids don't use AO, so pass dummy colors
             FaceColors dummyColors = new FaceColors();
-            int tex = block.getTexture(0);
+            int tex = block.GetTexture(0);
 
             // Note: Fluids don't override bounds for the bottom face, so we just pass the default context
             ctx.DrawBottomFace(block, new Vec3D(pos.x, pos.y, pos.z), dummyColors, tex);
@@ -124,7 +124,7 @@ public class FluidsRenderer : IBlockRenderer
             if (side == 2) adjX = pos.x - 1; // West
             if (side == 3) adjX = pos.x + 1; // East
 
-            int textureId = block.getTexture((side + 2).ToSide(), meta);
+            int textureId = block.GetTexture((side + 2).ToSide(), meta);
             int texU = (textureId & 15) << 4;
             int texV = textureId & 240;
 

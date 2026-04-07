@@ -10,7 +10,7 @@ public class BlockDeadBush : BlockPlant
 
     protected override bool canPlantOnTop(int id) => id == Sand.id;
 
-    public override int getTexture(Side side, int meta) => TextureId;
+    public override int GetTexture(Side side, int meta) => TextureId;
 
     public override int getDroppedItemId(int blockMeta) => -1;
 }

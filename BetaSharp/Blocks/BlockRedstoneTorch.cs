@@ -18,13 +18,13 @@ internal class BlockRedstoneTorch : BlockTorch
         setTickRandomly(true);
     }
 
-    public override int getTexture(Side side, int meta)
+    public override int GetTexture(Side side, int meta)
     {
         if (side == Side.Up)
         {
-            return RedstoneWire.getTexture(side, meta);
+            return RedstoneWire.GetTexture(side, meta);
         }
-        return base.getTexture(side, meta);
+        return base.GetTexture(side, meta);
     }
 
     private static bool isBurnedOut(OnTickEvent ctx, bool recordUpdate, long currentTime)

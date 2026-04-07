@@ -19,7 +19,7 @@ internal class BlockSlab : Block
         setOpacity(255);
     }
 
-    public override int getTexture(Side side, int meta) => meta switch
+    public override int GetTexture(Side side, int meta) => meta switch
     {
         0 => side <= Side.Up ? 6 : 5,
         1 => side switch
@@ -33,7 +33,7 @@ internal class BlockSlab : Block
         _ => 6
     };
 
-    public override int getTexture(Side side) => getTexture(side, 0);
+    public override int GetTexture(Side side) => GetTexture(side, 0);
 
     public override bool isOpaque() => _doubleSlab;
 

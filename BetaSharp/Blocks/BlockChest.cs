@@ -16,7 +16,7 @@ internal class BlockChest : BlockWithEntity
 
     public BlockChest(int id) : base(id, Material.Wood) => TextureId = 26;
 
-    public override int getTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side)
+    public override int GetTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side)
     {
         if (side is Side.Up or Side.Down) return TextureId - 1;
 
@@ -120,7 +120,7 @@ internal class BlockChest : BlockWithEntity
         return (side == facingSide ? TextureId + 16 : TextureId + 32) + textureOffset;
     }
 
-    public override int getTexture(Side side)
+    public override int GetTexture(Side side)
     {
         return side switch
         {

@@ -33,7 +33,7 @@ internal class BlockCake : Block
         return new Box(x + minX, y, z + EdgeInset, x + 1 - EdgeInset, y + CakeHeight, z + 1 - EdgeInset);
     }
 
-    public override int getTexture(Side side, int meta)
+    public override int GetTexture(Side side, int meta)
     {
         if (side == Side.Up)return TextureId;
         if (side == Side.Down)return TextureId + 3;
@@ -41,7 +41,7 @@ internal class BlockCake : Block
         return TextureId + 1;
     }
 
-    public override int getTexture(Side side) => side switch
+    public override int GetTexture(Side side) => side switch
     {
         Side.Up => TextureId,
         Side.Down => TextureId + 3,

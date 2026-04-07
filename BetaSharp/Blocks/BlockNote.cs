@@ -5,7 +5,7 @@ namespace BetaSharp.Blocks;
 
 internal class BlockNote(int id) : BlockWithEntity(id, 74, Material.Wood)
 {
-    public override int getTexture(Side side) => TextureId;
+    public override int GetTexture(Side side) => TextureId;
 
     public override void neighborUpdate(OnTickEvent @event)
     {

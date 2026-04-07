@@ -12,7 +12,7 @@ internal class ItemBlock : Item
     public ItemBlock(int id) : base(id)
     {
         blockID = id + 256;
-        setTextureId(Block.Blocks[id + 256].getTexture(2.ToSide()));
+        setTextureId(Block.Blocks[id + 256].GetTexture(2.ToSide()));
     }
 
     public override bool useOnBlock(ItemStack itemStack, EntityPlayer entityPlayer, IWorldContext world, int x, int y, int z, int meta)
