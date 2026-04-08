@@ -55,12 +55,22 @@ public sealed class FakeWorldContext : IWorldContext
     public RuleSet Rules { get; }
     public PersistentStateManager StateManager => throw new NotSupportedException();
     public int Difficulty => 1;
-    public WorldProperties Properties => throw new NotSupportedException();
+
+    /// <summary>Minimal spawn for code paths that need <see cref="EntityPlayer"/> (e.g. dispenser <c>onUse</c> tests).</summary>
+    public WorldProperties Properties { get; } = new WorldProperties(0L, "test")
+    {
+        SpawnX = 0,
+        SpawnY = 64,
+        SpawnZ = 0
+    };
     public JavaRandom Random { get; } = new(1234L);
     PathFinder IWorldContext.Pathing => throw new NotSupportedException();
 
+    /// <summary>Returned by <see cref="GetTime"/> for tests that need advancing world time (e.g. torch burnout history pruning).</summary>
+    public long SimulatedWorldTime { get; set; }
+
     public void SetDifficulty(int difficulty) => throw new NotSupportedException();
-    public long GetTime() => 0L;
+    public long GetTime() => SimulatedWorldTime;
     public int GetSpawnBlockId(int x, int z) => 0;
     public bool SpawnEntity(Entity entity) => true;
     public bool SpawnItemDrop(double x, double y, double z, ItemStack itemStack) => true;
