@@ -40,4 +40,8 @@ internal sealed class NoOpSceneRenderer : ISceneRenderer
     public void ChangeWorld(World world)
     {
     }
+
+    public void SetDamagePartialTime(float value)
+    {
+    }
 }

@@ -59,6 +59,13 @@ public class GameRenderer : ISceneRenderer
     public void MarkVisibleChunksDirty() => _client.WorldRenderer?.ChunkRenderer?.MarkAllVisibleChunksDirty();
     public void UpdateClouds() => _client.WorldRenderer?.UpdateClouds();
     public void ChangeWorld(World world) => _client.WorldRenderer?.ChangeWorld(world);
+    public void SetDamagePartialTime(float value)
+    {
+        if (_client.WorldRenderer != null)
+        {
+            _client.WorldRenderer.DamagePartialTime = value;
+        }
+    }
     public void PublishRenderMetrics()
     {
         if (_client.WorldRenderer?.ChunkRenderer is not { } chunkRenderer)

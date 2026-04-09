@@ -143,7 +143,7 @@ public class PlayerControllerMP : PlayerController
     {
         if (curBlockDamageMP <= 0.0F)
         {
-            Game.WorldRenderer.DamagePartialTime = 0.0F;
+            Game.SceneRenderer.SetDamagePartialTime(0.0F);
         }
         else
         {

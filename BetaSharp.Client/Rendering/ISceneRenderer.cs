@@ -12,4 +12,5 @@ public interface ISceneRenderer
     void UpdateClouds();
     void PublishRenderMetrics();
     void ChangeWorld(World world);
+    void SetDamagePartialTime(float value);
 }
