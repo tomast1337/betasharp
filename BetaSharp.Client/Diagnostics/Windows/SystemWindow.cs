@@ -17,6 +17,8 @@ internal sealed class SystemWindow(DebugWindowContext ctx) : DebugWindow
         ImGui.Text($"Renderer (Requested): {ctx.RequestedRendererBackend}");
         ImGui.Text($"Renderer (Active):    {ctx.ActiveRendererBackend}");
         ImGui.Text($"Display Backend:      {ctx.DisplayRendererBackend}");
+        ImGui.Text($"Display SwapBuffers:  {(ctx.DisplaySupportsWindowBufferSwap ? "Yes" : "No")}");
+        ImGui.Text($"Display GL Context:   {(ctx.DisplayHasOpenGlContext ? "Yes" : "No")}");
         ImGui.Text($"ImGui Backend:        {ctx.ImGuiRendererBackend}");
         ImGui.Text($"Presentation Backend: {ctx.PresentationRendererBackend}");
         ImGui.Text($"Renderer Runtime Init:{(ctx.IsRendererRuntimeInitialized ? " Yes" : " No")}");

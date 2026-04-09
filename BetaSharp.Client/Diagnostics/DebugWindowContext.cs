@@ -40,6 +40,8 @@ internal sealed class DebugWindowContext(BetaSharp game)
     public RendererBackendKind RequestedRendererBackend => game.RequestedRendererBackend;
     public RendererBackendKind ActiveRendererBackend => game.ActiveRendererBackend;
     public RendererBackendKind DisplayRendererBackend => Display.ActiveRendererBackend;
+    public bool DisplaySupportsWindowBufferSwap => Display.SupportsWindowBufferSwap;
+    public bool DisplayHasOpenGlContext => Display.HasOpenGlContext;
     public RendererBackendKind ImGuiRendererBackend => game.ImGuiRendererBackend;
     public RendererBackendKind PresentationRendererBackend => game.PresentationRendererBackend;
     public bool IsRendererRuntimeInitialized => game.IsRendererRuntimeInitialized;

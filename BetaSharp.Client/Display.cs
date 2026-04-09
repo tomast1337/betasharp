@@ -34,6 +34,26 @@ public static unsafe class Display
     public static int MSAA_Samples = 0;
     public static bool DebugMode = false;
     public static RendererBackendKind ActiveRendererBackend { get; private set; } = RendererBackendKind.OpenGL;
+    public static bool SupportsWindowBufferSwap
+    {
+        get
+        {
+            lock (_lock)
+            {
+                return UsesDisplaySwapBuffers;
+            }
+        }
+    }
+    public static bool HasOpenGlContext
+    {
+        get
+        {
+            lock (_lock)
+            {
+                return UsesOpenGlContext && _gl != null;
+            }
+        }
+    }
 
     // Window position
     private static int _x = -1;
