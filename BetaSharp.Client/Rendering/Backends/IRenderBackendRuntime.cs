@@ -16,6 +16,7 @@ internal interface IRenderBackendRuntime
     void SetVSyncEnabled(bool enabled);
     void SetMainViewport(int width, int height);
     void PrepareFrameRenderState();
+    void CheckBackendErrors(string location, ILogger logger);
     void UpdateWindow(bool processMessages);
     bool TryCaptureScreenshot(int framebufferWidth, int framebufferHeight, out byte[] rgbPixels);
 

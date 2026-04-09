@@ -40,6 +40,11 @@ internal sealed class VulkanRenderBackendRuntime : IRenderBackendRuntime
         // No global state mutation in Vulkan render loops.
     }
 
+    public void CheckBackendErrors(string location, ILogger logger)
+    {
+        // No-op for now. Vulkan validation output is handled by the Vulkan debug messenger when implemented.
+    }
+
     public void UpdateWindow(bool processMessages)
     {
         if (processMessages)

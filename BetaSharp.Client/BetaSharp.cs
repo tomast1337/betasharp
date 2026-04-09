@@ -1751,19 +1751,7 @@ public partial class BetaSharp :
     [Conditional("DEBUG")]
     private void CheckGLError(string location)
     {
-        if (ActiveRendererBackend != RendererBackendKind.OpenGL)
-        {
-            return;
-        }
-
-        GLEnum glError = GLManager.GL.GetError();
-        if (glError != 0)
-        {
-            _logger.LogError($"#### GL ERROR ####");
-            _logger.LogError($"@ {location}");
-            _logger.LogError($"> {glError.ToString()}");
-            _logger.LogError($"");
-        }
+        _renderBackendRuntime.CheckBackendErrors(location, _logger);
     }
 
     private void LoadScreen()

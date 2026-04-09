@@ -81,6 +81,17 @@ internal sealed class OpenGlRenderBackendRuntime : IRenderBackendRuntime
         GLManager.GL.Enable(LegacyGLEnum.Texture2D);
     }
 
+    public void CheckBackendErrors(string location, ILogger logger)
+    {
+        LegacyGLEnum glError = GLManager.GL.GetError();
+        if (glError != 0)
+        {
+            logger.LogError("#### GL ERROR ####");
+            logger.LogError("@ {Location}", location);
+            logger.LogError("> {GlError}", glError);
+        }
+    }
+
     public void UpdateWindow(bool processMessages)
     {
         Display.update(processMessages);
