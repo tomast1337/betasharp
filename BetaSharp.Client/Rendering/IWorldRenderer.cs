@@ -30,8 +30,8 @@ public interface IWorldRenderer
     void RenderSky(float partialTicks);
     int SortAndRender(EntityLiving entity, int pass, double partialTicks, ICuller culler);
     void RenderEntities(Vec3D position, ICuller culler, float partialTicks);
-    void DrawBlockBreaking(EntityPlayer entityPlayer, HitResult hit, ItemStack itemStack, float partialTicks);
-    void DrawSelectionBox(EntityPlayer entityPlayer, HitResult hit, int stage, ItemStack itemStack, float partialTicks);
+    void DrawBlockBreaking(EntityPlayer entityPlayer, HitResult hit, ItemStack? itemStack, float partialTicks);
+    void DrawSelectionBox(EntityPlayer entityPlayer, HitResult hit, int stage, ItemStack? itemStack, float partialTicks);
     void RenderClouds(float partialTicks);
 
     bool TryGetChunkStats(out ChunkRendererStats stats);

@@ -147,7 +147,7 @@ public partial class BetaSharp :
     public HitResult ObjectMouseOver = new(HitResultType.MISS);
 
     public ISceneRenderer SceneRenderer { get; private set; } = new NoOpSceneRenderer();
-    public IWorldRenderer WorldRenderer { get; private set; } = null!;
+    public IWorldRenderer WorldRenderer { get; private set; } = new NoOpWorldRenderer();
     public int PresentationTargetWidth => _renderPresentation.FramebufferWidth;
     public int PresentationTargetHeight => _renderPresentation.FramebufferHeight;
     public bool IsPresentationBlitSkipped => _renderPresentation.SkipBlit;

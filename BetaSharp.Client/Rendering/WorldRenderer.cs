@@ -668,7 +668,7 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
         GLManager.GL.Enable(GLEnum.CullFace);
     }
 
-    public void DrawBlockBreaking(EntityPlayer entityPlayer, HitResult hit, ItemStack itemStack, float tickDelta)
+    public void DrawBlockBreaking(EntityPlayer entityPlayer, HitResult hit, ItemStack? itemStack, float tickDelta)
     {
         if (DamagePartialTime <= 0.0F) return;
 
