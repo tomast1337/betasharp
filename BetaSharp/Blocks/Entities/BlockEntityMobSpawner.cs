@@ -36,7 +36,7 @@ public class BlockEntityMobSpawner : BlockEntity
         return World.Entities.GetClosestPlayer(X + 0.5D, Y + 0.5D, Z + 0.5D, 16.0D) != null;
     }
 
-    public override void tick(EntityManager entities)
+    public override void Tick(EntityManager entities)
     {
         LastRotation = Rotation;
         if (IsPlayerInRange())
@@ -111,7 +111,7 @@ public class BlockEntityMobSpawner : BlockEntity
                 }
             }
 
-            base.tick(entities);
+            base.Tick(entities);
         }
     }
 
@@ -121,16 +121,16 @@ public class BlockEntityMobSpawner : BlockEntity
         _logger.LogInformation("Spawn Delay: " + SpawnDelay);
     }
 
-    public override void readNbt(NBTTagCompound nbt)
+    public override void ReadNbt(NBTTagCompound nbt)
     {
-        base.readNbt(nbt);
+        base.ReadNbt(nbt);
         _spawnedEntityId = nbt.GetString("EntityId");
         SpawnDelay = nbt.GetShort("Delay");
     }
 
-    public override void writeNbt(NBTTagCompound nbt)
+    public override void WriteNbt(NBTTagCompound nbt)
     {
-        base.writeNbt(nbt);
+        base.WriteNbt(nbt);
         nbt.SetString("EntityId", _spawnedEntityId);
         nbt.SetShort("Delay", (short)SpawnDelay);
     }

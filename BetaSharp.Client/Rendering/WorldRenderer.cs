@@ -265,7 +265,7 @@ public class WorldRenderer : IWorldEventListener
             for (var6 = 0; var6 < _world.Entities.BlockEntities.Count; ++var6)
             {
                 BlockEntity entity = _world.Entities.BlockEntities[var6];
-                if (!entity.isRemoved() && culler.IsBoundingBoxInFrustum(new Box(entity.X, entity.Y, entity.Z, entity.X + 1, entity.Y + 1, entity.Z + 1)))
+                if (!entity.IsRemoved() && culler.IsBoundingBoxInFrustum(new Box(entity.X, entity.Y, entity.Z, entity.X + 1, entity.Y + 1, entity.Z + 1)))
                 {
                     BlockEntityRenderer.Instance.RenderTileEntity(entity, var3);
                 }

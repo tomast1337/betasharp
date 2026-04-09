@@ -93,7 +93,7 @@ public class BlockEntityPiston : BlockEntity
         }
 
         World.Entities.RemoveBlockEntity(X, Y, Z);
-        markRemoved();
+        MarkRemoved();
     }
 
     public void AbandonExtensionToStaticBlock() => FinalizeBlock();
@@ -106,7 +106,7 @@ public class BlockEntityPiston : BlockEntity
         FinalizeBlock();
     }
 
-    public override void tick(EntityManager entities)
+    public override void Tick(EntityManager entities)
     {
         _progress = _lastProgress;
         if (_progress >= 1.0F)
@@ -129,9 +129,9 @@ public class BlockEntityPiston : BlockEntity
         }
     }
 
-    public override void readNbt(NBTTagCompound nbt)
+    public override void ReadNbt(NBTTagCompound nbt)
     {
-        base.readNbt(nbt);
+        base.ReadNbt(nbt);
         PushedBlockId = nbt.GetInteger("blockId");
         PushedBlockData = nbt.GetInteger("blockData");
         Facing = nbt.GetInteger("facing");
@@ -139,9 +139,9 @@ public class BlockEntityPiston : BlockEntity
         IsExtending = nbt.GetBoolean("extending");
     }
 
-    public override void writeNbt(NBTTagCompound nbt)
+    public override void WriteNbt(NBTTagCompound nbt)
     {
-        base.writeNbt(nbt);
+        base.WriteNbt(nbt);
         nbt.SetInteger("blockId", PushedBlockId);
         nbt.SetInteger("blockData", PushedBlockData);
         nbt.SetInteger("facing", Facing);

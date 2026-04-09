@@ -311,12 +311,12 @@ public class EntityManager
             for (int i = BlockEntities.Count - 1; i >= 0; i--)
             {
                 BlockEntity blockEntity = BlockEntities[i];
-                if (!blockEntity.isRemoved())
+                if (!blockEntity.IsRemoved())
                 {
-                    blockEntity.tick(this);
+                    blockEntity.Tick(this);
                 }
 
-                if (blockEntity.isRemoved())
+                if (blockEntity.IsRemoved())
                 {
                     BlockEntities.RemoveAt(i);
                     Chunk chunk = _world.ChunkHost.GetChunk(blockEntity.X >> 4, blockEntity.Z >> 4);
@@ -330,7 +330,7 @@ public class EntityManager
             {
                 foreach (BlockEntity queuedBlockEntity in _blockEntityUpdateQueue)
                 {
-                    if (!queuedBlockEntity.isRemoved())
+                    if (!queuedBlockEntity.IsRemoved())
                     {
                         if (!BlockEntities.Contains(queuedBlockEntity))
                         {
@@ -786,12 +786,12 @@ public class EntityManager
     {
         BlockEntity? entity = _blockEntityUpdateQueue.FirstOrDefault(e => e.X == x && e.Y == y && e.Z == z);
 
-        if (entity == null || entity.isRemoved())
+        if (entity == null || entity.IsRemoved())
         {
             entity = BlockEntities.FirstOrDefault(e => e.X == x && e.Y == y && e.Z == z);
         }
 
-        if (entity != null && !entity.isRemoved())
+        if (entity != null && !entity.IsRemoved())
         {
             return entity as T;
         }
@@ -850,7 +850,7 @@ public class EntityManager
 
     public void SetBlockEntity(int x, int y, int z, BlockEntity? blockEntity)
     {
-        if (blockEntity == null || blockEntity.isRemoved())
+        if (blockEntity == null || blockEntity.IsRemoved())
         {
             return;
         }
@@ -878,7 +878,7 @@ public class EntityManager
         BlockEntity? entity = GetBlockEntity<BlockEntity>(x, y, z);
         if (entity != null && _processingDeferred)
         {
-            entity.markRemoved();
+            entity.MarkRemoved();
         }
         else
         {

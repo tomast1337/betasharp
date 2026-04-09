@@ -113,7 +113,7 @@ internal class BlockDispenser : BlockWithEntity
         BlockEntityDispenser? dispenser = @event.World.Entities.GetBlockEntity<BlockEntityDispenser>(@event.X, @event.Y, @event.Z);
         if (dispenser == null) return;
 
-        ItemStack? itemStack = dispenser.getItemToDispose();
+        ItemStack? itemStack = dispenser.GetItemToDispose();
         double spawnX = @event.X + dirX * 0.6D + 0.5D;
         double spawnY = @event.Y + 0.5D;
         double spawnZ = @event.Z + dirZ * 0.6D + 0.5D;

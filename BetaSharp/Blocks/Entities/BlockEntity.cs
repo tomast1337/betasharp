@@ -6,18 +6,39 @@ using Microsoft.Extensions.Logging;
 
 namespace BetaSharp.Blocks.Entities;
 
+/// <summary>
+/// Abstract class to represent a block entity, allowing a block to store inventory or other such
+/// stuff apart from the block.
+/// </summary>
 public abstract class BlockEntity
 {
     private static readonly IRegistry<BlockEntityType> s_registry = DefaultRegistries.BlockEntityTypes;
     private static readonly ILogger<BlockEntity> s_logger = Log.Instance.For<BlockEntity>();
     public IWorldContext World;
     protected bool Removed;
+
+    /// <summary>
+    /// Type of the block entity.
+    /// </summary>
     public abstract BlockEntityType Type { get; }
 
+    /// <summary>
+    /// X position of the block entity.
+    /// </summary>
     public int X;
+
+    /// <summary>
+    /// Y position of the block entity.
+    /// </summary>
     public int Y;
+
+    /// <summary>
+    /// Z position of the block entity.
+    /// </summary>
     public int Z;
 
+    // Block entity registered types
+    // No documentation for each as they are self-explanatory and will just fill up the file.
     public static readonly BlockEntityType Furnace = Register(() => new BlockEntityFurnace(), "Furnace");
     public static readonly BlockEntityType Chest = Register(() => new BlockEntityChest(), "Chest");
     public static readonly BlockEntityType RecordPlayer = Register(() => new BlockEntityRecordPlayer(), "RecordPlayer");
@@ -34,14 +55,25 @@ public abstract class BlockEntity
         return type;
     }
 
-    public virtual void readNbt(NBTTagCompound nbt)
+    /// <summary>
+    /// Read data for the entity from a NBT tag compound.
+    /// Expected to be overridden (with base.ReadNbt(nbt), of course).
+    /// </summary>
+    /// <param name="nbt"><see cref="NBTTagCompound"/> containing the data to read.</param>
+    public virtual void ReadNbt(NBTTagCompound nbt)
     {
         X = nbt.GetInteger("x");
         Y = nbt.GetInteger("y");
         Z = nbt.GetInteger("z");
     }
 
-    public virtual void writeNbt(NBTTagCompound nbt)
+    /// <summary>
+    /// Write data for the entity to a NBT tag compound.
+    /// Expected to be overridden (with base.WriteNbt(nbt), of course).
+    /// </summary>
+    /// <param name="nbt"><see cref="NBTTagCompound"/> to write the data to.</param>
+
+    public virtual void WriteNbt(NBTTagCompound nbt)
     {
         nbt.SetString("id", Type.Id);
         nbt.SetInteger("x", X);
@@ -49,10 +81,22 @@ public abstract class BlockEntity
         nbt.SetInteger("z", Z);
     }
 
-    public virtual void tick(EntityManager entities)
+    /// <summary>
+    /// Run a single tick for the block entity.
+    /// Expected to be overridden if the block entity needs to do something every tick.
+    /// </summary>
+    /// <param name="entities"><see cref="EntityManager"/> containing the entities in the world.</param>
+    public virtual void Tick(EntityManager entities)
     {
     }
 
+    /// <summary>
+    /// Create a BlockEntity from a NBT tag compound.
+    /// Uses the "id" tag to determine the type of block entity to create, and then calls ReadNbt,
+    /// to, of course, get the data.
+    /// </summary>
+    /// <param name="nbt"><see cref="NBTTagCompound"/> containing the data to read, expected to have an "id" tag.</param>
+    /// <returns>A <see cref="BlockEntity"></see> representing the NBT, or null if invalid.</returns>
     public static BlockEntity? CreateFromNbt(NBTTagCompound nbt)
     {
         string id = nbt.GetString("id");
@@ -68,7 +112,7 @@ public abstract class BlockEntity
         try
         {
             BlockEntity blockEntity = type.Create();
-            blockEntity.readNbt(nbt);
+            blockEntity.ReadNbt(nbt);
             return blockEntity;
         }
         catch (Exception exception)
@@ -78,8 +122,14 @@ public abstract class BlockEntity
         }
     }
 
+    /// <summary>
+    /// Gets the metadata value associated with the block at the current coordinates.
+    /// </summary>
     public int PushedBlockData => World.Reader.GetBlockMeta(X, Y, Z);
 
+    /// <summary>
+    /// Mark dirty for updates.
+    /// </summary>
     public void MarkDirty()
     {
         if (World == null || World.IsRemote)
@@ -90,7 +140,14 @@ public abstract class BlockEntity
         World.Broadcaster.UpdateBlockEntity(X, Y, Z, this);
     }
 
-    public double distanceFrom(double x, double y, double z)
+    /// <summary>
+    /// Gets the (squared!) distance from the center of the block entity to the given coordinates.
+    /// </summary>
+    /// <param name="x">X pos to check.</param>
+    /// <param name="y">Y pos to check.</param>
+    /// <param name="z">Z pos to check.</param>
+    /// <returns>The squared distance from the center of the block entity to the given coordinates. 
+    public double DistanceFrom(double x, double y, double z)
     {
         double dx = X + 0.5D - x;
         double dy = Y + 0.5D - y;
@@ -98,11 +155,19 @@ public abstract class BlockEntity
         return dx * dx + dy * dy + dz * dz;
     }
 
-    public Block getBlock() => Block.Blocks[World.Reader.GetBlockId(X, Y, Z)];
+    /// <summary>
+    /// Get the block class associated with the block at the current coordinates.
+    /// </summary>
+    public Block GetBlock() => Block.Blocks[World.Reader.GetBlockId(X, Y, Z)];
 
-    public virtual Packet createUpdatePacket() => null;
+    public virtual Packet CreateUpdatePacket() => null;
 
-    public bool isRemoved()
+    /// <summary>
+    /// Return true if the block entity removed (either by the targeted block not existing,
+    /// or Removed being true via <see cref="MarkRemoved"/>).
+    /// </summary>
+    /// <returns></returns>
+    public bool IsRemoved()
     {
         if (Removed)
         {
@@ -121,9 +186,15 @@ public abstract class BlockEntity
         return false;
     }
 
-    public void markRemoved() => Removed = true;
+    /// <summary>
+    /// Mark this block entity as being removed.
+    /// </summary>
+    public void MarkRemoved() => Removed = true;
 
-    public void cancelRemoval() => Removed = false;
+    /// <summary>
+    /// Cancel this block entity being removed, if it was marked as such by <see cref="MarkRemoved"/>.
+    /// </summary>
+    public void CancelRemoval() => Removed = false;
 
     static BlockEntity()
     {

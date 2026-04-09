@@ -148,7 +148,7 @@ internal class BlockFurnace : BlockWithEntity
 
         s_ignoreBlockRemoval.Value = false;
         world.Writer.SetBlockMeta(x, y, z, meta);
-        furnace?.cancelRemoval();
+        furnace?.CancelRemoval();
         world.Entities.SetBlockEntity(x, y, z, furnace!);
     }
 
