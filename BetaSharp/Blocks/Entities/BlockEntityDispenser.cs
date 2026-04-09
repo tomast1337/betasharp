@@ -7,7 +7,7 @@ using BetaSharp.Util.Maths;
 namespace BetaSharp.Blocks.Entities;
 
 /// <summary>
-/// Block entity for a chest, storing the 9 dispener slots.
+/// Block entity for a chest, storing the 9 dispener slots and implementing the random item selection.
 /// </summary>
 public class BlockEntityDispenser : BlockEntityWithInventory<BlockEntityDispenser>
 {

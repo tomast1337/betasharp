@@ -108,7 +108,7 @@ public sealed class BlockInteractionTests
         // Assert 1
         Assert.True((world.Reader.GetBlockMeta(0, 64, 0) & 8) != 0);
         Assert.True(world.Reader.GetBlockMeta(1, 64, 0) > 0);
-        Assert.True(note.powered);
+        Assert.True(note.Powered);
 
         // Act 2
         simulation.AdvanceTime(19);
@@ -125,6 +125,6 @@ public sealed class BlockInteractionTests
         // Assert 3
         Assert.True((world.Reader.GetBlockMeta(0, 64, 0) & 8) == 0);
         Assert.Equal(0, world.Reader.GetBlockMeta(1, 64, 0));
-        Assert.False(note.powered);
+        Assert.False(note.Powered);
     }
 }

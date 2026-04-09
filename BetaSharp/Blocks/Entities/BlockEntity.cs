@@ -39,18 +39,18 @@ public abstract class BlockEntity
 
     // Block entity registered types
     // No documentation for each as they are self-explanatory and will just fill up the file.
-    public static readonly BlockEntityType Furnace = Register(() => new BlockEntityFurnace(), "Furnace");
-    public static readonly BlockEntityType Chest = Register(() => new BlockEntityChest(), "Chest");
-    public static readonly BlockEntityType RecordPlayer = Register(() => new BlockEntityRecordPlayer(), "RecordPlayer");
-    public static readonly BlockEntityType Dispenser = Register(() => new BlockEntityDispenser(), "Trap");
-    public static readonly BlockEntityType Sign = Register(() => new BlockEntitySign(), "Sign");
-    public static readonly BlockEntityType MobSpawner = Register(() => new BlockEntityMobSpawner(), "MobSpawner");
-    public static readonly BlockEntityType Note = Register(() => new BlockEntityNote(), "Music");
-    public static readonly BlockEntityType Piston = Register(() => new BlockEntityPiston(), "Piston");
+    public static readonly BlockEntityType Furnace = Register<BlockEntityFurnace>("Furnace");
+    public static readonly BlockEntityType Chest = Register<BlockEntityChest>("Chest");
+    public static readonly BlockEntityType RecordPlayer = Register<BlockEntityRecordPlayer>("RecordPlayer");
+    public static readonly BlockEntityType Dispenser = Register<BlockEntityDispenser>("Trap");
+    public static readonly BlockEntityType Sign = Register<BlockEntitySign>("Sign");
+    public static readonly BlockEntityType MobSpawner = Register<BlockEntityMobSpawner>("MobSpawner");
+    public static readonly BlockEntityType Music = Register<BlockEntityNote>("Music");
+    public static readonly BlockEntityType Piston = Register< BlockEntityPiston>("Piston");
 
-    private static BlockEntityType Register<T>(Func<T> factory, string id) where T : BlockEntity
+    private static BlockEntityType Register<T>(string id) where T : BlockEntity, new()
     {
-        var type = new BlockEntityType(() => factory(), id);
+        var type = new BlockEntityType(() => new T(), id);
         s_registry.Register(ResourceLocation.Parse(id.ToLower()), type);
         return type;
     }

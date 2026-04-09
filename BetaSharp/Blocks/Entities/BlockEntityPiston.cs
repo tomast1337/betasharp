@@ -5,9 +5,14 @@ using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks.Entities;
 
+/// <summary>
+/// Block entity for both the extending and source blocks of a piston.
+/// </summary>
+///
 public class BlockEntityPiston : BlockEntity
 {
     public override BlockEntityType Type => Piston;
+
     public int PushedBlockId { get; private set; }
     public new int PushedBlockData { get; private set; }
     public bool IsExtending { get; private set; }

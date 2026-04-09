@@ -8,14 +8,21 @@ using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks.Entities;
 
+/// <summary>
+/// Block entity for the furnace block, allowing it to store inventory and smelt items.
+/// </summary>
 public class BlockEntityFurnace : BlockEntityWithInventory<BlockEntityFurnace>
 {
     public override BlockEntityType Type => Furnace;
 
     public override int Size => 3;
     public override string Name => "Furnace";
+
+
     public int BurnTime { get; set; }
+
     public int CookTime { get; set; }
+
     public int FuelTime { get; set; }
 
     // codingisfun2831t - doc - Note that for some reason the furance slot management

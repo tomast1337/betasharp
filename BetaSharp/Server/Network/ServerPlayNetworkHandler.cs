@@ -614,60 +614,62 @@ public class ServerPlayNetworkHandler : NetHandler, ICommandOutput
         }
     }
 
-    public override void handleUpdateSign(UpdateSignPacket packet)
+    public override void HandleUpdateSign(UpdateSignPacket packet)
     {
-        ServerWorld var2 = server.getWorld(player.dimensionId);
-        if (var2.Reader.IsPosLoaded(packet.x, packet.y, packet.z))
+        ServerWorld world = server.getWorld(player.dimensionId);
+        if (world.Reader.IsPosLoaded(packet.x, packet.y, packet.z))
         {
-            BlockEntity var3 = var2.Entities.GetBlockEntity<BlockEntitySign>(packet.x, packet.y, packet.z);
-            if (var3 is BlockEntitySign var4)
+            BlockEntity entity = world.Entities.GetBlockEntity<BlockEntitySign>(packet.x, packet.y, packet.z);
+            if (entity is BlockEntitySign sign)
             {
-                if (!var4.IsEditable())
+                if (!sign.Editable)
                 {
                     server.Warn("Player " + player.name + " just tried to change non-editable sign");
                     return;
                 }
-            }
 
-            for (int var9 = 0; var9 < 4; var9++)
-            {
-                bool var5 = true;
-                if (packet.text[var9].Length > 15)
+                for (int line = 0; line < 4; line++)
                 {
-                    var5 = false;
-                }
-                else
-                {
-                    for (int var6 = 0; var6 < packet.text[var9].Length; var6++)
+                    bool invalid = true;
+                    if (packet.text[line].Length > 15)
                     {
-                        if (!ChatAllowedCharacters.IsAllowedCharacter(packet.text[var9][var6]))
+                        invalid = false;
+                    }
+                    else
+                    {
+                        for (int ch = 0; ch < packet.text[line].Length; ch++)
                         {
-                            var5 = false;
+                            if (!ChatAllowedCharacters.IsAllowedCharacter(packet.text[line][ch]))
+                            {
+                                invalid = false;
+                            }
                         }
+                    }
+
+                    if (!invalid)
+                    {
+                        packet.text[line] = "!?";
                     }
                 }
 
-                if (!var5)
-                {
-                    packet.text[var9] = "!?";
-                }
-            }
+                int x = packet.x;
+                int y = packet.y;
+                int z = packet.z;
 
-            if (var3 is BlockEntitySign var7)
+                for (int line = 0; line < 4; line++)
+                {
+                    sign.Texts[line] = packet.text[line];
+                }
+
+                sign.Editable = false;
+                sign.MarkDirty();
+                world.Broadcaster.BlockUpdateEvent(x, y, z);
+            } else
             {
-                int var10 = packet.x;
-                int var11 = packet.y;
-                int var12 = packet.z;
-
-                for (int var8 = 0; var8 < 4; var8++)
-                {
-                    var7.Texts[var8] = packet.text[var8];
-                }
-
-                var7.SetEditable(false);
-                var7.MarkDirty();
-                var2.Broadcaster.BlockUpdateEvent(var10, var11, var12);
+                server.Warn("Player " + player.name + " just sent UpdateSignPacket on a block that isnt a sign");
+                return;
             }
+            
         }
     }
 

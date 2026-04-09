@@ -707,7 +707,7 @@ public class ClientNetworkHandler : NetHandler
 
     }
 
-    public override void handleUpdateSign(UpdateSignPacket packet)
+    public override void HandleUpdateSign(UpdateSignPacket packet)
     {
         if (_context.WorldHost.World.BlockHost.IsPosLoaded(packet.x, packet.y, packet.z))
         {

@@ -8,6 +8,10 @@ using BetaSharp.NBT;
 
 namespace BetaSharp.Blocks.Entities;
 
+/// <summary>
+/// Abstract class for block entities with an inventory.
+/// </summary>
+/// <typeparam name="T">The type of the block entity with inventory, just for CanPlayerUse method.</typeparam>
 public abstract class BlockEntityWithInventory<T> : BlockEntity, IInventory where T : BlockEntityWithInventory<T>
 {
     public abstract int Size { get; } // heirs must implement this to specify the inventory size

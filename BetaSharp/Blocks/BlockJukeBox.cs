@@ -33,7 +33,7 @@ internal class BlockJukeBox(int id, int textureId) : BlockWithEntity(id, texture
             return;
         }
 
-        jukebox.recordId = id;
+        jukebox.RecordID = id;
         jukebox.MarkDirty();
         world.Writer.SetBlockMeta(x, y, z, 1);
     }
@@ -43,12 +43,12 @@ internal class BlockJukeBox(int id, int textureId) : BlockWithEntity(id, texture
         if (level.IsRemote) return;
 
         BlockEntityRecordPlayer? jukebox = level.Entities.GetBlockEntity<BlockEntityRecordPlayer>(x, y, z);
-        int recordId = jukebox?.recordId ?? 0;
+        int recordId = jukebox?.RecordID ?? 0;
         if (recordId == 0) return;
 
         level.Broadcaster.WorldEvent(1005, x, y, z, 0);
         level.Broadcaster.PlayStreamingAtPos(null, x, y, z);
-        jukebox!.recordId = 0;
+        jukebox!.RecordID = 0;
         jukebox.MarkDirty();
         level.Writer.SetBlockMeta(x, y, z, 0);
 

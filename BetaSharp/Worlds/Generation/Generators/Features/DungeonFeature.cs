@@ -135,7 +135,7 @@ internal class DungeonFeature : Feature
 
         level.Writer.SetBlock(x, y, z, Block.Spawner.id, 0, true);
         BlockEntityMobSpawner? spawner = level.Entities.GetBlockEntity<BlockEntityMobSpawner>(x, y, z);
-        spawner!.SetSpawnedEntityId(PickMobSpawner(rand));
+        spawner!.SpawnedEntityId = PickMobSpawner(rand);
         return true;
     }
 

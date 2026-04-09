@@ -13,14 +13,14 @@ internal class BlockNote(int id) : BlockWithEntity(id, 74, Material.Wood)
 
         bool isPowered = @event.World.Redstone.IsStrongPowered(@event.X, @event.Y, @event.Z);
         BlockEntityNote? blockEntity = @event.World.Entities.GetBlockEntity<BlockEntityNote>(@event.X, @event.Y, @event.Z);
-        if (blockEntity == null || blockEntity.powered == isPowered) return;
+        if (blockEntity == null || blockEntity.Powered == isPowered) return;
 
         if (isPowered)
         {
-            blockEntity.playNote(@event.World, @event.X, @event.Y, @event.Z);
+            blockEntity.PlayNote(@event.World, @event.X, @event.Y, @event.Z);
         }
 
-        blockEntity.powered = isPowered;
+        blockEntity.Powered = isPowered;
     }
 
     public override bool onUse(OnUseEvent @event)
@@ -30,8 +30,8 @@ internal class BlockNote(int id) : BlockWithEntity(id, 74, Material.Wood)
         BlockEntityNote? blockEntity = @event.World.Entities.GetBlockEntity<BlockEntityNote>(@event.X, @event.Y, @event.Z);
         if (blockEntity == null) return false;
 
-        blockEntity.cycleNote();
-        blockEntity.playNote(@event.World, @event.X, @event.Y, @event.Z);
+        blockEntity.CycleNote();
+        blockEntity.PlayNote(@event.World, @event.X, @event.Y, @event.Z);
         return true;
     }
 
@@ -40,7 +40,7 @@ internal class BlockNote(int id) : BlockWithEntity(id, 74, Material.Wood)
         if (@event.World.IsRemote) return;
 
         BlockEntityNote? blockEntity = @event.World.Entities.GetBlockEntity<BlockEntityNote>(@event.X, @event.Y, @event.Z);
-        blockEntity?.playNote(@event.World, @event.X, @event.Y, @event.Z);
+        blockEntity?.PlayNote(@event.World, @event.X, @event.Y, @event.Z);
     }
 
     public override BlockEntity getBlockEntity() => new BlockEntityNote();

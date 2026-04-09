@@ -4,11 +4,26 @@ using BetaSharp.Network.Packets.Play;
 
 namespace BetaSharp.Blocks.Entities;
 
+/// <summary>
+/// Block entity for a sign, storing the text on the sign and whether it is editable.
+/// </summary>
 public class BlockEntitySign : BlockEntity
 {
-    private bool _editable = true;
     public override BlockEntityType Type => BlockEntity.Sign;
+
+    /// <summary>
+    /// If the sign is currently editable.
+    /// </summary>
+    public bool Editable { get; set; } = true;
+
+    /// <summary>
+    /// The text on the sign, with a maximum of 15 characters per line and 4 lines total.
+    /// </summary>
     public string[] Texts { get; set; } = ["", "", "", ""];
+
+    /// <summary>
+    /// The current row being edited, or -1 if no row is being edited.
+    /// </summary>
     public int CurrentRow { get; set; } = -1;
 
     public override void WriteNbt(NBTTagCompound nbt)
@@ -22,7 +37,7 @@ public class BlockEntitySign : BlockEntity
 
     public override void ReadNbt(NBTTagCompound nbt)
     {
-        _editable = false;
+        Editable = false;
         base.ReadNbt(nbt);
 
         for (int line = 0; line < 4; ++line)
@@ -45,15 +60,5 @@ public class BlockEntitySign : BlockEntity
         }
 
         return UpdateSignPacket.Get(X, Y, Z, lines);
-    }
-
-    public bool IsEditable()
-    {
-        return _editable;
-    }
-
-    public void SetEditable(bool editable)
-    {
-        _editable = editable;
     }
 }
