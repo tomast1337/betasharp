@@ -1,3 +1,4 @@
+BetaSharp.Client: /home/runner/work/Hexa.NET.ImGui/Hexa.NET.ImGui/src/imgui/imgui.cpp:20236: void ImGui::DockBuilderSetNodeSize(ImGuiID, ImVec2): Assertion `size.x > 0.0f && size.y > 0.0f' failed.
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime;
@@ -5,14 +6,17 @@ using System.Runtime.InteropServices;
 using BetaSharp.Blocks;
 using BetaSharp.Client.Achievements;
 using BetaSharp.Client.Diagnostics;
+using BetaSharp.Client.Diagnostics.GuiBackends;
 using BetaSharp.Client.DynamicTexture;
 using BetaSharp.Client.Entities;
 using BetaSharp.Client.Input;
 using BetaSharp.Client.Network;
 using BetaSharp.Client.Options;
 using BetaSharp.Client.Rendering;
+using BetaSharp.Client.Rendering.Backends;
 using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Client.Rendering.Core.OpenGL;
+using BetaSharp.Client.Rendering.Presentation;
 using BetaSharp.Client.Rendering.Core.Textures;
 using BetaSharp.Client.Rendering.Entities;
 using BetaSharp.Client.Rendering.Items;
@@ -42,8 +46,6 @@ using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Core.Systems;
 using BetaSharp.Worlds.Storage;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.Backends.GLFW;
-using Hexa.NET.ImGui.Backends.OpenGL3;
 using Microsoft.Extensions.Logging;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
@@ -126,7 +128,7 @@ public partial class BetaSharp :
 
     public GameRenderer GameRenderer { get; private set; }
     public WorldRenderer WorldRenderer { get; private set; }
-    public FramebufferManager FramebufferManager { get; private set; }
+    public IRenderPresentation FramebufferManager { get; private set; }
     public TextureManager TextureManager { get; private set; }
     public SkinManager SkinManager { get; private set; }
     public TextRenderer TextRenderer { get; private set; }
@@ -170,6 +172,8 @@ public partial class BetaSharp :
 
 
     private DebugWindowManager _debugWindowManager;
+    private IImGuiRendererBackend _imguiRendererBackend = null!;
+    private IRenderBackendRuntime _renderBackendRuntime = null!;
     private GLErrorHandler _glErrorHandler;
     private string _gameDataDir;
 
@@ -274,6 +278,7 @@ public partial class BetaSharp :
 
             RendererBackendSelection backendSelection = RendererBackendFactory.Resolve(RequestedRendererBackend);
             ActiveRendererBackend = backendSelection.Effective;
+            _renderBackendRuntime = RenderBackendRuntimeFactory.Create(ActiveRendererBackend);
 
             _logger.LogInformation(
                 "Renderer backend requested: {RequestedBackend}; active: {ActiveBackend}",
@@ -374,12 +379,6 @@ public partial class BetaSharp :
 
         ImGui.CreateContext();
 
-        // ImGuiImplGLFW and ImGuiImplOpenGL3 are compiled into separate native DLLs,
-        // each with their own GImGui context pointer. We must share the context created
-        // by cimgui.dll with both backend DLLs before calling their Init functions.
-        ImGuiImplGLFW.SetCurrentContext(ImGui.GetCurrentContext());
-        ImGuiImplOpenGL3.SetCurrentContext(ImGui.GetCurrentContext());
-
         ImGuiIO* io = ImGui.GetIO();
         io->ConfigFlags |= ImGuiConfigFlags.NavEnableKeyboard | ImGuiConfigFlags.DockingEnable;
 
@@ -388,8 +387,8 @@ public partial class BetaSharp :
         Mouse.create(Display.getGlfw(), Display.GetWindowHandle(), Display.getWidth(), Display.getHeight());
         Controller.Create(Display.getGlfw(), Display.GetWindowHandle());
 
-        ImGuiImplGLFW.InitForOpenGL((GLFWwindow*)Display.GetWindowHandle(), true);
-        ImGuiImplOpenGL3.Init("#version 330 core");
+        _imguiRendererBackend = _renderBackendRuntime.CreateImGuiRendererBackend();
+        _imguiRendererBackend.Initialize((nint)Display.GetWindowHandle());
         DebugWindowManager.ApplyStyle();
 
         _debugWindowManager = new DebugWindowManager(this, () => InGameHasFocus);
@@ -468,9 +467,10 @@ public partial class BetaSharp :
             () => _isMainMenuOpen
         ));
 
-        FramebufferManager = new FramebufferManager(Display.getFramebufferWidth(), Display.getFramebufferHeight(), Options);
-
-        EntityRenderDispatcher.Instance.SkinManager.RequestDownload(Session.username, true);
+        FramebufferManager = _renderBackendRuntime.CreatePresentation(
+            Display.getFramebufferWidth(),
+            Display.getFramebufferHeight(),
+            Options);
     }
 
     private void LoadVersion()
@@ -613,8 +613,7 @@ public partial class BetaSharp :
                     bool imguiThisFrame = Options.ShowDebugInfo;
                     if (imguiThisFrame)
                     {
-                        ImGuiImplOpenGL3.NewFrame();
-                        ImGuiImplGLFW.NewFrame();
+                        _imguiRendererBackend.NewFrame();
                         ImGui.NewFrame();
                         ImGuiInput.CapturingKeyboard = ImGui.GetIO().WantCaptureKeyboard && !_debugWindowManager.GameViewportFocused;
                     }
@@ -695,7 +694,7 @@ public partial class BetaSharp :
                         {
                             FramebufferManager.Resize(Display.getFramebufferWidth(), Display.getFramebufferHeight());
                             _lastViewportSize = Vector2.Zero;
-                            _debugWindowManager.ViewportTextureId = 0;
+                            _debugWindowManager.ViewportImage = PresentationViewportImage.Empty;
                         }
                     }
 
@@ -721,7 +720,7 @@ public partial class BetaSharp :
                     {
                         if (FramebufferManager.SkipBlit)
                         {
-                            _debugWindowManager.ViewportTextureId = FramebufferManager.TextureId;
+                            _debugWindowManager.ViewportImage = FramebufferManager.ViewportImage;
                         }
 
                         using (Profiler.Begin("ImguiBuild"))
@@ -732,7 +731,7 @@ public partial class BetaSharp :
                         using (Profiler.Begin("ImguiSubmit"))
                         {
                             ImGui.Render();
-                            ImGuiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
+                            _imguiRendererBackend.RenderDrawData();
                         }
                     }
 
