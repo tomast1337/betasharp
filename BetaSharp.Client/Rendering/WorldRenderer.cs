@@ -838,7 +838,7 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
             double maxDistance = 16.0D;
             if (cameraDx * cameraDx + cameraDy * cameraDy + cameraDz * cameraDz <= maxDistance * maxDistance)
             {
-                ParticleManager pm = _game.ParticleManager;
+                IParticleManager pm = _game.ParticleManager;
                 switch (particleName)
                 {
                     case "bubble": pm.AddBubble(x, y, z, velocityX, velocityY, velocityZ); break;
