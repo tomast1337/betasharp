@@ -281,8 +281,8 @@ public class BlockPistonBase : Block
         if (id != Piston.id && id != StickyPiston.id)
         {
             if (Math.Abs(Blocks[id].getHardness() - (-1.0F)) < 0.001F) return false;
-            if (Blocks[id].getPistonBehavior() == 2) return false;
-            if (!allowBreaking && Blocks[id].getPistonBehavior() == 1) return false;
+            if (Blocks[id].getPistonBehavior() == MaterialPistonBehavior.Unpushable) return false;
+            if (!allowBreaking && Blocks[id].getPistonBehavior() == MaterialPistonBehavior.Break) return false;
         }
         else if (IsExtended(ctx.Reader.GetBlockMeta(x, y, z))) return false;
 
@@ -311,7 +311,7 @@ public class BlockPistonBase : Block
                 return false;
             }
 
-            if (Blocks[blockId].getPistonBehavior() == 1) return true;
+            if (Blocks[blockId].getPistonBehavior() == MaterialPistonBehavior.Break) return true;
 
             if (pushCount == 12) return false;
 
@@ -343,7 +343,7 @@ public class BlockPistonBase : Block
                         return false;
                     }
 
-                    if (Blocks[blockId].getPistonBehavior() != 1)
+                    if (Blocks[blockId].getPistonBehavior() != MaterialPistonBehavior.Break)
                     {
                         if (pushCount == 12)
                         {

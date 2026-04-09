@@ -527,5 +527,5 @@ public class Block
         return this;
     }
 
-    public virtual int getPistonBehavior() => material.PistonBehavior;
+    public virtual MaterialPistonBehavior getPistonBehavior() => material.PistonBehavior;
 }

@@ -151,5 +151,5 @@ internal class BlockPressurePlate : Block
 
     public override void setupRenderBoundingBox() => setBoundingBox(0.5F - HalfWidth, 0.5F - HalfHeight, 0.5F - HalfDepth, 0.5F + HalfWidth, 0.5F + HalfHeight, 0.5F + HalfDepth);
 
-    public override int getPistonBehavior() => 1;
+    public override MaterialPistonBehavior getPistonBehavior() => MaterialPistonBehavior.Break;
 }
