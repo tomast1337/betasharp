@@ -8,7 +8,7 @@ using SixLabors.ImageSharp.Processing;
 
 namespace BetaSharp.Client.Rendering.Core.Textures;
 
-public sealed class SkinManager : IDisposable
+public sealed class SkinManager : ISkinManager
 {
     private const string SkinCacheDirectoryName = "SkinCache";
     private const int SkinCacheSize = 128;
