@@ -587,7 +587,7 @@ public class EntityManager
                         Block block = Block.Blocks[_world.Reader.GetBlockId(x, y, z)];
                         if (block != null)
                         {
-                            block.addIntersectingBoundingBox(_world.Reader, this, x, y, z, area, collidingBoundingBoxes);
+                            block.AddIntersectingBoundingBox(_world.Reader, this, x, y, z, area, collidingBoundingBoxes);
                         }
                     }
                 }
@@ -803,7 +803,7 @@ public class EntityManager
         }
 
         BlockWithEntity blockWithEntity = (BlockWithEntity)Block.Blocks[blockId];
-        entity = blockWithEntity.getBlockEntity();
+        entity = blockWithEntity.GetBlockEntity();
 
         if (entity == null)
         {

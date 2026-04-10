@@ -177,7 +177,7 @@ public class WorldRenderer : IWorldEventListener
 
     public void LoadRenderers()
     {
-        Block.Leaves.setGraphicsLevel(true);
+        Block.Leaves.SetGraphicsLevel(true);
         _renderDistance = _game.Options.renderDistance;
 
         ChunkRenderer?.Dispose();
@@ -677,11 +677,11 @@ public class WorldRenderer : IWorldEventListener
             int var7 = _world.Reader.GetBlockId(var2.BlockX, var2.BlockY, var2.BlockZ);
             if (var7 > 0)
             {
-                Block.Blocks[var7].updateBoundingBox(_world.Reader, var2.BlockX, var2.BlockY, var2.BlockZ);
+                Block.Blocks[var7].UpdateBoundingBox(_world.Reader, var2.BlockX, var2.BlockY, var2.BlockZ);
                 double var8 = var1.lastTickX + (var1.x - var1.lastTickX) * (double)var5;
                 double var10 = var1.lastTickY + (var1.y - var1.lastTickY) * (double)var5;
                 double var12 = var1.lastTickZ + (var1.z - var1.lastTickZ) * (double)var5;
-                DrawOutlinedBoundingBox(Block.Blocks[var7].getBoundingBox(_world.Reader, _world.Entities, var2.BlockX, var2.BlockY, var2.BlockZ).Expand((double)var6, (double)var6, (double)var6).Offset(-var8, -var10, -var12));
+                DrawOutlinedBoundingBox(Block.Blocks[var7].GetBoundingBox(_world.Reader, _world.Entities, var2.BlockX, var2.BlockY, var2.BlockZ).Expand((double)var6, (double)var6, (double)var6).Offset(-var8, -var10, -var12));
             }
 
             GLManager.GL.DepthMask(true);

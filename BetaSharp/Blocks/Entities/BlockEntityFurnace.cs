@@ -110,7 +110,7 @@ public class BlockEntityFurnace : BlockEntityWithInventory<BlockEntityFurnace>
             if (wasBurning != BurnTime > 0)
             {
                 stateChanged = true;
-                BlockFurnace.updateLitState(BurnTime > 0, World, X, Y, Z);
+                BlockFurnace.UpdateLitState(BurnTime > 0, World, X, Y, Z);
             }
         }
 
@@ -196,6 +196,6 @@ public class BlockEntityFurnace : BlockEntityWithInventory<BlockEntityFurnace>
         }
 
         int itemId = itemStack.getItem().id;
-        return itemId < 256 && Block.Blocks[itemId].material == Material.Wood ? 300 : itemId == Item.Stick.id ? 100 : itemId == Item.Coal.id ? 1600 : itemId == Item.LavaBucket.id ? 20000 : itemId == Block.Sapling.id ? 100 : 0;
+        return itemId < 256 && Block.Blocks[itemId].Material == Material.Wood ? 300 : itemId == Item.Stick.id ? 100 : itemId == Item.Coal.id ? 1600 : itemId == Item.LavaBucket.id ? 20000 : itemId == Block.Sapling.ID ? 100 : 0;
     }
 }

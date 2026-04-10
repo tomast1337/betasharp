@@ -25,11 +25,11 @@ internal class BlockFurnace : BlockWithEntity
         TextureId = 45;
     }
 
-    public override int getDroppedItemId(int blockMeta) => Furnace.id;
+    public override int GetDroppedItemId(int blockMeta) => Furnace.ID;
 
-    public override void onPlaced(OnPlacedEvent @event)
+    public override void OnPlaced(OnPlacedEvent @event)
     {
-        base.onPlaced(@event);
+        base.OnPlaced(@event);
 
         if (@event.Placer != null)
         {
@@ -53,11 +53,11 @@ internal class BlockFurnace : BlockWithEntity
         }
         else
         {
-            updateDirection(@event);
+            UpdateDirection(@event);
         }
     }
 
-    private static void updateDirection(OnPlacedEvent @event)
+    private static void UpdateDirection(OnPlacedEvent @event)
     {
         if (@event.World.IsRemote) return;
 
@@ -90,7 +90,7 @@ internal class BlockFurnace : BlockWithEntity
     }
 
 
-    public override void randomDisplayTick(OnTickEvent @event)
+    public override void RandomDisplayTick(OnTickEvent @event)
     {
         if (!_lit) return;
 
@@ -128,7 +128,7 @@ internal class BlockFurnace : BlockWithEntity
         _ => TextureId
     };
 
-    public override bool onUse(OnUseEvent @event)
+    public override bool OnUse(OnUseEvent @event)
     {
         if (@event.World.IsRemote) return true;
 
@@ -139,12 +139,12 @@ internal class BlockFurnace : BlockWithEntity
         return true;
     }
 
-    public static void updateLitState(bool lit, IWorldContext world, int x, int y, int z)
+    public static void UpdateLitState(bool lit, IWorldContext world, int x, int y, int z)
     {
         int meta = world.Reader.GetBlockMeta(x, y, z);
         BlockEntity? furnace = world.Entities.GetBlockEntity<BlockEntity>(x, y, z);
         s_ignoreBlockRemoval.Value = true;
-        world.Writer.SetBlock(x, y, z, lit ? LitFurnace.id : Furnace.id);
+        world.Writer.SetBlock(x, y, z, lit ? LitFurnace.ID : Furnace.ID);
 
         s_ignoreBlockRemoval.Value = false;
         world.Writer.SetBlockMeta(x, y, z, meta);
@@ -152,9 +152,9 @@ internal class BlockFurnace : BlockWithEntity
         world.Entities.SetBlockEntity(x, y, z, furnace!);
     }
 
-    public override BlockEntity getBlockEntity() => new BlockEntityFurnace();
+    public override BlockEntity GetBlockEntity() => new BlockEntityFurnace();
 
-    public override void onBreak(OnBreakEvent @event)
+    public override void OnBreak(OnBreakEvent @event)
     {
         if (!s_ignoreBlockRemoval.Value)
         {
@@ -192,6 +192,6 @@ internal class BlockFurnace : BlockWithEntity
             }
         }
 
-        base.onBreak(@event);
+        base.OnBreak(@event);
     }
 }

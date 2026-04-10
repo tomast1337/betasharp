@@ -94,7 +94,7 @@ public class EntityBoat : Entity
 
                 for (int i = 0; i < 3; ++i)
                 {
-                    dropItem(Block.Planks.id, 1, 0.0F);
+                    dropItem(Block.Planks.ID, 1, 0.0F);
                 }
 
                 for (int i = 0; i < 2; ++i)
@@ -286,7 +286,7 @@ public class EntityBoat : Entity
 
                 for (int i = 0; i < 3; ++i)
                 {
-                    dropItem(Block.Planks.id, 1, 0.0F);
+                    dropItem(Block.Planks.ID, 1, 0.0F);
                 }
 
                 for (int i = 0; i < 2; ++i)
@@ -324,7 +324,7 @@ public class EntityBoat : Entity
             int snowY = MathHelper.Floor(base.y);
             int snowZ = MathHelper.Floor(base.z + ((i / 2) - 0.5D) * 0.8D);
 
-            if (world.Reader.GetBlockId(snowX, snowY, snowZ) == Block.Snow.id)
+            if (world.Reader.GetBlockId(snowX, snowY, snowZ) == Block.Snow.ID)
             {
                 world.Writer.SetBlock(snowX, snowY, snowZ, 0);
             }

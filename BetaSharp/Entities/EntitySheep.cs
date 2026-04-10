@@ -30,14 +30,14 @@ public class EntitySheep : EntityAnimal
     {
         if (!getSheared())
         {
-            dropItem(new ItemStack(Block.Wool.id, 1, getFleeceColor()), 0.0F);
+            dropItem(new ItemStack(Block.Wool.ID, 1, getFleeceColor()), 0.0F);
         }
 
     }
 
     protected override int getDropItemId()
     {
-        return Block.Wool.id;
+        return Block.Wool.ID;
     }
 
     public override bool interact(EntityPlayer player)
@@ -52,7 +52,7 @@ public class EntitySheep : EntityAnimal
 
                 for (int i = 0; i < woolCount; ++i)
                 {
-                    EntityItem woolItem = dropItem(new ItemStack(Block.Wool.id, 1, getFleeceColor()), 1.0F);
+                    EntityItem woolItem = dropItem(new ItemStack(Block.Wool.ID, 1, getFleeceColor()), 1.0F);
                     woolItem.velocityY += (double)(random.NextFloat() * 0.05F);
                     woolItem.velocityX += (double)((random.NextFloat() - random.NextFloat()) * 0.1F);
                     woolItem.velocityZ += (double)((random.NextFloat() - random.NextFloat()) * 0.1F);

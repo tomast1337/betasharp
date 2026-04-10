@@ -10,7 +10,7 @@ internal class BlockPumpkin : Block
     public BlockPumpkin(int id, int textureId, bool lit) : base(id, Material.Pumpkin)
     {
         TextureId = textureId;
-        setTickRandomly(true);
+        SetTickRandomly(true);
         _lit = lit;
     }
 
@@ -37,13 +37,13 @@ internal class BlockPumpkin : Block
         _ => TextureId + 16
     };
 
-    public override bool canPlaceAt(CanPlaceAtContext evt)
+    public override bool CanPlaceAt(CanPlaceAtContext evt)
     {
         int blockId = evt.World.Reader.GetBlockId(evt.X, evt.Y, evt.Z);
-        return (blockId == 0 || Blocks[blockId].material.IsReplaceable) && evt.World.Reader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z);
+        return (blockId == 0 || Blocks[blockId].Material.IsReplaceable) && evt.World.Reader.ShouldSuffocate(evt.X, evt.Y - 1, evt.Z);
     }
 
-    public override void onPlaced(OnPlacedEvent @event)
+    public override void OnPlaced(OnPlacedEvent @event)
     {
         if (@event.Placer == null) return;
         int direction = MathHelper.Floor(@event.Placer.yaw * 4.0F / 360.0F + 2.5D) & 3;

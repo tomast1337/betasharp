@@ -24,48 +24,48 @@ internal class BlockSign : BlockWithEntity
         _standing = standing;
         TextureId = 4;
         _blockEntityType = blockEntityType;
-        setBoundingBox(0.5F - Width, 0.0F, 0.5F - Width, 0.5F + Width, Height, 0.5F + Width);
+        SetBoundingBox(0.5F - Width, 0.0F, 0.5F - Width, 0.5F + Width, Height, 0.5F + Width);
     }
 
-    public override Box? getCollisionShape(IBlockReader world, EntityManager entities, int x, int y, int z) => null;
+    public override Box? GetCollisionShape(IBlockReader world, EntityManager entities, int x, int y, int z) => null;
 
-    public override Box getBoundingBox(IBlockReader world, EntityManager entities, int x, int y, int z)
+    public override Box GetBoundingBox(IBlockReader world, EntityManager entities, int x, int y, int z)
     {
-        updateBoundingBox(world, x, y, z);
-        return base.getBoundingBox(world, entities, x, y, z);
+        UpdateBoundingBox(world, x, y, z);
+        return base.GetBoundingBox(world, entities, x, y, z);
     }
 
-    public override void updateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z)
+    public override void UpdateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z)
     {
         if (_standing) return;
 
         Side facing = blockReader.GetBlockMeta(x, y, z).ToSide();
 
-        setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+        SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         switch (facing)
         {
             case Side.North:
-                setBoundingBox(MinExtent, TopOffset, 1.0F - Thickness, MaxExtent, BottomOffset, 1.0F);
+                SetBoundingBox(MinExtent, TopOffset, 1.0F - Thickness, MaxExtent, BottomOffset, 1.0F);
                 break;
             case Side.South:
-                setBoundingBox(MinExtent, TopOffset, 0.0F, MaxExtent, BottomOffset, Thickness);
+                SetBoundingBox(MinExtent, TopOffset, 0.0F, MaxExtent, BottomOffset, Thickness);
                 break;
             case Side.West:
-                setBoundingBox(1.0F - Thickness, TopOffset, MinExtent, 1.0F, BottomOffset, MaxExtent);
+                SetBoundingBox(1.0F - Thickness, TopOffset, MinExtent, 1.0F, BottomOffset, MaxExtent);
                 break;
             case Side.East:
-                setBoundingBox(0.0F, TopOffset, MinExtent, Thickness, BottomOffset, MaxExtent);
+                SetBoundingBox(0.0F, TopOffset, MinExtent, Thickness, BottomOffset, MaxExtent);
                 break;
         }
     }
 
-    public override BlockRendererType getRenderType() => BlockRendererType.Entity;
+    public override BlockRendererType GetRenderType() => BlockRendererType.Entity;
 
-    public override bool isFullCube() => false;
+    public override bool IsFullCube() => false;
 
-    public override bool isOpaque() => false;
+    public override bool IsOpaque() => false;
 
-    public override BlockEntity getBlockEntity()
+    public override BlockEntity GetBlockEntity()
     {
         try
         {
@@ -77,9 +77,9 @@ internal class BlockSign : BlockWithEntity
         }
     }
 
-    public override int getDroppedItemId(int blockMeta) => Item.Sign.id;
+    public override int GetDroppedItemId(int blockMeta) => Item.Sign.id;
 
-    public override void neighborUpdate(OnTickEvent @event)
+    public override void NeighborUpdate(OnTickEvent @event)
     {
         bool shouldBreak = false;
         if (_standing)
@@ -106,10 +106,10 @@ internal class BlockSign : BlockWithEntity
 
         if (shouldBreak)
         {
-            dropStacks(new OnDropEvent(@event.World, @event.X, @event.Y, @event.Z, @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z)));
+            DropStacks(new OnDropEvent(@event.World, @event.X, @event.Y, @event.Z, @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z)));
             @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
         }
 
-        base.neighborUpdate(@event);
+        base.NeighborUpdate(@event);
     }
 }

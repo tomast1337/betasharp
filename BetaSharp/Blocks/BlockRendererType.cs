@@ -1,5 +1,8 @@
 namespace BetaSharp.Blocks;
 
+/// <summary>
+/// Enumeration of block renderer types, corresponding to the rendering logic used for each block.
+/// </summary>
 public enum BlockRendererType : int
 {
     Entity = -1,

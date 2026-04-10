@@ -7,9 +7,9 @@ internal class BlockNote(int id) : BlockWithEntity(id, 74, Material.Wood)
 {
     public override int GetTexture(Side side) => TextureId;
 
-    public override void neighborUpdate(OnTickEvent @event)
+    public override void NeighborUpdate(OnTickEvent @event)
     {
-        if (!(@event.BlockId > 0 && Blocks[@event.BlockId].canEmitRedstonePower())) return;
+        if (!(@event.BlockId > 0 && Blocks[@event.BlockId].CanEmitRedstonePower())) return;
 
         bool isPowered = @event.World.Redstone.IsStrongPowered(@event.X, @event.Y, @event.Z);
         BlockEntityNote? blockEntity = @event.World.Entities.GetBlockEntity<BlockEntityNote>(@event.X, @event.Y, @event.Z);
@@ -23,7 +23,7 @@ internal class BlockNote(int id) : BlockWithEntity(id, 74, Material.Wood)
         blockEntity.Powered = isPowered;
     }
 
-    public override bool onUse(OnUseEvent @event)
+    public override bool OnUse(OnUseEvent @event)
     {
         if (@event.World.IsRemote) return true;
 
@@ -35,7 +35,7 @@ internal class BlockNote(int id) : BlockWithEntity(id, 74, Material.Wood)
         return true;
     }
 
-    public override void onBlockBreakStart(OnBlockBreakStartEvent @event)
+    public override void OnBlockBreakStart(OnBlockBreakStartEvent @event)
     {
         if (@event.World.IsRemote) return;
 
@@ -43,9 +43,9 @@ internal class BlockNote(int id) : BlockWithEntity(id, 74, Material.Wood)
         blockEntity?.PlayNote(@event.World, @event.X, @event.Y, @event.Z);
     }
 
-    public override BlockEntity getBlockEntity() => new BlockEntityNote();
+    public override BlockEntity GetBlockEntity() => new BlockEntityNote();
 
-    public override void onBlockAction(OnBlockActionEvent @event)
+    public override void OnBlockAction(OnBlockActionEvent @event)
     {
         float pitch = (float)Math.Pow(2.0D, (@event.Data2 - 12) / 12.0D);
         string instrumentName = @event.Data1 switch

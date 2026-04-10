@@ -14,15 +14,15 @@ internal class BlockJukeBox(int id, int textureId) : BlockWithEntity(id, texture
 
     public override int GetTexture(Side side) => TextureId + (side == Side.Up ? 1 : 0);
 
-    public override bool onUse(OnUseEvent @event)
+    public override bool OnUse(OnUseEvent @event)
     {
         if (@event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z) == 0) return false;
 
-        tryEjectRecord(@event.World, @event.X, @event.Y, @event.Z);
+        TryEjectRecord(@event.World, @event.X, @event.Y, @event.Z);
         return true;
     }
 
-    public static void insertRecord(IWorldContext world, int x, int y, int z, int id)
+    public static void InsertRecord(IWorldContext world, int x, int y, int z, int id)
     {
         if (world.IsRemote) return;
 
@@ -38,7 +38,7 @@ internal class BlockJukeBox(int id, int textureId) : BlockWithEntity(id, texture
         world.Writer.SetBlockMeta(x, y, z, 1);
     }
 
-    public static void tryEjectRecord(IWorldContext level, int x, int y, int z)
+    public static void TryEjectRecord(IWorldContext level, int x, int y, int z)
     {
         if (level.IsRemote) return;
 
@@ -62,16 +62,16 @@ internal class BlockJukeBox(int id, int textureId) : BlockWithEntity(id, texture
         level.SpawnEntity(entityItem);
     }
 
-    public override void onBreak(OnBreakEvent @event)
+    public override void OnBreak(OnBreakEvent @event)
     {
-        tryEjectRecord(@event.World, @event.X, @event.Y, @event.Z);
-        base.onBreak(@event);
+        TryEjectRecord(@event.World, @event.X, @event.Y, @event.Z);
+        base.OnBreak(@event);
     }
 
-    public override void dropStacks(OnDropEvent @event)
+    public override void DropStacks(OnDropEvent @event)
     {
-        if (!@event.World.IsRemote) base.dropStacks(@event);
+        if (!@event.World.IsRemote) base.DropStacks(@event);
     }
 
-    public override BlockEntity getBlockEntity() => new BlockEntityRecordPlayer();
+    public override BlockEntity GetBlockEntity() => new BlockEntityRecordPlayer();
 }

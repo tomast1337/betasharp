@@ -99,7 +99,7 @@ public class EntityRenderDispatcher
         if (camera.isSleeping())
         {
             int blockId = world.Reader.GetBlockId(MathHelper.Floor(camera.x), MathHelper.Floor(camera.y), MathHelper.Floor(camera.z));
-            if (blockId == Block.Bed.id)
+            if (blockId == Block.Bed.ID)
             {
                 int var8 = world.Reader.GetBlockMeta(MathHelper.Floor(camera.x), MathHelper.Floor(camera.y), MathHelper.Floor(camera.z));
                 int var9 = var8 & 3;

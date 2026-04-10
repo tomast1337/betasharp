@@ -717,7 +717,7 @@ public abstract class EntityPlayer : EntityLiving
         if (world.Reader.IsPosLoaded(x, y, z))
         {
             int var4 = world.Reader.GetBlockMeta(x, y, z);
-            int var5 = BlockBed.getDirection(var4);
+            int var5 = BlockBed.GetDirection(var4);
             float var6 = 0.5F;
             float var7 = 0.5F;
             switch (var5)
@@ -782,11 +782,11 @@ public abstract class EntityPlayer : EntityLiving
         setBoundingBoxSpacing(0.6F, 1.8F);
         resetEyeHeight();
         Vec3i? var4 = sleepingPos;
-        if (var4 is (int x, int y, int z) && world.Reader.GetBlockId(x, y, z) == Block.Bed.id)
+        if (var4 is (int x, int y, int z) && world.Reader.GetBlockId(x, y, z) == Block.Bed.ID)
         {
             int bedMeta = world.Reader.GetBlockMeta(x, y, z);
-            BlockBed.updateState(world.Writer, x, y, z, bedMeta, false);
-            Vec3i? var5 = BlockBed.findWakeUpPosition(world.Reader, x, y, z, 0);
+            BlockBed.UpdateState(world.Writer, x, y, z, bedMeta, false);
+            Vec3i? var5 = BlockBed.FindWakeUpPosition(world.Reader, x, y, z, 0);
             if (var5 == null)
             {
                 var5 = new Vec3i(x, y + 1, z);
@@ -818,7 +818,7 @@ public abstract class EntityPlayer : EntityLiving
 
     private bool isSleepingInBed()
     {
-        return world.Reader.GetBlockId(sleepingPos.X, sleepingPos.Y, sleepingPos.Z) == Block.Bed.id;
+        return world.Reader.GetBlockId(sleepingPos.X, sleepingPos.Y, sleepingPos.Z) == Block.Bed.ID;
     }
 
     public static Vec3i? findRespawnPosition(IWorldContext world, Vec3i? spawnPos)
@@ -835,12 +835,12 @@ public abstract class EntityPlayer : EntityLiving
         chunkSource.LoadChunk((x - 3) >> 4, (z + 3) >> 4);
         chunkSource.LoadChunk((x + 3) >> 4, (z + 3) >> 4);
 
-        if (world.Reader.GetBlockId(x, y, z) != Block.Bed.id)
+        if (world.Reader.GetBlockId(x, y, z) != Block.Bed.ID)
         {
             return null;
         }
 
-        return BlockBed.findWakeUpPosition(world.Reader, x, y, z, 0);
+        return BlockBed.FindWakeUpPosition(world.Reader, x, y, z, 0);
     }
 
     public float getSleepingRotation()
@@ -848,7 +848,7 @@ public abstract class EntityPlayer : EntityLiving
         if (sleepingPos != null)
         {
             int var1 = world.Reader.GetBlockMeta(sleepingPos.X, sleepingPos.Y, sleepingPos.Z);
-            int var2 = BlockBed.getDirection(var1);
+            int var2 = BlockBed.GetDirection(var1);
             switch (var2)
             {
                 case 0:

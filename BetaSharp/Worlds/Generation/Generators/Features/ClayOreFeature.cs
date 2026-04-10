@@ -7,7 +7,7 @@ namespace BetaSharp.Worlds.Generation.Generators.Features;
 
 internal class ClayOreFeature : Feature
 {
-    private readonly int _clayBlockId = Block.Clay.id;
+    private readonly int _clayBlockId = Block.Clay.ID;
     private readonly int _numberOfBlocks;
 
     public ClayOreFeature(int numberOfBlocks) => _numberOfBlocks = numberOfBlocks;
@@ -61,7 +61,7 @@ internal class ClayOreFeature : Feature
                         if (dx * dx + dy * dy + dz * dz < 1.0D)
                         {
                             int var47 = level.Reader.GetBlockId(blockX, blockY, blockZ);
-                            if (var47 == Block.Sand.id)
+                            if (var47 == Block.Sand.ID)
                             {
                                 level.Writer.SetBlockWithoutNotifyingNeighbors(blockX, blockY, blockZ, _clayBlockId, 0, false);
                             }

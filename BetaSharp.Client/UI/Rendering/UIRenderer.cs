@@ -288,7 +288,7 @@ public class UIRenderer(TextRenderer textRenderer, TextureManager textureManager
     {
         if (stack == null) return;
 
-        bool isBlock = stack.ItemId < 256 && BlockRenderer.IsSideLit(Block.Blocks[stack.ItemId].getRenderType());
+        bool isBlock = stack.ItemId < 256 && BlockRenderer.IsSideLit(Block.Blocks[stack.ItemId].GetRenderType());
 
         if (isBlock)
         {

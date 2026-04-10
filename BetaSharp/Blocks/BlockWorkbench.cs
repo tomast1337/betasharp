@@ -16,7 +16,7 @@ internal class BlockWorkbench : Block
         };
     }
 
-    public override bool onUse(OnUseEvent ctx)
+    public override bool OnUse(OnUseEvent ctx)
     {
         if (ctx.World.IsRemote) return true;
         ctx.Player.openCraftingScreen(ctx.X, ctx.Y, ctx.Z);

@@ -677,7 +677,7 @@ public abstract class EntityLiving : Entity
         int x = MathHelper.Floor(base.x);
         int y = MathHelper.Floor(boundingBox.MinY);
         int z = MathHelper.Floor(base.z);
-        return world.Reader.GetBlockId(x, y, z) == Block.Ladder.id;
+        return world.Reader.GetBlockId(x, y, z) == Block.Ladder.ID;
     }
 
     public override void writeNbt(NBTTagCompound nbt)
