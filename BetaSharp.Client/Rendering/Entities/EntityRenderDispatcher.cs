@@ -21,7 +21,7 @@ public class EntityRenderDispatcher : IEntityRenderDispatcher
     public double OffsetZ { get; set; }
     public ITextureManager TextureManager { get; private set; }
     public ISkinManager SkinManager { get; set; }
-    public HeldItemRenderer HeldItemRenderer { get; set; }
+    public IHeldItemRenderer HeldItemRenderer { get; set; } = new NoOpHeldItemRenderer();
     public World World { get; set; }
     public EntityLiving CameraEntity { get; private set; }
     public float PlayerViewY { get; set; }

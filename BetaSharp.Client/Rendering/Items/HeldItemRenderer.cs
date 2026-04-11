@@ -12,7 +12,7 @@ using BetaSharp.Worlds.Maps;
 
 namespace BetaSharp.Client.Rendering.Items;
 
-public class HeldItemRenderer
+public class HeldItemRenderer : IHeldItemRenderer
 {
     private readonly BetaSharp _game;
     private ItemStack itemToRender;

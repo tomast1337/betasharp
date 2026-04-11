@@ -32,7 +32,7 @@ internal sealed class NoOpEntityRenderDispatcher : IEntityRenderDispatcher
     public double OffsetZ { get; set; }
     public ITextureManager TextureManager => null!;
     public ISkinManager SkinManager { get; set; } = null!;
-    public HeldItemRenderer HeldItemRenderer { get; set; } = null!;
+    public IHeldItemRenderer HeldItemRenderer { get; set; } = new NoOpHeldItemRenderer();
     public World World { get; set; } = null!;
     public EntityLiving CameraEntity => null!;
     public float PlayerViewY { get; set; }

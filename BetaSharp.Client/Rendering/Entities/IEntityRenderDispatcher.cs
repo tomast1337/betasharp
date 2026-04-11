@@ -17,7 +17,7 @@ public interface IEntityRenderDispatcher
 
     ITextureManager TextureManager { get; }
     ISkinManager SkinManager { get; set; }
-    HeldItemRenderer HeldItemRenderer { get; set; }
+    IHeldItemRenderer HeldItemRenderer { get; set; }
     World World { get; set; }
     EntityLiving CameraEntity { get; }
     float PlayerViewY { get; set; }

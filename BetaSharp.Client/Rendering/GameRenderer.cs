@@ -27,7 +27,6 @@ public class GameRenderer : ISceneRenderer
     private readonly bool _cloudFog = false;
     private readonly BetaSharp _client;
     private float _viewDistance;
-    public HeldItemRenderer itemRenderer;
     public CameraController cameraController;
     private int _ticks;
     private Entity _targetedEntity;
@@ -42,20 +41,20 @@ public class GameRenderer : ISceneRenderer
     private float _fogColorGreen;
     private float _fogColorBlue;
     private bool? _appliedVSyncState;
+    private IHeldItemRenderer HeldItemRenderer => _client.EntityRenderDispatcher.HeldItemRenderer;
 
     private readonly Stopwatch _fpsTimer = Stopwatch.StartNew();
 
     public GameRenderer(BetaSharp game)
     {
         _client = game;
-        itemRenderer = new HeldItemRenderer(game);
         cameraController = new CameraController(game);
     }
 
     public void UpdateCamera() => updateCamera();
     public void Tick(float partialTicks) => tick(partialTicks);
     public void OnFrameUpdate(float tickDelta) => onFrameUpdate(tickDelta);
-    public void ResetEquippedItemProgress() => itemRenderer.ResetEquippedProgress();
+    public void ResetEquippedItemProgress() => HeldItemRenderer.ResetEquippedProgress();
     public void MarkVisibleChunksDirty() => _client.WorldRenderer.MarkAllVisibleChunksDirty();
     public void UpdateClouds() => _client.WorldRenderer.UpdateClouds();
     public void ChangeWorld(World world) => _client.WorldRenderer.ChangeWorld(world);
@@ -87,7 +86,7 @@ public class GameRenderer : ISceneRenderer
     {
         cameraController.UpdateCamera();
         ++_ticks;
-        itemRenderer.updateEquippedItem();
+        HeldItemRenderer.updateEquippedItem();
         renderRain();
     }
 
@@ -231,13 +230,13 @@ public class GameRenderer : ISceneRenderer
 
         if (_client.Options.CameraMode == CameraMode.FirstPerson && !_client.Camera.IsSleeping && !_client.Options.HideGUI)
         {
-            itemRenderer.renderItemInFirstPerson(tickDelta);
+            HeldItemRenderer.renderItemInFirstPerson(tickDelta);
         }
 
         GLManager.GL.PopMatrix();
         if (_client.Options.CameraMode == CameraMode.FirstPerson && !_client.Camera.IsSleeping)
         {
-            itemRenderer.renderOverlays(tickDelta);
+            HeldItemRenderer.renderOverlays(tickDelta);
             cameraController.ApplyDamageTiltEffect(tickDelta);
         }
 
