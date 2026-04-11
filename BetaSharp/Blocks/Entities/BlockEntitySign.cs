@@ -11,9 +11,6 @@ public class BlockEntitySign : BlockEntity
 {
     public override BlockEntityType Type => BlockEntity.Sign;
 
-    /// <summary>
-    /// If the sign is currently editable.
-    /// </summary>
     public bool Editable { get; set; } = true;
 
     /// <summary>
@@ -21,9 +18,6 @@ public class BlockEntitySign : BlockEntity
     /// </summary>
     public string[] Texts { get; set; } = ["", "", "", ""];
 
-    /// <summary>
-    /// The current row being edited, or -1 if no row is being edited.
-    /// </summary>
     public int CurrentRow { get; set; } = -1;
 
     public override void WriteNbt(NBTTagCompound nbt)

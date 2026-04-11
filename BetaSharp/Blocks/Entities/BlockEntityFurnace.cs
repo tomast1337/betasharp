@@ -25,11 +25,6 @@ public class BlockEntityFurnace : BlockEntityWithInventory<BlockEntityFurnace>
 
     public int FuelTime { get; set; }
 
-    // codingisfun2831t - doc - Note that for some reason the furance slot management
-    // was different from the othercontainers, it doesnt mark the inventory as dirty
-    // when removing items, maybe because the furnace is a bit special? I dont know,
-    // but I'll just use the inherited code, not replicating this behavor.
-
     public override void ReadNbt(NBTTagCompound nbt)
     {
         base.ReadNbt(nbt);

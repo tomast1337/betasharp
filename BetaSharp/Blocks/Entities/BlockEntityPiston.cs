@@ -36,18 +36,18 @@ public class BlockEntityPiston : BlockEntity
         IsSource = source;
     }
 
-    public float getProgress(float tickDelta)
+    public float GetProgress(float tickDelta)
     {
         if (tickDelta > 1.0F) tickDelta = 1.0F;
 
         return _progress + (_lastProgress - _progress) * tickDelta;
     }
 
-    public float GetRenderOffsetX(float tickDelta) => IsExtending ? (getProgress(tickDelta) - 1.0F) * PistonConstants.HeadOffsetX[Facing] : (1.0F - getProgress(tickDelta)) * PistonConstants.HeadOffsetX[Facing];
+    public float GetRenderOffsetX(float tickDelta) => IsExtending ? (GetProgress(tickDelta) - 1.0F) * PistonConstants.HeadOffsetX[Facing] : (1.0F - GetProgress(tickDelta)) * PistonConstants.HeadOffsetX[Facing];
 
-    public float GetRenderOffsetY(float tickDelta) => IsExtending ? (getProgress(tickDelta) - 1.0F) * PistonConstants.HeadOffsetY[Facing] : (1.0F - getProgress(tickDelta)) * PistonConstants.HeadOffsetY[Facing];
+    public float GetRenderOffsetY(float tickDelta) => IsExtending ? (GetProgress(tickDelta) - 1.0F) * PistonConstants.HeadOffsetY[Facing] : (1.0F - GetProgress(tickDelta)) * PistonConstants.HeadOffsetY[Facing];
 
-    public float GetRenderOffsetZ(float tickDelta) => IsExtending ? (getProgress(tickDelta) - 1.0F) * PistonConstants.HeadOffsetZ[Facing] : (1.0F - getProgress(tickDelta)) * PistonConstants.HeadOffsetZ[Facing];
+    public float GetRenderOffsetZ(float tickDelta) => IsExtending ? (GetProgress(tickDelta) - 1.0F) * PistonConstants.HeadOffsetZ[Facing] : (1.0F - GetProgress(tickDelta)) * PistonConstants.HeadOffsetZ[Facing];
 
     private void PushEntities(EntityManager entities, float collisionShapeSizeMultiplier, float entityMoveMultiplier)
     {

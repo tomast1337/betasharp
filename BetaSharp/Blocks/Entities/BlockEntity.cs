@@ -14,28 +14,14 @@ public abstract class BlockEntity
 {
     private static readonly IRegistry<BlockEntityType> s_registry = DefaultRegistries.BlockEntityTypes;
     private static readonly ILogger<BlockEntity> s_logger = Log.Instance.For<BlockEntity>();
-    public IWorldContext World;
+    public IWorldContext World { get; set; }
     protected bool Removed;
 
-    /// <summary>
-    /// Type of the block entity.
-    /// </summary>
     public abstract BlockEntityType Type { get; }
 
-    /// <summary>
-    /// X position of the block entity.
-    /// </summary>
-    public int X;
-
-    /// <summary>
-    /// Y position of the block entity.
-    /// </summary>
-    public int Y;
-
-    /// <summary>
-    /// Z position of the block entity.
-    /// </summary>
-    public int Z;
+    public int X { get; set; }
+    public int Y { get; set; }
+    public int Z { get; set; }
 
     // Block entity registered types
     // No documentation for each as they are self-explanatory and will just fill up the file.
@@ -75,7 +61,7 @@ public abstract class BlockEntity
 
     public virtual void WriteNbt(NBTTagCompound nbt)
     {
-        nbt.SetString("id", Type.Id);
+        nbt.SetString("id", Type.ID);
         nbt.SetInteger("x", X);
         nbt.SetInteger("y", Y);
         nbt.SetInteger("z", Z);
@@ -127,9 +113,6 @@ public abstract class BlockEntity
     /// </summary>
     public int PushedBlockData => World.Reader.GetBlockMeta(X, Y, Z);
 
-    /// <summary>
-    /// Mark dirty for updates.
-    /// </summary>
     public void MarkDirty()
     {
         if (World == null || World.IsRemote)
@@ -143,9 +126,6 @@ public abstract class BlockEntity
     /// <summary>
     /// Gets the (squared!) distance from the center of the block entity to the given coordinates.
     /// </summary>
-    /// <param name="x">X pos to check.</param>
-    /// <param name="y">Y pos to check.</param>
-    /// <param name="z">Z pos to check.</param>
     /// <returns>The squared distance from the center of the block entity to the given coordinates. 
     public double DistanceFrom(double x, double y, double z)
     {
@@ -155,18 +135,10 @@ public abstract class BlockEntity
         return dx * dx + dy * dy + dz * dz;
     }
 
-    /// <summary>
-    /// Get the block class associated with the block at the current coordinates.
-    /// </summary>
     public Block GetBlock() => Block.Blocks[World.Reader.GetBlockId(X, Y, Z)];
 
     public virtual Packet CreateUpdatePacket() => null;
 
-    /// <summary>
-    /// Return true if the block entity removed (either by the targeted block not existing,
-    /// or Removed being true via <see cref="MarkRemoved"/>).
-    /// </summary>
-    /// <returns></returns>
     public bool IsRemoved()
     {
         if (Removed)
@@ -186,14 +158,8 @@ public abstract class BlockEntity
         return false;
     }
 
-    /// <summary>
-    /// Mark this block entity as being removed.
-    /// </summary>
     public void MarkRemoved() => Removed = true;
 
-    /// <summary>
-    /// Cancel this block entity being removed, if it was marked as such by <see cref="MarkRemoved"/>.
-    /// </summary>
     public void CancelRemoval() => Removed = false;
 
     static BlockEntity()

@@ -38,5 +38,5 @@ internal class BlockIce : BlockBreakable
         @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, Water.ID);
     }
 
-    public override MaterialPistonBehavior GetPistonBehavior() => MaterialPistonBehavior.Normal;
+    public override PistonBehavior GetPistonBehavior() => PistonBehavior.Normal;
 }

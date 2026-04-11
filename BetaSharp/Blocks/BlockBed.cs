@@ -266,5 +266,5 @@ public class BlockBed : Block
         }
     }
 
-    public override MaterialPistonBehavior GetPistonBehavior() => MaterialPistonBehavior.Break;
+    public override PistonBehavior GetPistonBehavior() => PistonBehavior.Break;
 }

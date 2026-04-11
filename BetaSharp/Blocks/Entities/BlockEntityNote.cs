@@ -11,14 +11,8 @@ internal class BlockEntityNote : BlockEntity
 {
     public override BlockEntityType Type => BlockEntity.Music;
 
-    /// <summary>
-    /// Current note ID to play.
-    /// </summary>
     public sbyte Note { get; set; }
 
-    /// <summary>
-    /// If the note block is powered.
-    /// </summary>
     public bool Powered { get; set; } = false;
 
     public override void WriteNbt(NBTTagCompound nbt)
@@ -42,18 +36,12 @@ internal class BlockEntityNote : BlockEntity
         }
     }
 
-    /// <summary>
-    /// Cycle the current note, for block use.
-    /// </summary>
     public void CycleNote()
     {
         Note = (sbyte)((Note + 1) % 25);
         MarkDirty();
     }
 
-    /// <summary>
-    /// Play the note of this block.
-    /// </summary>
     public void PlayNote(IWorldContext level, int x, int y, int z)
     {
         if (level.Reader.GetMaterial(x, y + 1, z) == Material.Air)

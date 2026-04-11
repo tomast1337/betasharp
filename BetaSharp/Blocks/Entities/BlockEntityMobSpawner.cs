@@ -13,20 +13,10 @@ public class BlockEntityMobSpawner : BlockEntity
 {
     public override BlockEntityType Type => BlockEntity.MobSpawner;
 
-    /// <summary>
-    /// Delay until the next spawn try.
-    /// </summary>
     public int SpawnDelay { get; set; } = -1;
     public string SpawnedEntityId { get; set; } = "Pig";
 
-    /// <summary>
-    /// Gets or sets the rotation angle, in degrees.
-    /// </summary>
     public double Rotation { get; set; }
-
-    /// <summary>
-    /// Gets or sets the last applied rotation value.
-    /// </summary>
     public double LastRotation { get; set; } = 0.0D;
 
     private readonly ILogger<BlockEntityMobSpawner> _logger = Log.Instance.For<BlockEntityMobSpawner>();
@@ -36,9 +26,6 @@ public class BlockEntityMobSpawner : BlockEntity
         SpawnDelay = 20;
     }
 
-    /// <summary>
-    /// Checks if the player is in range of the mob spawner.
-    /// </summary>
     public bool IsPlayerInRange()
     {
         return World.Entities.GetClosestPlayer(X + 0.5D, Y + 0.5D, Z + 0.5D, 16.0D) != null;
@@ -123,9 +110,6 @@ public class BlockEntityMobSpawner : BlockEntity
         }
     }
 
-    /// <summary>
-    /// Reset the spawn delay.
-    /// </summary>
     private void ResetDelay()
     {
         SpawnDelay = 200 + World.Random.NextInt(600);

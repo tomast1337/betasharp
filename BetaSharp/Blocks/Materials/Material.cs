@@ -38,50 +38,15 @@ namespace BetaSharp.Blocks.Materials
 
         private bool _transparent;
 
-        /// <summary>
-        /// Map color of the material.
-        /// </summary>
         public MapColor MapColor { get; }
-
-        /// <summary>
-        /// If the material is a fluid.
-        /// </summary>
         public virtual bool IsFluid => false;
-
-        /// <summary>
-        /// If the material is a solid.
-        /// </summary>
         public virtual bool IsSolid => true;
-
-        /// <summary>
-        /// If the materials blocks vision through it.
-        /// </summary>
         public virtual bool BlocksVision => true;
-
-        /// <summary>
-        /// If the materials blocks movement through it.
-        /// </summary>
         public virtual bool BlocksMovement => true;
-
-        /// <summary>
-        /// If the block is burnable (by fire or lava).
-        /// </summary>
         public bool IsBurnable { get; private set; }
-
-        /// <summary>
-        /// If the block is replaceable.
-        /// </summary>
         public bool IsReplaceable { get; private set; }
-
-        /// <summary>
-        /// If the block can be harvested by hand.
-        /// </summary>
         public bool IsHandHarvestable { get; private set; } = true;
-
-        /// <summary>
-        /// <see cref="MaterialPistonBehavior"/> defining how the block behaves when pushed by a piston.
-        /// </summary>
-        public MaterialPistonBehavior PistonBehavior { get; private set; }
+        public PistonBehavior PistonBehavior { get; private set; }
 
         /// <summary>
         /// If the material suffocates entities inside it. A material suffocates if it blocks movement and is not transparent.
@@ -93,63 +58,39 @@ namespace BetaSharp.Blocks.Materials
             MapColor = mapColor;
         }
 
-        /// <summary>
-        /// Sets the material to use transparency and returns the current instance.
-        /// </summary>
-        /// <returns>The current instance with transparency enabled.</returns>
         private Material SetTransparent()
         {
             _transparent = true;
             return this;
         }
 
-        /// <summary>
-        /// Marks the material as requiring a tool for harvesting (not hand harvestable).
-        /// </summary>
-        /// <returns>The current instance with the tool requirement set.</returns>
         private Material SetRequiresTool()
         {
             IsHandHarvestable = false;
             return this;
         }
 
-        /// <summary>
-        /// Marks the material as burnable and returns the updated instance.
-        /// </summary>
-        /// <returns>The current instance of the material with burnable state enabled.</returns>
         private Material SetBurning()
         {
             IsBurnable = true;
             return this;
         }
 
-        /// <summary>
-        /// Marks the material as replaceable and returns the current instance.
-        /// </summary>
-        /// <returns>The current instance of the material with the replaceable flag set.</returns>
         public Material SetReplaceable()
         {
             IsReplaceable = true;
             return this;
         }
 
-        /// <summary>
-        /// Sets the piston behavior to break when acted upon by a piston.
-        /// </summary>
-        /// <returns>The current instance with the updated piston behavior.</returns>
         protected Material SetDestroyPistonBehavior()
         {
-            PistonBehavior = MaterialPistonBehavior.Break;
+            PistonBehavior = PistonBehavior.Break;
             return this;
         }
 
-        /// <summary>
-        /// Sets the piston behavior to unpushable, meaning it cannot be moved by pistons.
-        /// </summary>
-        /// <returns>The current instance with the updated piston behavior.</returns>
         protected Material SetUnpushablePistonBehavior()
         {
-            PistonBehavior = MaterialPistonBehavior.Unpushable;
+            PistonBehavior = PistonBehavior.Unpushable;
             return this;
         }
     }

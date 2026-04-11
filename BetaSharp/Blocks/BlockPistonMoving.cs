@@ -74,7 +74,7 @@ public class BlockPistonMoving : BlockWithEntity
             return null;
         }
 
-        float progress = piston.getProgress(0.0F);
+        float progress = piston.GetProgress(0.0F);
         if (piston.IsExtending)
         {
             progress = 1.0F - progress;
@@ -92,7 +92,7 @@ public class BlockPistonMoving : BlockWithEntity
         if (block == this) return;
 
         block.UpdateBoundingBox(blockReader, entities, x, y, z);
-        float progress = piston.getProgress(0.0F);
+        float progress = piston.GetProgress(0.0F);
         if (piston.IsExtending)
         {
             progress = 1.0F - progress;
