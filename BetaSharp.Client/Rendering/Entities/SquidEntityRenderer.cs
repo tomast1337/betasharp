@@ -20,11 +20,11 @@ public class SquidEntityRenderer : LivingEntityRenderer
     {
         float tiltAngle = squidEntity.PrevTiltAngle + (squidEntity.TiltAngle - squidEntity.PrevTiltAngle) * tickDelta;
         float tentacleYaw = squidEntity.PrevTentaclePhase + (squidEntity.TentaclePhase - squidEntity.PrevTentaclePhase) * tickDelta;
-        GLManager.GL.Translate(0.0F, 0.5F, 0.0F);
-        GLManager.GL.Rotate(180.0F - bodyYaw, 0.0F, 1.0F, 0.0F);
-        GLManager.GL.Rotate(tiltAngle, 1.0F, 0.0F, 0.0F);
-        GLManager.GL.Rotate(tentacleYaw, 0.0F, 1.0F, 0.0F);
-        GLManager.GL.Translate(0.0F, -1.2F, 0.0F);
+        Scene.Translate(0.0F, 0.5F, 0.0F);
+        Scene.Rotate(180.0F - bodyYaw, 0.0F, 1.0F, 0.0F);
+        Scene.Rotate(tiltAngle, 1.0F, 0.0F, 0.0F);
+        Scene.Rotate(tentacleYaw, 0.0F, 1.0F, 0.0F);
+        Scene.Translate(0.0F, -1.2F, 0.0F);
     }
 
     protected void func_21005_a(EntitySquid squidEntity, float tickDelta)

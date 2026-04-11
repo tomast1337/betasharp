@@ -1,5 +1,4 @@
 using BetaSharp.Client.Rendering.Core;
-using BetaSharp.Client.Rendering.Core.OpenGL;
 using BetaSharp.Client.Rendering.Entities.Models;
 using BetaSharp.Entities;
 
@@ -20,17 +19,16 @@ public class SlimeEntityRenderer : LivingEntityRenderer
         if (renderPass == 0)
         {
             setRenderPassModel(scaleAmount);
-            //GLManager.GL.Enable(GLEnum.Normalize);
-            GLManager.GL.Enable(GLEnum.Blend);
-            GLManager.GL.BlendFunc(GLEnum.SrcAlpha, GLEnum.OneMinusSrcAlpha);
+            Scene.Enable(SceneRenderCapability.Blend);
+            Scene.SetBlendFunction(SceneBlendFactor.SrcAlpha, SceneBlendFactor.OneMinusSrcAlpha);
             return true;
         }
         else
         {
             if (renderPass == 1)
             {
-                GLManager.GL.Disable(GLEnum.Blend);
-                GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 1.0F);
+                Scene.Disable(SceneRenderCapability.Blend);
+                Scene.SetColor(1.0F, 1.0F, 1.0F, 1.0F);
             }
 
             return false;
@@ -43,7 +41,7 @@ public class SlimeEntityRenderer : LivingEntityRenderer
         float squish = (slimeEntity.PrevSquishAmount + (slimeEntity.SquishAmount - slimeEntity.PrevSquishAmount) * tickDelta) / (slimeSize * 0.5F + 1.0F);
         float inverseSquish = 1.0F / (squish + 1.0F);
         float baseScale = slimeSize;
-        GLManager.GL.Scale(inverseSquish * baseScale, 1.0F / inverseSquish * baseScale, inverseSquish * baseScale);
+        Scene.Scale(inverseSquish * baseScale, 1.0F / inverseSquish * baseScale, inverseSquish * baseScale);
     }
 
     protected override void PreRenderCallback(EntityLiving entity, float tickDelta)

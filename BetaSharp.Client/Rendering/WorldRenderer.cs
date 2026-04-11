@@ -249,7 +249,7 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
         else
         {
             _game.BlockEntityRenderDispatcher.CacheActiveRenderInfo(_world, _textureManager, _game.TextRenderer, _game.Camera, partialTicks);
-            _game.EntityRenderDispatcher.CacheRenderInfo(_world, _textureManager, _game.TextRenderer, _game.Camera, _game.Options, partialTicks);
+            _game.EntityRenderDispatcher.CacheRenderInfo(_world, _textureManager, _game.TextRenderer, _game.Camera, _game.Options, _sceneRenderBackend, partialTicks);
             CountEntitiesTotal = 0;
             CountEntitiesRendered = 0;
             CountEntitiesHidden = 0;

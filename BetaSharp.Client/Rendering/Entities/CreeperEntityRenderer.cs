@@ -1,5 +1,4 @@
 using BetaSharp.Client.Rendering.Core;
-using BetaSharp.Client.Rendering.Core.OpenGL;
 using BetaSharp.Client.Rendering.Entities.Models;
 using BetaSharp.Entities;
 using BetaSharp.Util.Maths;
@@ -34,7 +33,7 @@ public class CreeperEntityRenderer : LivingEntityRenderer
         progress *= progress;
         float scaleX = (1.0F + progress * 0.4F) * pulse;
         float scaleY = (1.0F + progress * 0.1F) / pulse;
-        GLManager.GL.Scale(scaleX, scaleY, scaleX);
+        Scene.Scale(scaleX, scaleY, scaleX);
     }
 
     protected int UpdateCreeperColorMultiplier(EntityCreeper creeperEntity, float brightness, float tickDelta)
@@ -72,28 +71,28 @@ public class CreeperEntityRenderer : LivingEntityRenderer
             {
                 float animationTime = creeperEntity.Age + tickDelta;
                 loadTexture("/armor/power.png");
-                GLManager.GL.MatrixMode(GLEnum.Texture2D); //wtf?
-                GLManager.GL.LoadIdentity();
+                Scene.SetMatrixMode(SceneMatrixMode.Texture);
+                Scene.LoadIdentity();
                 float textureOffsetX = animationTime * 0.01F;
                 float textureOffsetY = animationTime * 0.01F;
-                GLManager.GL.Translate(textureOffsetX, textureOffsetY, 0.0F);
+                Scene.Translate(textureOffsetX, textureOffsetY, 0.0F);
                 setRenderPassModel(model);
-                GLManager.GL.MatrixMode(GLEnum.Modelview);
-                GLManager.GL.Enable(GLEnum.Blend);
+                Scene.SetMatrixMode(SceneMatrixMode.Modelview);
+                Scene.Enable(SceneRenderCapability.Blend);
                 float overlayBrightness = 0.5F;
-                GLManager.GL.Color4(overlayBrightness, overlayBrightness, overlayBrightness, 1.0F);
-                GLManager.GL.Disable(GLEnum.Lighting);
-                GLManager.GL.BlendFunc(GLEnum.One, GLEnum.One);
+                Scene.SetColor(overlayBrightness, overlayBrightness, overlayBrightness, 1.0F);
+                Scene.Disable(SceneRenderCapability.Lighting);
+                Scene.SetBlendFunction(SceneBlendFactor.One, SceneBlendFactor.One);
                 return true;
             }
 
             if (renderPass == 2)
             {
-                GLManager.GL.MatrixMode(GLEnum.Texture);
-                GLManager.GL.LoadIdentity();
-                GLManager.GL.MatrixMode(GLEnum.Modelview);
-                GLManager.GL.Enable(GLEnum.Lighting);
-                GLManager.GL.Disable(GLEnum.Blend);
+                Scene.SetMatrixMode(SceneMatrixMode.Texture);
+                Scene.LoadIdentity();
+                Scene.SetMatrixMode(SceneMatrixMode.Modelview);
+                Scene.Enable(SceneRenderCapability.Lighting);
+                Scene.Disable(SceneRenderCapability.Blend);
             }
         }
 

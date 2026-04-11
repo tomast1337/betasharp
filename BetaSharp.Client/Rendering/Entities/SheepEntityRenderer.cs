@@ -19,7 +19,7 @@ public class SheepEntityRenderer : LivingEntityRenderer
             loadTexture("/mob/sheep_fur.png");
             float brightness = sheepEntity.GetBrightnessAtEyes(tickDelta);
             int fleeceColor = sheepEntity.FleeceColor;
-            GLManager.GL.Color3(brightness * EntitySheep.FleeceColorTable[fleeceColor][0], brightness * EntitySheep.FleeceColorTable[fleeceColor][1], brightness * EntitySheep.FleeceColorTable[fleeceColor][2]);
+            Scene.SetColorRgb(brightness * EntitySheep.FleeceColorTable[fleeceColor][0], brightness * EntitySheep.FleeceColorTable[fleeceColor][1], brightness * EntitySheep.FleeceColorTable[fleeceColor][2]);
             return true;
         }
         else
