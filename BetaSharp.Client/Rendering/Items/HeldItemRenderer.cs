@@ -3,7 +3,6 @@ using BetaSharp.Blocks.Materials;
 using BetaSharp.Client.Entities;
 using BetaSharp.Client.Rendering.Blocks;
 using BetaSharp.Client.Rendering.Core;
-using BetaSharp.Client.Rendering.Core.OpenGL;
 using BetaSharp.Client.Rendering.Entities;
 using BetaSharp.Entities;
 using BetaSharp.Items;
@@ -15,6 +14,7 @@ namespace BetaSharp.Client.Rendering.Items;
 public class HeldItemRenderer : IHeldItemRenderer
 {
     private readonly BetaSharp _game;
+    private readonly ISceneRenderBackend _sceneRenderBackend;
     private ItemStack itemToRender;
     private float equippedProgress;
     private float prevEquippedProgress;
@@ -26,12 +26,13 @@ public class HeldItemRenderer : IHeldItemRenderer
     public HeldItemRenderer(BetaSharp game)
     {
         _game = game;
+        _sceneRenderBackend = game.SceneRenderBackend;
         mapRenderer = new MapItemRenderer(game.TextRenderer, game.Options, game.TextureManager);
     }
 
     public void renderItem(EntityLiving entity, ItemStack item)
     {
-        GLManager.GL.PushMatrix();
+        _sceneRenderBackend.PushMatrix();
         if (item.ItemId < 256 && BlockRenderer.IsSideLit(Block.Blocks[item.ItemId].getRenderType()))
         {
             _game.TextureManager.BindTexture(_game.TextureManager.GetTextureId("/terrain.png"));
@@ -52,13 +53,13 @@ public class HeldItemRenderer : IHeldItemRenderer
             float quadWidth = 1.0F;
             float xOffset = 0.0F;
             float yOffset = 0.3F;
-            GLManager.GL.Enable(GLEnum.RescaleNormal);
-            GLManager.GL.Translate(-xOffset, -yOffset, 0.0F);
+            _sceneRenderBackend.Enable(SceneRenderCapability.RescaleNormal);
+            _sceneRenderBackend.Translate(-xOffset, -yOffset, 0.0F);
             float itemScale = 1.5F;
-            GLManager.GL.Scale(itemScale, itemScale, itemScale);
-            GLManager.GL.Rotate(50.0F, 0.0F, 1.0F, 0.0F);
-            GLManager.GL.Rotate(335.0F, 0.0F, 0.0F, 1.0F);
-            GLManager.GL.Translate(-(15.0F / 16.0F), -(1.0F / 16.0F), 0.0F);
+            _sceneRenderBackend.Scale(itemScale, itemScale, itemScale);
+            _sceneRenderBackend.Rotate(50.0F, 0.0F, 1.0F, 0.0F);
+            _sceneRenderBackend.Rotate(335.0F, 0.0F, 0.0F, 1.0F);
+            _sceneRenderBackend.Translate(-(15.0F / 16.0F), -(1.0F / 16.0F), 0.0F);
             float thickness = 1.0F / 16.0F;
             tessellator.startDrawingQuads();
             tessellator.setNormal(0.0F, 0.0F, 1.0F);
@@ -138,10 +139,10 @@ public class HeldItemRenderer : IHeldItemRenderer
             }
 
             tessellator.draw();
-            GLManager.GL.Disable(GLEnum.RescaleNormal);
+            _sceneRenderBackend.Disable(SceneRenderCapability.RescaleNormal);
         }
 
-        GLManager.GL.PopMatrix();
+        _sceneRenderBackend.PopMatrix();
     }
 
     public void renderItemInFirstPerson(float tickDelta)
@@ -149,11 +150,11 @@ public class HeldItemRenderer : IHeldItemRenderer
         float equipProgress = prevEquippedProgress + (equippedProgress - prevEquippedProgress) * tickDelta;
         ClientPlayerEntity player = _game.Player;
         float pitch = player.PrevPitch + (player.Pitch - player.PrevPitch) * tickDelta;
-        GLManager.GL.PushMatrix();
-        GLManager.GL.Rotate(pitch, 1.0F, 0.0F, 0.0F);
-        GLManager.GL.Rotate(player.PrevYaw + (player.Yaw - player.PrevYaw) * tickDelta, 0.0F, 1.0F, 0.0F);
+        _sceneRenderBackend.PushMatrix();
+        _sceneRenderBackend.Rotate(pitch, 1.0F, 0.0F, 0.0F);
+        _sceneRenderBackend.Rotate(player.PrevYaw + (player.Yaw - player.PrevYaw) * tickDelta, 0.0F, 1.0F, 0.0F);
         Lighting.turnOn();
-        GLManager.GL.PopMatrix();
+        _sceneRenderBackend.PopMatrix();
         ItemStack heldStack = itemToRender;
         float brightness = _game.World.GetLuminance(MathHelper.Floor(player.X), MathHelper.Floor(player.Y), MathHelper.Floor(player.Z));
         float red;
@@ -165,22 +166,22 @@ public class HeldItemRenderer : IHeldItemRenderer
             red = (itemColor >> 16 & 255) / 255.0F;
             sineSwing = (itemColor >> 8 & 255) / 255.0F;
             sqrtSwing = (itemColor & 255) / 255.0F;
-            GLManager.GL.Color4(brightness * red, brightness * sineSwing, brightness * sqrtSwing, 1.0F);
+            _sceneRenderBackend.SetColor(brightness * red, brightness * sineSwing, brightness * sqrtSwing, 1.0F);
         }
         else
         {
-            GLManager.GL.Color4(brightness, brightness, brightness, 1.0F);
+            _sceneRenderBackend.SetColor(brightness, brightness, brightness, 1.0F);
         }
 
         float baseScale;
         if (itemToRender != null && itemToRender.ItemId == Item.Map.id)
         {
-            GLManager.GL.PushMatrix();
+            _sceneRenderBackend.PushMatrix();
             baseScale = 0.8F;
             float swingProgress = player.GetSwingProgress(tickDelta);
             sineSwing = MathHelper.Sin(swingProgress * (float)Math.PI);
             sqrtSwing = MathHelper.Sin(MathHelper.Sqrt(swingProgress) * (float)Math.PI);
-            GLManager.GL.Translate(-sqrtSwing * 0.4F, MathHelper.Sin(MathHelper.Sqrt(swingProgress) * (float)Math.PI * 2.0F) * 0.2F, -sineSwing * 0.2F);
+            _sceneRenderBackend.Translate(-sqrtSwing * 0.4F, MathHelper.Sin(MathHelper.Sqrt(swingProgress) * (float)Math.PI * 2.0F) * 0.2F, -sineSwing * 0.2F);
             swingProgress = 1.0F - pitch / 45.0F + 0.1F;
             if (swingProgress < 0.0F)
             {
@@ -193,45 +194,45 @@ public class HeldItemRenderer : IHeldItemRenderer
             }
 
             swingProgress = -MathHelper.Cos(swingProgress * (float)Math.PI) * 0.5F + 0.5F;
-            GLManager.GL.Translate(0.0F, 0.0F * baseScale - (1.0F - equipProgress) * 1.2F - swingProgress * 0.5F + 0.04F, -0.9F * baseScale);
-            GLManager.GL.Rotate(90.0F, 0.0F, 1.0F, 0.0F);
-            GLManager.GL.Rotate(swingProgress * -85.0F, 0.0F, 0.0F, 1.0F);
-            GLManager.GL.Enable(GLEnum.RescaleNormal);
+            _sceneRenderBackend.Translate(0.0F, 0.0F * baseScale - (1.0F - equipProgress) * 1.2F - swingProgress * 0.5F + 0.04F, -0.9F * baseScale);
+            _sceneRenderBackend.Rotate(90.0F, 0.0F, 1.0F, 0.0F);
+            _sceneRenderBackend.Rotate(swingProgress * -85.0F, 0.0F, 0.0F, 1.0F);
+            _sceneRenderBackend.Enable(SceneRenderCapability.RescaleNormal);
             bindSkinTexture();
 
             for (int i = 0; i < 2; i++)
             {
                 int handSide = i * 2 - 1;
-                GLManager.GL.PushMatrix();
-                GLManager.GL.Translate(-0.0F, -0.6F, 1.1F * handSide);
-                GLManager.GL.Rotate(-45 * handSide, 1.0F, 0.0F, 0.0F);
-                GLManager.GL.Rotate(-90.0F, 0.0F, 0.0F, 1.0F);
-                GLManager.GL.Rotate(59.0F, 0.0F, 0.0F, 1.0F);
-                GLManager.GL.Rotate(-65 * handSide, 0.0F, 1.0F, 0.0F);
+                _sceneRenderBackend.PushMatrix();
+                _sceneRenderBackend.Translate(-0.0F, -0.6F, 1.1F * handSide);
+                _sceneRenderBackend.Rotate(-45 * handSide, 1.0F, 0.0F, 0.0F);
+                _sceneRenderBackend.Rotate(-90.0F, 0.0F, 0.0F, 1.0F);
+                _sceneRenderBackend.Rotate(59.0F, 0.0F, 0.0F, 1.0F);
+                _sceneRenderBackend.Rotate(-65 * handSide, 0.0F, 1.0F, 0.0F);
                 EntityRenderer playerRendererBase = _game.EntityRenderDispatcher.GetEntityRenderObject(_game.Player);
                 PlayerEntityRenderer playerRenderer = (PlayerEntityRenderer)playerRendererBase;
                 float armScale = 1.0F;
-                GLManager.GL.Scale(armScale, armScale, armScale);
+                _sceneRenderBackend.Scale(armScale, armScale, armScale);
                 playerRenderer.DrawFirstPersonHand();
-                GLManager.GL.PopMatrix();
+                _sceneRenderBackend.PopMatrix();
             }
 
             sineSwing = player.GetSwingProgress(tickDelta);
             sqrtSwing = MathHelper.Sin(sineSwing * sineSwing * (float)Math.PI);
             float secondarySwing = MathHelper.Sin(MathHelper.Sqrt(sineSwing) * (float)Math.PI);
-            GLManager.GL.Rotate(-sqrtSwing * 20.0F, 0.0F, 1.0F, 0.0F);
-            GLManager.GL.Rotate(-secondarySwing * 20.0F, 0.0F, 0.0F, 1.0F);
-            GLManager.GL.Rotate(-secondarySwing * 80.0F, 1.0F, 0.0F, 0.0F);
+            _sceneRenderBackend.Rotate(-sqrtSwing * 20.0F, 0.0F, 1.0F, 0.0F);
+            _sceneRenderBackend.Rotate(-secondarySwing * 20.0F, 0.0F, 0.0F, 1.0F);
+            _sceneRenderBackend.Rotate(-secondarySwing * 80.0F, 1.0F, 0.0F, 0.0F);
             sineSwing = 0.38F;
-            GLManager.GL.Scale(sineSwing, sineSwing, sineSwing);
-            GLManager.GL.Rotate(90.0F, 0.0F, 1.0F, 0.0F);
-            GLManager.GL.Rotate(180.0F, 0.0F, 0.0F, 1.0F);
-            GLManager.GL.Translate(-1.0F, -1.0F, 0.0F);
+            _sceneRenderBackend.Scale(sineSwing, sineSwing, sineSwing);
+            _sceneRenderBackend.Rotate(90.0F, 0.0F, 1.0F, 0.0F);
+            _sceneRenderBackend.Rotate(180.0F, 0.0F, 0.0F, 1.0F);
+            _sceneRenderBackend.Translate(-1.0F, -1.0F, 0.0F);
             sqrtSwing = (1 / 64f);
-            GLManager.GL.Scale(sqrtSwing, sqrtSwing, sqrtSwing);
+            _sceneRenderBackend.Scale(sqrtSwing, sqrtSwing, sqrtSwing);
             _game.TextureManager.BindTexture(_game.TextureManager.GetTextureId("/misc/mapbg.png"));
             Tessellator tessellator = Tessellator.instance;
-            GLManager.GL.Normal3(0.0F, 0.0F, -1.0F);
+            _sceneRenderBackend.SetNormal(0.0F, 0.0F, -1.0F);
             tessellator.startDrawingQuads();
             byte mapBorder = 7;
             tessellator.addVertexWithUV(0 - mapBorder, 128 + mapBorder, 0.0D, 0.0D, 1.0D);
@@ -241,73 +242,73 @@ public class HeldItemRenderer : IHeldItemRenderer
             tessellator.draw();
             MapState mapState = ItemMap.getMapState(itemToRender.getDamage(), _game.World);
             mapRenderer.render(_game.Player, _game.TextureManager, mapState);
-            GLManager.GL.PopMatrix();
+            _sceneRenderBackend.PopMatrix();
         }
         else if (itemToRender != null)
         {
-            GLManager.GL.PushMatrix();
+            _sceneRenderBackend.PushMatrix();
             baseScale = 0.8F;
             red = player.GetSwingProgress(tickDelta);
             sineSwing = MathHelper.Sin(red * (float)Math.PI);
             sqrtSwing = MathHelper.Sin(MathHelper.Sqrt(red) * (float)Math.PI);
-            GLManager.GL.Translate(-sqrtSwing * 0.4F, MathHelper.Sin(MathHelper.Sqrt(red) * (float)Math.PI * 2.0F) * 0.2F, -sineSwing * 0.2F);
-            GLManager.GL.Translate(0.7F * baseScale, -0.65F * baseScale - (1.0F - equipProgress) * 0.6F, -0.9F * baseScale);
-            GLManager.GL.Rotate(45.0F, 0.0F, 1.0F, 0.0F);
-            GLManager.GL.Enable(GLEnum.RescaleNormal);
+            _sceneRenderBackend.Translate(-sqrtSwing * 0.4F, MathHelper.Sin(MathHelper.Sqrt(red) * (float)Math.PI * 2.0F) * 0.2F, -sineSwing * 0.2F);
+            _sceneRenderBackend.Translate(0.7F * baseScale, -0.65F * baseScale - (1.0F - equipProgress) * 0.6F, -0.9F * baseScale);
+            _sceneRenderBackend.Rotate(45.0F, 0.0F, 1.0F, 0.0F);
+            _sceneRenderBackend.Enable(SceneRenderCapability.RescaleNormal);
             red = player.GetSwingProgress(tickDelta);
             sineSwing = MathHelper.Sin(red * red * (float)Math.PI);
             sqrtSwing = MathHelper.Sin(MathHelper.Sqrt(red) * (float)Math.PI);
-            GLManager.GL.Rotate(-sineSwing * 20.0F, 0.0F, 1.0F, 0.0F);
-            GLManager.GL.Rotate(-sqrtSwing * 20.0F, 0.0F, 0.0F, 1.0F);
-            GLManager.GL.Rotate(-sqrtSwing * 80.0F, 1.0F, 0.0F, 0.0F);
+            _sceneRenderBackend.Rotate(-sineSwing * 20.0F, 0.0F, 1.0F, 0.0F);
+            _sceneRenderBackend.Rotate(-sqrtSwing * 20.0F, 0.0F, 0.0F, 1.0F);
+            _sceneRenderBackend.Rotate(-sqrtSwing * 80.0F, 1.0F, 0.0F, 0.0F);
             red = 0.4F;
-            GLManager.GL.Scale(red, red, red);
+            _sceneRenderBackend.Scale(red, red, red);
             if (itemToRender.getItem().isHandheldRod())
             {
-                GLManager.GL.Rotate(180.0F, 0.0F, 1.0F, 0.0F);
+                _sceneRenderBackend.Rotate(180.0F, 0.0F, 1.0F, 0.0F);
             }
 
             renderItem(player, itemToRender);
-            GLManager.GL.PopMatrix();
+            _sceneRenderBackend.PopMatrix();
         }
         else
         {
-            GLManager.GL.PushMatrix();
+            _sceneRenderBackend.PushMatrix();
             baseScale = 0.8F;
             red = player.GetSwingProgress(tickDelta);
             sineSwing = MathHelper.Sin(red * (float)Math.PI);
             sqrtSwing = MathHelper.Sin(MathHelper.Sqrt(red) * (float)Math.PI);
-            GLManager.GL.Translate(-sqrtSwing * 0.3F, MathHelper.Sin(MathHelper.Sqrt(red) * (float)Math.PI * 2.0F) * 0.4F, -sineSwing * 0.4F);
-            GLManager.GL.Translate(0.8F * baseScale, -(12.0F / 16.0F) * baseScale - (1.0F - equipProgress) * 0.6F, -0.9F * baseScale);
-            GLManager.GL.Rotate(45.0F, 0.0F, 1.0F, 0.0F);
-            GLManager.GL.Enable(GLEnum.RescaleNormal);
+            _sceneRenderBackend.Translate(-sqrtSwing * 0.3F, MathHelper.Sin(MathHelper.Sqrt(red) * (float)Math.PI * 2.0F) * 0.4F, -sineSwing * 0.4F);
+            _sceneRenderBackend.Translate(0.8F * baseScale, -(12.0F / 16.0F) * baseScale - (1.0F - equipProgress) * 0.6F, -0.9F * baseScale);
+            _sceneRenderBackend.Rotate(45.0F, 0.0F, 1.0F, 0.0F);
+            _sceneRenderBackend.Enable(SceneRenderCapability.RescaleNormal);
             red = player.GetSwingProgress(tickDelta);
             sineSwing = MathHelper.Sin(red * red * (float)Math.PI);
             sqrtSwing = MathHelper.Sin(MathHelper.Sqrt(red) * (float)Math.PI);
-            GLManager.GL.Rotate(sqrtSwing * 70.0F, 0.0F, 1.0F, 0.0F);
-            GLManager.GL.Rotate(-sineSwing * 20.0F, 0.0F, 0.0F, 1.0F);
+            _sceneRenderBackend.Rotate(sqrtSwing * 70.0F, 0.0F, 1.0F, 0.0F);
+            _sceneRenderBackend.Rotate(-sineSwing * 20.0F, 0.0F, 0.0F, 1.0F);
             bindSkinTexture();
-            GLManager.GL.Translate(-1.0F, 3.6F, 3.5F);
-            GLManager.GL.Rotate(120.0F, 0.0F, 0.0F, 1.0F);
-            GLManager.GL.Rotate(200.0F, 1.0F, 0.0F, 0.0F);
-            GLManager.GL.Rotate(-135.0F, 0.0F, 1.0F, 0.0F);
-            GLManager.GL.Scale(1.0F, 1.0F, 1.0F);
-            GLManager.GL.Translate(5.6F, 0.0F, 0.0F);
+            _sceneRenderBackend.Translate(-1.0F, 3.6F, 3.5F);
+            _sceneRenderBackend.Rotate(120.0F, 0.0F, 0.0F, 1.0F);
+            _sceneRenderBackend.Rotate(200.0F, 1.0F, 0.0F, 0.0F);
+            _sceneRenderBackend.Rotate(-135.0F, 0.0F, 1.0F, 0.0F);
+            _sceneRenderBackend.Scale(1.0F, 1.0F, 1.0F);
+            _sceneRenderBackend.Translate(5.6F, 0.0F, 0.0F);
             EntityRenderer playerRendererBase2 = _game.EntityRenderDispatcher.GetEntityRenderObject(_game.Player);
             PlayerEntityRenderer playerRenderer2 = (PlayerEntityRenderer)playerRendererBase2;
             sqrtSwing = 1.0F;
-            GLManager.GL.Scale(sqrtSwing, sqrtSwing, sqrtSwing);
+            _sceneRenderBackend.Scale(sqrtSwing, sqrtSwing, sqrtSwing);
             playerRenderer2.DrawFirstPersonHand();
-            GLManager.GL.PopMatrix();
+            _sceneRenderBackend.PopMatrix();
         }
 
-        GLManager.GL.Disable(GLEnum.RescaleNormal);
+        _sceneRenderBackend.Disable(SceneRenderCapability.RescaleNormal);
         Lighting.turnOff();
     }
 
     public void renderOverlays(float tickDelta)
     {
-        GLManager.GL.Disable(GLEnum.AlphaTest);
+        _sceneRenderBackend.Disable(SceneRenderCapability.AlphaTest);
         int blockX;
         if (_game.Player.IsOnFire)
         {
@@ -355,7 +356,7 @@ public class HeldItemRenderer : IHeldItemRenderer
             renderWarpedTextureOverlay(tickDelta);
         }
 
-        GLManager.GL.Enable(GLEnum.AlphaTest);
+        _sceneRenderBackend.Enable(SceneRenderCapability.AlphaTest);
     }
 
     private void renderInsideOfBlock(float tickDelta, int textureId)
@@ -363,8 +364,8 @@ public class HeldItemRenderer : IHeldItemRenderer
         Tessellator tessellator = Tessellator.instance;
         _game.Player.GetBrightnessAtEyes(tickDelta);
         float brightness = 0.1F;
-        GLManager.GL.Color4(brightness, brightness, brightness, 0.5F);
-        GLManager.GL.PushMatrix();
+        _sceneRenderBackend.SetColor(brightness, brightness, brightness, 0.5F);
+        _sceneRenderBackend.PushMatrix();
         float minX = -1.0F;
         float maxX = 1.0F;
         float minY = -1.0F;
@@ -381,18 +382,18 @@ public class HeldItemRenderer : IHeldItemRenderer
         tessellator.addVertexWithUV((double)maxX, (double)maxY, (double)z, (double)minU, (double)minV);
         tessellator.addVertexWithUV((double)minX, (double)maxY, (double)z, (double)maxU, (double)minV);
         tessellator.draw();
-        GLManager.GL.PopMatrix();
-        GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 1.0F);
+        _sceneRenderBackend.PopMatrix();
+        _sceneRenderBackend.SetColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     private void renderWarpedTextureOverlay(float tickDelta)
     {
         Tessellator tessellator = Tessellator.instance;
         float brightness = _game.Player.GetBrightnessAtEyes(tickDelta);
-        GLManager.GL.Color4(brightness, brightness, brightness, 0.5F);
-        GLManager.GL.Enable(GLEnum.Blend);
-        GLManager.GL.BlendFunc(GLEnum.SrcAlpha, GLEnum.OneMinusSrcAlpha);
-        GLManager.GL.PushMatrix();
+        _sceneRenderBackend.SetColor(brightness, brightness, brightness, 0.5F);
+        _sceneRenderBackend.Enable(SceneRenderCapability.Blend);
+        _sceneRenderBackend.SetBlendFunction(SceneBlendFactor.SrcAlpha, SceneBlendFactor.OneMinusSrcAlpha);
+        _sceneRenderBackend.PushMatrix();
         float uvScale = 4.0F;
         float minX = -1.0F;
         float maxX = 1.0F;
@@ -407,22 +408,22 @@ public class HeldItemRenderer : IHeldItemRenderer
         tessellator.addVertexWithUV((double)maxX, (double)maxY, (double)z, (double)(0.0F + uOffset), (double)(0.0F + vOffset));
         tessellator.addVertexWithUV((double)minX, (double)maxY, (double)z, (double)(uvScale + uOffset), (double)(0.0F + vOffset));
         tessellator.draw();
-        GLManager.GL.PopMatrix();
-        GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 1.0F);
-        GLManager.GL.Disable(GLEnum.Blend);
+        _sceneRenderBackend.PopMatrix();
+        _sceneRenderBackend.SetColor(1.0F, 1.0F, 1.0F, 1.0F);
+        _sceneRenderBackend.Disable(SceneRenderCapability.Blend);
     }
 
     private void renderFireInFirstPerson(float tickDelta)
     {
         Tessellator tessellator = Tessellator.instance;
-        GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 0.9F);
-        GLManager.GL.Enable(GLEnum.Blend);
-        GLManager.GL.BlendFunc(GLEnum.SrcAlpha, GLEnum.OneMinusSrcAlpha);
+        _sceneRenderBackend.SetColor(1.0F, 1.0F, 1.0F, 0.9F);
+        _sceneRenderBackend.Enable(SceneRenderCapability.Blend);
+        _sceneRenderBackend.SetBlendFunction(SceneBlendFactor.SrcAlpha, SceneBlendFactor.OneMinusSrcAlpha);
         float quadSize = 1.0F;
 
         for (int layerIndex = 0; layerIndex < 2; ++layerIndex)
         {
-            GLManager.GL.PushMatrix();
+            _sceneRenderBackend.PushMatrix();
             int fireTexture = Block.Fire.TextureId + layerIndex * 16;
             int textureU = (fireTexture & 15) << 4;
             int textureV = fireTexture & 240;
@@ -435,19 +436,19 @@ public class HeldItemRenderer : IHeldItemRenderer
             float minY = 0.0F - quadSize / 2.0F;
             float maxY = minY + quadSize;
             float z = -0.5F;
-            GLManager.GL.Translate(-(layerIndex * 2 - 1) * 0.24F, -0.3F, 0.0F);
-            GLManager.GL.Rotate((layerIndex * 2 - 1) * 10.0F, 0.0F, 1.0F, 0.0F);
+            _sceneRenderBackend.Translate(-(layerIndex * 2 - 1) * 0.24F, -0.3F, 0.0F);
+            _sceneRenderBackend.Rotate((layerIndex * 2 - 1) * 10.0F, 0.0F, 1.0F, 0.0F);
             tessellator.startDrawingQuads();
             tessellator.addVertexWithUV((double)minX, (double)minY, (double)z, (double)maxU, (double)maxV);
             tessellator.addVertexWithUV((double)maxX, (double)minY, (double)z, (double)minU, (double)maxV);
             tessellator.addVertexWithUV((double)maxX, (double)maxY, (double)z, (double)minU, (double)minV);
             tessellator.addVertexWithUV((double)minX, (double)maxY, (double)z, (double)maxU, (double)minV);
             tessellator.draw();
-            GLManager.GL.PopMatrix();
+            _sceneRenderBackend.PopMatrix();
         }
 
-        GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 1.0F);
-        GLManager.GL.Disable(GLEnum.Blend);
+        _sceneRenderBackend.SetColor(1.0F, 1.0F, 1.0F, 1.0F);
+        _sceneRenderBackend.Disable(SceneRenderCapability.Blend);
     }
 
     public void updateEquippedItem()
