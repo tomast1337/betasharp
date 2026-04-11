@@ -290,6 +290,7 @@ public class BlockPistonBase : Block
         return targetEntity == null;
     }
 
+    const int MaxPushCount = 12;
     private static bool CanExtend(IWorldContext ctx, int x, int y, int z, int dir)
     {
         int checkX = x + PistonConstants.HeadOffsetX[dir];
@@ -313,7 +314,7 @@ public class BlockPistonBase : Block
 
             if (Blocks[blockId].GetPistonBehavior() == PistonBehavior.Break) return true;
 
-            if (pushCount == 12) return false;
+            if (pushCount == MaxPushCount) return false;
 
             checkX += PistonConstants.HeadOffsetX[dir];
             checkY += PistonConstants.HeadOffsetY[dir];
