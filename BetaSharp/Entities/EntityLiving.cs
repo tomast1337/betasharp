@@ -358,9 +358,9 @@ public abstract class EntityLiving : Entity
         if (health > 0)
         {
             health += amount;
-            if (health > 20)
+            if (health > maxHealth)
             {
-                health = 20;
+                health = maxHealth;
             }
 
             hearts = maxHealth / 2;
@@ -962,7 +962,7 @@ public abstract class EntityLiving : Entity
         return lookTarget;
     }
 
-    private float updateRotation(float var1, float var2, float var3)
+    private static float updateRotation(float var1, float var2, float var3)
     {
         float var4;
         for (var4 = var2 - var1; var4 < -180.0F; var4 += 360.0F)
@@ -987,7 +987,7 @@ public abstract class EntityLiving : Entity
         return var1 + var4;
     }
 
-    public void onEntityDeath()
+    public static void onEntityDeath()
     {
     }
 

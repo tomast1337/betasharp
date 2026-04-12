@@ -148,7 +148,7 @@ public class Block
 
     public readonly int id;
     public readonly Material material;
-    private string? blockName;
+    private string _blockName = "";
     public Box BoundingBox;
     public float hardness;
     public float particleFallSpeedModifier;
@@ -410,7 +410,7 @@ public class Block
         }
     }
 
-    protected void dropStack(IWorldContext world, int x, int y, int z, ItemStack itemStack)
+    protected static void dropStack(IWorldContext world, int x, int y, int z, ItemStack itemStack)
     {
         if (!world.IsRemote && world.Rules.GetBool(DefaultRules.DoTileDrops))
         {
@@ -507,13 +507,13 @@ public class Block
 
     public Block setBlockName(string name)
     {
-        blockName = "tile." + name;
+        _blockName = "tile." + name;
         return this;
     }
 
     public string translateBlockName() => StatCollector.TranslateToLocal($"{getBlockName()}.name");
 
-    public string getBlockName() => blockName;
+    public string getBlockName() => _blockName;
 
     public virtual void onBlockAction(OnBlockActionEvent ctx)
     {
