@@ -32,6 +32,7 @@ internal class ChunkMeshGenerator : IDisposable
     private readonly ILogger<ChunkMeshGenerator> _logger = Log.Instance.For<ChunkMeshGenerator>();
 
     private readonly ConcurrentQueue<MeshBuildResult> _results = new();
+
     private readonly ObjectPool<PooledList<ChunkVertex>> _listPool =
         new(() => new PooledList<ChunkVertex>(), 64);
 
@@ -95,7 +96,8 @@ internal class ChunkMeshGenerator : IDisposable
         });
     }
 
-    private MeshBuildResult GenerateMesh(Vector3D<int> pos, long version, WorldRegionSnapshot cache, bool alternateBlocks)
+    private MeshBuildResult GenerateMesh(Vector3D<int> pos, long version, WorldRegionSnapshot cache,
+        bool alternateBlocks)
     {
         int minX = pos.X;
         int minY = pos.Y;
@@ -138,7 +140,8 @@ internal class ChunkMeshGenerator : IDisposable
                         }
                         else
                         {
-                            BlockRenderer.RenderBlockByRenderType(cache, cache, b, new BlockPos(x, y, z), tess, doVariance: alternateBlocks);
+                            BlockRenderer.RenderBlockByRenderType(cache, cache, b, new BlockPos(x, y, z), tess,
+                                doVariance: alternateBlocks);
                         }
                     }
                 }

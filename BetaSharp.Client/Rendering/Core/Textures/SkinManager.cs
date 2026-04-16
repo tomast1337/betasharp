@@ -75,7 +75,8 @@ public sealed class SkinManager : ISkinManager
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Failed to delete old cached skin for {name}", Path.GetFileNameWithoutExtension(file));
+                _logger.LogWarning(ex, "Failed to delete old cached skin for {name}",
+                    Path.GetFileNameWithoutExtension(file));
             }
         }
 
@@ -191,7 +192,8 @@ public sealed class SkinManager : ISkinManager
         }
         catch (ProfileException)
         {
-            _logger.LogWarning("Failed to download skin for {Name}{br}Profile not found.", username, Environment.NewLine);
+            _logger.LogWarning("Failed to download skin for {Name}{br}Profile not found.", username,
+                Environment.NewLine);
         }
         catch (Exception ex)
         {

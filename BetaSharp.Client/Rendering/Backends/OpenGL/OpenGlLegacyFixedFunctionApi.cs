@@ -31,6 +31,7 @@ internal sealed class OpenGlLegacyFixedFunctionApi : ILegacyFixedFunctionApi
     public void Translate(float x, float y, float z) => GLManager.GL.Translate(x, y, z);
     public void Scale(float x, float y, float z) => GLManager.GL.Scale(x, y, z);
     public void Rotate(float angle, float x, float y, float z) => GLManager.GL.Rotate(angle, x, y, z);
+
     public void Perspective(float fieldOfView, float aspectRatio, float zNear, float zFar)
     {
         float fH = (float)Math.Tan(fieldOfView / 360.0 * Math.PI) * zNear;
@@ -38,8 +39,12 @@ internal sealed class OpenGlLegacyFixedFunctionApi : ILegacyFixedFunctionApi
         GLManager.GL.Frustum(-fW, fW, -fH, fH, zNear, zFar);
         float f = 1.0f / MathF.Tan(fieldOfView / 2.0f);
     }
-    public void Ortho(double left, double right, double bottom, double top, double zNear, double zFar) => GLManager.GL.Ortho(left, right, bottom, top, zNear, zFar);
+
+    public void Ortho(double left, double right, double bottom, double top, double zNear, double zFar) =>
+        GLManager.GL.Ortho(left, right, bottom, top, zNear, zFar);
+
     public void SetViewport(int x, int y, uint width, uint height) => GLManager.GL.Viewport(x, y, width, height);
+
     public void Clear(SceneClearBufferMask clearMask)
     {
         ClearBufferMask mask = 0;
@@ -48,20 +53,37 @@ internal sealed class OpenGlLegacyFixedFunctionApi : ILegacyFixedFunctionApi
         GLManager.GL.Clear(mask);
     }
 
-    public void ClearColor(float red, float green, float blue, float alpha) => GLManager.GL.ClearColor(red, green, blue, alpha);
+    public void ClearColor(float red, float green, float blue, float alpha) =>
+        GLManager.GL.ClearColor(red, green, blue, alpha);
+
     public void SetDepthMask(bool enabled) => GLManager.GL.DepthMask(enabled);
-    public void SetBlendFunction(SceneBlendFactor source, SceneBlendFactor destination) => GLManager.GL.BlendFunc(ToGl(source), ToGl(destination));
-    public void SetAlphaFunction(SceneAlphaFunction function, float threshold) => GLManager.GL.AlphaFunc(ToGl(function), threshold);
+
+    public void SetBlendFunction(SceneBlendFactor source, SceneBlendFactor destination) =>
+        GLManager.GL.BlendFunc(ToGl(source), ToGl(destination));
+
+    public void SetAlphaFunction(SceneAlphaFunction function, float threshold) =>
+        GLManager.GL.AlphaFunc(ToGl(function), threshold);
+
     public void SetShadeModel(SceneShadeModel shadeModel) => GLManager.GL.ShadeModel(ToGl(shadeModel));
     public void SetNormal(float x, float y, float z) => GLManager.GL.Normal3(x, y, z);
     public void SetColorRgb(float red, float green, float blue) => GLManager.GL.Color3(red, green, blue);
-    public void SetColor(float red, float green, float blue, float alpha) => GLManager.GL.Color4(red, green, blue, alpha);
-    public void SetColorMask(bool red, bool green, bool blue, bool alpha) => GLManager.GL.ColorMask(red, green, blue, alpha);
+
+    public void SetColor(float red, float green, float blue, float alpha) =>
+        GLManager.GL.Color4(red, green, blue, alpha);
+
+    public void SetColorMask(bool red, bool green, bool blue, bool alpha) =>
+        GLManager.GL.ColorMask(red, green, blue, alpha);
+
     public void SetLineWidth(float width) => GLManager.GL.LineWidth(width);
     public void SetPolygonOffset(float factor, float units) => GLManager.GL.PolygonOffset(factor, units);
     public void SetDepthFunction(SceneDepthFunction depthFunction) => GLManager.GL.DepthFunc(ToGl(depthFunction));
-    public void SetColorMaterial(SceneColorMaterialFace face, SceneColorMaterialParameter parameter) => GLManager.GL.ColorMaterial(ToGl(face), ToGl(parameter));
-    public void SetFogColor(float red, float green, float blue, float alpha) => GLManager.GL.Fog(LegacyGLEnum.FogColor, [red, green, blue, alpha]);
+
+    public void SetColorMaterial(SceneColorMaterialFace face, SceneColorMaterialParameter parameter) =>
+        GLManager.GL.ColorMaterial(ToGl(face), ToGl(parameter));
+
+    public void SetFogColor(float red, float green, float blue, float alpha) =>
+        GLManager.GL.Fog(LegacyGLEnum.FogColor, [red, green, blue, alpha]);
+
     public void SetFogMode(SceneFogMode fogMode) => GLManager.GL.Fog(LegacyGLEnum.FogMode, (int)ToGl(fogMode));
     public void SetFogDensity(float density) => GLManager.GL.Fog(LegacyGLEnum.FogDensity, density);
     public void SetFogStart(float start) => GLManager.GL.Fog(LegacyGLEnum.FogStart, start);

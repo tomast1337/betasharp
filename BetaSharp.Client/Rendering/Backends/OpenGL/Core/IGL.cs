@@ -87,12 +87,20 @@ public unsafe interface IGL
     void ShadeModel(GLEnum mode);
     void ShaderSource(uint shader, string string_);
     void TexCoordPointer(int size, GLEnum type, uint stride, void* pointer);
-    void TexImage2D(TextureTarget target, int level, InternalFormat internalformat, uint width, uint height, int border, PixelFormat format, PixelType type, void* pixels);
-    void TexImage2D(GLEnum target, int level, int internalformat, uint width, uint height, int border, GLEnum format, GLEnum type, void* pixels);
+
+    void TexImage2D(TextureTarget target, int level, InternalFormat internalformat, uint width, uint height, int border,
+        PixelFormat format, PixelType type, void* pixels);
+
+    void TexImage2D(GLEnum target, int level, int internalformat, uint width, uint height, int border, GLEnum format,
+        GLEnum type, void* pixels);
+
     void TexParameter(TextureTarget target, TextureParameterName pname, int param);
     void TexParameter(GLEnum target, GLEnum pname, int param);
     void TexParameter(GLEnum target, GLEnum pname, float param);
-    void TexSubImage2D(GLEnum target, int level, int xoffset, int yoffset, uint width, uint height, GLEnum format, GLEnum type, void* pixels);
+
+    void TexSubImage2D(GLEnum target, int level, int xoffset, int yoffset, uint width, uint height, GLEnum format,
+        GLEnum type, void* pixels);
+
     void Translate(float x, float y, float z);
     void Uniform1(int location, int v0);
     void Uniform1(int location, float v0);
@@ -108,11 +116,17 @@ public unsafe interface IGL
     void Scissor(int x, int y, uint width, uint height);
     uint GenFramebuffer();
     void BindFramebuffer(FramebufferTarget target, uint framebuffer);
-    void FramebufferTexture2D(FramebufferTarget target, FramebufferAttachment attachment, TextureTarget textarget, uint texture, int level);
+
+    void FramebufferTexture2D(FramebufferTarget target, FramebufferAttachment attachment, TextureTarget textarget,
+        uint texture, int level);
+
     void GenRenderbuffers(Span<uint> renderbuffers);
     void BindRenderbuffer(RenderbufferTarget target, uint renderbuffer);
     void RenderbufferStorage(RenderbufferTarget target, InternalFormat internalformat, uint width, uint height);
-    void FramebufferRenderbuffer(FramebufferTarget target, FramebufferAttachment attachment, RenderbufferTarget renderbuffertarget, uint renderbuffer);
+
+    void FramebufferRenderbuffer(FramebufferTarget target, FramebufferAttachment attachment,
+        RenderbufferTarget renderbuffertarget, uint renderbuffer);
+
     Silk.NET.OpenGL.GLEnum CheckFramebufferStatus(FramebufferTarget target);
     void DeleteFramebuffer(uint framebuffer);
     void DeleteRenderbuffer(uint renderbuffer);

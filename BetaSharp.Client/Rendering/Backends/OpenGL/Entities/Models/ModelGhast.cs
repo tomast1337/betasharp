@@ -27,7 +27,6 @@ public class ModelGhast : ModelBase
             tentacles[tentacleIndex].rotationPointZ = tentacleZ;
             tentacles[tentacleIndex].rotationPointY = 31 + yOffset;
         }
-
     }
 
     public override void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
@@ -36,7 +35,6 @@ public class ModelGhast : ModelBase
         {
             tentacles[tentacleIndex].rotateAngleX = 0.2F * MathHelper.Sin(ageInTicks * 0.3F + tentacleIndex) + 0.4F;
         }
-
     }
 
     public override void render(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
@@ -48,6 +46,5 @@ public class ModelGhast : ModelBase
         {
             tentacles[tentacleIndex].render(scale);
         }
-
     }
 }

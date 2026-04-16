@@ -4,7 +4,6 @@ namespace BetaSharp.Client.Rendering.Entities.Models;
 
 public class ModelMinecart : ModelBase
 {
-
     public ModelPart[] sideModels = new ModelPart[7];
 
     public ModelMinecart()
@@ -46,7 +45,6 @@ public class ModelMinecart : ModelBase
         {
             sideModels[sideIndex].render(scale);
         }
-
     }
 
     public override void setRotationAngles(float limbSwing, float limbSwingAmount, float animationProgress, float netHeadYaw, float headPitch, float scale)

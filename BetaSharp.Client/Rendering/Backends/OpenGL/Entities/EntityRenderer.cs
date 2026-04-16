@@ -176,11 +176,13 @@ public abstract class EntityRenderer
         Scene.SetDepthMask(true);
     }
 
-    private void renderShadowOnBlock(Block block, Vec3D pos, int blockX, int blockY, int blockZ, float shadowiness, float radius, Vec3D offset)
+    private void renderShadowOnBlock(Block block, Vec3D pos, int blockX, int blockY, int blockZ, float shadowiness,
+        float radius, Vec3D offset)
     {
         if (!block.isFullCube()) return;
 
-        double shadowDarkness = (shadowiness - (pos.y - (blockY + offset.y)) / 2.0D) * 0.5D * World.GetLuminance(blockX, blockY, blockZ);
+        double shadowDarkness = (shadowiness - (pos.y - (blockY + offset.y)) / 2.0D) * 0.5D *
+                                World.GetLuminance(blockX, blockY, blockZ);
 
         if (shadowDarkness < 0.0D) return;
 
@@ -312,7 +314,6 @@ public abstract class EntityRenderer
         {
             RenderOnFire(target, pos, tickDelta);
         }
-
     }
 
     public void RenderBoundingBox(Entity target, Vec3D pos, float yaw, float tickDelta)

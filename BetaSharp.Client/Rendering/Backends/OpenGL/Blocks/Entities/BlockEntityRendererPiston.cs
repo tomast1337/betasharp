@@ -52,18 +52,28 @@ public class BlockEntityRendererPiston : BlockEntitySpecialRenderer
 
             if (block == Block.PistonHead && piston.getProgress(tickDelta) < 0.5F)
             {
-                var ctx = baseCtx with { CustomFlag = true };
+                var ctx = baseCtx with
+                {
+                    CustomFlag = true
+                };
                 _pistonExtensionRenderer.Draw(block, pos, ref ctx);
             }
             else if (piston.IsSource && !piston.IsExtending)
             {
-                var headCtx = baseCtx with { OverrideTexture = ((BlockPistonBase)block).getTopTexture(), CustomFlag = piston.getProgress(tickDelta) < 0.5F };
+                var headCtx = baseCtx with
+                {
+                    OverrideTexture = ((BlockPistonBase)block).getTopTexture(),
+                    CustomFlag = piston.getProgress(tickDelta) < 0.5F
+                };
 
                 _pistonExtensionRenderer.Draw(Block.PistonHead, pos, ref headCtx);
 
                 tess.setTranslationD(x - piston.X, y - piston.Y, z - piston.Z);
 
-                var basePartCtx = baseCtx with { CustomFlag = true };
+                var basePartCtx = baseCtx with
+                {
+                    CustomFlag = true
+                };
                 _pistonBaseRenderer.Draw(block, pos, ref basePartCtx);
             }
             else

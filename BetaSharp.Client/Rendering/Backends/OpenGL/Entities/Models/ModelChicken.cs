@@ -70,5 +70,4 @@ public class ModelChicken : ModelBase
         rightWing.rotateAngleZ = wingRotation;
         leftWing.rotateAngleZ = -wingRotation;
     }
-
 }

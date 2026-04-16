@@ -7,7 +7,6 @@ namespace BetaSharp.Client.Rendering.Entities;
 
 public class SpiderEntityRenderer : LivingEntityRenderer
 {
-
     public SpiderEntityRenderer() : base(new ModelSpider(), 1.0F)
     {
         setRenderPassModel(new ModelSpider());

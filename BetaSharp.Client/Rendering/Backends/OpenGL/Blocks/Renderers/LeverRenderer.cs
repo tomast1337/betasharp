@@ -20,9 +20,11 @@ public class LeverRenderer : IBlockRenderer
         {
             5 => new Box(0.5 - baseHeight, 0.0, 0.5 - baseWidth, 0.5 + baseHeight, baseThickness, 0.5 + baseWidth),
             6 => new Box(0.5 - baseWidth, 0.0, 0.5 - baseHeight, 0.5 + baseWidth, baseThickness, 0.5 + baseHeight),
-            4 => new Box(0.5 - baseHeight, 0.5 - baseWidth, 1.0 - baseThickness, 0.5 + baseHeight, 0.5 + baseWidth, 1.0),
+            4 => new Box(0.5 - baseHeight, 0.5 - baseWidth, 1.0 - baseThickness, 0.5 + baseHeight, 0.5 + baseWidth,
+                1.0),
             3 => new Box(0.5 - baseHeight, 0.5 - baseWidth, 0.0, 0.5 + baseHeight, 0.5 + baseWidth, baseThickness),
-            2 => new Box(1.0 - baseThickness, 0.5 - baseWidth, 0.5 - baseHeight, 1.0, 0.5 + baseWidth, 0.5 + baseHeight),
+            2 => new Box(1.0 - baseThickness, 0.5 - baseWidth, 0.5 - baseHeight, 1.0, 0.5 + baseWidth,
+                0.5 + baseHeight),
             1 => new Box(0.0, 0.5 - baseWidth, 0.5 - baseHeight, baseThickness, 0.5 + baseWidth, 0.5 + baseHeight),
             _ => new Box(0, 0, 0, 1, 1, 1)
         };

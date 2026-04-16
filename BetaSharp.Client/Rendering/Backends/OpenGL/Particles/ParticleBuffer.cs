@@ -55,19 +55,30 @@ public sealed class ParticleBuffer
 
         int i = Count++;
         Type[i] = type;
-        X[i] = x; Y[i] = y; Z[i] = z;
-        PrevX[i] = x; PrevY[i] = y; PrevZ[i] = z;
-        VelX[i] = velX; VelY[i] = velY; VelZ[i] = velZ;
-        Red[i] = red; Green[i] = green; Blue[i] = blue;
+        X[i] = x;
+        Y[i] = y;
+        Z[i] = z;
+        PrevX[i] = x;
+        PrevY[i] = y;
+        PrevZ[i] = z;
+        VelX[i] = velX;
+        VelY[i] = velY;
+        VelZ[i] = velZ;
+        Red[i] = red;
+        Green[i] = green;
+        Blue[i] = blue;
         BaseScale[i] = baseScale;
         Gravity[i] = gravity;
         TextureIndex[i] = textureIndex;
-        TexJitterX[i] = texJitterX; TexJitterY[i] = texJitterY;
+        TexJitterX[i] = texJitterX;
+        TexJitterY[i] = texJitterY;
         Age[i] = 0;
         MaxAge[i] = maxAge;
         OnGround[i] = false;
         Dead[i] = false;
-        SpawnX[i] = 0; SpawnY[i] = 0; SpawnZ[i] = 0;
+        SpawnX[i] = 0;
+        SpawnY[i] = 0;
+        SpawnZ[i] = 0;
         return i;
     }
 
@@ -76,20 +87,33 @@ public sealed class ParticleBuffer
         int last = Count - 1;
         if (i != last)
         {
-            X[i] = X[last]; Y[i] = Y[last]; Z[i] = Z[last];
-            PrevX[i] = PrevX[last]; PrevY[i] = PrevY[last]; PrevZ[i] = PrevZ[last];
-            VelX[i] = VelX[last]; VelY[i] = VelY[last]; VelZ[i] = VelZ[last];
-            Red[i] = Red[last]; Green[i] = Green[last]; Blue[i] = Blue[last];
+            X[i] = X[last];
+            Y[i] = Y[last];
+            Z[i] = Z[last];
+            PrevX[i] = PrevX[last];
+            PrevY[i] = PrevY[last];
+            PrevZ[i] = PrevZ[last];
+            VelX[i] = VelX[last];
+            VelY[i] = VelY[last];
+            VelZ[i] = VelZ[last];
+            Red[i] = Red[last];
+            Green[i] = Green[last];
+            Blue[i] = Blue[last];
             BaseScale[i] = BaseScale[last];
             Gravity[i] = Gravity[last];
             TextureIndex[i] = TextureIndex[last];
-            TexJitterX[i] = TexJitterX[last]; TexJitterY[i] = TexJitterY[last];
-            Age[i] = Age[last]; MaxAge[i] = MaxAge[last];
+            TexJitterX[i] = TexJitterX[last];
+            TexJitterY[i] = TexJitterY[last];
+            Age[i] = Age[last];
+            MaxAge[i] = MaxAge[last];
             Type[i] = Type[last];
             OnGround[i] = OnGround[last];
             Dead[i] = Dead[last];
-            SpawnX[i] = SpawnX[last]; SpawnY[i] = SpawnY[last]; SpawnZ[i] = SpawnZ[last];
+            SpawnX[i] = SpawnX[last];
+            SpawnY[i] = SpawnY[last];
+            SpawnZ[i] = SpawnZ[last];
         }
+
         Count--;
     }
 

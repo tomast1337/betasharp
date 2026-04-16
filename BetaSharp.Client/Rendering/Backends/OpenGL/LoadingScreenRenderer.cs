@@ -109,7 +109,7 @@ public class LoadingScreenRenderer(BetaSharp game) : ILoadingScreenRenderer
 
         float tileSize = 32.0f;
         DrawTexturedQuad tess = new(tessellator);
-        tess.SetTint(new Color(64, 64, 64, 255));
+        tess.BeginTiledBackground(new Color(64, 64, 64, 255));
 
         for (float py = 0; py < height; py += tileSize)
         {
@@ -118,11 +118,11 @@ public class LoadingScreenRenderer(BetaSharp game) : ILoadingScreenRenderer
             for (float px = 0; px < width; px += tileSize)
             {
                 float w = MathF.Min(tileSize, width - px);
-                tess.Draw(px, py, px + w, py + h, 0.0f, 0.0, 0.0, w / tileSize, h / tileSize);
+                tess.AddTile(px, py, px + w, py + h, 0.0f, 0.0, 0.0, w / tileSize, h / tileSize);
             }
         }
 
-        tess.Draw();
+        tessellator.draw();
 
         if (progress >= 0)
         {
@@ -162,23 +162,19 @@ public class LoadingScreenRenderer(BetaSharp game) : ILoadingScreenRenderer
 
     private class DrawTexturedQuad(Tessellator tessellator)
     {
-        private Color _tint = new(64, 64, 64, 255);
-
-        public void SetTint(Color tint)
-        {
-            _tint = tint;
-        }
-
-        public void Draw(float left, float top, float right, float bottom, float z, double uLeft, double vTop, double uRight, double vBottom)
+        public void BeginTiledBackground(Color tint)
         {
             tessellator.startDrawingQuads();
-            tessellator.setColorRGBA(_tint);
+            tessellator.setColorRGBA(tint);
+        }
+
+        public void AddTile(float left, float top, float right, float bottom, float z, double uLeft, double vTop,
+            double uRight, double vBottom)
+        {
             tessellator.addVertexWithUV(left, bottom, z, uLeft, vBottom);
             tessellator.addVertexWithUV(right, bottom, z, uRight, vBottom);
             tessellator.addVertexWithUV(right, top, z, uRight, vTop);
             tessellator.addVertexWithUV(left, top, z, uLeft, vTop);
         }
-
-        public void Draw() => tessellator.draw();
     }
 }

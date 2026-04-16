@@ -113,9 +113,13 @@ public class BedRenderer : IBlockRenderer
         }
 
         float faceLuminance;
-        var flatCtx = ctx with { EnableAo = false };
+        var flatCtx = ctx with
+        {
+            EnableAo = false
+        };
         // East Face (Z - 1)
-        if (forwardDir != 2 && (ctx.RenderAllFaces || block.isSideVisible(ctx.BlockReader, pos.x, pos.y, pos.z - 1, Side.North)))
+        if (forwardDir != 2 && (ctx.RenderAllFaces ||
+                                block.isSideVisible(ctx.BlockReader, pos.x, pos.y, pos.z - 1, Side.North)))
         {
             faceLuminance = bounds.MinZ > 0.0f
                 ? centerLuminance
@@ -128,7 +132,8 @@ public class BedRenderer : IBlockRenderer
         }
 
         // West Face (Z + 1)
-        if (forwardDir != 3 && (ctx.RenderAllFaces || block.isSideVisible(ctx.BlockReader, pos.x, pos.y, pos.z + 1, Side.South)))
+        if (forwardDir != 3 && (ctx.RenderAllFaces ||
+                                block.isSideVisible(ctx.BlockReader, pos.x, pos.y, pos.z + 1, Side.South)))
         {
             faceLuminance = bounds.MaxZ < 1.0f
                 ? centerLuminance
@@ -141,7 +146,8 @@ public class BedRenderer : IBlockRenderer
         }
 
         // North Face (X - 1)
-        if (forwardDir != 4 && (ctx.RenderAllFaces || block.isSideVisible(ctx.BlockReader, pos.x - 1, pos.y, pos.z, Side.West)))
+        if (forwardDir != 4 &&
+            (ctx.RenderAllFaces || block.isSideVisible(ctx.BlockReader, pos.x - 1, pos.y, pos.z, Side.West)))
         {
             faceLuminance = bounds.MinX > 0.0f
                 ? centerLuminance
@@ -154,7 +160,8 @@ public class BedRenderer : IBlockRenderer
         }
 
         // South Face (X + 1)
-        if (forwardDir != 5 && (ctx.RenderAllFaces || block.isSideVisible(ctx.BlockReader, pos.x + 1, pos.y, pos.z, Side.East)))
+        if (forwardDir != 5 &&
+            (ctx.RenderAllFaces || block.isSideVisible(ctx.BlockReader, pos.x + 1, pos.y, pos.z, Side.East)))
         {
             faceLuminance = bounds.MaxX < 1.0f
                 ? centerLuminance

@@ -8,7 +8,6 @@ namespace BetaSharp.Client.Rendering.Entities;
 
 public class CreeperEntityRenderer : LivingEntityRenderer
 {
-
     private readonly ModelBase model = new ModelCreeper(2.0F);
 
     public CreeperEntityRenderer() : base(new ModelCreeper(), 0.5F)

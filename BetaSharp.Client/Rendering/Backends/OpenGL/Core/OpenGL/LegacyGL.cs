@@ -221,7 +221,10 @@ public abstract unsafe class LegacyGL : IGL
 
     public virtual void GetFloat(GLEnum pname, out float data)
     {
-        fixed (float* ptr = &data) { SilkGL.GetFloat(pname.ToModern(), ptr); }
+        fixed (float* ptr = &data)
+        {
+            SilkGL.GetFloat(pname.ToModern(), ptr);
+        }
     }
 
     public virtual void GetFloat(GLEnum pname, float* data)
@@ -319,14 +322,17 @@ public abstract unsafe class LegacyGL : IGL
 
     public abstract void TexCoordPointer(int size, GLEnum type, uint stride, void* pointer);
 
-    public void TexImage2D(TextureTarget target, int level, InternalFormat internalformat, uint width, uint height, int border, PixelFormat format, PixelType type, void* pixels)
+    public void TexImage2D(TextureTarget target, int level, InternalFormat internalformat, uint width, uint height,
+        int border, PixelFormat format, PixelType type, void* pixels)
     {
         SilkGL.TexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
     }
 
-    public void TexImage2D(GLEnum target, int level, int internalformat, uint width, uint height, int border, GLEnum format, GLEnum type, void* pixels)
+    public void TexImage2D(GLEnum target, int level, int internalformat, uint width, uint height, int border,
+        GLEnum format, GLEnum type, void* pixels)
     {
-        SilkGL.TexImage2D(target.ToModern(), level, internalformat, width, height, border, format.ToModern(), type.ToModern(), pixels);
+        SilkGL.TexImage2D(target.ToModern(), level, internalformat, width, height, border, format.ToModern(),
+            type.ToModern(), pixels);
     }
 
     public void TexParameter(TextureTarget target, TextureParameterName pname, int param)
@@ -344,9 +350,11 @@ public abstract unsafe class LegacyGL : IGL
         SilkGL.TexParameter(target.ToModern(), pname.ToModern(), param);
     }
 
-    public void TexSubImage2D(GLEnum target, int level, int xoffset, int yoffset, uint width, uint height, GLEnum format, GLEnum type, void* pixels)
+    public void TexSubImage2D(GLEnum target, int level, int xoffset, int yoffset, uint width, uint height,
+        GLEnum format, GLEnum type, void* pixels)
     {
-        SilkGL.TexSubImage2D(target.ToModern(), level, xoffset, yoffset, width, height, format.ToModern(), type.ToModern(), pixels);
+        SilkGL.TexSubImage2D(target.ToModern(), level, xoffset, yoffset, width, height, format.ToModern(),
+            type.ToModern(), pixels);
     }
 
     public abstract void Translate(float x, float y, float z);
@@ -409,13 +417,29 @@ public abstract unsafe class LegacyGL : IGL
     }
 
     public uint GenFramebuffer() => SilkGL.GenFramebuffer();
-    public void BindFramebuffer(FramebufferTarget target, uint framebuffer) => SilkGL.BindFramebuffer(target, framebuffer);
-    public void FramebufferTexture2D(FramebufferTarget target, FramebufferAttachment attachment, TextureTarget textarget, uint texture, int level) => SilkGL.FramebufferTexture2D(target, attachment, textarget, texture, level);
+
+    public void BindFramebuffer(FramebufferTarget target, uint framebuffer) =>
+        SilkGL.BindFramebuffer(target, framebuffer);
+
+    public void FramebufferTexture2D(FramebufferTarget target, FramebufferAttachment attachment,
+        TextureTarget textarget, uint texture, int level) =>
+        SilkGL.FramebufferTexture2D(target, attachment, textarget, texture, level);
+
     public void GenRenderbuffers(Span<uint> renderbuffers) => SilkGL.GenRenderbuffers(renderbuffers);
-    public void BindRenderbuffer(RenderbufferTarget target, uint renderbuffer) => SilkGL.BindRenderbuffer(target, renderbuffer);
-    public void RenderbufferStorage(RenderbufferTarget target, InternalFormat internalformat, uint width, uint height) => SilkGL.RenderbufferStorage(target, internalformat, width, height);
-    public void FramebufferRenderbuffer(FramebufferTarget target, FramebufferAttachment attachment, RenderbufferTarget renderbuffertarget, uint renderbuffer) => SilkGL.FramebufferRenderbuffer(target, attachment, renderbuffertarget, renderbuffer);
-    public Silk.NET.OpenGL.GLEnum CheckFramebufferStatus(FramebufferTarget target) => SilkGL.CheckFramebufferStatus(target);
+
+    public void BindRenderbuffer(RenderbufferTarget target, uint renderbuffer) =>
+        SilkGL.BindRenderbuffer(target, renderbuffer);
+
+    public void RenderbufferStorage(RenderbufferTarget target, InternalFormat internalformat, uint width,
+        uint height) => SilkGL.RenderbufferStorage(target, internalformat, width, height);
+
+    public void FramebufferRenderbuffer(FramebufferTarget target, FramebufferAttachment attachment,
+        RenderbufferTarget renderbuffertarget, uint renderbuffer) =>
+        SilkGL.FramebufferRenderbuffer(target, attachment, renderbuffertarget, renderbuffer);
+
+    public Silk.NET.OpenGL.GLEnum CheckFramebufferStatus(FramebufferTarget target) =>
+        SilkGL.CheckFramebufferStatus(target);
+
     public void DeleteFramebuffer(uint framebuffer) => SilkGL.DeleteFramebuffer(framebuffer);
     public void DeleteRenderbuffer(uint renderbuffer) => SilkGL.DeleteRenderbuffer(renderbuffer);
 

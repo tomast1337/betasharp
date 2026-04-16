@@ -53,11 +53,13 @@ public class MatrixStack
 
     public void Ortho(double left, double right, double bottom, double top, double zNear, double zFar)
     {
-        _current *= Matrix4X4.CreateOrthographicOffCenter((float)left, (float)right, (float)bottom, (float)top, (float)zNear, (float)zFar);
+        _current *= Matrix4X4.CreateOrthographicOffCenter((float)left, (float)right, (float)bottom, (float)top,
+            (float)zNear, (float)zFar);
     }
 
     public void Frustum(double left, double right, double bottom, double top, double zNear, double zFar)
     {
-        _current *= Matrix4X4.CreatePerspectiveOffCenter((float)left, (float)right, (float)bottom, (float)top, (float)zNear, (float)zFar);
+        _current *= Matrix4X4.CreatePerspectiveOffCenter((float)left, (float)right, (float)bottom, (float)top,
+            (float)zNear, (float)zFar);
     }
 }

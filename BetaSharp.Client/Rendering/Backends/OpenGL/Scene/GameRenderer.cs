@@ -59,6 +59,7 @@ public class GameRenderer : ISceneOrchestrator
     public void UpdateClouds() => _client.WorldRenderer.UpdateClouds();
     public void ChangeWorld(World world) => _client.WorldRenderer.ChangeWorld(world);
     public void SetDamagePartialTime(float value) => _client.WorldRenderer.DamagePartialTime = value;
+
     public void PublishRenderMetrics()
     {
         if (!_client.WorldRenderer.TryGetChunkStats(out ChunkRendererStats chunkStats))
@@ -176,13 +177,16 @@ public class GameRenderer : ISceneOrchestrator
 
         if (cameraController.CameraZoom != 1.0D)
         {
-            _sceneRenderBackend.Translate((float)cameraController.CameraYaw, (float)-cameraController.CameraPitch, 0.0F);
+            _sceneRenderBackend.Translate((float)cameraController.CameraYaw, (float)-cameraController.CameraPitch,
+                0.0F);
             _sceneRenderBackend.Scale((float)cameraController.CameraZoom, (float)cameraController.CameraZoom, 1.0F);
-            _sceneRenderBackend.Perspective(cameraController.GetFov(tickDelta), _client.DisplayWidth / (float)_client.DisplayHeight, 0.05F, _viewDistance * 2.0F);
+            _sceneRenderBackend.Perspective(cameraController.GetFov(tickDelta),
+                _client.DisplayWidth / (float)_client.DisplayHeight, 0.05F, _viewDistance * 2.0F);
         }
         else
         {
-            _sceneRenderBackend.Perspective(cameraController.GetFov(tickDelta), _client.DisplayWidth / (float)_client.DisplayHeight, 0.05F, _viewDistance * 2.0F);
+            _sceneRenderBackend.Perspective(cameraController.GetFov(tickDelta),
+                _client.DisplayWidth / (float)_client.DisplayHeight, 0.05F, _viewDistance * 2.0F);
         }
 
         _sceneRenderBackend.SetMatrixMode(SceneMatrixMode.Modelview);
@@ -213,11 +217,13 @@ public class GameRenderer : ISceneOrchestrator
         _sceneRenderBackend.LoadIdentity();
         if (cameraController.CameraZoom != 1.0D)
         {
-            _sceneRenderBackend.Translate((float)cameraController.CameraYaw, (float)-cameraController.CameraPitch, 0.0F);
+            _sceneRenderBackend.Translate((float)cameraController.CameraYaw, (float)-cameraController.CameraPitch,
+                0.0F);
             _sceneRenderBackend.Scale((float)cameraController.CameraZoom, (float)cameraController.CameraZoom, 1.0F);
         }
 
-        _sceneRenderBackend.Perspective(cameraController.GetFov(tickDelta, true), _client.DisplayWidth / (float)_client.DisplayHeight, 0.05F, _viewDistance * 2.0F);
+        _sceneRenderBackend.Perspective(cameraController.GetFov(tickDelta, true),
+            _client.DisplayWidth / (float)_client.DisplayHeight, 0.05F, _viewDistance * 2.0F);
         _sceneRenderBackend.SetMatrixMode(SceneMatrixMode.Modelview);
         _sceneRenderBackend.LoadIdentity();
 
@@ -344,8 +350,9 @@ public class GameRenderer : ISceneOrchestrator
             }
             else
             {
-                _sceneRenderBackend.SetViewport(0, 0, (uint)_client.PresentationTargetWidth, (uint)_client.PresentationTargetHeight);
-        _sceneRenderBackend.SetMatrixMode(SceneMatrixMode.Projection);
+                _sceneRenderBackend.SetViewport(0, 0, (uint)_client.PresentationTargetWidth,
+                    (uint)_client.PresentationTargetHeight);
+                _sceneRenderBackend.SetMatrixMode(SceneMatrixMode.Projection);
                 _sceneRenderBackend.LoadIdentity();
                 _sceneRenderBackend.SetMatrixMode(SceneMatrixMode.Modelview);
                 _sceneRenderBackend.LoadIdentity();
@@ -421,9 +428,11 @@ public class GameRenderer : ISceneOrchestrator
 
         using (Profiler.Begin("UpdateFog"))
         {
-            _sceneRenderBackend.SetViewport(0, 0, (uint)_client.PresentationTargetWidth, (uint)_client.PresentationTargetHeight);
+            _sceneRenderBackend.SetViewport(0, 0, (uint)_client.PresentationTargetWidth,
+                (uint)_client.PresentationTargetHeight);
             updateSkyAndFogColors(tickDelta);
         }
+
         _sceneRenderBackend.Clear(SceneClearBufferMask.Depth | SceneClearBufferMask.Color);
         _sceneRenderBackend.Enable(SceneRenderCapability.CullFace);
         renderWorld(tickDelta);
@@ -1008,5 +1017,4 @@ public class GameRenderer : ISceneOrchestrator
         _sceneRenderBackend.Enable(SceneRenderCapability.ColorMaterial);
         _sceneRenderBackend.SetColorMaterial(SceneColorMaterialFace.Front, SceneColorMaterialParameter.Ambient);
     }
-
 }

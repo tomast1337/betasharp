@@ -13,11 +13,14 @@ namespace BetaSharp.Client.Rendering;
 public class ParticleManager : IParticleManager
 {
     protected World worldObj;
+
     // Layer 0: Standard, Layer 1: Terrain/Digging (mipmapped), Layer 2: Overlays/Items
     private readonly ParticleBuffer[] _layers = new ParticleBuffer[3];
     private readonly List<ISpecialParticle> _specialParticles = [];
     private readonly ITextureManager _textureManager;
+
     private readonly JavaRandom _rand = new();
+
     // Temp storage for sub-particles spawned during the update loop (avoids buffer mutation)
     private readonly List<ParticleUpdater.DeferredSmoke> _deferredSmoke = [];
 
@@ -86,9 +89,11 @@ public class ParticleManager : IParticleManager
 
     public int ActiveParticleCount => _layers[0].Count + _layers[1].Count + _layers[2].Count;
 
-    public void AddPickupParticle(Entity target, Entity collector, float yOffset, IEntityRenderDispatcher entityRenderDispatcher)
+    public void AddPickupParticle(Entity target, Entity collector, float yOffset,
+        IEntityRenderDispatcher entityRenderDispatcher)
     {
-        AddSpecialParticle(new LegacyParticleAdapter(new EntityPickupFX(worldObj, target, collector, yOffset, entityRenderDispatcher)));
+        AddSpecialParticle(new LegacyParticleAdapter(new EntityPickupFX(worldObj, target, collector, yOffset,
+            entityRenderDispatcher)));
     }
 
     public void AddFootstep(double x, double y, double z)

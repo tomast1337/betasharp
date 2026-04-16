@@ -58,6 +58,7 @@ public unsafe class DisplayListCompiler
             _emulatedLists[_nextListId] = new DisplayList();
             _nextListId++;
         }
+
         return baseId;
     }
 
@@ -114,6 +115,7 @@ public unsafe class DisplayListCompiler
         {
             System.Buffer.MemoryCopy(data, dst + _stagingBufferCount, byteCount, byteCount);
         }
+
         _stagingBufferCount += byteCount;
     }
 
@@ -152,7 +154,8 @@ public unsafe class DisplayListCompiler
 
         fixed (byte* ptr = &_stagingBuffer[0])
         {
-            _gl.BufferData(GLEnum.ArrayBuffer.ToModern(), (nuint)_stagingBufferCount, ptr, GLEnum.StaticDraw.ToModern());
+            _gl.BufferData(GLEnum.ArrayBuffer.ToModern(), (nuint)_stagingBufferCount, ptr,
+                GLEnum.StaticDraw.ToModern());
         }
 
         uint stride = _compiledStride;
@@ -207,12 +210,25 @@ public unsafe class DisplayListCompiler
 
     public void RecordTranslate(float x, float y, float z)
     {
-        _currentList!.Commands.Add(new DLCommand { Type = DLCommandType.Translate, X_R = x, Y_G = y, Z_B = z });
+        _currentList!.Commands.Add(new DLCommand
+        {
+            Type = DLCommandType.Translate,
+            X_R = x,
+            Y_G = y,
+            Z_B = z
+        });
     }
 
     public void RecordColor(float r, float g, float b, float a)
     {
-        _currentList!.Commands.Add(new DLCommand { Type = DLCommandType.Color, X_R = r, Y_G = g, Z_B = b, W_A = a });
+        _currentList!.Commands.Add(new DLCommand
+        {
+            Type = DLCommandType.Color,
+            X_R = r,
+            Y_G = g,
+            Z_B = b,
+            W_A = a
+        });
     }
 
     public void Execute(uint list, EmulatedGL emuGl)

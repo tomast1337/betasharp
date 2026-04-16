@@ -29,7 +29,10 @@ internal sealed class VulkanRendererServices : IRendererServices
         TextRenderer = new NoOpTextRenderer();
         SkinManager = new NoOpSkinManager();
         EntityRenderDispatcher = new NoOpEntityRenderDispatcher();
-        BlockEntityRenderDispatcher = new NoOpBlockEntityRenderDispatcher { EntityDispatcher = EntityRenderDispatcher };
+        BlockEntityRenderDispatcher = new NoOpBlockEntityRenderDispatcher
+        {
+            EntityDispatcher = EntityRenderDispatcher
+        };
         UiRenderBackend = new NoOpUiRenderBackend();
         LegacyFixedFunctionApi = new NoOpLegacyFixedFunctionApi();
     }

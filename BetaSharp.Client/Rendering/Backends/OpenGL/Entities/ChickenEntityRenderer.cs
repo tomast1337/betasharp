@@ -6,7 +6,6 @@ namespace BetaSharp.Client.Rendering.Entities;
 
 public class ChickenEntityRenderer : LivingEntityRenderer
 {
-
     public ChickenEntityRenderer(ModelBase mainModel, float shadowRadius) : base(mainModel, shadowRadius)
     {
     }

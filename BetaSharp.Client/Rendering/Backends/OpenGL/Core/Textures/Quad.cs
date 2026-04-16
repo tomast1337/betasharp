@@ -58,7 +58,8 @@ internal struct Quad
         for (int i = 0; i < 4; ++i)
         {
             PositionTextureVertex vertex = _vertexPositions[i];
-            tessellator.addVertexWithUV(((float)vertex.vector3D.X * scale), ((float)vertex.vector3D.Y * scale), ((float)vertex.vector3D.Z * scale), vertex.texturePositionX, vertex.texturePositionY);
+            tessellator.addVertexWithUV(((float)vertex.vector3D.X * scale), ((float)vertex.vector3D.Y * scale),
+                ((float)vertex.vector3D.Z * scale), vertex.texturePositionX, vertex.texturePositionY);
         }
 
         tessellator.draw();

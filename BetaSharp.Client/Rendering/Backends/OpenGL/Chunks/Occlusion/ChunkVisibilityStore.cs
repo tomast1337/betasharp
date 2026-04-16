@@ -13,7 +13,8 @@ public struct ChunkVisibilityStore
         _data |= 1L << GetBit(from, to);
     }
 
-    public readonly ChunkDirectionMask GetVisibleFrom(ChunkDirectionMask incoming, Vector3D<double> viewPos, SubChunkRenderer renderer)
+    public readonly ChunkDirectionMask GetVisibleFrom(ChunkDirectionMask incoming, Vector3D<double> viewPos,
+        SubChunkRenderer renderer)
     {
         if (incoming == ChunkDirectionMask.None)
             return FoldOutgoing(_data);
@@ -42,13 +43,16 @@ public struct ChunkVisibilityStore
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static long GetUpDownOccluded() => (1L << GetBit(ChunkDirection.Down, ChunkDirection.Up)) | (1L << GetBit(ChunkDirection.Up, ChunkDirection.Down));
+    private static long GetUpDownOccluded() => (1L << GetBit(ChunkDirection.Down, ChunkDirection.Up)) |
+                                               (1L << GetBit(ChunkDirection.Up, ChunkDirection.Down));
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static long GetNorthSouthOccluded() => (1L << GetBit(ChunkDirection.North, ChunkDirection.South)) | (1L << GetBit(ChunkDirection.South, ChunkDirection.North));
+    private static long GetNorthSouthOccluded() => (1L << GetBit(ChunkDirection.North, ChunkDirection.South)) |
+                                                   (1L << GetBit(ChunkDirection.South, ChunkDirection.North));
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static long GetWestEastOccluded() => (1L << GetBit(ChunkDirection.West, ChunkDirection.East)) | (1L << GetBit(ChunkDirection.East, ChunkDirection.West));
+    private static long GetWestEastOccluded() => (1L << GetBit(ChunkDirection.West, ChunkDirection.East)) |
+                                                 (1L << GetBit(ChunkDirection.East, ChunkDirection.West));
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int GetBit(ChunkDirection from, ChunkDirection to)

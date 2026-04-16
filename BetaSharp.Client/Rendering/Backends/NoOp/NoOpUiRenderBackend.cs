@@ -101,11 +101,13 @@ internal sealed class NoOpUiRenderBackend : IUiRenderBackend
     {
     }
 
-    public void DrawTexturedQuad(float left, float top, float right, float bottom, float z, double uLeft, double vTop, double uRight, double vBottom)
+    public void DrawTexturedQuad(float left, float top, float right, float bottom, float z, double uLeft, double vTop,
+        double uRight, double vBottom)
     {
     }
 
-    public void DrawTexturedQuad(float left, float top, float right, float bottom, float z, double uLeft, double vTop, double uRight, double vBottom, Color tint)
+    public void DrawTexturedQuad(float left, float top, float right, float bottom, float z, double uLeft, double vTop,
+        double uRight, double vBottom, Color tint)
     {
     }
 

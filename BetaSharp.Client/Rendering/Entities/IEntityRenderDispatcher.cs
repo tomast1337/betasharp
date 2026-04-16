@@ -28,7 +28,10 @@ public interface IEntityRenderDispatcher
     GameOptions Options { get; }
 
     EntityRenderer GetEntityRenderObject(Entity entity);
-    void CacheRenderInfo(World world, ITextureManager textureManager, ITextRenderer textRenderer, EntityLiving camera, GameOptions options, ILegacyFixedFunctionApi sceneRenderBackend, float tickDelta);
+
+    void CacheRenderInfo(World world, ITextureManager textureManager, ITextRenderer textRenderer, EntityLiving camera,
+        GameOptions options, ILegacyFixedFunctionApi sceneRenderBackend, float tickDelta);
+
     void RenderEntity(Entity target, float tickDelta);
     void RenderEntityWithPosYaw(Entity target, double x, double y, double z, float yaw, float tickDelta);
     double GetSquareDistanceTo(double x, double y, double z);

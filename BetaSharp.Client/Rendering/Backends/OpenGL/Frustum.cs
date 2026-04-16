@@ -6,7 +6,6 @@ namespace BetaSharp.Client.Rendering;
 
 public class Frustum : FrustumData
 {
-
     private static readonly Frustum _instance = new();
 
     public static FrustumData Instance()
@@ -47,19 +46,27 @@ public class Frustum : FrustumData
                     ModelviewMatrix[i * 4 + 3] * ProjectionMatrix[12 + j];
             }
         }
+
         // Right Plane
-        SetPlane(0, ClippingMatrix[3] - ClippingMatrix[0], ClippingMatrix[7] - ClippingMatrix[4], ClippingMatrix[11] - ClippingMatrix[8], ClippingMatrix[15] - ClippingMatrix[12]);
+        SetPlane(0, ClippingMatrix[3] - ClippingMatrix[0], ClippingMatrix[7] - ClippingMatrix[4],
+            ClippingMatrix[11] - ClippingMatrix[8], ClippingMatrix[15] - ClippingMatrix[12]);
         // Left Plane
-        SetPlane(1, ClippingMatrix[3] + ClippingMatrix[0], ClippingMatrix[7] + ClippingMatrix[4], ClippingMatrix[11] + ClippingMatrix[8], ClippingMatrix[15] + ClippingMatrix[12]);
+        SetPlane(1, ClippingMatrix[3] + ClippingMatrix[0], ClippingMatrix[7] + ClippingMatrix[4],
+            ClippingMatrix[11] + ClippingMatrix[8], ClippingMatrix[15] + ClippingMatrix[12]);
         // Bottom Plane
-        SetPlane(2, ClippingMatrix[3] + ClippingMatrix[1], ClippingMatrix[7] + ClippingMatrix[5], ClippingMatrix[11] + ClippingMatrix[9], ClippingMatrix[15] + ClippingMatrix[13]);
+        SetPlane(2, ClippingMatrix[3] + ClippingMatrix[1], ClippingMatrix[7] + ClippingMatrix[5],
+            ClippingMatrix[11] + ClippingMatrix[9], ClippingMatrix[15] + ClippingMatrix[13]);
         // Top Plane
-        SetPlane(3, ClippingMatrix[3] - ClippingMatrix[1], ClippingMatrix[7] - ClippingMatrix[5], ClippingMatrix[11] - ClippingMatrix[9], ClippingMatrix[15] - ClippingMatrix[13]);
+        SetPlane(3, ClippingMatrix[3] - ClippingMatrix[1], ClippingMatrix[7] - ClippingMatrix[5],
+            ClippingMatrix[11] - ClippingMatrix[9], ClippingMatrix[15] - ClippingMatrix[13]);
         // Far Plane
-        SetPlane(4, ClippingMatrix[3] - ClippingMatrix[2], ClippingMatrix[7] - ClippingMatrix[6], ClippingMatrix[11] - ClippingMatrix[10], ClippingMatrix[15] - ClippingMatrix[14]);
+        SetPlane(4, ClippingMatrix[3] - ClippingMatrix[2], ClippingMatrix[7] - ClippingMatrix[6],
+            ClippingMatrix[11] - ClippingMatrix[10], ClippingMatrix[15] - ClippingMatrix[14]);
         // Near Plane
-        SetPlane(5, ClippingMatrix[3] + ClippingMatrix[2], ClippingMatrix[7] + ClippingMatrix[6], ClippingMatrix[11] + ClippingMatrix[10], ClippingMatrix[15] + ClippingMatrix[14]);
+        SetPlane(5, ClippingMatrix[3] + ClippingMatrix[2], ClippingMatrix[7] + ClippingMatrix[6],
+            ClippingMatrix[11] + ClippingMatrix[10], ClippingMatrix[15] + ClippingMatrix[14]);
     }
+
     private void SetPlane(int side, float a, float b, float c, float d)
     {
         int offset = side * 4;

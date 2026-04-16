@@ -186,12 +186,14 @@ internal sealed class OpenGlUiRenderBackend : IUiRenderBackend
         Lighting.turnOff();
     }
 
-    public void DrawTexturedQuad(float left, float top, float right, float bottom, float z, double uLeft, double vTop, double uRight, double vBottom)
+    public void DrawTexturedQuad(float left, float top, float right, float bottom, float z, double uLeft, double vTop,
+        double uRight, double vBottom)
     {
         DrawTexturedQuad(left, top, right, bottom, z, uLeft, vTop, uRight, vBottom, new Color(255, 255, 255, 255));
     }
 
-    public void DrawTexturedQuad(float left, float top, float right, float bottom, float z, double uLeft, double vTop, double uRight, double vBottom, Color tint)
+    public void DrawTexturedQuad(float left, float top, float right, float bottom, float z, double uLeft, double vTop,
+        double uRight, double vBottom, Color tint)
     {
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();

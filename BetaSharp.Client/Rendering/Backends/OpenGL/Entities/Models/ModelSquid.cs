@@ -5,6 +5,7 @@ namespace BetaSharp.Client.Rendering.Entities.Models;
 public class ModelSquid : ModelBase
 {
     private readonly ModelPart squidBody;
+
     private readonly ModelPart[]
         squidTentacles = new ModelPart[8];
 
@@ -28,7 +29,6 @@ public class ModelSquid : ModelBase
             tentacleAngle = tentacleIndex * Math.PI * -2.0D / squidTentacles.Length + Math.PI * 0.5D;
             squidTentacles[tentacleIndex].rotateAngleY = (float)tentacleAngle;
         }
-
     }
 
     public override void setRotationAngles(float limbSwing, float limbSwingAmount, float tentaclePitch, float netHeadYaw, float headPitch, float scale)
@@ -37,7 +37,6 @@ public class ModelSquid : ModelBase
         {
             squidTentacles[tentacleIndex].rotateAngleX = tentaclePitch;
         }
-
     }
 
     public override void render(float limbSwing, float limbSwingAmount, float tentaclePitch, float netHeadYaw, float headPitch, float scale)
@@ -49,6 +48,5 @@ public class ModelSquid : ModelBase
         {
             squidTentacles[tentacleIndex].render(scale);
         }
-
     }
 }

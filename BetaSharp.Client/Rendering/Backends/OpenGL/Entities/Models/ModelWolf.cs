@@ -8,7 +8,6 @@ namespace BetaSharp.Client.Rendering.Entities.Models;
 
 public class ModelWolf : ModelBase
 {
-
     public ModelPart wolfHeadMain;
     public ModelPart wolfBody;
     public ModelPart wolfLeg1;
@@ -136,7 +135,6 @@ public class ModelWolf : ModelBase
             float shakeBrightness = wolf.GetBrightnessAtEyes(partialTick) * wolf.getShadingWhileShaking(partialTick);
             SceneRenderBackendContext.Current.SetColorRgb(shakeBrightness, shakeBrightness, shakeBrightness);
         }
-
     }
 
     public override void setRotationAngles(float limbSwing, float limbSwingAmount, float tailPitch, float netHeadYaw, float headPitch, float scale)

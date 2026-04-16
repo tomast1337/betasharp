@@ -17,7 +17,10 @@ public interface IParticleManager
     void renderParticles(Entity camera, float partialTick);
     void renderSpecialParticles(Entity camera, float partialTick);
     void clearEffects(World world);
-    void AddPickupParticle(Entity target, Entity collector, float yOffset, IEntityRenderDispatcher entityRenderDispatcher);
+
+    void AddPickupParticle(Entity target, Entity collector, float yOffset,
+        IEntityRenderDispatcher entityRenderDispatcher);
+
     void AddFootstep(double x, double y, double z);
     void AddSmoke(double x, double y, double z, double vx, double vy, double vz, float scaleMultiplier = 1.0f);
     void AddFlame(double x, double y, double z, double vx, double vy, double vz);
@@ -31,6 +34,7 @@ public interface IParticleManager
     void AddRain(double x, double y, double z);
     void AddSplash(double x, double y, double z, double vx, double vy, double vz);
     void AddBubble(double x, double y, double z, double vx, double vy, double vz);
+
     void AddDigging(
         double x,
         double y,
@@ -44,6 +48,7 @@ public interface IParticleManager
         int blockX,
         int blockY,
         int blockZ);
+
     void AddDiggingScaled(
         double x,
         double y,
@@ -56,6 +61,7 @@ public interface IParticleManager
         int blockZ,
         float velScale,
         float sizeScale);
+
     void AddSlime(double x, double y, double z, Item item);
     void addBlockDestroyEffects(int x, int y, int z, int blockId, int meta);
     void addBlockHitEffects(int blockX, int blockY, int blockZ, int face);

@@ -44,7 +44,8 @@ internal sealed class NoOpEntityRenderDispatcher : IEntityRenderDispatcher
 
     public EntityRenderer GetEntityRenderObject(Entity entity) => _renderer;
 
-    public void CacheRenderInfo(World world, ITextureManager textureManager, ITextRenderer textRenderer, EntityLiving camera, GameOptions options, ILegacyFixedFunctionApi sceneRenderBackend, float tickDelta)
+    public void CacheRenderInfo(World world, ITextureManager textureManager, ITextRenderer textRenderer,
+        EntityLiving camera, GameOptions options, ILegacyFixedFunctionApi sceneRenderBackend, float tickDelta)
     {
     }
 

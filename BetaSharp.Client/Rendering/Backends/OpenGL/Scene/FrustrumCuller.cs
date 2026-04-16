@@ -4,7 +4,6 @@ namespace BetaSharp.Client.Rendering;
 
 public class FrustrumCuller : ICuller
 {
-
     private readonly FrustumData _frustum = Frustum.Instance();
     private double _x;
     private double _y;

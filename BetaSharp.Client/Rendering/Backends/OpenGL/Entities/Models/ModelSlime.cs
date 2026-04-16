@@ -25,7 +25,6 @@ public class ModelSlime : ModelBase
             slimeMouth = new ModelPart(32, 8);
             slimeMouth.addBox(0.0F, 21.0F, -3.5F, 1, 1, 1);
         }
-
     }
 
     public override void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
@@ -42,6 +41,5 @@ public class ModelSlime : ModelBase
             slimeLeftEye.render(scale);
             slimeMouth.render(scale);
         }
-
     }
 }

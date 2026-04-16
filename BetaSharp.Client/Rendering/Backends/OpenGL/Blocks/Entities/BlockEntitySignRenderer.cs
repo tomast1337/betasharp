@@ -9,7 +9,6 @@ namespace BetaSharp.Client.Rendering.Blocks.Entities;
 
 public class BlockEntitySignRenderer : BlockEntitySpecialRenderer
 {
-
     private readonly SignModel signModel = new();
 
     public void renderTileEntitySignAt(BlockEntitySign sign, double x, double y, double z, float tickDelta)
@@ -68,11 +67,13 @@ public class BlockEntitySignRenderer : BlockEntitySpecialRenderer
             if (rowIndex == sign.CurrentRow)
             {
                 rowText = "> " + rowText + " <";
-                textRenderer.DrawString(rowText, -textRenderer.GetStringWidth(rowText) / 2, rowIndex * 10 - sign.Texts.Length * 5, Color.Black);
+                textRenderer.DrawString(rowText, -textRenderer.GetStringWidth(rowText) / 2,
+                    rowIndex * 10 - sign.Texts.Length * 5, Color.Black);
             }
             else
             {
-                textRenderer.DrawString(rowText, -textRenderer.GetStringWidth(rowText) / 2, rowIndex * 10 - sign.Texts.Length * 5, Color.Black);
+                textRenderer.DrawString(rowText, -textRenderer.GetStringWidth(rowText) / 2,
+                    rowIndex * 10 - sign.Texts.Length * 5, Color.Black);
             }
         }
 

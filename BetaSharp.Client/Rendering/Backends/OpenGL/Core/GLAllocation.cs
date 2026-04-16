@@ -75,6 +75,7 @@ public class GLAllocation
                 {
                     textureIds[i] = (uint)textureNames[i];
                 }
+
                 GLManager.GL.DeleteTextures(textureIds);
             }
 

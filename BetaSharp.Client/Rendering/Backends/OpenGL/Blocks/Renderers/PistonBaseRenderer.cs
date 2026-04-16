@@ -18,33 +18,57 @@ public class PistonBaseRenderer : IBlockRenderer
         {
             case 0: // Down (-Y)
                 // Set to 0 so the texture samples from the correct height!
-                uvSouth = 2; uvNorth = 2; uvEast = 2; uvWest = 2;
-                uvTop = 0; uvBottom = 0;
+                uvSouth = 2;
+                uvNorth = 2;
+                uvEast = 2;
+                uvWest = 2;
+                uvTop = 0;
+                uvBottom = 0;
                 if (isExpanded) bounds = new Box(0.0F, 0.25F, 0.0F, 1.0F, 1.0F, 1.0F);
                 break;
             case 1: // Up (+Y)
-                uvSouth = 0; uvNorth = 0; uvEast = 0; uvWest = 0;
-                uvTop = 0; uvBottom = 0;
+                uvSouth = 0;
+                uvNorth = 0;
+                uvEast = 0;
+                uvWest = 0;
+                uvTop = 0;
+                uvBottom = 0;
                 if (isExpanded) bounds = new Box(0.0F, 0.0F, 0.0F, 1.0F, 0.75F, 1.0F);
                 break;
             case 2: // North (-Z)
-                uvSouth = 1; uvNorth = 3; uvEast = 0; uvWest = 1;
-                uvTop = 0; uvBottom = 0;
+                uvSouth = 1;
+                uvNorth = 3;
+                uvEast = 0;
+                uvWest = 1;
+                uvTop = 0;
+                uvBottom = 0;
                 if (isExpanded) bounds = new Box(0.0F, 0.0F, 0.25F, 1.0F, 1.0F, 1.0F);
                 break;
             case 3: // South (+Z)
-                uvSouth = 3; uvNorth = 1; uvEast = 1; uvWest = 0;
-                uvTop = 2; uvBottom = 2;
+                uvSouth = 3;
+                uvNorth = 1;
+                uvEast = 1;
+                uvWest = 0;
+                uvTop = 2;
+                uvBottom = 2;
                 if (isExpanded) bounds = new Box(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.75F);
                 break;
             case 4: // West (-X)
-                uvSouth = 0; uvNorth = 0; uvEast = 1; uvWest = 3;
-                uvTop = 3; uvBottom = 3;
+                uvSouth = 0;
+                uvNorth = 0;
+                uvEast = 1;
+                uvWest = 3;
+                uvTop = 3;
+                uvBottom = 3;
                 if (isExpanded) bounds = new Box(0.25F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
                 break;
             case 5: // East (+X)
-                uvSouth = 0; uvNorth = 0; uvEast = 3; uvWest = 1;
-                uvTop = 1; uvBottom = 1;
+                uvSouth = 0;
+                uvNorth = 0;
+                uvEast = 3;
+                uvWest = 1;
+                uvTop = 1;
+                uvBottom = 1;
                 if (isExpanded) bounds = new Box(0.0F, 0.0F, 0.0F, 0.75F, 1.0F, 1.0F);
                 break;
         }

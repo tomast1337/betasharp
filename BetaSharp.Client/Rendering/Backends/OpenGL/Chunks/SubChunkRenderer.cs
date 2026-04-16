@@ -187,10 +187,12 @@ public class SubChunkRenderer : IDisposable
         if (vertexCount == 0)
             return;
 
-        Vector3D<double> pos = new(PositionMinus.X - viewPos.X, PositionMinus.Y - viewPos.Y, PositionMinus.Z - viewPos.Z);
+        Vector3D<double> pos = new(PositionMinus.X - viewPos.X, PositionMinus.Y - viewPos.Y,
+            PositionMinus.Z - viewPos.Z);
         pos += new Vector3D<double>(ClipPosition.X, ClipPosition.Y, ClipPosition.Z);
 
-        modelViewMatrix = Matrix4X4.CreateTranslation(new Vector3D<float>((float)pos.X, (float)pos.Y, (float)pos.Z)) * modelViewMatrix;
+        modelViewMatrix = Matrix4X4.CreateTranslation(new Vector3D<float>((float)pos.X, (float)pos.Y, (float)pos.Z)) *
+                          modelViewMatrix;
 
         shader.SetUniformMatrix4("modelViewMatrix", modelViewMatrix);
         shader.SetUniform2("chunkPos", Position.X, Position.Z);

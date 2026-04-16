@@ -98,40 +98,64 @@ public class PistonExtensionRenderer : IBlockRenderer
         switch (facing)
         {
             case Side.Down:
-                RenderPistonArmY(ref ctx, x + 0.375f, x + 0.625f, y + 0.25f, y + 0.25f + armLength, z + 0.625f, z + 0.625f, luminance * 0.8F, texWidth);
-                RenderPistonArmY(ref ctx, x + 0.625f, x + 0.375f, y + 0.25f, y + 0.25f + armLength, z + 0.375f, z + 0.375f, luminance * 0.8F, texWidth);
-                RenderPistonArmY(ref ctx, x + 0.375f, x + 0.375f, y + 0.25f, y + 0.25f + armLength, z + 0.375f, z + 0.625f, luminance * 0.6F, texWidth);
-                RenderPistonArmY(ref ctx, x + 0.625f, x + 0.625f, y + 0.25f, y + 0.25f + armLength, z + 0.625f, z + 0.375f, luminance * 0.6F, texWidth);
+                RenderPistonArmY(ref ctx, x + 0.375f, x + 0.625f, y + 0.25f, y + 0.25f + armLength, z + 0.625f,
+                    z + 0.625f, luminance * 0.8F, texWidth);
+                RenderPistonArmY(ref ctx, x + 0.625f, x + 0.375f, y + 0.25f, y + 0.25f + armLength, z + 0.375f,
+                    z + 0.375f, luminance * 0.8F, texWidth);
+                RenderPistonArmY(ref ctx, x + 0.375f, x + 0.375f, y + 0.25f, y + 0.25f + armLength, z + 0.375f,
+                    z + 0.625f, luminance * 0.6F, texWidth);
+                RenderPistonArmY(ref ctx, x + 0.625f, x + 0.625f, y + 0.25f, y + 0.25f + armLength, z + 0.625f,
+                    z + 0.375f, luminance * 0.6F, texWidth);
                 break;
             case Side.Up:
-                RenderPistonArmY(ref ctx, x + 0.375f, x + 0.625f, y + 0.75f - armLength, y + 0.75f, z + 0.625f, z + 0.625f, luminance * 0.8F, texWidth);
-                RenderPistonArmY(ref ctx, x + 0.625f, x + 0.375f, y + 0.75f - armLength, y + 0.75f, z + 0.375f, z + 0.375f, luminance * 0.8F, texWidth);
-                RenderPistonArmY(ref ctx, x + 0.375f, x + 0.375f, y + 0.75f - armLength, y + 0.75f, z + 0.375f, z + 0.625f, luminance * 0.6F, texWidth);
-                RenderPistonArmY(ref ctx, x + 0.625f, x + 0.625f, y + 0.75f - armLength, y + 0.75f, z + 0.625f, z + 0.375f, luminance * 0.6F, texWidth);
+                RenderPistonArmY(ref ctx, x + 0.375f, x + 0.625f, y + 0.75f - armLength, y + 0.75f, z + 0.625f,
+                    z + 0.625f, luminance * 0.8F, texWidth);
+                RenderPistonArmY(ref ctx, x + 0.625f, x + 0.375f, y + 0.75f - armLength, y + 0.75f, z + 0.375f,
+                    z + 0.375f, luminance * 0.8F, texWidth);
+                RenderPistonArmY(ref ctx, x + 0.375f, x + 0.375f, y + 0.75f - armLength, y + 0.75f, z + 0.375f,
+                    z + 0.625f, luminance * 0.6F, texWidth);
+                RenderPistonArmY(ref ctx, x + 0.625f, x + 0.625f, y + 0.75f - armLength, y + 0.75f, z + 0.625f,
+                    z + 0.375f, luminance * 0.6F, texWidth);
                 break;
             case Side.North:
-                RenderPistonArmZ(ref ctx, x + 0.375f, x + 0.375f, y + 0.625f, y + 0.375f, z + 0.25f, z + 0.25f + armLength, luminance * 0.6F, texWidth);
-                RenderPistonArmZ(ref ctx, x + 0.625f, x + 0.625f, y + 0.375f, y + 0.625f, z + 0.25f, z + 0.25f + armLength, luminance * 0.6F, texWidth);
-                RenderPistonArmZ(ref ctx, x + 0.375f, x + 0.625f, y + 0.375f, y + 0.375f, z + 0.25f, z + 0.25f + armLength, luminance * 0.5F, texWidth);
-                RenderPistonArmZ(ref ctx, x + 0.625f, x + 0.375f, y + 0.625f, y + 0.625f, z + 0.25f, z + 0.25f + armLength, luminance, texWidth);
+                RenderPistonArmZ(ref ctx, x + 0.375f, x + 0.375f, y + 0.625f, y + 0.375f, z + 0.25f,
+                    z + 0.25f + armLength, luminance * 0.6F, texWidth);
+                RenderPistonArmZ(ref ctx, x + 0.625f, x + 0.625f, y + 0.375f, y + 0.625f, z + 0.25f,
+                    z + 0.25f + armLength, luminance * 0.6F, texWidth);
+                RenderPistonArmZ(ref ctx, x + 0.375f, x + 0.625f, y + 0.375f, y + 0.375f, z + 0.25f,
+                    z + 0.25f + armLength, luminance * 0.5F, texWidth);
+                RenderPistonArmZ(ref ctx, x + 0.625f, x + 0.375f, y + 0.625f, y + 0.625f, z + 0.25f,
+                    z + 0.25f + armLength, luminance, texWidth);
                 break;
             case Side.South:
-                RenderPistonArmZ(ref ctx, x + 0.375f, x + 0.375f, y + 0.625f, y + 0.375f, z + 0.75f - armLength, z + 0.75f, luminance * 0.6F, texWidth);
-                RenderPistonArmZ(ref ctx, x + 0.625f, x + 0.625f, y + 0.375f, y + 0.625f, z + 0.75f - armLength, z + 0.75f, luminance * 0.6F, texWidth);
-                RenderPistonArmZ(ref ctx, x + 0.375f, x + 0.625f, y + 0.375f, y + 0.375f, z + 0.75f - armLength, z + 0.75f, luminance * 0.5F, texWidth);
-                RenderPistonArmZ(ref ctx, x + 0.625f, x + 0.375f, y + 0.625f, y + 0.625f, z + 0.75f - armLength, z + 0.75f, luminance, texWidth);
+                RenderPistonArmZ(ref ctx, x + 0.375f, x + 0.375f, y + 0.625f, y + 0.375f, z + 0.75f - armLength,
+                    z + 0.75f, luminance * 0.6F, texWidth);
+                RenderPistonArmZ(ref ctx, x + 0.625f, x + 0.625f, y + 0.375f, y + 0.625f, z + 0.75f - armLength,
+                    z + 0.75f, luminance * 0.6F, texWidth);
+                RenderPistonArmZ(ref ctx, x + 0.375f, x + 0.625f, y + 0.375f, y + 0.375f, z + 0.75f - armLength,
+                    z + 0.75f, luminance * 0.5F, texWidth);
+                RenderPistonArmZ(ref ctx, x + 0.625f, x + 0.375f, y + 0.625f, y + 0.625f, z + 0.75f - armLength,
+                    z + 0.75f, luminance, texWidth);
                 break;
             case Side.West:
-                RenderPistonArmX(ref ctx, x + 0.25f, x + 0.25f + armLength, y + 0.375f, y + 0.375f, z + 0.625f, z + 0.375f, luminance * 0.5F, texWidth);
-                RenderPistonArmX(ref ctx, x + 0.25f, x + 0.25f + armLength, y + 0.625f, y + 0.625f, z + 0.375f, z + 0.625f, luminance, texWidth);
-                RenderPistonArmX(ref ctx, x + 0.25f, x + 0.25f + armLength, y + 0.375f, y + 0.625f, z + 0.375f, z + 0.375f, luminance * 0.6F, texWidth);
-                RenderPistonArmX(ref ctx, x + 0.25f, x + 0.25f + armLength, y + 0.625f, y + 0.375f, z + 0.625f, z + 0.625f, luminance * 0.6F, texWidth);
+                RenderPistonArmX(ref ctx, x + 0.25f, x + 0.25f + armLength, y + 0.375f, y + 0.375f, z + 0.625f,
+                    z + 0.375f, luminance * 0.5F, texWidth);
+                RenderPistonArmX(ref ctx, x + 0.25f, x + 0.25f + armLength, y + 0.625f, y + 0.625f, z + 0.375f,
+                    z + 0.625f, luminance, texWidth);
+                RenderPistonArmX(ref ctx, x + 0.25f, x + 0.25f + armLength, y + 0.375f, y + 0.625f, z + 0.375f,
+                    z + 0.375f, luminance * 0.6F, texWidth);
+                RenderPistonArmX(ref ctx, x + 0.25f, x + 0.25f + armLength, y + 0.625f, y + 0.375f, z + 0.625f,
+                    z + 0.625f, luminance * 0.6F, texWidth);
                 break;
             case Side.East:
-                RenderPistonArmX(ref ctx, x + 0.75f - armLength, x + 0.75f, y + 0.375f, y + 0.375f, z + 0.625f, z + 0.375f, luminance * 0.5F, texWidth);
-                RenderPistonArmX(ref ctx, x + 0.75f - armLength, x + 0.75f, y + 0.625f, y + 0.625f, z + 0.375f, z + 0.625f, luminance, texWidth);
-                RenderPistonArmX(ref ctx, x + 0.75f - armLength, x + 0.75f, y + 0.375f, y + 0.625f, z + 0.375f, z + 0.375f, luminance * 0.6F, texWidth);
-                RenderPistonArmX(ref ctx, x + 0.75f - armLength, x + 0.75f, y + 0.625f, y + 0.375f, z + 0.625f, z + 0.625f, luminance * 0.6F, texWidth);
+                RenderPistonArmX(ref ctx, x + 0.75f - armLength, x + 0.75f, y + 0.375f, y + 0.375f, z + 0.625f,
+                    z + 0.375f, luminance * 0.5F, texWidth);
+                RenderPistonArmX(ref ctx, x + 0.75f - armLength, x + 0.75f, y + 0.625f, y + 0.625f, z + 0.375f,
+                    z + 0.625f, luminance, texWidth);
+                RenderPistonArmX(ref ctx, x + 0.75f - armLength, x + 0.75f, y + 0.375f, y + 0.625f, z + 0.375f,
+                    z + 0.375f, luminance * 0.6F, texWidth);
+                RenderPistonArmX(ref ctx, x + 0.75f - armLength, x + 0.75f, y + 0.625f, y + 0.375f, z + 0.625f,
+                    z + 0.625f, luminance * 0.6F, texWidth);
                 break;
         }
 

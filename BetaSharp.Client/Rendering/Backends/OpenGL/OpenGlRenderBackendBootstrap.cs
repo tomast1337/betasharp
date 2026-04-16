@@ -134,7 +134,8 @@ internal sealed class OpenGlRenderBackendBootstrap : IRenderBackendBootstrap
         GLTexture.LogLeakReport();
     }
 
-    public void RenderStartupScreen(GameOptions options, int displayWidth, int displayHeight, int framebufferWidth, int framebufferHeight, int splashTextureId)
+    public void RenderStartupScreen(GameOptions options, int displayWidth, int displayHeight, int framebufferWidth,
+        int framebufferHeight, int splashTextureId)
     {
         GLManager.GL.Viewport(0, 0, (uint)framebufferWidth, (uint)framebufferHeight);
 
@@ -167,10 +168,10 @@ internal sealed class OpenGlRenderBackendBootstrap : IRenderBackendBootstrap
         Tessellator tess = Tessellator.instance;
         tess.startDrawingQuads();
         tess.setColorOpaque_F(1f, 1f, 1f);
-        tess.addVertexWithUV(x,             y + logoHeight, 0.0, 0.0, 1.0);
+        tess.addVertexWithUV(x, y + logoHeight, 0.0, 0.0, 1.0);
         tess.addVertexWithUV(x + logoWidth, y + logoHeight, 0.0, 1.0, 1.0);
-        tess.addVertexWithUV(x + logoWidth, y,              0.0, 1.0, 0.0);
-        tess.addVertexWithUV(x,             y,              0.0, 0.0, 0.0);
+        tess.addVertexWithUV(x + logoWidth, y, 0.0, 1.0, 0.0);
+        tess.addVertexWithUV(x, y, 0.0, 0.0, 0.0);
         tess.draw();
 
         GLManager.GL.Disable(LegacyGLEnum.Blend);

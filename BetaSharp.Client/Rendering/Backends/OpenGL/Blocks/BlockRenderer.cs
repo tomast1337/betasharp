@@ -29,7 +29,8 @@ public class BlockRenderer
     private static readonly PistonExtensionRenderer s_pistonExt = new();
 
 
-    public static bool RenderBlockByRenderType(IBlockReader world, ILightProvider lighting, Block block, BlockPos pos, Tessellator tess, int overrideTexture = -1, bool renderAllFaces = false, bool doVariance = false)
+    public static bool RenderBlockByRenderType(IBlockReader world, ILightProvider lighting, Block block, BlockPos pos,
+        Tessellator tess, int overrideTexture = -1, bool renderAllFaces = false, bool doVariance = false)
     {
         BlockRendererType type = block.getRenderType();
 
@@ -39,9 +40,15 @@ public class BlockRenderer
         TextureVariance botRule = doVariance ? block.BottomVariance : TextureVariance.None;
         TextureVariance sideRule = doVariance ? block.SideVariance : TextureVariance.None;
 
-        int topHash = topRule != TextureVariance.None ? BlockRenderContext.GetTextureVarianceHash(pos.x, pos.y, pos.z) : 0;
-        int botHash = botRule != TextureVariance.None ? BlockRenderContext.GetTextureVarianceHash(pos.x, pos.y - 1, pos.z) : 0;
-        int sideHash = sideRule != TextureVariance.None ? BlockRenderContext.GetTextureVarianceHash(pos.x, pos.y, pos.z) : 0;
+        int topHash = topRule != TextureVariance.None
+            ? BlockRenderContext.GetTextureVarianceHash(pos.x, pos.y, pos.z)
+            : 0;
+        int botHash = botRule != TextureVariance.None
+            ? BlockRenderContext.GetTextureVarianceHash(pos.x, pos.y - 1, pos.z)
+            : 0;
+        int sideHash = sideRule != TextureVariance.None
+            ? BlockRenderContext.GetTextureVarianceHash(pos.x, pos.y, pos.z)
+            : 0;
 
         int topRot = BlockRenderContext.ApplyVariance(topHash, topRule, out int flipTop);
         int botRot = BlockRenderContext.ApplyVariance(botHash, botRule, out int flipBot);
@@ -133,7 +140,8 @@ public class BlockRenderer
             tess.startDrawingQuads();
             tess.setNormal(0.0F, -1.0F, 0.0F);
             SetFaceColor(0);
-            uiCtx.DrawBottomFace(block, origin, dummyColors, isPiston ? block.GetTexture(Side.Down) : block.GetTexture(Side.Down, metadata));
+            uiCtx.DrawBottomFace(block, origin, dummyColors,
+                isPiston ? block.GetTexture(Side.Down) : block.GetTexture(Side.Down, metadata));
             tess.draw();
 
             tess.startDrawingQuads();

@@ -81,9 +81,9 @@ public static class ParticleUpdater
                     vy[i] += config.GravityAccel;
                     ParticlePhysics.MoveWithCollision(buf, i, world);
                     if (world.Reader.GetMaterial(
-                        MathHelper.Floor(x[i]),
-                        MathHelper.Floor(y[i]),
-                        MathHelper.Floor(z[i])) != Material.Water)
+                            MathHelper.Floor(x[i]),
+                            MathHelper.Floor(y[i]),
+                            MathHelper.Floor(z[i])) != Material.Water)
                         buf.Dead[i] = true;
                     break;
 
@@ -156,7 +156,8 @@ public static class ParticleUpdater
         }
     }
 
-    private static void TickLava(ParticleBuffer buf, int i, IWorldContext world, List<DeferredSmoke> deferred, in ParticleTypeConfig config, Random rng)
+    private static void TickLava(ParticleBuffer buf, int i, IWorldContext world, List<DeferredSmoke> deferred,
+        in ParticleTypeConfig config, Random rng)
     {
         if (rng.NextDouble() > (float)buf.Age[i] / buf.MaxAge[i])
         {

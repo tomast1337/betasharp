@@ -64,6 +64,7 @@ public class GLTexture : ITextureResource
             Width = width;
             Height = height;
         }
+
         Bind();
         GLManager.GL.TexImage2D(
             TextureTarget.Texture2D,
@@ -127,7 +128,8 @@ public class GLTexture : ITextureResource
         s_logger.LogWarning("Found {Count} leaked OpenGL textures on shutdown!", s_activeTextures.Count);
         foreach (KeyValuePair<uint, (string Source, DateTime CreatedAt)> entry in s_activeTextures)
         {
-            s_logger.LogWarning("Leaked Texture ID: {Id}, Source: {Source}, Created At: {CreatedAt}", entry.Key, entry.Value.Source, entry.Value.CreatedAt);
+            s_logger.LogWarning("Leaked Texture ID: {Id}, Source: {Source}, Created At: {CreatedAt}", entry.Key,
+                entry.Value.Source, entry.Value.CreatedAt);
         }
     }
 

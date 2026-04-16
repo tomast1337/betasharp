@@ -6,7 +6,6 @@ namespace BetaSharp.Client.Rendering.Entities;
 
 public class ProjectileEntityRenderer : EntityRenderer
 {
-
     private readonly int itemIconIndex;
 
     public ProjectileEntityRenderer(int itemIconIndex)

@@ -26,7 +26,8 @@ internal sealed class NoOpParticleManager : IParticleManager
     {
     }
 
-    public void AddPickupParticle(Entity target, Entity collector, float yOffset, IEntityRenderDispatcher entityRenderDispatcher)
+    public void AddPickupParticle(Entity target, Entity collector, float yOffset,
+        IEntityRenderDispatcher entityRenderDispatcher)
     {
     }
 

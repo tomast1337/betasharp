@@ -7,7 +7,6 @@ namespace BetaSharp.Client.Rendering.Blocks.Entities;
 
 public class BlockEntityMobSpawnerRenderer : BlockEntitySpecialRenderer
 {
-
     private readonly Dictionary<string, Entity> _entityDict = [];
 
     public void renderTileEntityMobSpawner(BlockEntityMobSpawner spawner, double x, double y, double z, float tickDelta)

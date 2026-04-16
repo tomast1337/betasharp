@@ -488,7 +488,6 @@ public class HeldItemRenderer : IHeldItemRenderer
             itemToRender = heldStack;
             field_20099_f = player.Inventory.SelectedSlot;
         }
-
     }
 
     public void ResetEquippedProgress()

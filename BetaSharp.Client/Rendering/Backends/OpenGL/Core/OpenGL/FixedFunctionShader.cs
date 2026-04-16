@@ -23,7 +23,7 @@ public class FixedFunctionShader
     private readonly int _uNormalMatrix;
 
     private readonly int _uEnableFog;
-    private readonly int _uFogMode;  // 0=linear, 1=exp
+    private readonly int _uFogMode; // 0=linear, 1=exp
     private readonly int _uFogColor;
     private readonly int _uFogStart;
     private readonly int _uFogEnd;
@@ -240,6 +240,7 @@ void main()
 
     public unsafe void SetNormalMatrix(Matrix3X3<float> matrix) =>
         _gl.UniformMatrix3(_uNormalMatrix, 1, false, (float*)&matrix);
+
     public void SetEnableFog(bool enable) =>
         _gl.Uniform1(_uEnableFog, enable ? 1 : 0);
 

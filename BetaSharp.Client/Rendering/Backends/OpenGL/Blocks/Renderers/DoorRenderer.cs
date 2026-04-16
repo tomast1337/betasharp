@@ -9,7 +9,10 @@ public class DoorRenderer : IBlockRenderer
     {
         Box bounds = ctx.OverrideBounds ?? block.BoundingBox;
 
-        var flatCtx = ctx with { EnableAo = false };
+        var flatCtx = ctx with
+        {
+            EnableAo = false
+        };
 
         const float lightBottom = 0.5F;
         const float lightTop = 1.0F;
@@ -30,8 +33,10 @@ public class DoorRenderer : IBlockRenderer
         if (bounds.MinY > 0.0D) faceLuminance = blockLuminance;
         if (isLightEmitter) faceLuminance = 1.0F;
 
-        ctx.Tess.setColorOpaque_F(lightBottom * faceLuminance, lightBottom * faceLuminance, lightBottom * faceLuminance);
-        flatCtx.DrawBottomFace(block, vecPos, dummyColors, block.GetTextureId(ctx.BlockReader, pos.x, pos.y, pos.z, Side.Down));
+        ctx.Tess.setColorOpaque_F(lightBottom * faceLuminance, lightBottom * faceLuminance,
+            lightBottom * faceLuminance);
+        flatCtx.DrawBottomFace(block, vecPos, dummyColors,
+            block.GetTextureId(ctx.BlockReader, pos.x, pos.y, pos.z, Side.Down));
 
         // --- Top Face (Y + 1) ---
         faceLuminance = block.getLuminance(ctx.Lighting, pos.x, pos.y + 1, pos.z);
@@ -39,7 +44,8 @@ public class DoorRenderer : IBlockRenderer
         if (isLightEmitter) faceLuminance = 1.0F;
 
         ctx.Tess.setColorOpaque_F(lightTop * faceLuminance, lightTop * faceLuminance, lightTop * faceLuminance);
-        flatCtx.DrawTopFace(block, vecPos, dummyColors, block.GetTextureId(ctx.BlockReader, pos.x, pos.y, pos.z, Side.Up));
+        flatCtx.DrawTopFace(block, vecPos, dummyColors,
+            block.GetTextureId(ctx.BlockReader, pos.x, pos.y, pos.z, Side.Up));
 
         // --- East Face (Z - 1) ---
         faceLuminance = block.getLuminance(ctx.Lighting, pos.x, pos.y, pos.z - 1);
@@ -55,6 +61,7 @@ public class DoorRenderer : IBlockRenderer
             flatCtx.FlipTexture = true;
             textureId = -textureId; // Make it positive for the UV math
         }
+
         flatCtx.DrawEastFace(block, vecPos, dummyColors, textureId);
 
         // --- West Face (Z + 1) ---
@@ -71,6 +78,7 @@ public class DoorRenderer : IBlockRenderer
             flatCtx.FlipTexture = true;
             textureId = -textureId;
         }
+
         flatCtx.DrawWestFace(block, vecPos, dummyColors, textureId);
 
         // --- North Face (X - 1) ---
@@ -87,6 +95,7 @@ public class DoorRenderer : IBlockRenderer
             flatCtx.FlipTexture = true;
             textureId = -textureId;
         }
+
         flatCtx.DrawNorthFace(block, vecPos, dummyColors, textureId);
 
         // --- South Face (X + 1) ---
@@ -103,6 +112,7 @@ public class DoorRenderer : IBlockRenderer
             flatCtx.FlipTexture = true;
             textureId = -textureId;
         }
+
         flatCtx.DrawSouthFace(block, vecPos, dummyColors, textureId);
 
         return true;

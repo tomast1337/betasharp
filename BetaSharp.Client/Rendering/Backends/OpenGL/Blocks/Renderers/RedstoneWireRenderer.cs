@@ -47,10 +47,12 @@ public class RedstoneWireRenderer : IBlockRenderer
                              BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x + 1, pos.y - 1, pos.z, -1));
         bool connectsNorth = BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y, pos.z - 1, 2) ||
                              (!ctx.BlockReader.ShouldSuffocate(pos.x, pos.y, pos.z - 1) &&
-                              BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y - 1, pos.z - 1, -1));
+                              BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y - 1, pos.z - 1,
+                                  -1));
         bool connectsSouth = BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y, pos.z + 1, 0) ||
                              (!ctx.BlockReader.ShouldSuffocate(pos.x, pos.y, pos.z + 1) &&
-                              BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y - 1, pos.z + 1, -1));
+                              BlockRedstoneWire.isPowerProviderOrWire(ctx.BlockReader, pos.x, pos.y - 1, pos.z + 1,
+                                  -1));
 
         if (!ctx.BlockReader.ShouldSuffocate(pos.x, pos.y + 1, pos.z))
         {

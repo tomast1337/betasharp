@@ -262,11 +262,13 @@ public class Tessellator
                     GLManager.GL.TexCoordPointer(2, GLEnum.Float, 32, (void*)12);
                     GLManager.GL.EnableClientState(GLEnum.TextureCoordArray);
                 }
+
                 if (hasColor)
                 {
                     GLManager.GL.ColorPointer(4, ColorPointerType.UnsignedByte, 32, (void*)20);
                     GLManager.GL.EnableClientState(GLEnum.ColorArray);
                 }
+
                 if (hasNormals)
                 {
                     GLManager.GL.NormalPointer(NormalPointerType.Byte, 32, (void*)24);
@@ -411,7 +413,6 @@ public class Tessellator
             {
                 color = red << 24 | green << 16 | blue << 8 | alpha;
             }
-
         }
     }
 
@@ -426,6 +427,7 @@ public class Tessellator
         {
             color = ((int)c << 8) | 255;
         }
+
         hasColor = true;
     }
 
@@ -441,6 +443,7 @@ public class Tessellator
             int v = (int)c;
             color = (v << 8) | (v >> 24);
         }
+
         hasColor = true;
     }
 
@@ -496,6 +499,7 @@ public class Tessellator
                     uvCentroidU += BitConverter.Int32BitsToSingle(scratchBuffer[idx + 3]);
                     uvCentroidV += BitConverter.Int32BitsToSingle(scratchBuffer[idx + 4]);
                 }
+
                 uvCentroidU *= 0.25f;
                 uvCentroidV *= 0.25f;
 

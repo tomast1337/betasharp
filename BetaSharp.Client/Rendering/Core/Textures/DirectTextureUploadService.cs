@@ -41,7 +41,8 @@ internal sealed class DirectTextureUploadService : ITextureUploadService
         }
     }
 
-    private static void Validate(ITextureResource texture, int width, int height, ReadOnlySpan<byte> pixelData, TextureDataFormat format)
+    private static void Validate(ITextureResource texture, int width, int height, ReadOnlySpan<byte> pixelData,
+        TextureDataFormat format)
     {
         ArgumentNullException.ThrowIfNull(texture);
 

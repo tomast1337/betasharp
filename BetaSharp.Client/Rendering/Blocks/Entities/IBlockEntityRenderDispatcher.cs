@@ -18,7 +18,9 @@ public interface IBlockEntityRenderDispatcher
     ITextureManager TextureManager { get; }
     IEntityRenderDispatcher EntityDispatcher { get; set; }
 
-    void CacheActiveRenderInfo(World world, ITextureManager textureManager, ITextRenderer textRenderer, EntityLiving camera, float tickDelta);
+    void CacheActiveRenderInfo(World world, ITextureManager textureManager, ITextRenderer textRenderer,
+        EntityLiving camera, float tickDelta);
+
     void RenderTileEntity(BlockEntity blockEntity, float tickDelta);
     void RenderTileEntityAt(BlockEntity blockEntity, double x, double y, double z, float tickDelta);
     ITextRenderer GetFontRenderer();

@@ -71,10 +71,14 @@ public static class ParticleRenderer
                     out float minU, out float maxU, out float minV, out float maxV);
 
                 t.setColorOpaque_F(buf.Red[i] * brightness, buf.Green[i] * brightness, buf.Blue[i] * brightness);
-                t.addVertexWithUV(rx - cosYaw * size - upX * size, ry - cosPitch * size, rz - sinYaw * size - upZ * size, maxU, maxV);
-                t.addVertexWithUV(rx - cosYaw * size + upX * size, ry + cosPitch * size, rz - sinYaw * size + upZ * size, maxU, minV);
-                t.addVertexWithUV(rx + cosYaw * size + upX * size, ry + cosPitch * size, rz + sinYaw * size + upZ * size, minU, minV);
-                t.addVertexWithUV(rx + cosYaw * size - upX * size, ry - cosPitch * size, rz + sinYaw * size - upZ * size, minU, maxV);
+                t.addVertexWithUV(rx - cosYaw * size - upX * size, ry - cosPitch * size,
+                    rz - sinYaw * size - upZ * size, maxU, maxV);
+                t.addVertexWithUV(rx - cosYaw * size + upX * size, ry + cosPitch * size,
+                    rz - sinYaw * size + upZ * size, maxU, minV);
+                t.addVertexWithUV(rx + cosYaw * size + upX * size, ry + cosPitch * size,
+                    rz + sinYaw * size + upZ * size, minU, minV);
+                t.addVertexWithUV(rx + cosYaw * size - upX * size, ry - cosPitch * size,
+                    rz + sinYaw * size - upZ * size, minU, maxV);
             }
 
             t.draw();

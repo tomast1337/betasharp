@@ -34,19 +34,24 @@ public class Framebuffer : IDisposable
 
         unsafe
         {
-            gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgb, (uint)width, (uint)height, 0, PixelFormat.Rgb, PixelType.UnsignedByte, null);
+            gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgb, (uint)width, (uint)height, 0, PixelFormat.Rgb,
+                PixelType.UnsignedByte, null);
         }
+
         gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
         gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-        gl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, TextureId, 0);
+        gl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0,
+            TextureTarget.Texture2D, TextureId, 0);
 
         uint[] rboArray = new uint[1];
         gl.GenRenderbuffers(rboArray);
         RenderBufferId = rboArray[0];
 
         gl.BindRenderbuffer(RenderbufferTarget.Renderbuffer, RenderBufferId);
-        gl.RenderbufferStorage(RenderbufferTarget.Renderbuffer, InternalFormat.Depth24Stencil8, (uint)width, (uint)height);
-        gl.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthStencilAttachment, RenderbufferTarget.Renderbuffer, RenderBufferId);
+        gl.RenderbufferStorage(RenderbufferTarget.Renderbuffer, InternalFormat.Depth24Stencil8, (uint)width,
+            (uint)height);
+        gl.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthStencilAttachment,
+            RenderbufferTarget.Renderbuffer, RenderBufferId);
 
         GLEnum status = gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
         if (status != GLEnum.FramebufferComplete)
@@ -83,11 +88,13 @@ public class Framebuffer : IDisposable
             GLManager.GL.DeleteFramebuffer(FboId);
             FboId = 0;
         }
+
         if (TextureId != 0)
         {
             GLManager.GL.DeleteTexture(TextureId);
             TextureId = 0;
         }
+
         if (RenderBufferId != 0)
         {
             GLManager.GL.DeleteRenderbuffer(RenderBufferId);

@@ -5,7 +5,6 @@ namespace BetaSharp.Client.Rendering.Entities.Models;
 
 public class ModelSpider : ModelBase
 {
-
     public ModelPart spiderHead;
     public ModelPart spiderNeck;
     public ModelPart spiderBody;

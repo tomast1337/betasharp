@@ -13,7 +13,6 @@ namespace BetaSharp.Client.Rendering.Entities;
 
 public class PlayerEntityRenderer : LivingEntityRenderer
 {
-
     private readonly ModelBiped _modelBipedMain;
     private readonly ModelBiped _modelArmorChestplate = new(1.0F);
     private readonly ModelBiped _modelArmor = new(0.5F);
@@ -32,7 +31,8 @@ public class PlayerEntityRenderer : LivingEntityRenderer
             Item armorItem = armorStack.getItem();
             if (armorItem is ItemArmor itemArmor)
             {
-                loadTexture("/armor/" + s_armorFilenamePrefix[itemArmor.renderIndex] + "_" + (armorSlot == 2 ? 2 : 1) + ".png");
+                loadTexture("/armor/" + s_armorFilenamePrefix[itemArmor.renderIndex] + "_" + (armorSlot == 2 ? 2 : 1) +
+                            ".png");
                 ModelBiped armorModel = armorSlot == 2 ? _modelArmor : _modelArmorChestplate;
                 armorModel.bipedHead.visible = armorSlot == 0;
                 armorModel.bipedHeadwear.visible = armorSlot == 0;
@@ -113,7 +113,8 @@ public class PlayerEntityRenderer : LivingEntityRenderer
                     tessellator.draw();
                     Scene.Enable(SceneRenderCapability.Texture2D);
                     Scene.SetDepthMask(true);
-                    textRenderer.DrawString(playerName, -textRenderer.GetStringWidth(playerName) / 2, 0, Color.WhiteAlpha20);
+                    textRenderer.DrawString(playerName, -textRenderer.GetStringWidth(playerName) / 2, 0,
+                        Color.WhiteAlpha20);
                     Scene.Enable(SceneRenderCapability.Lighting);
                     Scene.Disable(SceneRenderCapability.Blend);
                     Scene.SetColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -121,7 +122,6 @@ public class PlayerEntityRenderer : LivingEntityRenderer
                 }
             }
         }
-
     }
 
     protected void RenderSpecials(EntityPlayer player, float tickDelta)
@@ -258,7 +258,6 @@ public class PlayerEntityRenderer : LivingEntityRenderer
             Dispatcher.HeldItemRenderer.renderItem(player, heldStack);
             Scene.PopMatrix();
         }
-
     }
 
     protected void func_186_b(EntityPlayer player, float tickDelta)
@@ -284,7 +283,6 @@ public class PlayerEntityRenderer : LivingEntityRenderer
         {
             base.Func_22012_b(player, x, y, z);
         }
-
     }
 
     protected void func_22017_a(EntityPlayer player, float animationProgress, float bodyYaw, float tickDelta)
@@ -299,7 +297,6 @@ public class PlayerEntityRenderer : LivingEntityRenderer
         {
             base.RotateCorpse(player, animationProgress, bodyYaw, tickDelta);
         }
-
     }
 
     protected override void PassSpecialRender(EntityLiving entity, double x, double y, double z)

@@ -56,7 +56,8 @@ public class ItemRenderer : EntityRenderer
             loadTexture("/terrain.png");
             float blockScale = 0.25F;
             if (!Block.Blocks[itemStack.ItemId].isFullCube() && itemStack.ItemId != Block.Slab.id
-                && Block.Blocks[itemStack.ItemId].getRenderType() != BlockRendererType.PistonBase)
+                                                             && Block.Blocks[itemStack.ItemId].getRenderType() !=
+                                                             BlockRendererType.PistonBase)
             {
                 blockScale = 0.5F;
             }
@@ -131,10 +132,14 @@ public class ItemRenderer : EntityRenderer
                 GLManager.GL.Rotate(180.0F - Dispatcher.PlayerViewY, 0.0F, 1.0F, 0.0F);
                 tessellator.startDrawingQuads();
                 tessellator.setNormal(0.0F, 1.0F, 0.0F);
-                tessellator.addVertexWithUV((double)(0.0F - quadHalfWidth), (double)(0.0F - quadHalfHeight), 0.0D, (double)minU, (double)maxV);
-                tessellator.addVertexWithUV((double)(quadWidth - quadHalfWidth), (double)(0.0F - quadHalfHeight), 0.0D, (double)maxU, (double)maxV);
-                tessellator.addVertexWithUV((double)(quadWidth - quadHalfWidth), (double)(1.0F - quadHalfHeight), 0.0D, (double)maxU, (double)minV);
-                tessellator.addVertexWithUV((double)(0.0F - quadHalfWidth), (double)(1.0F - quadHalfHeight), 0.0D, (double)minU, (double)minV);
+                tessellator.addVertexWithUV((double)(0.0F - quadHalfWidth), (double)(0.0F - quadHalfHeight), 0.0D,
+                    (double)minU, (double)maxV);
+                tessellator.addVertexWithUV((double)(quadWidth - quadHalfWidth), (double)(0.0F - quadHalfHeight), 0.0D,
+                    (double)maxU, (double)maxV);
+                tessellator.addVertexWithUV((double)(quadWidth - quadHalfWidth), (double)(1.0F - quadHalfHeight), 0.0D,
+                    (double)maxU, (double)minV);
+                tessellator.addVertexWithUV((double)(0.0F - quadHalfWidth), (double)(1.0F - quadHalfHeight), 0.0D,
+                    (double)minU, (double)minV);
                 tessellator.draw();
                 GLManager.GL.PopMatrix();
             }
@@ -203,15 +208,18 @@ public class ItemRenderer : EntityRenderer
         }
     }
 
-    public void renderItemIntoGUI(ITextRenderer textRenderer, ITextureManager textureManager, ItemStack itemStack, int x, int y)
+    public void renderItemIntoGUI(ITextRenderer textRenderer, ITextureManager textureManager, ItemStack itemStack,
+        int x, int y)
     {
         if (itemStack != null)
         {
-            drawItemIntoGui(textRenderer, textureManager, itemStack.ItemId, itemStack.getDamage(), itemStack.getTextureId(), x, y);
+            drawItemIntoGui(textRenderer, textureManager, itemStack.ItemId, itemStack.getDamage(),
+                itemStack.getTextureId(), x, y);
         }
     }
 
-    public void renderItemOverlayIntoGUI(ITextRenderer textRenderer, ITextureManager textureManager, ItemStack itemStack, int x, int y)
+    public void renderItemOverlayIntoGUI(ITextRenderer textRenderer, ITextureManager textureManager,
+        ItemStack itemStack, int x, int y)
     {
         if (itemStack != null)
         {
@@ -229,8 +237,10 @@ public class ItemRenderer : EntityRenderer
 
             if (itemStack.isDamaged())
             {
-                int durabilityBarWidth = (int)MathHelper.Round(13.0D - itemStack.getDamage2() * 13.0D / itemStack.getMaxDamage());
-                int durabilityGreen = (int)MathHelper.Round(255.0D - itemStack.getDamage2() * 255.0D / itemStack.getMaxDamage());
+                int durabilityBarWidth =
+                    (int)MathHelper.Round(13.0D - itemStack.getDamage2() * 13.0D / itemStack.getMaxDamage());
+                int durabilityGreen =
+                    (int)MathHelper.Round(255.0D - itemStack.getDamage2() * 255.0D / itemStack.getMaxDamage());
                 GLManager.GL.Disable(GLEnum.Lighting);
                 GLManager.GL.Disable(GLEnum.DepthTest);
                 GLManager.GL.Disable(GLEnum.Texture2D);
@@ -243,7 +253,6 @@ public class ItemRenderer : EntityRenderer
                 GLManager.GL.Enable(GLEnum.Texture2D);
                 GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 1.0F);
             }
-
         }
     }
 
@@ -265,10 +274,14 @@ public class ItemRenderer : EntityRenderer
         float vScale = 1 / 256f;
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(x + 0, y + height, (double)depth, (double)((u + 0) * uScale), (double)((v + height) * vScale));
-        tessellator.addVertexWithUV(x + width, y + height, (double)depth, (double)((u + width) * uScale), (double)((v + height) * vScale));
-        tessellator.addVertexWithUV(x + width, y + 0, (double)depth, (double)((u + width) * uScale), (double)((v + 0) * vScale));
-        tessellator.addVertexWithUV(x + 0, y + 0, (double)depth, (double)((u + 0) * uScale), (double)((v + 0) * vScale));
+        tessellator.addVertexWithUV(x + 0, y + height, (double)depth, (double)((u + 0) * uScale),
+            (double)((v + height) * vScale));
+        tessellator.addVertexWithUV(x + width, y + height, (double)depth, (double)((u + width) * uScale),
+            (double)((v + height) * vScale));
+        tessellator.addVertexWithUV(x + width, y + 0, (double)depth, (double)((u + width) * uScale),
+            (double)((v + 0) * vScale));
+        tessellator.addVertexWithUV(x + 0, y + 0, (double)depth, (double)((u + 0) * uScale),
+            (double)((v + 0) * vScale));
         tessellator.draw();
     }
 

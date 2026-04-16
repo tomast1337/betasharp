@@ -35,7 +35,14 @@ public class TextRenderer : ITextRenderer
     private readonly ITextureManager _textureManager;
 
     [StructLayout(LayoutKind.Sequential)]
-    private readonly struct GlyphInfo(float advanceWidth, float u0, float v0, float u1, float v1, float width, float height)
+    private readonly struct GlyphInfo(
+        float advanceWidth,
+        float u0,
+        float v0,
+        float u1,
+        float v1,
+        float width,
+        float height)
     {
         public readonly float AdvanceWidth = advanceWidth;
         public readonly float U0 = u0, V0 = v0, U1 = u1, V1 = v1;
@@ -91,8 +98,8 @@ public class TextRenderer : ITextRenderer
             }
 
             using (Image<Rgba32> glyphImage = classicFontImage.Clone(ctx => ctx
-                .Crop(new Rectangle(col * 8, row * 8, 8, 8))
-                .Resize(cellW, cellH, KnownResamplers.NearestNeighbor)))
+                       .Crop(new Rectangle(col * 8, row * 8, 8, 8))
+                       .Resize(cellW, cellH, KnownResamplers.NearestNeighbor)))
             {
                 glyphImage.ProcessPixelRows(_atlasImage, (srcAccessor, dstAccessor) =>
                 {
@@ -157,6 +164,7 @@ public class TextRenderer : ITextRenderer
             _logger.LogWarning(ex, "Failed to load classic font. Falling back entirely to TrueType.");
         }
     }
+
     private static void ClearAtlasRegion(Image<Rgba32> image, int x, int y, int w, int h)
     {
         image.Mutate(ctx => ctx.Fill(SixLabors.ImageSharp.Color.Transparent, new Rectangle(x, y, w, h)));
@@ -281,18 +289,21 @@ public class TextRenderer : ITextRenderer
         }
     }
 
-    public void DrawStringWithShadow(ReadOnlySpan<char> text, int x, int y, Guis.Color color, HorizontalAlignment align = HorizontalAlignment.Left)
+    public void DrawStringWithShadow(ReadOnlySpan<char> text, int x, int y, Guis.Color color,
+        HorizontalAlignment align = HorizontalAlignment.Left)
     {
         RenderString(text, x + 1, y + 1, color, true, align);
         DrawString(text, x, y, color, align);
     }
 
-    public void DrawString(ReadOnlySpan<char> text, int x, int y, Guis.Color color, HorizontalAlignment align = HorizontalAlignment.Left)
+    public void DrawString(ReadOnlySpan<char> text, int x, int y, Guis.Color color,
+        HorizontalAlignment align = HorizontalAlignment.Left)
     {
         RenderString(text, x, y, color, false, align);
     }
 
-    public void RenderString(ReadOnlySpan<char> text, int x, int y, Guis.Color color, bool darken, HorizontalAlignment align)
+    public void RenderString(ReadOnlySpan<char> text, int x, int y, Guis.Color color, bool darken,
+        HorizontalAlignment align)
     {
         if (text.IsEmpty) return;
 
@@ -392,7 +403,8 @@ public class TextRenderer : ITextRenderer
         return text.Length;
     }
 
-    private void ProcessWrappedText(ReadOnlySpan<char> text, int x, int y, int maxWidth, Guis.Color color, bool draw, ref int outHeight, HorizontalAlignment align)
+    private void ProcessWrappedText(ReadOnlySpan<char> text, int x, int y, int maxWidth, Guis.Color color, bool draw,
+        ref int outHeight, HorizontalAlignment align)
     {
         if (text.IsEmpty) return;
 
@@ -440,7 +452,8 @@ public class TextRenderer : ITextRenderer
         outHeight = totalHeight;
     }
 
-    public void DrawStringWrapped(ReadOnlySpan<char> text, int x, int y, int maxWidth, Guis.Color color, HorizontalAlignment align = HorizontalAlignment.Left)
+    public void DrawStringWrapped(ReadOnlySpan<char> text, int x, int y, int maxWidth, Guis.Color color,
+        HorizontalAlignment align = HorizontalAlignment.Left)
     {
         int dummyHeight = 0;
         ProcessWrappedText(text, x, y, maxWidth, color, true, ref dummyHeight, align);

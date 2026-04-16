@@ -54,7 +54,8 @@ public class BlockEntityRenderer : IBlockEntityRenderDispatcher
         return be == null ? null : GetSpecialRendererForClass(be.GetType());
     }
 
-    public void CacheActiveRenderInfo(World world, ITextureManager textureManager, ITextRenderer textRenderer, EntityLiving camera, float tickDelta)
+    public void CacheActiveRenderInfo(World world, ITextureManager textureManager, ITextRenderer textRenderer,
+        EntityLiving camera, float tickDelta)
     {
         if (World != world)
         {
@@ -84,14 +85,12 @@ public class BlockEntityRenderer : IBlockEntityRenderDispatcher
                 blockEntity.Z - this.StaticPlayerZ,
                 tickDelta);
         }
-
     }
 
     public void RenderTileEntityAt(BlockEntity blockEntity, double x, double y, double z, float tickDelta)
     {
         BlockEntitySpecialRenderer? renderer = GetSpecialRendererForEntity(blockEntity);
         renderer?.renderTileEntityAt(blockEntity, x, y, z, tickDelta);
-
     }
 
     public void func_31072_a(World world)

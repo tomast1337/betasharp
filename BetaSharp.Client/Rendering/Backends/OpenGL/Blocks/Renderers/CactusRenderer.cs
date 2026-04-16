@@ -43,7 +43,8 @@ public class CactusRenderer : IBlockRenderer
         FaceColors dummyColors = new();
 
         // --- Bottom Face (Y - 1) ---
-        if (flatCtx.RenderAllFaces || bounds.MinY > 0.0D || block.isSideVisible(ctx.BlockReader, pos.x, pos.y - 1, pos.z, 0))
+        if (flatCtx.RenderAllFaces || bounds.MinY > 0.0D ||
+            block.isSideVisible(ctx.BlockReader, pos.x, pos.y - 1, pos.z, 0))
         {
             faceLuminance = block.getLuminance(ctx.Lighting, pos.x, pos.y - 1, pos.z);
             ctx.Tess.setColorOpaque_F(rBottom * faceLuminance, gBottom * faceLuminance, bBottom * faceLuminance);
@@ -54,7 +55,8 @@ public class CactusRenderer : IBlockRenderer
         }
 
         // --- Top Face (Y + 1) ---
-        if (flatCtx.RenderAllFaces || bounds.MaxY < 1.0D || block.isSideVisible(ctx.BlockReader, pos.x, pos.y + 1, pos.z, Side.Up))
+        if (flatCtx.RenderAllFaces || bounds.MaxY < 1.0D ||
+            block.isSideVisible(ctx.BlockReader, pos.x, pos.y + 1, pos.z, Side.Up))
         {
             faceLuminance = block.getLuminance(ctx.Lighting, pos.x, pos.y + 1, pos.z);
             if (Math.Abs(bounds.MaxY - 1.0D) > 0.1 && !block.material.IsFluid)
@@ -70,7 +72,8 @@ public class CactusRenderer : IBlockRenderer
         }
 
         // --- East Face (Z - 1) ---
-        if (flatCtx.RenderAllFaces || bounds.MinZ > 0.0D || block.isSideVisible(ctx.BlockReader, pos.x, pos.y, pos.z - 1, Side.North))
+        if (flatCtx.RenderAllFaces || bounds.MinZ > 0.0D ||
+            block.isSideVisible(ctx.BlockReader, pos.x, pos.y, pos.z - 1, Side.North))
         {
             faceLuminance = block.getLuminance(ctx.Lighting, pos.x, pos.y, pos.z - 1);
             if (bounds.MinZ > 0.0D) faceLuminance = centerLuminance;
@@ -87,7 +90,8 @@ public class CactusRenderer : IBlockRenderer
         }
 
         // --- West Face (Z + 1) ---
-        if (flatCtx.RenderAllFaces || bounds.MaxZ < 1.0D || block.isSideVisible(ctx.BlockReader, pos.x, pos.y, pos.z + 1, Side.South))
+        if (flatCtx.RenderAllFaces || bounds.MaxZ < 1.0D ||
+            block.isSideVisible(ctx.BlockReader, pos.x, pos.y, pos.z + 1, Side.South))
         {
             faceLuminance = block.getLuminance(ctx.Lighting, pos.x, pos.y, pos.z + 1);
             if (bounds.MaxZ < 1.0D) faceLuminance = centerLuminance;
@@ -104,7 +108,8 @@ public class CactusRenderer : IBlockRenderer
         }
 
         // --- North Face (X - 1) ---
-        if (flatCtx.RenderAllFaces || bounds.MinX > 0.0D || block.isSideVisible(ctx.BlockReader, pos.x - 1, pos.y, pos.z, Side.West))
+        if (flatCtx.RenderAllFaces || bounds.MinX > 0.0D ||
+            block.isSideVisible(ctx.BlockReader, pos.x - 1, pos.y, pos.z, Side.West))
         {
             faceLuminance = block.getLuminance(ctx.Lighting, pos.x - 1, pos.y, pos.z);
             if (bounds.MinX > 0.0D) faceLuminance = centerLuminance;
@@ -121,7 +126,8 @@ public class CactusRenderer : IBlockRenderer
         }
 
         // --- South Face (X + 1) ---
-        if (flatCtx.RenderAllFaces || bounds.MaxX < 1.0D || block.isSideVisible(ctx.BlockReader, pos.x + 1, pos.y, pos.z, Side.East))
+        if (flatCtx.RenderAllFaces || bounds.MaxX < 1.0D ||
+            block.isSideVisible(ctx.BlockReader, pos.x + 1, pos.y, pos.z, Side.East))
         {
             faceLuminance = block.getLuminance(ctx.Lighting, pos.x + 1, pos.y, pos.z);
             if (bounds.MaxX < 1.0D) faceLuminance = centerLuminance;

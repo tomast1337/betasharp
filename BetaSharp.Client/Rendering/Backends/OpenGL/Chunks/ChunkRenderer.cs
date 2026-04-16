@@ -49,6 +49,7 @@ public class ChunkRenderer : IChunkVisibilityVisitor, IChunkRenderer
     private sealed class TranslucentDistanceComparer : IComparer<SubChunkRenderer>
     {
         public Vector3D<double> Origin;
+
         public int Compare(SubChunkRenderer? a, SubChunkRenderer? b)
         {
             if (a == null || b == null) return 0;
@@ -102,7 +103,8 @@ public class ChunkRenderer : IChunkVisibilityVisitor, IChunkRenderer
         _world = world;
         _alternateBlocks = alternateBlocks;
 
-        _chunkShader = new(AssetManager.Instance.getAsset("shaders/chunk.vert").GetTextContent(), AssetManager.Instance.getAsset("shaders/chunk.frag").GetTextContent());
+        _chunkShader = new(AssetManager.Instance.getAsset("shaders/chunk.vert").GetTextContent(),
+            AssetManager.Instance.getAsset("shaders/chunk.frag").GetTextContent());
 
         GLManager.GL.UseProgram(0);
     }
@@ -206,6 +208,7 @@ public class ChunkRenderer : IChunkVisibilityVisitor, IChunkRenderer
                     }
                 }
             }
+
             _visibleRenderers.Clear();
             _visibleRenderers.AddRange(_occludedRenderersBuffer);
             ChunksRendered = _visibleRenderers.Count;
@@ -331,6 +334,7 @@ public class ChunkRenderer : IChunkVisibilityVisitor, IChunkRenderer
                     {
                         _meshGenerator.MeshChunk(_world, mesh.Pos, snapshot.Value, _alternateBlocks());
                     }
+
                     continue;
                 }
 
@@ -608,7 +612,9 @@ public class ChunkRenderer : IChunkVisibilityVisitor, IChunkRenderer
 
     public bool MarkDirty(Vector3D<int> chunkPos, bool priority = false)
     {
-        if (!_world.BlockHost.IsRegionLoaded(chunkPos.X - 1, chunkPos.Y - 1, chunkPos.Z - 1, chunkPos.X + SubChunkRenderer.Size + 1, chunkPos.Y + SubChunkRenderer.Size + 1, chunkPos.Z + SubChunkRenderer.Size + 1) | !IsChunkInRenderDistance(chunkPos, _lastViewPos))
+        if (!_world.BlockHost.IsRegionLoaded(chunkPos.X - 1, chunkPos.Y - 1, chunkPos.Z - 1,
+                chunkPos.X + SubChunkRenderer.Size + 1, chunkPos.Y + SubChunkRenderer.Size + 1,
+                chunkPos.Z + SubChunkRenderer.Size + 1) | !IsChunkInRenderDistance(chunkPos, _lastViewPos))
             return false;
 
         if (!_chunkVersions.TryGetValue(chunkPos, out ChunkMeshVersion? version))
@@ -616,6 +622,7 @@ public class ChunkRenderer : IChunkVisibilityVisitor, IChunkRenderer
             version = ChunkMeshVersion.Get();
             _chunkVersions[chunkPos] = version;
         }
+
         version.MarkDirty();
 
         long? snapshot = version.SnapshotIfNeeded();

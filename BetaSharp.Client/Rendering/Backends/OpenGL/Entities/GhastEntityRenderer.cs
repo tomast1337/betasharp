@@ -6,7 +6,6 @@ namespace BetaSharp.Client.Rendering.Entities;
 
 public class GhastEntityRenderer : LivingEntityRenderer
 {
-
     public GhastEntityRenderer() : base(new ModelGhast(), 0.5F)
     {
     }

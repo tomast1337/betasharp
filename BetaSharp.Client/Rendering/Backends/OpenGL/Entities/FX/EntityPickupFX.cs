@@ -8,7 +8,6 @@ namespace BetaSharp.Client.Entities.FX;
 
 public class EntityPickupFX : EntityFX
 {
-
     private readonly IEntityRenderDispatcher _entityRenderDispatcher;
     private readonly Entity target;
     private readonly Entity source;
@@ -30,7 +29,8 @@ public class EntityPickupFX : EntityFX
         maxAge = 3;
     }
 
-    public override void renderParticle(Tessellator t, float partialTick, float rotX, float rotY, float rotZ, float upX, float upZ)
+    public override void renderParticle(Tessellator t, float partialTick, float rotX, float rotY, float rotZ, float upX,
+        float upZ)
     {
         float lifeProgress = ((float)currentAge + partialTick) / (float)maxAge;
         lifeProgress *= lifeProgress;
@@ -61,7 +61,6 @@ public class EntityPickupFX : EntityFX
         {
             MarkDead();
         }
-
     }
 
     public override int getFXLayer()

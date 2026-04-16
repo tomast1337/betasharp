@@ -6,7 +6,6 @@ namespace BetaSharp.Client.Rendering.Entities;
 
 public class GiantEntityRenderer : LivingEntityRenderer
 {
-
     private readonly float scale;
 
     public GiantEntityRenderer(ModelBase mainModel, float shadowRadius, float scale) : base(mainModel, shadowRadius * scale)

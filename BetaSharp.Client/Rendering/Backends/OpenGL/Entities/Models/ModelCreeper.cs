@@ -5,7 +5,6 @@ namespace BetaSharp.Client.Rendering.Entities.Models;
 
 public class ModelCreeper : ModelBase
 {
-
     public ModelPart head;
     public ModelPart field_1270_b;
     public ModelPart body;

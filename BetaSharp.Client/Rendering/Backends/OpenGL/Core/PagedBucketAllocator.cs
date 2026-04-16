@@ -43,7 +43,8 @@ internal class PagedBucketAllocator
                 return false;
             }
 
-            _gl.CopyNamedBufferSubData(stagingBufferId, _bufferId, offset, (nint)(slot * _bucket.BytesPerSlot), (nuint)length);
+            _gl.CopyNamedBufferSubData(stagingBufferId, _bufferId, offset, (nint)(slot * _bucket.BytesPerSlot),
+                (nuint)length);
             return true;
         }
 
@@ -126,6 +127,7 @@ internal class PagedBucketAllocator
                 if (_pages[i].FreeSlots.Count < _pages[leastEmptyIndex].FreeSlots.Count)
                     leastEmptyIndex = i;
             }
+
             return leastEmptyIndex;
         }
     }

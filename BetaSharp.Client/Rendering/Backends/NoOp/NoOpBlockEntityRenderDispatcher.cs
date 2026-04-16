@@ -17,7 +17,8 @@ internal sealed class NoOpBlockEntityRenderDispatcher : IBlockEntityRenderDispat
     public ITextureManager TextureManager => null!;
     public IEntityRenderDispatcher EntityDispatcher { get; set; } = new NoOpEntityRenderDispatcher();
 
-    public void CacheActiveRenderInfo(World world, ITextureManager textureManager, ITextRenderer textRenderer, EntityLiving camera, float tickDelta)
+    public void CacheActiveRenderInfo(World world, ITextureManager textureManager, ITextRenderer textRenderer,
+        EntityLiving camera, float tickDelta)
     {
     }
 

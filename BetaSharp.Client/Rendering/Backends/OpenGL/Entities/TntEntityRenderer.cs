@@ -53,6 +53,7 @@ public class TntEntityRenderer : EntityRenderer
             Scene.Enable(SceneRenderCapability.Lighting);
             Scene.Enable(SceneRenderCapability.Texture2D);
         }
+
         Scene.PopMatrix();
     }
 

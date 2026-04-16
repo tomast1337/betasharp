@@ -109,8 +109,17 @@ public unsafe class EmulatedGL : LegacyGL
             if (_fogState.FogEnabled) _dirtyState.DirtyFog = true;
         }
 
-        if (_dirtyState.DirtyProjection) { _shader.SetProjection(_projectionStack.Top); _dirtyState.DirtyProjection = false; }
-        if (_dirtyState.DirtyTextureMatrix) { _shader.SetTextureMatrix(_textureStack.Top); _dirtyState.DirtyTextureMatrix = false; }
+        if (_dirtyState.DirtyProjection)
+        {
+            _shader.SetProjection(_projectionStack.Top);
+            _dirtyState.DirtyProjection = false;
+        }
+
+        if (_dirtyState.DirtyTextureMatrix)
+        {
+            _shader.SetTextureMatrix(_textureStack.Top);
+            _dirtyState.DirtyTextureMatrix = false;
+        }
 
         if (_dirtyState.StateDirty)
         {
@@ -143,13 +152,16 @@ public unsafe class EmulatedGL : LegacyGL
                     _shader.SetNormalMatrix(Matrix3X3<float>.Identity);
                 }
             }
+
             _dirtyState.DirtyModelView = false;
         }
 
         if (_lightingState.LightingEnabled && _dirtyState.DirtyLighting)
         {
-            _shader.SetLight0(_lightingState.Light0DirX, _lightingState.Light0DirY, _lightingState.Light0DirZ, _lightingState.Light0DiffR, _lightingState.Light0DiffG, _lightingState.Light0DiffB);
-            _shader.SetLight1(_lightingState.Light1DirX, _lightingState.Light1DirY, _lightingState.Light1DirZ, _lightingState.Light1DiffR, _lightingState.Light1DiffG, _lightingState.Light1DiffB);
+            _shader.SetLight0(_lightingState.Light0DirX, _lightingState.Light0DirY, _lightingState.Light0DirZ,
+                _lightingState.Light0DiffR, _lightingState.Light0DiffG, _lightingState.Light0DiffB);
+            _shader.SetLight1(_lightingState.Light1DirX, _lightingState.Light1DirY, _lightingState.Light1DirZ,
+                _lightingState.Light1DiffR, _lightingState.Light1DiffG, _lightingState.Light1DiffB);
             _shader.SetAmbientLight(_lightingState.AmbientR, _lightingState.AmbientG, _lightingState.AmbientB);
             _dirtyState.DirtyLighting = false;
         }
@@ -246,7 +258,12 @@ public unsafe class EmulatedGL : LegacyGL
 
     public override void Translate(float x, float y, float z)
     {
-        if (_displayLists.IsCompiling) { _displayLists.RecordTranslate(x, y, z); return; }
+        if (_displayLists.IsCompiling)
+        {
+            _displayLists.RecordTranslate(x, y, z);
+            return;
+        }
+
         ActiveStack.Translate(x, y, z);
         MarkActiveMatrixDirty();
     }
@@ -288,26 +305,46 @@ public unsafe class EmulatedGL : LegacyGL
 
     public override void Color3(float red, float green, float blue)
     {
-        if (_displayLists.IsCompiling) { _displayLists.RecordColor(red, green, blue, 1.0f); return; }
+        if (_displayLists.IsCompiling)
+        {
+            _displayLists.RecordColor(red, green, blue, 1.0f);
+            return;
+        }
+
         SilkGL.VertexAttrib4(1, red, green, blue, 1.0f);
     }
 
     public override void Color3(byte red, byte green, byte blue)
     {
         float r = red / 255.0f, g = green / 255.0f, b = blue / 255.0f;
-        if (_displayLists.IsCompiling) { _displayLists.RecordColor(r, g, b, 1.0f); return; }
+        if (_displayLists.IsCompiling)
+        {
+            _displayLists.RecordColor(r, g, b, 1.0f);
+            return;
+        }
+
         SilkGL.VertexAttrib4(1, r, g, b, 1.0f);
     }
 
     public override void Color4(float red, float green, float blue, float alpha)
     {
-        if (_displayLists.IsCompiling) { _displayLists.RecordColor(red, green, blue, alpha); return; }
+        if (_displayLists.IsCompiling)
+        {
+            _displayLists.RecordColor(red, green, blue, alpha);
+            return;
+        }
+
         SilkGL.VertexAttrib4(1, red, green, blue, alpha);
     }
 
     public override void VertexPointer(int size, GLEnum type, uint stride, void* pointer)
     {
-        if (_displayLists.IsCompiling) { _displayLists.SetStride(stride); return; }
+        if (_displayLists.IsCompiling)
+        {
+            _displayLists.SetStride(stride);
+            return;
+        }
+
         SilkGL.BindVertexArray(_immediateVao);
         SilkGL.VertexAttribPointer(0, size, type.ToModern(), false, stride, pointer);
     }
@@ -335,7 +372,12 @@ public unsafe class EmulatedGL : LegacyGL
 
     public override void EnableClientState(GLEnum array)
     {
-        if (_displayLists.IsCompiling) { _displayLists.EnableAttribute(array); return; }
+        if (_displayLists.IsCompiling)
+        {
+            _displayLists.EnableAttribute(array);
+            return;
+        }
+
         SilkGL.BindVertexArray(_immediateVao);
         switch (array)
         {
@@ -365,15 +407,30 @@ public unsafe class EmulatedGL : LegacyGL
     {
         switch (cap)
         {
-            case GLEnum.Texture2D: _useTexture = true; _dirtyState.StateDirty = true; return;
-            case GLEnum.AlphaTest: _alphaTestEnabled = true; _dirtyState.StateDirty = true; return;
-            case GLEnum.Lighting: _lightingState.LightingEnabled = true; _dirtyState.StateDirty = true; _dirtyState.DirtyLighting = true; return;
-            case GLEnum.Fog: _fogState.FogEnabled = true; _dirtyState.StateDirty = true; _dirtyState.DirtyFog = true; return;
+            case GLEnum.Texture2D:
+                _useTexture = true;
+                _dirtyState.StateDirty = true;
+                return;
+            case GLEnum.AlphaTest:
+                _alphaTestEnabled = true;
+                _dirtyState.StateDirty = true;
+                return;
+            case GLEnum.Lighting:
+                _lightingState.LightingEnabled = true;
+                _dirtyState.StateDirty = true;
+                _dirtyState.DirtyLighting = true;
+                return;
+            case GLEnum.Fog:
+                _fogState.FogEnabled = true;
+                _dirtyState.StateDirty = true;
+                _dirtyState.DirtyFog = true;
+                return;
             case GLEnum.Light0: return;
             case GLEnum.Light1: return;
             case GLEnum.ColorMaterial: return;
             case GLEnum.RescaleNormal: return;
         }
+
         if (_displayLists.IsCompiling) return;
         SilkGL.Enable(cap.ToModern());
     }
@@ -382,15 +439,28 @@ public unsafe class EmulatedGL : LegacyGL
     {
         switch (cap)
         {
-            case GLEnum.Texture2D: _useTexture = false; _dirtyState.StateDirty = true; return;
-            case GLEnum.AlphaTest: _alphaTestEnabled = false; _dirtyState.StateDirty = true; return;
-            case GLEnum.Lighting: _lightingState.LightingEnabled = false; _dirtyState.StateDirty = true; return;
-            case GLEnum.Fog: _fogState.FogEnabled = false; _dirtyState.StateDirty = true; return;
+            case GLEnum.Texture2D:
+                _useTexture = false;
+                _dirtyState.StateDirty = true;
+                return;
+            case GLEnum.AlphaTest:
+                _alphaTestEnabled = false;
+                _dirtyState.StateDirty = true;
+                return;
+            case GLEnum.Lighting:
+                _lightingState.LightingEnabled = false;
+                _dirtyState.StateDirty = true;
+                return;
+            case GLEnum.Fog:
+                _fogState.FogEnabled = false;
+                _dirtyState.StateDirty = true;
+                return;
             case GLEnum.Light0: return;
             case GLEnum.Light1: return;
             case GLEnum.ColorMaterial: return;
             case GLEnum.RescaleNormal: return;
         }
+
         if (_displayLists.IsCompiling) return;
         SilkGL.Disable(cap.ToModern());
     }
@@ -410,7 +480,12 @@ public unsafe class EmulatedGL : LegacyGL
         tz = x * mv.M13 + y * mv.M23 + z * mv.M33 + w * mv.M43;
 
         float len = MathF.Sqrt(tx * tx + ty * ty + tz * tz);
-        if (len > 0) { tx /= len; ty /= len; tz /= len; }
+        if (len > 0)
+        {
+            tx /= len;
+            ty /= len;
+            tz /= len;
+        }
     }
 
     public override void Light(GLEnum light, GLEnum pname, float* params_)
@@ -419,14 +494,36 @@ public unsafe class EmulatedGL : LegacyGL
         {
             TransformLightPosition(params_, out float tx, out float ty, out float tz);
 
-            if (light == GLEnum.Light0) { _lightingState.Light0DirX = tx; _lightingState.Light0DirY = ty; _lightingState.Light0DirZ = tz; }
-            else if (light == GLEnum.Light1) { _lightingState.Light1DirX = tx; _lightingState.Light1DirY = ty; _lightingState.Light1DirZ = tz; }
+            if (light == GLEnum.Light0)
+            {
+                _lightingState.Light0DirX = tx;
+                _lightingState.Light0DirY = ty;
+                _lightingState.Light0DirZ = tz;
+            }
+            else if (light == GLEnum.Light1)
+            {
+                _lightingState.Light1DirX = tx;
+                _lightingState.Light1DirY = ty;
+                _lightingState.Light1DirZ = tz;
+            }
+
             _dirtyState.DirtyLighting = true;
         }
         else if (pname == GLEnum.Diffuse)
         {
-            if (light == GLEnum.Light0) { _lightingState.Light0DiffR = params_[0]; _lightingState.Light0DiffG = params_[1]; _lightingState.Light0DiffB = params_[2]; }
-            else if (light == GLEnum.Light1) { _lightingState.Light1DiffR = params_[0]; _lightingState.Light1DiffG = params_[1]; _lightingState.Light1DiffB = params_[2]; }
+            if (light == GLEnum.Light0)
+            {
+                _lightingState.Light0DiffR = params_[0];
+                _lightingState.Light0DiffG = params_[1];
+                _lightingState.Light0DiffB = params_[2];
+            }
+            else if (light == GLEnum.Light1)
+            {
+                _lightingState.Light1DiffR = params_[0];
+                _lightingState.Light1DiffG = params_[1];
+                _lightingState.Light1DiffB = params_[2];
+            }
+
             _dirtyState.DirtyLighting = true;
         }
     }
@@ -440,6 +537,7 @@ public unsafe class EmulatedGL : LegacyGL
             case GLEnum.FogEnd: _fogState.FogEnd = param; break;
             case GLEnum.FogDensity: _fogState.FogDensity = param; break;
         }
+
         _dirtyState.DirtyFog = true;
     }
 

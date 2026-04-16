@@ -44,7 +44,8 @@ internal sealed class NoOpWorldRenderer : IWorldRenderer
     {
     }
 
-    public void DrawSelectionBox(EntityPlayer entityPlayer, HitResult hit, int stage, ItemStack? itemStack, float partialTicks)
+    public void DrawSelectionBox(EntityPlayer entityPlayer, HitResult hit, int stage, ItemStack? itemStack,
+        float partialTicks)
     {
     }
 

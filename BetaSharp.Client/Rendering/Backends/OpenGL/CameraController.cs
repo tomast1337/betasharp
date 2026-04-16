@@ -118,9 +118,11 @@ public class CameraController
             float bobAmount = player.PrevStepBobbingAmount + (player.StepBobbingAmount - player.PrevStepBobbingAmount) * tickDelta;
             float pitch = player.CameraPitch + (player.Tilt - player.CameraPitch) * tickDelta;
 
-            GLManager.GL.Translate(MathHelper.Sin(speed * (float)Math.PI) * bobAmount * 0.5F, -Math.Abs(MathHelper.Cos(speed * (float)Math.PI) * bobAmount), 0.0F);
+            GLManager.GL.Translate(MathHelper.Sin(speed * (float)Math.PI) * bobAmount * 0.5F,
+                -Math.Abs(MathHelper.Cos(speed * (float)Math.PI) * bobAmount), 0.0F);
             GLManager.GL.Rotate(MathHelper.Sin(speed * (float)Math.PI) * bobAmount * 3.0F, 0.0F, 0.0F, 1.0F);
-            GLManager.GL.Rotate(Math.Abs(MathHelper.Cos(speed * (float)Math.PI - 0.2F) * bobAmount) * 5.0F, 1.0F, 0.0F, 0.0F);
+            GLManager.GL.Rotate(Math.Abs(MathHelper.Cos(speed * (float)Math.PI - 0.2F) * bobAmount) * 5.0F, 1.0F, 0.0F,
+                0.0F);
             GLManager.GL.Rotate(pitch, 1.0F, 0.0F, 0.0F);
         }
     }
@@ -133,7 +135,8 @@ public class CameraController
         double y = cameraEntity.PrevY + (cameraEntity.Y - cameraEntity.PrevY) * (double)tickDelta - (double)eyeHeightOffset;
         double z = cameraEntity.PrevZ + (cameraEntity.Z - cameraEntity.PrevZ) * (double)tickDelta;
 
-        GLManager.GL.Rotate(_prevCameraRollAmount + (_cameraRollAmount - _prevCameraRollAmount) * tickDelta, 0.0F, 0.0F, 1.0F);
+        GLManager.GL.Rotate(_prevCameraRollAmount + (_cameraRollAmount - _prevCameraRollAmount) * tickDelta, 0.0F, 0.0F,
+            1.0F);
 
         if (cameraEntity.IsSleeping)
         {
@@ -158,11 +161,13 @@ public class CameraController
             double currentDistance;
             if (_game.Options.CameraMode == CameraMode.FrontThirdPerson)
             {
-                currentDistance = _prevFrontThirdPersonDistance + (_frontThirdPersonDistance - _prevFrontThirdPersonDistance) * tickDelta;
+                currentDistance = _prevFrontThirdPersonDistance +
+                                  (_frontThirdPersonDistance - _prevFrontThirdPersonDistance) * tickDelta;
             }
             else
             {
-                currentDistance = _prevThirdPersonDistance + (_thirdPersonDistance - _prevThirdPersonDistance) * tickDelta;
+                currentDistance = _prevThirdPersonDistance +
+                                  (_thirdPersonDistance - _prevThirdPersonDistance) * tickDelta;
             }
 
             float targetPitch;
@@ -181,8 +186,12 @@ public class CameraController
                 targetYaw = cameraEntity.Yaw;
                 targetPitch = cameraEntity.Pitch;
 
-                double vecX = (double)(-MathHelper.Sin(targetYaw / 180.0F * (float)Math.PI) * MathHelper.Cos(targetPitch / 180.0F * (float)Math.PI)) * currentDistance;
-                double vecZ = (double)(MathHelper.Cos(targetYaw / 180.0F * (float)Math.PI) * MathHelper.Cos(targetPitch / 180.0F * (float)Math.PI)) * currentDistance;
+                double vecX =
+                    (double)(-MathHelper.Sin(targetYaw / 180.0F * (float)Math.PI) *
+                             MathHelper.Cos(targetPitch / 180.0F * (float)Math.PI)) * currentDistance;
+                double vecZ =
+                    (double)(MathHelper.Cos(targetYaw / 180.0F * (float)Math.PI) *
+                             MathHelper.Cos(targetPitch / 180.0F * (float)Math.PI)) * currentDistance;
                 double vecY = (double)(-MathHelper.Sin(targetPitch / 180.0F * (float)Math.PI)) * currentDistance;
 
                 for (int i = 0; i < 8; ++i)

@@ -12,7 +12,9 @@ internal sealed class OpenGlRendererFactory : IRendererFactory
 {
     public static OpenGlRendererFactory Instance { get; } = new();
 
-    private OpenGlRendererFactory() { }
+    private OpenGlRendererFactory()
+    {
+    }
 
     public IRendererServices CreateServices(BetaSharp client, TexturePacks texturePacks, GameOptions options)
         => new OpenGlRendererServices(client, texturePacks, options);

@@ -73,7 +73,8 @@ internal sealed class VulkanRenderBackendBootstrap : IRenderBackendBootstrap
     {
     }
 
-    public void RenderStartupScreen(GameOptions options, int displayWidth, int displayHeight, int framebufferWidth, int framebufferHeight, int splashTextureId)
+    public void RenderStartupScreen(GameOptions options, int displayWidth, int displayHeight, int framebufferWidth,
+        int framebufferHeight, int splashTextureId)
     {
     }
 }

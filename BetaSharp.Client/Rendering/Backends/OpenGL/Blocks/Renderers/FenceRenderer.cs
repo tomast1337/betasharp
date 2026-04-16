@@ -14,7 +14,10 @@ public class FenceRenderer : IBlockRenderer
         float postMax = 10.0F / 16.0F;
 
         // Clone the context and apply the new bounding box for the post
-        var postCtx = ctx with { OverrideBounds = new Box(postMin, 0.0F, postMin, postMax, 1.0F, postMax) };
+        var postCtx = ctx with
+        {
+            OverrideBounds = new Box(postMin, 0.0F, postMin, postMax, 1.0F, postMax)
+        };
         postCtx.DrawBlock(block, pos);
 
         // Check for adjacent fences using 'ctx.World' and 'pos'
@@ -85,6 +88,7 @@ public class FenceRenderer : IBlockRenderer
             };
             bottomZCtx.DrawBlock(block, pos);
         }
+
         return hasRendered;
     }
 }

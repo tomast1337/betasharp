@@ -57,6 +57,7 @@ public class FrustumData
                 return false;
             }
         }
+
         return true;
     }
 
@@ -83,6 +84,7 @@ public class FrustumData
                 return false;
             }
         }
+
         return true;
     }
 }

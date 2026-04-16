@@ -2,43 +2,49 @@ namespace BetaSharp.Client.Rendering.Particles;
 
 public enum PhysicsModel : byte
 {
-    Standard,   // Uses per-particle gravity scale against a 0.04 engine constant
-    Buoyant,    // Uses gravityAccel as upward force
-    NoClip,     // No collision; simple velocity integration
+    Standard, // Uses per-particle gravity scale against a 0.04 engine constant
+    Buoyant, // Uses gravityAccel as upward force
+    NoClip, // No collision; simple velocity integration
     Parametric, // Position determined by time-based function; ignores friction
     BubbleRise, // Upward drift; dies when exiting water material
-    RainFall,   // Dies on contact with solid or fluid surfaces
-    LavaDrop,   // Hardcoded gravity -0.03; triggers smoke sub-particle spawning
-    SnowDrift,  // Hardcoded gravity -0.03; high friction (0.99)
+    RainFall, // Dies on contact with solid or fluid surfaces
+    LavaDrop, // Hardcoded gravity -0.03; triggers smoke sub-particle spawning
+    SnowDrift, // Hardcoded gravity -0.03; high friction (0.99)
 }
 
 public enum ScaleModel : byte
 {
-    Constant,      // No scale change over lifetime
-    GrowToFull,    // Rapid expansion to baseScale (32x speed): min(1, progress * 32)
-    ShrinkHalf,    // Parabolic shrink ending at 50%: baseScale * (1 - progress^2 * 0.5)
+    Constant, // No scale change over lifetime
+    GrowToFull, // Rapid expansion to baseScale (32x speed): min(1, progress * 32)
+    ShrinkHalf, // Parabolic shrink ending at 50%: baseScale * (1 - progress^2 * 0.5)
     ShrinkSquared, // Quadratic shrink ending at zero: baseScale * (1 - progress^2)
-    PortalEase,    // Inverted quadratic: 1 - (1 - progress)^2
+    PortalEase, // Inverted quadratic: 1 - (1 - progress)^2
 }
 
 public enum BrightnessModel : byte
 {
-    WorldBased,   // Sampled from world lighting at the current position
-    AlwaysFull,   // Force maximum brightness (1.0)
+    WorldBased, // Sampled from world lighting at the current position
+    AlwaysFull, // Force maximum brightness (1.0)
     FadeFromFull, // Starts at 1.0, lerps toward sampled world light over lifetime
-    EaseToFull,   // Starts at world brightness, quartic ease toward 1.0
+    EaseToFull, // Starts at world brightness, quartic ease toward 1.0
 }
 
 public enum UVModel : byte
 {
     Standard16x16, // Full 1/16 tile based on textureIndex
-    Jittered4x4,   // Quarter-tile with randomized sub-tile offset
+    Jittered4x4, // Quarter-tile with randomized sub-tile offset
 }
 
 public readonly struct ParticleTypeConfig(
-    PhysicsModel physics, ScaleModel scale, BrightnessModel brightness, UVModel uv,
-    float friction, float groundFriction, float gravityAccel,
-    bool stalledSpread, bool animatesTexture)
+    PhysicsModel physics,
+    ScaleModel scale,
+    BrightnessModel brightness,
+    UVModel uv,
+    float friction,
+    float groundFriction,
+    float gravityAccel,
+    bool stalledSpread,
+    bool animatesTexture)
 {
     public PhysicsModel Physics { get; } = physics;
     public ScaleModel Scale { get; } = scale;
@@ -46,9 +52,12 @@ public readonly struct ParticleTypeConfig(
     public UVModel UV { get; } = uv;
     public float Friction { get; } = friction;
     public float GroundFriction { get; } = groundFriction;
+
     public float GravityAccel { get; } = gravityAccel;
+
     // Accelerates horizontal spread when vertical movement is blocked to prevent clumping
     public bool StalledSpread { get; } = stalledSpread;
+
     // Maps age to an 8-frame sequence in reverse order (7 to 0)
     public bool AnimatesTexture { get; } = animatesTexture;
 

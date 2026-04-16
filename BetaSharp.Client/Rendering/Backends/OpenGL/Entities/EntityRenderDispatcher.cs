@@ -93,7 +93,8 @@ public class EntityRenderDispatcher : IEntityRenderDispatcher
         return GetEntityClassRenderObject(entity.GetType());
     }
 
-    public void CacheRenderInfo(World world, ITextureManager textureManager, ITextRenderer textRenderer, EntityLiving camera, GameOptions options, ILegacyFixedFunctionApi sceneRenderBackend, float tickDelta)
+    public void CacheRenderInfo(World world, ITextureManager textureManager, ITextRenderer textRenderer,
+        EntityLiving camera, GameOptions options, ILegacyFixedFunctionApi sceneRenderBackend, float tickDelta)
     {
         World = world;
         TextureManager = textureManager;

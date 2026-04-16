@@ -42,7 +42,8 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
     private int _renderDistance = -1;
     private int _renderEntitiesStartupCounter = 2;
 
-    public WorldRenderer(BetaSharp gameInstance, ITextureManager textureManager, IChunkRendererFactory chunkRendererFactory)
+    public WorldRenderer(BetaSharp gameInstance, ITextureManager textureManager,
+        IChunkRendererFactory chunkRendererFactory)
     {
         _game = gameInstance;
         _sceneRenderBackend = gameInstance.LegacyFixedFunctionApi;
@@ -166,7 +167,6 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
             _chunkRenderer?.Dispose();
             _chunkRenderer = null;
         }
-
     }
 
     public void Tick(Entity view, float partialTicks)
@@ -596,6 +596,7 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
                     }
                 }
             }
+
             tessellator.draw();
             _sceneRenderBackend.EndDisplayList();
         }
@@ -707,7 +708,9 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
         tessellator.setTranslationD(-renderX, -renderY, -renderZ);
         tessellator.disableColor();
 
-        BlockRenderer.RenderBlockByRenderType(_world.Reader, _world.Lighting, targetBlock, new BlockPos(hit.BlockX, hit.BlockY, hit.BlockZ), tessellator, 240 + (int)(DamagePartialTime * 10.0F), true, _game.Options.AlternateBlocksEnabled);
+        BlockRenderer.RenderBlockByRenderType(_world.Reader, _world.Lighting, targetBlock,
+            new BlockPos(hit.BlockX, hit.BlockY, hit.BlockZ), tessellator, 240 + (int)(DamagePartialTime * 10.0F), true,
+            _game.Options.AlternateBlocksEnabled);
         tessellator.draw();
 
         tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
@@ -746,7 +749,6 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
             _sceneRenderBackend.Enable(SceneRenderCapability.Texture2D);
             _sceneRenderBackend.Disable(SceneRenderCapability.Blend);
         }
-
     }
 
     private static void DrawOutlinedBoundingBox(Box box)
@@ -842,7 +844,6 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
         {
             _game.SoundManager.PlaySound(soundName, (float)x, (float)y, (float)z, volume, pitch);
         }
-
     }
 
     public void SpawnParticle(string particleName, double x, double y, double z, double velocityX, double velocityY, double velocityZ)
@@ -874,7 +875,6 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
                     case "slime": pm.AddSlime(x, y, z, Item.Slimeball); break;
                     case "heart": pm.AddHeart(x, y, z, velocityX, velocityY, velocityZ); break;
                 }
-
             }
         }
     }
@@ -922,6 +922,7 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
                 {
                     _game.SoundManager.PlaySound("random.door_close", x + 0.5F, y + 0.5F, z + 0.5F, 1.0F, _world.Random.NextFloat() * 0.1F + 0.9F);
                 }
+
                 break;
             case 1004:
                 _game.SoundManager.PlaySound("random.fizz", x + 0.5F, y + 0.5F, z + 0.5F, 0.5F, 2.6F + (random.NextFloat() - random.NextFloat()) * 0.8F);
@@ -940,6 +941,7 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
                 {
                     _game.SoundManager.PlayStreaming(null, x, y, z, 1.0F, 1.0F);
                 }
+
                 break;
             case 2000:
                 int offsetX = data % 3 - 1;
@@ -972,9 +974,13 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
                 _game.ParticleManager.addBlockDestroyEffects(x, y, z, data & 255, data >> 8 & 255);
                 break;
         }
-
     }
 
-    public void PlayNote(int x, int y, int z, int soundType, int pitch) { }
-    public void BroadcastEntityEvent(Entity entity, byte @event) { }
+    public void PlayNote(int x, int y, int z, int soundType, int pitch)
+    {
+    }
+
+    public void BroadcastEntityEvent(Entity entity, byte @event)
+    {
+    }
 }

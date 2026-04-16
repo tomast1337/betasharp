@@ -7,7 +7,6 @@ namespace BetaSharp.Client.Rendering.Entities;
 
 public class SlimeEntityRenderer : LivingEntityRenderer
 {
-
     private readonly ModelBase scaleAmount;
 
     public SlimeEntityRenderer(ModelBase mainModel, ModelBase slimeOverlayModel, float shadowRadius) : base(mainModel, shadowRadius)

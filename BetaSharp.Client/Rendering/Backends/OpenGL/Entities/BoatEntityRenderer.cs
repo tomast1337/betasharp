@@ -8,7 +8,6 @@ namespace BetaSharp.Client.Rendering.Entities;
 
 public class BoatEntityRenderer : EntityRenderer
 {
-
     protected ModelBase modelBoat;
 
     public BoatEntityRenderer()

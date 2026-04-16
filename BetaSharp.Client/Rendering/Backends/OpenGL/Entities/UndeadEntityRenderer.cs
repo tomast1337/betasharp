@@ -10,7 +10,6 @@ namespace BetaSharp.Client.Rendering.Entities;
 
 public class UndeadEntityRenderer : LivingEntityRenderer
 {
-
     protected ModelBiped modelBipedMain;
 
     public UndeadEntityRenderer(ModelBiped mainModel, float shadowRadius) : base(mainModel, shadowRadius)
@@ -57,6 +56,5 @@ public class UndeadEntityRenderer : LivingEntityRenderer
             Dispatcher.HeldItemRenderer.renderItem(entity, heldItem);
             Scene.PopMatrix();
         }
-
     }
 }

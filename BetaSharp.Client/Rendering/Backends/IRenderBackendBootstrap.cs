@@ -22,5 +22,7 @@ internal interface IRenderBackendBootstrap
     bool TryCaptureScreenshot(int framebufferWidth, int framebufferHeight, out byte[] rgbPixels);
     void CleanupRenderResources();
     void LogRenderResourceReport();
-    void RenderStartupScreen(GameOptions options, int displayWidth, int displayHeight, int framebufferWidth, int framebufferHeight, int splashTextureId);
+
+    void RenderStartupScreen(GameOptions options, int displayWidth, int displayHeight, int framebufferWidth,
+        int framebufferHeight, int splashTextureId);
 }

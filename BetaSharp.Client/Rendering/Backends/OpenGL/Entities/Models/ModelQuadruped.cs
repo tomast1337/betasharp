@@ -5,7 +5,6 @@ namespace BetaSharp.Client.Rendering.Entities.Models;
 
 public class ModelQuadruped : ModelBase
 {
-
     public ModelPart head = new(0, 0);
     public ModelPart body;
     public ModelPart leg1;

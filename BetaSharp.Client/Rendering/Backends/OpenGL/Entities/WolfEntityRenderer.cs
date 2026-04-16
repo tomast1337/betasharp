@@ -5,7 +5,6 @@ namespace BetaSharp.Client.Rendering.Entities;
 
 public class WolfEntityRenderer : LivingEntityRenderer
 {
-
     public WolfEntityRenderer(ModelBase mainModel, float shadowRadius) : base(mainModel, shadowRadius)
     {
     }

@@ -11,7 +11,9 @@ internal sealed class VulkanRendererFactory : IRendererFactory
 {
     public static VulkanRendererFactory Instance { get; } = new();
 
-    private VulkanRendererFactory() { }
+    private VulkanRendererFactory()
+    {
+    }
 
     public IRendererServices CreateServices(BetaSharp client, TexturePacks texturePacks, GameOptions options)
         => new VulkanRendererServices(client, texturePacks, options);

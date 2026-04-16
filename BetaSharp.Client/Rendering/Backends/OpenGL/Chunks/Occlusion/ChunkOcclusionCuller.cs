@@ -109,16 +109,23 @@ public class ChunkOcclusionCuller
         }
     }
 
-    private static void EnqueueNeighbors(ChunkQueue queue, SubChunkRenderer current, ChunkDirectionMask outgoing, int frame)
+    private static void EnqueueNeighbors(ChunkQueue queue, SubChunkRenderer current, ChunkDirectionMask outgoing,
+        int frame)
     {
         if (outgoing == ChunkDirectionMask.None) return;
 
-        if ((outgoing & ChunkDirectionMask.Down) != 0) VisitNode(queue, current.AdjacentDown, ChunkDirectionMask.Up, frame);
-        if ((outgoing & ChunkDirectionMask.Up) != 0) VisitNode(queue, current.AdjacentUp, ChunkDirectionMask.Down, frame);
-        if ((outgoing & ChunkDirectionMask.North) != 0) VisitNode(queue, current.AdjacentNorth, ChunkDirectionMask.South, frame);
-        if ((outgoing & ChunkDirectionMask.South) != 0) VisitNode(queue, current.AdjacentSouth, ChunkDirectionMask.North, frame);
-        if ((outgoing & ChunkDirectionMask.West) != 0) VisitNode(queue, current.AdjacentWest, ChunkDirectionMask.East, frame);
-        if ((outgoing & ChunkDirectionMask.East) != 0) VisitNode(queue, current.AdjacentEast, ChunkDirectionMask.West, frame);
+        if ((outgoing & ChunkDirectionMask.Down) != 0)
+            VisitNode(queue, current.AdjacentDown, ChunkDirectionMask.Up, frame);
+        if ((outgoing & ChunkDirectionMask.Up) != 0)
+            VisitNode(queue, current.AdjacentUp, ChunkDirectionMask.Down, frame);
+        if ((outgoing & ChunkDirectionMask.North) != 0)
+            VisitNode(queue, current.AdjacentNorth, ChunkDirectionMask.South, frame);
+        if ((outgoing & ChunkDirectionMask.South) != 0)
+            VisitNode(queue, current.AdjacentSouth, ChunkDirectionMask.North, frame);
+        if ((outgoing & ChunkDirectionMask.West) != 0)
+            VisitNode(queue, current.AdjacentWest, ChunkDirectionMask.East, frame);
+        if ((outgoing & ChunkDirectionMask.East) != 0)
+            VisitNode(queue, current.AdjacentEast, ChunkDirectionMask.West, frame);
     }
 
     private static void VisitNode(ChunkQueue queue, SubChunkRenderer? neighbor, ChunkDirectionMask incoming, int frame)

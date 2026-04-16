@@ -5,7 +5,6 @@ namespace BetaSharp.Client.Rendering.Entities;
 
 public class CowEntityRenderer : LivingEntityRenderer
 {
-
     public CowEntityRenderer(ModelBase mainModel, float shadowRadius) : base(mainModel, shadowRadius)
     {
     }

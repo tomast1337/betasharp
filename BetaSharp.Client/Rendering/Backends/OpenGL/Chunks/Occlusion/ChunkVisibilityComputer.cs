@@ -11,7 +11,8 @@ public static class ChunkVisibilityComputer
         ChunkVisibilityStore store = new();
 
         // We use a bitset to track visited blocks (4096 bits = 512 bytes)
-        Span<uint> visited = stackalloc uint[(SubChunkRenderer.Size * SubChunkRenderer.Size * SubChunkRenderer.Size) / 32];
+        Span<uint> visited =
+            stackalloc uint[(SubChunkRenderer.Size * SubChunkRenderer.Size * SubChunkRenderer.Size) / 32];
 
         // Check connectivity from each face
         for (int f = 0; f < ChunkDirectionExtensions.Count; f++)
@@ -54,12 +55,36 @@ public static class ChunkVisibilityComputer
                 int lx = 0, ly = 0, lz = 0;
                 switch (startFace)
                 {
-                    case ChunkDirection.Down: lx = i; ly = 0; lz = j; break;
-                    case ChunkDirection.Up: lx = i; ly = SubChunkRenderer.Size - 1; lz = j; break;
-                    case ChunkDirection.North: lx = i; ly = j; lz = 0; break;
-                    case ChunkDirection.South: lx = i; ly = j; lz = SubChunkRenderer.Size - 1; break;
-                    case ChunkDirection.West: lx = 0; ly = i; lz = j; break;
-                    case ChunkDirection.East: lx = SubChunkRenderer.Size - 1; ly = i; lz = j; break;
+                    case ChunkDirection.Down:
+                        lx = i;
+                        ly = 0;
+                        lz = j;
+                        break;
+                    case ChunkDirection.Up:
+                        lx = i;
+                        ly = SubChunkRenderer.Size - 1;
+                        lz = j;
+                        break;
+                    case ChunkDirection.North:
+                        lx = i;
+                        ly = j;
+                        lz = 0;
+                        break;
+                    case ChunkDirection.South:
+                        lx = i;
+                        ly = j;
+                        lz = SubChunkRenderer.Size - 1;
+                        break;
+                    case ChunkDirection.West:
+                        lx = 0;
+                        ly = i;
+                        lz = j;
+                        break;
+                    case ChunkDirection.East:
+                        lx = SubChunkRenderer.Size - 1;
+                        ly = i;
+                        lz = j;
+                        break;
                 }
 
                 if (IsAir(cache, minX + lx, minY + ly, minZ + lz))
@@ -108,7 +133,8 @@ public static class ChunkVisibilityComputer
         Span<ushort> queue,
         ref int tail)
     {
-        if (lx < 0 || lx >= SubChunkRenderer.Size || ly < 0 || ly >= SubChunkRenderer.Size || lz < 0 || lz >= SubChunkRenderer.Size) return;
+        if (lx < 0 || lx >= SubChunkRenderer.Size || ly < 0 || ly >= SubChunkRenderer.Size || lz < 0 ||
+            lz >= SubChunkRenderer.Size) return;
 
         int idx = GetIndex(lx, ly, lz);
         if (IsVisited(visited, idx)) return;

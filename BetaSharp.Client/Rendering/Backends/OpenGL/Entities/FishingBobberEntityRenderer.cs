@@ -84,7 +84,6 @@ public class FishingBobberEntityRenderer : EntityRenderer
             Scene.Enable(SceneRenderCapability.Lighting);
             Scene.Enable(SceneRenderCapability.Texture2D);
         }
-
     }
 
     public override void Render(Entity target, double x, double y, double z, float yaw, float tickDelta)

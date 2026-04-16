@@ -27,7 +27,6 @@ public class MapItemRenderer
         {
             colors[i] = 0;
         }
-
     }
 
     public void render(EntityPlayer player, ITextureManager textureManager, MapState mapState)

@@ -11,6 +11,7 @@ public interface ITextureResource : IDisposable
     void SetFilter(TextureMinificationFilter min, TextureMagnificationFilter mag);
     void SetWrap(TextureAddressMode s, TextureAddressMode t);
     void SetMaxLevel(int level);
+
     unsafe void Upload(
         int width,
         int height,
@@ -18,6 +19,7 @@ public interface ITextureResource : IDisposable
         int level = 0,
         TextureDataFormat format = TextureDataFormat.Rgba,
         TextureStorageFormat internalFormat = TextureStorageFormat.Rgba);
+
     unsafe void UploadSubImage(
         int x,
         int y,
@@ -26,5 +28,6 @@ public interface ITextureResource : IDisposable
         byte* ptr,
         int level = 0,
         TextureDataFormat format = TextureDataFormat.Rgba);
+
     void SetAnisotropicFilter(float level);
 }

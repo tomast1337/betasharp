@@ -124,6 +124,4 @@ public class PaintingEntityRenderer : EntityRenderer
         float light = Dispatcher.World.GetLuminance(checkX, checkY, checkZ);
         Scene.SetColorRgb(light, light, light);
     }
-
-
 }

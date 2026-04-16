@@ -4,7 +4,6 @@ namespace BetaSharp.Client.Rendering.Entities.Models;
 
 public class ModelBoat : ModelBase
 {
-
     public ModelPart[] boatSides = new ModelPart[5];
 
     public ModelBoat()
@@ -40,7 +39,6 @@ public class ModelBoat : ModelBase
         {
             boatSides[sideIndex].render(scale);
         }
-
     }
 
     public override void setRotationAngles(float limbSwing, float limbSwingAmount, float animationProgress, float netHeadYaw, float headPitch, float scale)

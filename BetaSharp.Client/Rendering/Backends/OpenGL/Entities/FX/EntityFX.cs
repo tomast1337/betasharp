@@ -24,7 +24,8 @@ public class EntityFX : Entity
     public static double interpPosY;
     public static double interpPosZ;
 
-    public EntityFX(IWorldContext world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) : base(world)
+    public EntityFX(IWorldContext world, double x, double y, double z, double velocityX, double velocityY,
+        double velocityZ) : base(world)
     {
         SetBoundingBoxSpacing(0.2F, 0.2F);
         StandingEyeHeight = Height / 2.0F;
@@ -85,10 +86,10 @@ public class EntityFX : Entity
             VelocityX *= (double)0.7F;
             VelocityZ *= (double)0.7F;
         }
-
     }
 
-    public virtual void renderParticle(Tessellator t, float partialTick, float rotX, float rotY, float rotZ, float upX, float upZ)
+    public virtual void renderParticle(Tessellator t, float partialTick, float rotX, float rotY, float rotZ, float upX,
+        float upZ)
     {
         float minU = (float)(particleTextureIndex % 16) / 16.0F;
         float maxU = minU + 0.999F / 16.0F;
@@ -100,10 +101,14 @@ public class EntityFX : Entity
         float z = (float)(PrevZ + (base.Z - PrevZ) * (double)partialTick - interpPosZ);
         float brightness = GetBrightnessAtEyes(partialTick);
         t.setColorOpaque_F(particleRed * brightness, particleGreen * brightness, particleBlue * brightness);
-        t.addVertexWithUV((double)(x - rotX * size - upX * size), (double)(y - rotY * size), (double)(z - rotZ * size - upZ * size), (double)maxU, (double)maxV);
-        t.addVertexWithUV((double)(x - rotX * size + upX * size), (double)(y + rotY * size), (double)(z - rotZ * size + upZ * size), (double)maxU, (double)minV);
-        t.addVertexWithUV((double)(x + rotX * size + upX * size), (double)(y + rotY * size), (double)(z + rotZ * size + upZ * size), (double)minU, (double)minV);
-        t.addVertexWithUV((double)(x + rotX * size - upX * size), (double)(y - rotY * size), (double)(z + rotZ * size - upZ * size), (double)minU, (double)maxV);
+        t.addVertexWithUV((double)(x - rotX * size - upX * size), (double)(y - rotY * size),
+            (double)(z - rotZ * size - upZ * size), (double)maxU, (double)maxV);
+        t.addVertexWithUV((double)(x - rotX * size + upX * size), (double)(y + rotY * size),
+            (double)(z - rotZ * size + upZ * size), (double)maxU, (double)minV);
+        t.addVertexWithUV((double)(x + rotX * size + upX * size), (double)(y + rotY * size),
+            (double)(z + rotZ * size + upZ * size), (double)minU, (double)minV);
+        t.addVertexWithUV((double)(x + rotX * size - upX * size), (double)(y - rotY * size),
+            (double)(z + rotZ * size - upZ * size), (double)minU, (double)maxV);
     }
 
     public virtual int getFXLayer()

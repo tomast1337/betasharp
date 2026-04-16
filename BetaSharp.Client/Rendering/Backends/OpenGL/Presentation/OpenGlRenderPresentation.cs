@@ -49,14 +49,15 @@ public class OpenGlRenderPresentation : IFramePresenter
                 }"
         );
 
-        float[] quadVertices = [
-            -1.0f,  1.0f,  0.0f, 1.0f,
-            -1.0f, -1.0f,  0.0f, 0.0f,
-             1.0f, -1.0f,  1.0f, 0.0f,
+        float[] quadVertices =
+        [
+            -1.0f, 1.0f, 0.0f, 1.0f,
+            -1.0f, -1.0f, 0.0f, 0.0f,
+            1.0f, -1.0f, 1.0f, 0.0f,
 
-            -1.0f,  1.0f,  0.0f, 1.0f,
-             1.0f, -1.0f,  1.0f, 0.0f,
-             1.0f,  1.0f,  1.0f, 1.0f
+            -1.0f, 1.0f, 0.0f, 1.0f,
+            1.0f, -1.0f, 1.0f, 0.0f,
+            1.0f, 1.0f, 1.0f, 1.0f
         ];
 
         IGL gl = GLManager.GL;
@@ -75,10 +76,16 @@ public class OpenGlRenderPresentation : IFramePresenter
         }
 
         gl.EnableVertexAttribArray(0);
-        unsafe { gl.VertexAttribPointer(0, 2, GLEnum.Float, false, 4 * sizeof(float), (void*)0); }
+        unsafe
+        {
+            gl.VertexAttribPointer(0, 2, GLEnum.Float, false, 4 * sizeof(float), (void*)0);
+        }
 
         gl.EnableVertexAttribArray(1);
-        unsafe { gl.VertexAttribPointer(1, 2, GLEnum.Float, false, 4 * sizeof(float), (void*)(2 * sizeof(float))); }
+        unsafe
+        {
+            gl.VertexAttribPointer(1, 2, GLEnum.Float, false, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+        }
 
         gl.BindVertexArray(0);
     }

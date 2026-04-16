@@ -18,8 +18,13 @@ public sealed class NoOpFramePresenter : IFramePresenter
         FramebufferHeight = height > 0 ? height : 1;
     }
 
-    public void Begin() { }
-    public void End() { }
+    public void Begin()
+    {
+    }
+
+    public void End()
+    {
+    }
 
     public void Resize(int width, int height)
     {

@@ -69,7 +69,6 @@ public class TextureManager : ITextureManager
             _colors[path] = fallback;
             return fallback;
         }
-
     }
 
     public int GetAtlasTileSize(string path)
@@ -110,7 +109,6 @@ public class TextureManager : ITextureManager
             Load(_missingTextureImage, texture, false);
             return handle;
         }
-
     }
 
     public void Load(Image<Rgba32> image, ITextureResource texture, bool isTerrain)
@@ -189,7 +187,8 @@ public class TextureManager : ITextureManager
         {
             for (int i = 0; i < scale; i++)
             {
-                using Image<Rgba32> frame = image.Clone(x => x.Crop(new SixLabors.ImageSharp.Rectangle(i * 16, 0, 16, image.Height)));
+                using Image<Rgba32> frame = image.Clone(x =>
+                    x.Crop(new SixLabors.ImageSharp.Rectangle(i * 16, 0, 16, image.Height)));
                 ctx.DrawImage(frame, new SixLabors.ImageSharp.Point(0, i * image.Height), 1f);
             }
         });
@@ -228,8 +227,16 @@ public class TextureManager : ITextureManager
         string cleanPath = path;
         while (true)
         {
-            if (cleanPath.StartsWith("%clamp%")) { _clamp = true; cleanPath = cleanPath[7..]; }
-            else if (cleanPath.StartsWith("%blur%")) { _blur = true; cleanPath = cleanPath[6..]; }
+            if (cleanPath.StartsWith("%clamp%"))
+            {
+                _clamp = true;
+                cleanPath = cleanPath[7..];
+            }
+            else if (cleanPath.StartsWith("%blur%"))
+            {
+                _blur = true;
+                cleanPath = cleanPath[6..];
+            }
             else break;
         }
 
@@ -512,10 +519,14 @@ public class TextureManager : ITextureManager
 
                             int dst = (y * newSize + x) * 4;
 
-                            downsampled[dst] = (byte)((currentData[src0] + currentData[src1] + currentData[src2] + currentData[src3]) >> 2);
-                            downsampled[dst + 1] = (byte)((currentData[src0 + 1] + currentData[src1 + 1] + currentData[src2 + 1] + currentData[src3 + 1]) >> 2);
-                            downsampled[dst + 2] = (byte)((currentData[src0 + 2] + currentData[src1 + 2] + currentData[src2 + 2] + currentData[src3 + 2]) >> 2);
-                            downsampled[dst + 3] = (byte)((currentData[src0 + 3] + currentData[src1 + 3] + currentData[src2 + 3] + currentData[src3 + 3]) >> 2);
+                            downsampled[dst] = (byte)((currentData[src0] + currentData[src1] + currentData[src2] +
+                                                       currentData[src3]) >> 2);
+                            downsampled[dst + 1] = (byte)((currentData[src0 + 1] + currentData[src1 + 1] +
+                                                           currentData[src2 + 1] + currentData[src3 + 1]) >> 2);
+                            downsampled[dst + 2] = (byte)((currentData[src0 + 2] + currentData[src1 + 2] +
+                                                           currentData[src2 + 2] + currentData[src3 + 2]) >> 2);
+                            downsampled[dst + 3] = (byte)((currentData[src0 + 3] + currentData[src1 + 3] +
+                                                           currentData[src2 + 3] + currentData[src3 + 3]) >> 2);
                         }
                     }
                 }
@@ -565,6 +576,7 @@ public class TextureManager : ITextureManager
         {
             handle.Texture?.Dispose();
         }
+
         _textures.Clear();
 
         foreach ((Image<Rgba32> Image, TextureHandle Handle) entry in _images.Values)
@@ -572,6 +584,7 @@ public class TextureManager : ITextureManager
             entry.Handle.Texture?.Dispose();
             entry.Image.Dispose();
         }
+
         _images.Clear();
 
         _missingTextureImage.Dispose();

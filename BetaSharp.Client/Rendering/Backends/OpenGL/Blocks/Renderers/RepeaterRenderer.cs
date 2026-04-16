@@ -11,7 +11,12 @@ public class RepeaterRenderer : IBlockRenderer
         int direction = metadata & 3;
         int delay = (metadata & 12) >> 2;
         // 1. Base Rendering
-        var slabCtx = ctx with { EnableAo = true, AoBlendMode = 0, UvRotateTop = direction % 4 };
+        var slabCtx = ctx with
+        {
+            EnableAo = true,
+            AoBlendMode = 0,
+            UvRotateTop = direction % 4
+        };
 
         slabCtx.DrawBlock(block, pos);
 
@@ -52,8 +57,10 @@ public class RepeaterRenderer : IBlockRenderer
         }
 
         // 3. Render the two torch pins
-        slabCtx.DrawTorch(block, new Vec3D(pos.x + staticTorchX, pos.y + torchVerticalOffset, pos.z + staticTorchZ), 0.0f, 0.0f);
-        slabCtx.DrawTorch(block, new Vec3D(pos.x + delayTorchX, pos.y + torchVerticalOffset, pos.z + delayTorchZ), 0.0f, 0.0f);
+        slabCtx.DrawTorch(block, new Vec3D(pos.x + staticTorchX, pos.y + torchVerticalOffset, pos.z + staticTorchZ),
+            0.0f, 0.0f);
+        slabCtx.DrawTorch(block, new Vec3D(pos.x + delayTorchX, pos.y + torchVerticalOffset, pos.z + delayTorchZ), 0.0f,
+            0.0f);
         return true;
     }
 }
