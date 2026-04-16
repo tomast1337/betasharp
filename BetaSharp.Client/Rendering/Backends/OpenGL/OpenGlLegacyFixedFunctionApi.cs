@@ -33,15 +33,10 @@ internal sealed class OpenGlLegacyFixedFunctionApi : ILegacyFixedFunctionApi
     public void Rotate(float angle, float x, float y, float z) => GLManager.GL.Rotate(angle, x, y, z);
     public void Perspective(float fieldOfView, float aspectRatio, float zNear, float zFar)
     {
+        float fH = (float)Math.Tan(fieldOfView / 360.0 * Math.PI) * zNear;
+        float fW = fH * aspectRatio;
+        GLManager.GL.Frustum(-fW, fW, -fH, fH, zNear, zFar);
         float f = 1.0f / MathF.Tan(fieldOfView / 2.0f);
-        float range = zNear - zFar;
-        GLManager.GL.Frustum(
-            -f / aspectRatio * zNear,
-            f / aspectRatio * zNear,
-            -f * zNear,
-            f * zNear,
-            zNear,
-            zFar);
     }
     public void Ortho(double left, double right, double bottom, double top, double zNear, double zFar) => GLManager.GL.Ortho(left, right, bottom, top, zNear, zFar);
     public void SetViewport(int x, int y, uint width, uint height) => GLManager.GL.Viewport(x, y, width, height);
