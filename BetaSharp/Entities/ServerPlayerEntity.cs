@@ -21,26 +21,22 @@ namespace BetaSharp.Entities;
 
 public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
 {
-    private static readonly ILogger s_logger = Log.Instance.For<ServerPlayerEntity>();
-    public override EntityType Type => EntityRegistry.Player;
     private const int MaxChunkPackets = 16;
+    private static readonly ILogger s_logger = Log.Instance.For<ServerPlayerEntity>();
+    private readonly PlayerChunkSendQueue _pendingChunkUpdates = new();
     private readonly ItemStack?[] equipment = [null, null, null, null, null];
+    private double _chunkStreamingMotionX;
+    private double _chunkStreamingMotionZ;
     public HashSet<ChunkPos> activeChunks = new();
-    public Dictionary<ChunkPos, long> ChunksTerrainSentToClient { get; } = [];
     public ServerPlayerInteractionManager interactionManager;
     private int joinInvulnerabilityTicks = 60;
     private int lastHealthScore = -99999999;
     public double lastX;
     public double lastZ;
-
-    public ServerPlayNetworkHandler NetworkHandler { get; set; }
     public Queue<ChunkPos> PendingChunkUpdates = new();
     private int screenHandlerSyncId;
     public BetaSharpServer server;
     public bool skipPacketSlotUpdates;
-    private readonly PlayerChunkSendQueue _pendingChunkUpdates = new();
-    private double _chunkStreamingMotionX;
-    private double _chunkStreamingMotionZ;
 
     public ServerPlayerEntity(BetaSharpServer server, IWorldContext world, string name, ServerPlayerInteractionManager interactionManager) : base(world)
     {
@@ -56,7 +52,9 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
             {
                 int validityY = world.Reader.GetSpawnPositionValidityY(x, y);
                 if (validityY > 0)
+                {
                     z = validityY;
+                }
             }
             else
             {
@@ -72,6 +70,11 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         this.name = name;
         standingEyeHeight = 0.0F;
     }
+
+    public override EntityType Type => EntityRegistry.Player;
+    public Dictionary<ChunkPos, long> ChunksTerrainSentToClient { get; } = [];
+
+    public ServerPlayNetworkHandler NetworkHandler { get; set; }
 
 
     public void onSlotUpdate(ScreenHandler handler, int slot, ItemStack? stack)
@@ -263,15 +266,9 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         _pendingChunkUpdates.ReprioritizeAll(this);
     }
 
-    public void ScheduleChunkSend(ChunkPos chunkPos)
-    {
-        _pendingChunkUpdates.EnqueueOrPromote(this, chunkPos);
-    }
+    public void ScheduleChunkSend(ChunkPos chunkPos) => _pendingChunkUpdates.EnqueueOrPromote(this, chunkPos);
 
-    public void CancelChunkSend(ChunkPos chunkPos)
-    {
-        _pendingChunkUpdates.Remove(chunkPos);
-    }
+    public void CancelChunkSend(ChunkPos chunkPos) => _pendingChunkUpdates.Remove(chunkPos);
 
     public void FlushPendingChunkUpdates()
     {
@@ -307,7 +304,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         double motionLength = Math.Sqrt(_chunkStreamingMotionX * _chunkStreamingMotionX + _chunkStreamingMotionZ * _chunkStreamingMotionZ);
         if (motionLength > 0.0)
         {
-            directionPenalty = -((deltaX * _chunkStreamingMotionX) + (deltaZ * _chunkStreamingMotionZ)) / motionLength;
+            directionPenalty = -(deltaX * _chunkStreamingMotionX + deltaZ * _chunkStreamingMotionZ) / motionLength;
         }
 
         return new ChunkPriority(ring, directionPenalty, sequence);
@@ -327,7 +324,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         int endX = startX + 16;
         int endZ = startZ + 16;
 
-        var blockEntities = world.Entities.GetBlockEntities(startX, 0, startZ, endX, 128, endZ);
+        List<BlockEntity> blockEntities = world.Entities.GetBlockEntities(startX, 0, startZ, endX, 128, endZ);
         foreach (BlockEntity blockEntity in blockEntities)
         {
             updateBlockEntity(blockEntity);
@@ -348,7 +345,11 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
 
     public override void sendPickup(Entity item, int count)
     {
-        if (!GameMode.CanPickup) return;
+        if (!GameMode.CanPickup)
+        {
+            return;
+        }
+
         if (!item.dead)
         {
             EntityTracker et = server.getEntityTracker(dimensionId);

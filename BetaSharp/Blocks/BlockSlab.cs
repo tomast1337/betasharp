@@ -39,13 +39,24 @@ internal class BlockSlab : Block
 
     public override void OnPlaced(OnPlacedEvent etv)
     {
-        if (this != Slab) base.OnPlaced(etv);
+        if (this != Slab)
+        {
+            base.OnPlaced(etv);
+        }
 
         int blockBelowId = etv.World.Reader.GetBlockId(etv.X, etv.Y - 1, etv.Z);
         int slabMeta = etv.World.Reader.GetBlockMeta(etv.X, etv.Y, etv.Z);
         int blockBelowMeta = etv.World.Reader.GetBlockMeta(etv.X, etv.Y - 1, etv.Z);
-        if (slabMeta != blockBelowMeta) return;
-        if (blockBelowId != Slab.ID) return;
+        if (slabMeta != blockBelowMeta)
+        {
+            return;
+        }
+
+        if (blockBelowId != Slab.ID)
+        {
+            return;
+        }
+
         etv.World.Writer.SetBlock(etv.X, etv.Y, etv.Z, 0);
         etv.World.Writer.SetBlock(etv.X, etv.Y - 1, etv.Z, DoubleSlab.ID, slabMeta);
     }
@@ -60,8 +71,11 @@ internal class BlockSlab : Block
 
     public override bool IsSideVisible(IBlockReader iBlockReader, int x, int y, int z, Side side)
     {
-        if (this != Slab) base.IsSideVisible(iBlockReader, x, y, z, side);
+        if (this != Slab)
+        {
+            base.IsSideVisible(iBlockReader, x, y, z, side);
+        }
 
-        return side == Side.Up || base.IsSideVisible(iBlockReader, x, y, z, side) && (side == Side.Down || iBlockReader.GetBlockId(x, y, z) != ID);
+        return side == Side.Up || (base.IsSideVisible(iBlockReader, x, y, z, side) && (side == Side.Down || iBlockReader.GetBlockId(x, y, z) != ID));
     }
 }

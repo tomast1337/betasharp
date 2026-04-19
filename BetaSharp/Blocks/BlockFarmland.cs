@@ -7,6 +7,7 @@ namespace BetaSharp.Blocks;
 internal class BlockFarmland : Block
 {
     private const sbyte CropRadius = 0;
+
     public BlockFarmland(int id) : base(id, Material.Soil)
     {
         TextureId = 87;
@@ -31,7 +32,10 @@ internal class BlockFarmland : Block
 
     public override void OnTick(OnTickEvent @event)
     {
-        if (Random.Shared.Next(5) != 0) return;
+        if (Random.Shared.Next(5) != 0)
+        {
+            return;
+        }
 
 
         if (!IsWaterNearby(@event.World.Reader, @event.X, @event.Y, @event.Z) && !@event.World.Environment.IsRaining)
@@ -66,7 +70,10 @@ internal class BlockFarmland : Block
         {
             for (int dy = z - CropRadius; dy <= z + CropRadius; ++dy)
             {
-                if (world.GetBlockId(dx, y + 1, dy) == Wheat.ID) return true;
+                if (world.GetBlockId(dx, y + 1, dy) == Wheat.ID)
+                {
+                    return true;
+                }
             }
         }
 

@@ -85,7 +85,7 @@ internal class BlockFlowing(int id, Material material) : BlockFluid(id, material
             }
             else if (convertToSource)
             {
-                this.ConvertToSource(ctx.World, ctx.X, ctx.Y, ctx.Z);
+                ConvertToSource(ctx.World, ctx.X, ctx.Y, ctx.Z);
             }
             else
             {
@@ -132,25 +132,40 @@ internal class BlockFlowing(int id, Material material) : BlockFluid(id, material
 
             if (newLevel < 8)
             {
-                if (spreadArray[0]) SpreadTo(ctx.World, ctx.X - 1, ctx.Y, ctx.Z, newLevel);
+                if (spreadArray[0])
+                {
+                    SpreadTo(ctx.World, ctx.X - 1, ctx.Y, ctx.Z, newLevel);
+                }
 
-                if (spreadArray[1]) SpreadTo(ctx.World, ctx.X + 1, ctx.Y, ctx.Z, newLevel);
+                if (spreadArray[1])
+                {
+                    SpreadTo(ctx.World, ctx.X + 1, ctx.Y, ctx.Z, newLevel);
+                }
 
-                if (spreadArray[2]) SpreadTo(ctx.World, ctx.X, ctx.Y, ctx.Z - 1, newLevel);
+                if (spreadArray[2])
+                {
+                    SpreadTo(ctx.World, ctx.X, ctx.Y, ctx.Z - 1, newLevel);
+                }
 
-                if (spreadArray[3]) SpreadTo(ctx.World, ctx.X, ctx.Y, ctx.Z + 1, newLevel);
+                if (spreadArray[3])
+                {
+                    SpreadTo(ctx.World, ctx.X, ctx.Y, ctx.Z + 1, newLevel);
+                }
             }
         }
 
         if (currentState == 0 && ctx.World.Reader.GetBlockId(ctx.X, ctx.Y, ctx.Z) == ID)
         {
-            this.ConvertToSource(ctx.World, ctx.X, ctx.Y, ctx.Z);
+            ConvertToSource(ctx.World, ctx.X, ctx.Y, ctx.Z);
         }
     }
 
     private void SpreadTo(IWorldContext world, int x, int y, int z, int depth)
     {
-        if (!CanSpreadTo(world.Reader, x, y, z)) return;
+        if (!CanSpreadTo(world.Reader, x, y, z))
+        {
+            return;
+        }
 
         int currentId = world.Reader.GetBlockId(x, y, z);
         if (currentId > 0)
@@ -287,14 +302,26 @@ internal class BlockFlowing(int id, Material material) : BlockFluid(id, material
 
     private static bool IsLiquidBreaking(IBlockReader reader, int x, int y, int z)
     {
-        if (x < -32000000 || z < -32000000 || x >= 32000000 || z > 32000000 || y < 0 || y >= 128) return false;
+        if (x < -32000000 || z < -32000000 || x >= 32000000 || z > 32000000 || y < 0 || y >= 128)
+        {
+            return false;
+        }
 
-        if (!reader.IsPosLoaded(x, y, z)) return true;
+        if (!reader.IsPosLoaded(x, y, z))
+        {
+            return true;
+        }
 
         int blockId = reader.GetBlockId(x, y, z);
-        if (blockId == Door.ID || blockId == IronDoor.ID || blockId == Sign.ID || blockId == Ladder.ID || blockId == SugarCane.ID) return true;
+        if (blockId == Door.ID || blockId == IronDoor.ID || blockId == Sign.ID || blockId == Ladder.ID || blockId == SugarCane.ID)
+        {
+            return true;
+        }
 
-        if (blockId == 0) return false;
+        if (blockId == 0)
+        {
+            return false;
+        }
 
         Material mat = Blocks[blockId].Material;
         return mat.BlocksMovement;
@@ -320,12 +347,21 @@ internal class BlockFlowing(int id, Material material) : BlockFluid(id, material
 
     private bool CanSpreadTo(IBlockReader reader, int x, int y, int z)
     {
-        if (x < -32000000 || z < -32000000 || x >= 32000000 || z > 32000000 || y < 0 || y >= 128) return false;
+        if (x < -32000000 || z < -32000000 || x >= 32000000 || z > 32000000 || y < 0 || y >= 128)
+        {
+            return false;
+        }
 
-        if (!reader.IsPosLoaded(x, y, z)) return false;
+        if (!reader.IsPosLoaded(x, y, z))
+        {
+            return false;
+        }
 
         int blockId = reader.GetBlockId(x, y, z);
-        if (blockId == 0) return true;
+        if (blockId == 0)
+        {
+            return true;
+        }
 
         Material mat = reader.GetMaterial(x, y, z);
         return mat != Material && mat != Material.Lava && !IsLiquidBreaking(reader, x, y, z);

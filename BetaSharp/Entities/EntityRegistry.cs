@@ -40,17 +40,18 @@ public static class EntityRegistry
     public static readonly EntityType LightningBolt = Register(world => new EntityLightningBolt(world), "LightningBolt", 65);
     public static readonly EntityType Player = Register<ServerPlayerEntity>(_ => throw new NotSupportedException("Players must be created via ServerPlayerEntity constructor"), "Player", 100);
 
+    static EntityRegistry()
+    {
+    }
+
     private static EntityType Register<T>(Func<IWorldContext, T> factory, string id, int rawId) where T : Entity
     {
-        var type = new EntityType(w => factory(w), typeof(T), id);
+        EntityType type = new(w => factory(w), typeof(T), id);
         s_registry.Register(rawId, ResourceLocation.Parse(id.ToLower()), type);
         return type;
     }
 
-    public static Entity? Create(string id, IWorldContext world)
-    {
-        return TryCreate(id, world, out Entity? entity) ? entity : null;
-    }
+    public static Entity? Create(string id, IWorldContext world) => TryCreate(id, world, out Entity? entity) ? entity : null;
 
     public static bool TryCreate(string id, IWorldContext world, [MaybeNullWhen(false)] out Entity entity, EntityType? skip = null)
     {
@@ -73,10 +74,7 @@ public static class EntityRegistry
         return false;
     }
 
-    public static Entity? Create(int rawId, IWorldContext world)
-    {
-        return TryCreate(rawId, world, out Entity? entity) ? entity : null;
-    }
+    public static Entity? Create(int rawId, IWorldContext world) => TryCreate(rawId, world, out Entity? entity) ? entity : null;
 
     public static bool TryCreate(int rawId, IWorldContext world, [MaybeNullWhen(false)] out Entity entity)
     {
@@ -112,7 +110,7 @@ public static class EntityRegistry
     public static Entity? GetEntityFromNbt(NBTTagCompound nbt, IWorldContext world)
     {
         string id = nbt.GetString("id");
-        if (TryCreate(id, world, out Entity? entity, skip: Player))
+        if (TryCreate(id, world, out Entity? entity, Player))
         {
             entity!.read(nbt);
         }
@@ -137,9 +135,5 @@ public static class EntityRegistry
 
         s_logger.LogError($"Failed to find entity type associated with name `{name}`");
         return null;
-    }
-
-    static EntityRegistry()
-    {
     }
 }

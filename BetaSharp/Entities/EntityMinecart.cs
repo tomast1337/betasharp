@@ -11,8 +11,6 @@ namespace BetaSharp.Entities;
 // TODO: BREAKING MINECART CRASHES THE GAME!!
 public class EntityMinecart : Entity, IInventory
 {
-    public override EntityType Type => EntityRegistry.Minecart;
-
     private static readonly int[][][] RailShapeVectors =
     [
         [[0, 0, -1], [0, 0, 1]],
@@ -31,27 +29,27 @@ public class EntityMinecart : Entity, IInventory
 
     private ItemStack?[] _cargoItems;
 
-    // Kept with original names for external compatibility.
-    public int minecartCurrentDamage;
-    public int minecartTimeSinceHit;
-    public int minecartRockDirection;
-    public int type;
-    public int fuel;
-    public double pushX;
-    public double pushZ;
-
-    private bool yawFlipped;
-
     // Client-side interpolation state.
     private int clientInterpolationSteps;
+    private double clientTargetPitch;
     private double clientTargetX;
     private double clientTargetY;
-    private double clientTargetZ;
     private double clientTargetYaw;
-    private double clientTargetPitch;
+    private double clientTargetZ;
     private double clientVelocityX;
     private double clientVelocityY;
     private double clientVelocityZ;
+    public int fuel;
+
+    // Kept with original names for external compatibility.
+    public int minecartCurrentDamage;
+    public int minecartRockDirection;
+    public int minecartTimeSinceHit;
+    public double pushX;
+    public double pushZ;
+    public int type;
+
+    private bool yawFlipped;
 
     public EntityMinecart(IWorldContext world) : base(world)
     {
@@ -77,30 +75,71 @@ public class EntityMinecart : Entity, IInventory
         this.type = type;
     }
 
-    protected override bool bypassesSteppingEffects()
+    public override EntityType Type => EntityRegistry.Minecart;
+
+    public int Size => 27;
+
+    public ItemStack? GetStack(int slotIndex) => _cargoItems[slotIndex];
+
+    public ItemStack? RemoveStack(int slotIndex, int amount)
     {
-        return false;
+        if (_cargoItems[slotIndex] == null)
+        {
+            return null;
+        }
+
+        ItemStack itemStack;
+        ItemStack? stack = _cargoItems[slotIndex];
+
+        if (stack is null)
+        {
+            return null;
+        }
+
+        if (stack.Count <= amount)
+        {
+            itemStack = stack;
+            _cargoItems[slotIndex] = null;
+            return itemStack;
+        }
+
+        itemStack = stack.Split(amount);
+        if (stack.Count == 0)
+        {
+            _cargoItems[slotIndex] = null;
+        }
+
+        return itemStack;
     }
 
-    public override Box? getCollisionAgainstShape(Entity entity)
+    public void SetStack(int slotIndex, ItemStack? itemStack)
     {
-        return entity.boundingBox;
+        _cargoItems[slotIndex] = itemStack;
+        if (itemStack != null && itemStack.Count > MaxCountPerStack)
+        {
+            itemStack.Count = MaxCountPerStack;
+        }
     }
 
-    public override Box? getBoundingBox()
+    public string Name => "Minecart";
+
+    public int MaxCountPerStack => 64;
+
+    public void MarkDirty()
     {
-        return boundingBox;
     }
 
-    public override bool isPushable()
-    {
-        return true;
-    }
+    public bool CanPlayerUse(EntityPlayer player) => !dead && player.getSquaredDistance(this) <= 64.0D;
 
-    public override double getPassengerRidingHeight()
-    {
-        return (double)height * 0.0D - 0.3D;
-    }
+    protected override bool bypassesSteppingEffects() => false;
+
+    public override Box? getCollisionAgainstShape(Entity entity) => entity.boundingBox;
+
+    public override Box? getBoundingBox() => boundingBox;
+
+    public override bool isPushable() => true;
+
+    public override double getPassengerRidingHeight() => height * 0.0D - 0.3D;
 
     public override bool damage(Entity entity, int amount)
     {
@@ -180,10 +219,7 @@ public class EntityMinecart : Entity, IInventory
         minecartCurrentDamage += minecartCurrentDamage * 10;
     }
 
-    public override bool isCollidable()
-    {
-        return !dead;
-    }
+    public override bool isCollidable() => !dead;
 
     public override void markDead()
     {
@@ -339,7 +375,7 @@ public class EntityMinecart : Entity, IInventory
             int[][] railEnds = RailShapeVectors[railMeta];
             double railDirX = railEnds[1][0] - railEnds[0][0];
             double railDirZ = railEnds[1][2] - railEnds[0][2];
-            double railDirLength = System.Math.Sqrt(railDirX * railDirX + railDirZ * railDirZ);
+            double railDirLength = Math.Sqrt(railDirX * railDirX + railDirZ * railDirZ);
             double velocityDotRail = velocityX * railDirX + velocityZ * railDirZ;
 
             if (velocityDotRail < 0.0D)
@@ -348,13 +384,13 @@ public class EntityMinecart : Entity, IInventory
                 railDirZ = -railDirZ;
             }
 
-            double horizontalSpeed = System.Math.Sqrt(velocityX * velocityX + velocityZ * velocityZ);
+            double horizontalSpeed = Math.Sqrt(velocityX * velocityX + velocityZ * velocityZ);
             velocityX = horizontalSpeed * railDirX / railDirLength;
             velocityZ = horizontalSpeed * railDirZ / railDirLength;
 
             if (poweredRailBraking)
             {
-                double brakingSpeed = System.Math.Sqrt(velocityX * velocityX + velocityZ * velocityZ);
+                double brakingSpeed = Math.Sqrt(velocityX * velocityX + velocityZ * velocityZ);
                 if (brakingSpeed < 0.03D)
                 {
                     velocityX = 0.0D;
@@ -485,7 +521,7 @@ public class EntityMinecart : Entity, IInventory
             if (currentTrackPosition != null && previousTrackPosition != null)
             {
                 double railHeightDeltaForce = (previousTrackPosition.Value.y - currentTrackPosition.Value.y) * 0.05D;
-                horizontalSpeed = System.Math.Sqrt(velocityX * velocityX + velocityZ * velocityZ);
+                horizontalSpeed = Math.Sqrt(velocityX * velocityX + velocityZ * velocityZ);
                 if (horizontalSpeed > 0.0D)
                 {
                     velocityX = velocityX / horizontalSpeed * (horizontalSpeed + railHeightDeltaForce);
@@ -501,7 +537,7 @@ public class EntityMinecart : Entity, IInventory
             int currentBlockZ = MathHelper.Floor(z);
             if (currentBlockX != blockX || currentBlockZ != blockZ)
             {
-                horizontalSpeed = System.Math.Sqrt(velocityX * velocityX + velocityZ * velocityZ);
+                horizontalSpeed = Math.Sqrt(velocityX * velocityX + velocityZ * velocityZ);
                 velocityX = horizontalSpeed * (currentBlockX - blockX);
                 velocityZ = horizontalSpeed * (currentBlockZ - blockZ);
             }
@@ -529,7 +565,7 @@ public class EntityMinecart : Entity, IInventory
 
             if (poweredRailActive)
             {
-                double speedMagnitude = System.Math.Sqrt(velocityX * velocityX + velocityZ * velocityZ);
+                double speedMagnitude = Math.Sqrt(velocityX * velocityX + velocityZ * velocityZ);
                 if (speedMagnitude > 0.01D)
                 {
                     double poweredRailBoost = 0.06D;
@@ -605,7 +641,7 @@ public class EntityMinecart : Entity, IInventory
         double deltaZ = prevZ - z;
         if (deltaX * deltaX + deltaZ * deltaZ > 0.001D)
         {
-            yaw = (float)(System.Math.Atan2(deltaZ, deltaX) * 180.0D / System.Math.PI);
+            yaw = (float)(Math.Atan2(deltaZ, deltaX) * 180.0D / Math.PI);
             if (yawFlipped)
             {
                 yaw += 180.0F;
@@ -631,7 +667,7 @@ public class EntityMinecart : Entity, IInventory
 
         setRotation(yaw, pitch);
 
-        var nearbyEntities = world.Entities.GetEntities(this, boundingBox.Expand(0.2D, 0.0D, 0.2D));
+        List<Entity>? nearbyEntities = world.Entities.GetEntities(this, boundingBox.Expand(0.2D, 0.0D, 0.2D));
         if (nearbyEntities != null && nearbyEntities.Count > 0)
         {
             for (int i = 0; i < nearbyEntities.Count; ++i)
@@ -662,10 +698,7 @@ public class EntityMinecart : Entity, IInventory
         }
     }
 
-    private void setTrackAlignedPosition(double x, double trackY, double z)
-    {
-        setPosition(x, trackY + standingEyeHeight, z);
-    }
+    private void setTrackAlignedPosition(double x, double trackY, double z) => setPosition(x, trackY + standingEyeHeight, z);
 
     public Vec3D? getTrackPositionOffset(double x, double y, double z, double distanceAlongTrack)
     {
@@ -699,7 +732,7 @@ public class EntityMinecart : Entity, IInventory
         int[][] railEnds = RailShapeVectors[railMeta];
         double railDirX = railEnds[1][0] - railEnds[0][0];
         double railDirZ = railEnds[1][2] - railEnds[0][2];
-        double railDirLength = System.Math.Sqrt(railDirX * railDirX + railDirZ * railDirZ);
+        double railDirLength = Math.Sqrt(railDirX * railDirX + railDirZ * railDirZ);
 
         railDirX /= railDirLength;
         railDirZ /= railDirLength;
@@ -803,15 +836,9 @@ public class EntityMinecart : Entity, IInventory
     }
 
     // Compatibility wrappers for any external code still calling the old names.
-    public Vec3D? func_515_a(double x, double y, double z, double var7)
-    {
-        return getTrackPositionOffset(x, y, z, var7);
-    }
+    public Vec3D? func_515_a(double x, double y, double z, double var7) => getTrackPositionOffset(x, y, z, var7);
 
-    public Vec3D? func_514_g(double x, double y, double z)
-    {
-        return getTrackPosition(x, y, z);
-    }
+    public Vec3D? func_514_g(double x, double y, double z) => getTrackPosition(x, y, z);
 
     public override void writeNbt(NBTTagCompound nbt)
     {
@@ -870,10 +897,7 @@ public class EntityMinecart : Entity, IInventory
         }
     }
 
-    public override float getShadowRadius()
-    {
-        return 0.0F;
-    }
+    public override float getShadowRadius() => 0.0F;
 
     public override void onCollision(Entity entity)
     {
@@ -982,58 +1006,6 @@ public class EntityMinecart : Entity, IInventory
         }
     }
 
-    public int Size => 27;
-
-    public ItemStack? GetStack(int slotIndex)
-    {
-        return _cargoItems[slotIndex];
-    }
-
-    public ItemStack? RemoveStack(int slotIndex, int amount)
-    {
-        if (_cargoItems[slotIndex] == null)
-        {
-            return null;
-        }
-
-        ItemStack itemStack;
-        ItemStack? stack = _cargoItems[slotIndex];
-
-        if (stack is null) return null;
-
-        if (stack.Count <= amount)
-        {
-            itemStack = stack;
-            _cargoItems[slotIndex] = null;
-            return itemStack;
-        }
-
-        itemStack = stack.Split(amount);
-        if (stack.Count == 0)
-        {
-            _cargoItems[slotIndex] = null;
-        }
-
-        return itemStack;
-    }
-
-    public void SetStack(int slotIndex, ItemStack? itemStack)
-    {
-        _cargoItems[slotIndex] = itemStack;
-        if (itemStack != null && itemStack.Count > MaxCountPerStack)
-        {
-            itemStack.Count = MaxCountPerStack;
-        }
-    }
-
-    public string Name => "Minecart";
-
-    public int MaxCountPerStack => 64;
-
-    public void MarkDirty()
-    {
-    }
-
     public override bool interact(EntityPlayer player)
     {
         if (type == 0)
@@ -1091,13 +1063,8 @@ public class EntityMinecart : Entity, IInventory
 
     public override void setVelocityClient(double velocityX, double velocityY, double velocityZ)
     {
-        clientVelocityX = base.velocityX = velocityX;
-        clientVelocityY = base.velocityY = velocityY;
-        clientVelocityZ = base.velocityZ = velocityZ;
-    }
-
-    public bool CanPlayerUse(EntityPlayer player)
-    {
-        return !dead && player.getSquaredDistance(this) <= 64.0D;
+        clientVelocityX = this.velocityX = velocityX;
+        clientVelocityY = this.velocityY = velocityY;
+        clientVelocityZ = this.velocityZ = velocityZ;
     }
 }

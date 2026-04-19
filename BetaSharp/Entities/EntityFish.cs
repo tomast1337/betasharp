@@ -9,27 +9,26 @@ namespace BetaSharp.Entities;
 
 public class EntityFish : Entity
 {
-    public override EntityType Type => EntityRegistry.FishHook;
-    private int xTile;
-    private int yTile;
-    private int zTile;
-    private int inTile;
-    private bool inGround;
-    public int shake;
     public EntityPlayer angler;
-    private int ticksInGround;
-    private int ticksInAir;
-    private int ticksCatchable;
     public Entity bobber;
-    private int positionUpdateTicks;
-    private double targetX;
-    private double targetY;
-    private double targetZ;
-    private double targetYaw;
-    private double targetPitch;
     private double clientVelocityX;
     private double clientVelocityY;
     private double clientVelocityZ;
+    private bool inGround;
+    private int inTile;
+    private int positionUpdateTicks;
+    public int shake;
+    private double targetPitch;
+    private double targetX;
+    private double targetY;
+    private double targetYaw;
+    private double targetZ;
+    private int ticksCatchable;
+    private int ticksInAir;
+    private int ticksInGround;
+    private int xTile;
+    private int yTile;
+    private int zTile;
 
     public EntityFish(IWorldContext world) : base(world)
     {
@@ -67,18 +66,20 @@ public class EntityFish : Entity
         angler = player;
         angler.fishHook = this;
         setBoundingBoxSpacing(0.25F, 0.25F);
-        setPositionAndAnglesKeepPrevAngles(player.x, player.y + 1.62D - (double)player.standingEyeHeight, player.z, player.yaw, player.pitch);
-        x -= (double)(MathHelper.Cos(yaw / 180.0F * (float)System.Math.PI) * 0.16F);
-        y -= (double)0.1F;
-        z -= (double)(MathHelper.Sin(yaw / 180.0F * (float)System.Math.PI) * 0.16F);
+        setPositionAndAnglesKeepPrevAngles(player.x, player.y + 1.62D - player.standingEyeHeight, player.z, player.yaw, player.pitch);
+        x -= MathHelper.Cos(yaw / 180.0F * (float)Math.PI) * 0.16F;
+        y -= 0.1F;
+        z -= MathHelper.Sin(yaw / 180.0F * (float)Math.PI) * 0.16F;
         setPosition(x, y, z);
         standingEyeHeight = 0.0F;
         float speed = 0.4F;
-        base.velocityX = (double)(-MathHelper.Sin(yaw / 180.0F * (float)System.Math.PI) * MathHelper.Cos(pitch / 180.0F * (float)System.Math.PI) * speed);
-        base.velocityZ = (double)(MathHelper.Cos(yaw / 180.0F * (float)System.Math.PI) * MathHelper.Cos(pitch / 180.0F * (float)System.Math.PI) * speed);
-        base.velocityY = (double)(-MathHelper.Sin(pitch / 180.0F * (float)System.Math.PI) * speed);
-        setHeading(base.velocityX, base.velocityY, base.velocityZ, 1.5F, 1.0F);
+        velocityX = -MathHelper.Sin(yaw / 180.0F * (float)Math.PI) * MathHelper.Cos(pitch / 180.0F * (float)Math.PI) * speed;
+        velocityZ = MathHelper.Cos(yaw / 180.0F * (float)Math.PI) * MathHelper.Cos(pitch / 180.0F * (float)Math.PI) * speed;
+        velocityY = -MathHelper.Sin(pitch / 180.0F * (float)Math.PI) * speed;
+        setHeading(velocityX, velocityY, velocityZ, 1.5F, 1.0F);
     }
+
+    public override EntityType Type => EntityRegistry.FishHook;
 
 
     public override bool shouldRender(double distanceSquared)
@@ -91,21 +92,21 @@ public class EntityFish : Entity
     public void setHeading(double dirX, double dirY, double dirZ, float speed, float spread)
     {
         float length = MathHelper.Sqrt(dirX * dirX + dirY * dirY + dirZ * dirZ);
-        dirX /= (double)length;
-        dirY /= (double)length;
-        dirZ /= (double)length;
-        dirX += random.NextGaussian() * (double)0.0075F * (double)spread;
-        dirY += random.NextGaussian() * (double)0.0075F * (double)spread;
-        dirZ += random.NextGaussian() * (double)0.0075F * (double)spread;
-        dirX *= (double)speed;
-        dirY *= (double)speed;
-        dirZ *= (double)speed;
-        base.velocityX = dirX;
-        base.velocityY = dirY;
-        base.velocityZ = dirZ;
+        dirX /= length;
+        dirY /= length;
+        dirZ /= length;
+        dirX += random.NextGaussian() * 0.0075F * spread;
+        dirY += random.NextGaussian() * 0.0075F * spread;
+        dirZ += random.NextGaussian() * 0.0075F * spread;
+        dirX *= speed;
+        dirY *= speed;
+        dirZ *= speed;
+        velocityX = dirX;
+        velocityY = dirY;
+        velocityZ = dirZ;
         float horizontalLength = MathHelper.Sqrt(dirX * dirX + dirZ * dirZ);
-        prevYaw = yaw = (float)(System.Math.Atan2(dirX, dirZ) * 180.0D / (double)((float)System.Math.PI));
-        prevPitch = pitch = (float)(System.Math.Atan2(dirY, (double)horizontalLength) * 180.0D / (double)((float)System.Math.PI));
+        prevYaw = yaw = (float)(Math.Atan2(dirX, dirZ) * 180.0D / (float)Math.PI);
+        prevPitch = pitch = (float)(Math.Atan2(dirY, horizontalLength) * 180.0D / (float)Math.PI);
         ticksInGround = 0;
     }
 
@@ -114,19 +115,19 @@ public class EntityFish : Entity
         targetX = newX;
         targetY = newY;
         targetZ = newZ;
-        targetYaw = (double)newYaw;
-        targetPitch = (double)newPitch;
+        targetYaw = newYaw;
+        targetPitch = newPitch;
         positionUpdateTicks = interpolationSteps;
-        base.velocityX = clientVelocityX;
-        base.velocityY = clientVelocityY;
-        base.velocityZ = clientVelocityZ;
+        velocityX = clientVelocityX;
+        velocityY = clientVelocityY;
+        velocityZ = clientVelocityZ;
     }
 
     public override void setVelocityClient(double motionX, double motionY, double motionZ)
     {
-        clientVelocityX = base.velocityX = motionX;
-        clientVelocityY = base.velocityY = motionY;
-        clientVelocityZ = base.velocityZ = motionZ;
+        clientVelocityX = velocityX = motionX;
+        clientVelocityY = velocityY = motionY;
+        clientVelocityZ = velocityZ = motionZ;
     }
 
     public override void tick()
@@ -134,12 +135,12 @@ public class EntityFish : Entity
         base.tick();
         if (positionUpdateTicks > 0)
         {
-            double interpX = x + (targetX - x) / (double)positionUpdateTicks;
-            double interpY = y + (targetY - y) / (double)positionUpdateTicks;
-            double interpZ = z + (targetZ - z) / (double)positionUpdateTicks;
+            double interpX = x + (targetX - x) / positionUpdateTicks;
+            double interpY = y + (targetY - y) / positionUpdateTicks;
+            double interpZ = z + (targetZ - z) / positionUpdateTicks;
 
             double yawDelta;
-            for (yawDelta = targetYaw - (double)yaw; yawDelta < -180.0D; yawDelta += 360.0D)
+            for (yawDelta = targetYaw - yaw; yawDelta < -180.0D; yawDelta += 360.0D)
             {
             }
 
@@ -148,8 +149,8 @@ public class EntityFish : Entity
                 yawDelta -= 360.0D;
             }
 
-            yaw = (float)((double)yaw + yawDelta / (double)positionUpdateTicks);
-            pitch = (float)((double)pitch + (targetPitch - (double)pitch) / (double)positionUpdateTicks);
+            yaw = (float)(yaw + yawDelta / positionUpdateTicks);
+            pitch = (float)(pitch + (targetPitch - pitch) / positionUpdateTicks);
             --positionUpdateTicks;
             setPosition(interpX, interpY, interpZ);
             setRotation(yaw, pitch);
@@ -171,7 +172,7 @@ public class EntityFish : Entity
                     if (!bobber.dead)
                     {
                         x = bobber.x;
-                        y = bobber.boundingBox.MinY + (double)bobber.height * 0.8D;
+                        y = bobber.boundingBox.MinY + bobber.height * 0.8D;
                         z = bobber.z;
                         return;
                     }
@@ -200,9 +201,9 @@ public class EntityFish : Entity
                 }
 
                 inGround = false;
-                base.velocityX *= (double)(random.NextFloat() * 0.2F);
-                base.velocityY *= (double)(random.NextFloat() * 0.2F);
-                base.velocityZ *= (double)(random.NextFloat() * 0.2F);
+                velocityX *= random.NextFloat() * 0.2F;
+                velocityY *= random.NextFloat() * 0.2F;
+                velocityZ *= random.NextFloat() * 0.2F;
                 ticksInGround = 0;
                 ticksInAir = 0;
             }
@@ -211,18 +212,18 @@ public class EntityFish : Entity
                 ++ticksInAir;
             }
 
-            Vec3D rayStart = new Vec3D(x, y, z);
-            Vec3D rayEnd = new Vec3D(x + base.velocityX, y + base.velocityY, z + base.velocityZ);
+            Vec3D rayStart = new(x, y, z);
+            Vec3D rayEnd = new(x + velocityX, y + velocityY, z + velocityZ);
             HitResult hit = world.Reader.Raycast(rayStart, rayEnd);
             rayStart = new Vec3D(x, y, z);
-            rayEnd = new Vec3D(x + base.velocityX, y + base.velocityY, z + base.velocityZ);
+            rayEnd = new Vec3D(x + velocityX, y + velocityY, z + velocityZ);
             if (hit.Type != HitResultType.MISS)
             {
                 rayEnd = new Vec3D(hit.Pos.x, hit.Pos.y, hit.Pos.z);
             }
 
             Entity hitEntity = null;
-            var entities = world.Entities.GetEntities(this, boundingBox.Stretch(base.velocityX, base.velocityY, base.velocityZ).Expand(1.0D, 1.0D, 1.0D));
+            List<Entity> entities = world.Entities.GetEntities(this, boundingBox.Stretch(velocityX, velocityY, velocityZ).Expand(1.0D, 1.0D, 1.0D));
             double minHitDistance = 0.0D;
 
             double buoyancy;
@@ -232,7 +233,7 @@ public class EntityFish : Entity
                 if (entity.isCollidable() && (entity != angler || ticksInAir >= 5))
                 {
                     float expandAmount = 0.3F;
-                    Box expandedBox = entity.boundingBox.Expand((double)expandAmount, (double)expandAmount, (double)expandAmount);
+                    Box expandedBox = entity.boundingBox.Expand(expandAmount, expandAmount, expandAmount);
                     HitResult entityHit = expandedBox.Raycast(rayStart, rayEnd);
                     if (entityHit.Type != HitResultType.MISS)
                     {
@@ -268,11 +269,11 @@ public class EntityFish : Entity
 
             if (!inGround)
             {
-                base.move(base.velocityX, base.velocityY, base.velocityZ);
-                float horizontalSpeed = MathHelper.Sqrt(base.velocityX * base.velocityX + base.velocityZ * base.velocityZ);
-                yaw = (float)(System.Math.Atan2(base.velocityX, base.velocityZ) * 180.0D / (double)((float)System.Math.PI));
+                base.move(velocityX, velocityY, velocityZ);
+                float horizontalSpeed = MathHelper.Sqrt(velocityX * velocityX + velocityZ * velocityZ);
+                yaw = (float)(Math.Atan2(velocityX, velocityZ) * 180.0D / (float)Math.PI);
 
-                for (pitch = (float)(System.Math.Atan2(base.velocityY, (double)horizontalSpeed) * 180.0D / (double)((float)System.Math.PI)); pitch - prevPitch < -180.0F; prevPitch -= 360.0F)
+                for (pitch = (float)(Math.Atan2(velocityY, horizontalSpeed) * 180.0D / (float)Math.PI); pitch - prevPitch < -180.0F; prevPitch -= 360.0F)
                 {
                 }
 
@@ -304,12 +305,12 @@ public class EntityFish : Entity
 
                 for (int segment = 0; segment < waterCheckSegments; ++segment)
                 {
-                    double segmentBottom = boundingBox.MinY + (boundingBox.MaxY - boundingBox.MinY) * (double)(segment + 0) / (double)waterCheckSegments - 0.125D + 0.125D;
-                    double segmentTop = boundingBox.MinY + (boundingBox.MaxY - boundingBox.MinY) * (double)(segment + 1) / (double)waterCheckSegments - 0.125D + 0.125D;
-                    Box segmentBox = new Box(boundingBox.MinX, segmentBottom, boundingBox.MinZ, boundingBox.MaxX, segmentTop, boundingBox.MaxZ);
+                    double segmentBottom = boundingBox.MinY + (boundingBox.MaxY - boundingBox.MinY) * (segment + 0) / waterCheckSegments - 0.125D + 0.125D;
+                    double segmentTop = boundingBox.MinY + (boundingBox.MaxY - boundingBox.MinY) * (segment + 1) / waterCheckSegments - 0.125D + 0.125D;
+                    Box segmentBox = new(boundingBox.MinX, segmentBottom, boundingBox.MinZ, boundingBox.MaxX, segmentTop, boundingBox.MaxZ);
                     if (world.Reader.IsMaterialInBox(segmentBox, m => m == Material.Water))
                     {
-                        waterSubmersion += 1.0D / (double)waterCheckSegments;
+                        waterSubmersion += 1.0D / waterCheckSegments;
                     }
                 }
 
@@ -330,25 +331,25 @@ public class EntityFish : Entity
                         if (random.NextInt(catchDelay) == 0)
                         {
                             ticksCatchable = random.NextInt(30) + 10;
-                            base.velocityY -= (double)0.2F;
+                            velocityY -= 0.2F;
                             world.Broadcaster.PlaySoundAtEntity(this, "random.splash", 0.25F, 1.0F + (random.NextFloat() - random.NextFloat()) * 0.4F);
-                            float waterSurface = (float)MathHelper.Floor(boundingBox.MinY);
+                            float waterSurface = MathHelper.Floor(boundingBox.MinY);
 
                             int particle;
                             float offsetX;
                             float offsetZ;
-                            for (particle = 0; (float)particle < 1.0F + width * 20.0F; ++particle)
+                            for (particle = 0; particle < 1.0F + width * 20.0F; ++particle)
                             {
                                 offsetX = (random.NextFloat() * 2.0F - 1.0F) * width;
                                 offsetZ = (random.NextFloat() * 2.0F - 1.0F) * width;
-                                world.Broadcaster.AddParticle("bubble", x + (double)offsetX, (double)(waterSurface + 1.0F), z + (double)offsetZ, base.velocityX, base.velocityY - (double)(random.NextFloat() * 0.2F), base.velocityZ);
+                                world.Broadcaster.AddParticle("bubble", x + offsetX, waterSurface + 1.0F, z + offsetZ, velocityX, velocityY - random.NextFloat() * 0.2F, velocityZ);
                             }
 
-                            for (particle = 0; (float)particle < 1.0F + width * 20.0F; ++particle)
+                            for (particle = 0; particle < 1.0F + width * 20.0F; ++particle)
                             {
                                 offsetX = (random.NextFloat() * 2.0F - 1.0F) * width;
                                 offsetZ = (random.NextFloat() * 2.0F - 1.0F) * width;
-                                world.Broadcaster.AddParticle("splash", x + (double)offsetX, (double)(waterSurface + 1.0F), z + (double)offsetZ, base.velocityX, base.velocityY, base.velocityZ);
+                                world.Broadcaster.AddParticle("splash", x + offsetX, waterSurface + 1.0F, z + offsetZ, velocityX, velocityY, velocityZ);
                             }
                         }
                     }
@@ -356,20 +357,20 @@ public class EntityFish : Entity
 
                 if (ticksCatchable > 0)
                 {
-                    base.velocityY -= (double)(random.NextFloat() * random.NextFloat() * random.NextFloat()) * 0.2D;
+                    velocityY -= random.NextFloat() * random.NextFloat() * random.NextFloat() * 0.2D;
                 }
 
                 buoyancy = waterSubmersion * 2.0D - 1.0D;
-                base.velocityY += (double)0.04F * buoyancy;
+                velocityY += 0.04F * buoyancy;
                 if (waterSubmersion > 0.0D)
                 {
-                    drag = (float)((double)drag * 0.9D);
-                    base.velocityY *= 0.8D;
+                    drag = (float)(drag * 0.9D);
+                    velocityY *= 0.8D;
                 }
 
-                base.velocityX *= (double)drag;
-                base.velocityY *= (double)drag;
-                base.velocityZ *= (double)drag;
+                velocityX *= drag;
+                velocityY *= drag;
+                velocityZ *= drag;
                 setPosition(x, y, z);
             }
         }
@@ -395,10 +396,7 @@ public class EntityFish : Entity
         inGround = nbt.GetByte("inGround") == 1;
     }
 
-    public override float getShadowRadius()
-    {
-        return 0.0F;
-    }
+    public override float getShadowRadius() => 0.0F;
 
     public int catchFish()
     {
@@ -408,23 +406,23 @@ public class EntityFish : Entity
             double deltaX = angler.x - x;
             double deltaY = angler.y - y;
             double deltaZ = angler.z - z;
-            double distance = (double)MathHelper.Sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+            double distance = MathHelper.Sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
             double pullStrength = 0.1D;
             bobber.velocityX += deltaX * pullStrength;
-            bobber.velocityY += deltaY * pullStrength + (double)MathHelper.Sqrt(distance) * 0.08D;
+            bobber.velocityY += deltaY * pullStrength + MathHelper.Sqrt(distance) * 0.08D;
             bobber.velocityZ += deltaZ * pullStrength;
             result = 3;
         }
         else if (ticksCatchable > 0)
         {
-            EntityItem fishItem = new EntityItem(world, x, y, z, new ItemStack(Item.RawFish));
+            EntityItem fishItem = new(world, x, y, z, new ItemStack(Item.RawFish));
             double deltaX = angler.x - x;
             double deltaY = angler.y - y;
             double deltaZ = angler.z - z;
-            double distance = (double)MathHelper.Sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+            double distance = MathHelper.Sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
             double pullStrength = 0.1D;
             fishItem.velocityX = deltaX * pullStrength;
-            fishItem.velocityY = deltaY * pullStrength + (double)MathHelper.Sqrt(distance) * 0.08D;
+            fishItem.velocityY = deltaY * pullStrength + MathHelper.Sqrt(distance) * 0.08D;
             fishItem.velocityZ = deltaZ * pullStrength;
             world.SpawnEntity(fishItem);
             angler.increaseStat(Stats.Stats.FishCaughtStat, 1);

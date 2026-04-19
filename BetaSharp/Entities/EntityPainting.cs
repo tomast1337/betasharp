@@ -8,13 +8,12 @@ namespace BetaSharp.Entities;
 
 public class EntityPainting : Entity
 {
-    public override EntityType Type => EntityRegistry.Painting;
     private int _tickCounter;
+    public EnumArt Art;
     public int Direction;
     public int XPosition;
     public int YPosition;
     public int ZPosition;
-    public EnumArt Art;
 
     public EntityPainting(IWorldContext world) : base(world)
     {
@@ -32,7 +31,7 @@ public class EntityPainting : Entity
 
         List<EnumArt> validPaintings = new();
 
-        foreach (var art in EnumArt.Values)
+        foreach (EnumArt art in EnumArt.Values)
         {
             Art = art;
             SetFacing(direction);
@@ -50,7 +49,7 @@ public class EntityPainting : Entity
         SetFacing(direction);
     }
 
-    public EntityPainting(IWorldContext world, int x, int y, int z, int direction, String title) : this(world)
+    public EntityPainting(IWorldContext world, int x, int y, int z, int direction, string title) : this(world)
     {
         XPosition = x;
         YPosition = y;
@@ -61,20 +60,26 @@ public class EntityPainting : Entity
         SetFacing(direction);
     }
 
+    public override EntityType Type => EntityRegistry.Painting;
+
 
     private void SetFacing(int facing)
     {
         Direction = facing;
-        prevYaw = yaw = (facing * 90);
+        prevYaw = yaw = facing * 90;
 
         float halfWidth = Art.SizeX;
         float halfHeight = Art.SizeY;
         float halfDepth = Art.SizeX;
 
         if (facing != 0 && facing != 2)
+        {
             halfWidth = 0.5F;
+        }
         else
+        {
             halfDepth = 0.5F;
+        }
 
         halfWidth /= 32.0F;
         halfHeight /= 32.0F;
@@ -118,10 +123,7 @@ public class EntityPainting : Entity
             centerZ + halfDepth + margin);
     }
 
-    private static float GetArtOffset(int artSize)
-    {
-        return artSize == 32 ? 0.5F : (artSize == 64 ? 0.5F : 0.0F);
-    }
+    private static float GetArtOffset(int artSize) => artSize == 32 ? 0.5F : artSize == 64 ? 0.5F : 0.0F;
 
     public override void tick()
     {
@@ -151,15 +153,15 @@ public class EntityPainting : Entity
         {
             case 0:
             case 2:
-                startX = MathHelper.Floor(x - (Art.SizeX / 32.0F));
+                startX = MathHelper.Floor(x - Art.SizeX / 32.0F);
                 break;
             case 1:
             case 3:
-                startZ = MathHelper.Floor(z - (Art.SizeX / 32.0F));
+                startZ = MathHelper.Floor(z - Art.SizeX / 32.0F);
                 break;
         }
 
-        int startY = MathHelper.Floor(y - (Art.SizeY / 32.0F));
+        int startY = MathHelper.Floor(y - Art.SizeY / 32.0F);
 
         for (int dx = 0; dx < widthInBlocks; ++dx)
         {
@@ -182,9 +184,9 @@ public class EntityPainting : Entity
             }
         }
 
-        var entitiesInBox = world.Entities.GetEntities(this, boundingBox);
+        List<Entity> entitiesInBox = world.Entities.GetEntities(this, boundingBox);
 
-        foreach (var entity in entitiesInBox)
+        foreach (Entity entity in entitiesInBox)
         {
             if (entity is EntityPainting)
             {
@@ -204,6 +206,7 @@ public class EntityPainting : Entity
             scheduleVelocityUpdate();
             DropAsItem();
         }
+
         return true;
     }
 
@@ -247,7 +250,10 @@ public class EntityPainting : Entity
 
     private void DropAsItem()
     {
-        if (dead || world.IsRemote) return;
+        if (dead || world.IsRemote)
+        {
+            return;
+        }
 
         markDead();
         world.SpawnEntity(new EntityItem(world, x, y, z, new ItemStack(Item.Painting)));

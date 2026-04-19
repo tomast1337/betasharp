@@ -7,7 +7,6 @@ namespace BetaSharp.Entities;
 
 public class EntityTNTPrimed : Entity
 {
-    public override EntityType Type => EntityRegistry.PrimedTnt;
     public int fuse;
 
     public EntityTNTPrimed(IWorldContext world) : base(world)
@@ -21,41 +20,37 @@ public class EntityTNTPrimed : Entity
     public EntityTNTPrimed(IWorldContext world, double x, double y, double z) : base(world)
     {
         setPosition(x, y, z);
-        float randomAngle = (float)(Random.Shared.NextSingle() * (Math.PI) * 2.0D);
-        velocityX = (double)(-MathHelper.Sin(randomAngle * (float)Math.PI / 180.0F) * 0.02F);
-        velocityY = (double)0.2F;
-        velocityZ = (double)(-MathHelper.Cos(randomAngle * (float)Math.PI / 180.0F) * 0.02F);
+        float randomAngle = (float)(Random.Shared.NextSingle() * Math.PI * 2.0D);
+        velocityX = -MathHelper.Sin(randomAngle * (float)Math.PI / 180.0F) * 0.02F;
+        velocityY = 0.2F;
+        velocityZ = -MathHelper.Cos(randomAngle * (float)Math.PI / 180.0F) * 0.02F;
         fuse = 80;
         prevX = x;
         prevY = y;
         prevZ = z;
     }
 
+    public override EntityType Type => EntityRegistry.PrimedTnt;
 
-    protected override bool bypassesSteppingEffects()
-    {
-        return false;
-    }
 
-    public override bool isCollidable()
-    {
-        return !dead;
-    }
+    protected override bool bypassesSteppingEffects() => false;
+
+    public override bool isCollidable() => !dead;
 
     public override void tick()
     {
         prevX = x;
         prevY = y;
         prevZ = z;
-        velocityY -= (double)0.04F;
+        velocityY -= 0.04F;
         move(velocityX, velocityY, velocityZ);
-        velocityX *= (double)0.98F;
-        velocityY *= (double)0.98F;
-        velocityZ *= (double)0.98F;
+        velocityX *= 0.98F;
+        velocityY *= 0.98F;
+        velocityZ *= 0.98F;
         if (onGround)
         {
-            velocityX *= (double)0.7F;
-            velocityZ *= (double)0.7F;
+            velocityX *= 0.7F;
+            velocityZ *= 0.7F;
             velocityY *= -0.5D;
         }
 
@@ -75,7 +70,6 @@ public class EntityTNTPrimed : Entity
         {
             world.Broadcaster.AddParticle("smoke", x, y + 0.5D, z, 0.0D, 0.0D, 0.0D);
         }
-
     }
 
     private void explode()
@@ -86,21 +80,12 @@ public class EntityTNTPrimed : Entity
         }
 
         const float power = 4.0F;
-        world.CreateExplosion((Entity)null, x, y, z, power);
+        world.CreateExplosion(null, x, y, z, power);
     }
 
-    public override void writeNbt(NBTTagCompound nbt)
-    {
-        nbt.SetByte("Fuse", (sbyte)fuse);
-    }
+    public override void writeNbt(NBTTagCompound nbt) => nbt.SetByte("Fuse", (sbyte)fuse);
 
-    public override void readNbt(NBTTagCompound nbt)
-    {
-        fuse = nbt.GetByte("Fuse");
-    }
+    public override void readNbt(NBTTagCompound nbt) => fuse = nbt.GetByte("Fuse");
 
-    public override float getShadowRadius()
-    {
-        return 0.0F;
-    }
+    public override float getShadowRadius() => 0.0F;
 }

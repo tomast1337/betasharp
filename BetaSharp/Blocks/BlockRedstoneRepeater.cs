@@ -65,13 +65,16 @@ public class BlockRedstoneRepeater : Block
 
     public override bool IsPoweringSide(IBlockReader reader, int x, int y, int z, int side)
     {
-        if (!_lit) return false;
+        if (!_lit)
+        {
+            return false;
+        }
 
         int facing = reader.GetBlockMeta(x, y, z) & 3;
-        return facing == 0 && side == 3 ||
-               facing == 1 && side == 4 ||
-               facing == 2 && side == 2 ||
-               facing == 3 && side == 5;
+        return (facing == 0 && side == 3) ||
+               (facing == 1 && side == 4) ||
+               (facing == 2 && side == 2) ||
+               (facing == 3 && side == 5);
     }
 
     public override void NeighborUpdate(OnTickEvent @event)
@@ -86,7 +89,7 @@ public class BlockRedstoneRepeater : Block
             int meta = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
             bool powered = IsPowered(@event.World.Reader, @event.World.Redstone, @event.X, @event.Y, @event.Z, meta);
             int delaySetting = (meta & 12) >> 2;
-            if (_lit && !powered || !_lit && powered)
+            if ((_lit && !powered) || (!_lit && powered))
             {
                 @event.World.TickScheduler.ScheduleBlockUpdate(@event.X, @event.Y, @event.Z, ID, s_delay[delaySetting] * 2);
             }
@@ -96,7 +99,10 @@ public class BlockRedstoneRepeater : Block
     public override void OnBreak(OnBreakEvent @event)
     {
         base.OnBreak(@event);
-        if (@event.World.IsRemote) return;
+        if (@event.World.IsRemote)
+        {
+            return;
+        }
 
         int meta = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
         NotifyTargetNeighbors(@event.World, @event.X, @event.Y, @event.Z, meta);
@@ -150,7 +156,10 @@ public class BlockRedstoneRepeater : Block
         @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y - 1, @event.Z, ID);
         @event.World.Broadcaster.NotifyNeighbors(@event.X, @event.Y + 1, @event.Z, ID);
 
-        if (!@event.World.IsRemote) NotifyTargetNeighbors(@event.World, @event.X, @event.Y, @event.Z, meta);
+        if (!@event.World.IsRemote)
+        {
+            NotifyTargetNeighbors(@event.World, @event.X, @event.Y, @event.Z, meta);
+        }
     }
 
     private void NotifyTargetNeighbors(IWorldContext ctx, int x, int y, int z, int meta)
@@ -176,7 +185,10 @@ public class BlockRedstoneRepeater : Block
 
     public override void RandomDisplayTick(OnTickEvent ctx)
     {
-        if (!_lit) return;
+        if (!_lit)
+        {
+            return;
+        }
 
         int meta = ctx.World.Reader.GetBlockMeta(ctx.X, ctx.Y, ctx.Z);
         double particleX = ctx.X + 0.5F + (Random.Shared.NextSingle() - 0.5F) * 0.2D;

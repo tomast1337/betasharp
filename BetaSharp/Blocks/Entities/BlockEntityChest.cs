@@ -1,12 +1,7 @@
-using BetaSharp.Entities;
-using BetaSharp.Inventorys;
-using BetaSharp.Items;
-using BetaSharp.NBT;
-
 namespace BetaSharp.Blocks.Entities;
 
 /// <summary>
-/// Block entity for a chest, storing the inventory.
+///     Block entity for a chest, storing the inventory.
 /// </summary>
 public class BlockEntityChest : BlockEntityWithInventory<BlockEntityChest>
 {

@@ -8,10 +8,7 @@ public abstract class EntityMonster : EntityCreature, Monster
 {
     protected int attackStrength = 2;
 
-    public EntityMonster(IWorldContext world) : base(world)
-    {
-        health = 20;
-    }
+    public EntityMonster(IWorldContext world) : base(world) => health = 20;
 
     public override void tickMovement()
     {
@@ -31,12 +28,11 @@ public abstract class EntityMonster : EntityCreature, Monster
         {
             markDead();
         }
-
     }
 
     protected override Entity? findPlayerToAttack()
     {
-        EntityPlayer? player = world.Entities.GetClosestPlayerTarget(this.x, this.y, this.z, 16.0D);
+        EntityPlayer? player = world.Entities.GetClosestPlayerTarget(x, y, z, 16.0D);
         return player != null && canSee(player) ? player : null;
     }
 
@@ -56,15 +52,11 @@ public abstract class EntityMonster : EntityCreature, Monster
 
                 return true;
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     protected override void attackEntity(Entity entity, float distance)
@@ -74,23 +66,13 @@ public abstract class EntityMonster : EntityCreature, Monster
             attackTime = 20;
             entity.damage(this, attackStrength);
         }
-
     }
 
-    protected override float getBlockPathWeight(int x, int y, int z)
-    {
-        return 0.5F - world.Lighting.GetLuminance(x, y, z);
-    }
+    protected override float getBlockPathWeight(int x, int y, int z) => 0.5F - world.Lighting.GetLuminance(x, y, z);
 
-    public override void writeNbt(NBTTagCompound nbt)
-    {
-        base.writeNbt(nbt);
-    }
+    public override void writeNbt(NBTTagCompound nbt) => base.writeNbt(nbt);
 
-    public override void readNbt(NBTTagCompound nbt)
-    {
-        base.readNbt(nbt);
-    }
+    public override void readNbt(NBTTagCompound nbt) => base.readNbt(nbt);
 
     public override bool canSpawn()
     {

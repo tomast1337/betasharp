@@ -1,6 +1,4 @@
 using BetaSharp.Blocks.Materials;
-using BetaSharp.Entities;
-using BetaSharp.Inventorys;
 using BetaSharp.Items;
 using BetaSharp.NBT;
 using BetaSharp.Recipes;
@@ -9,7 +7,7 @@ using BetaSharp.Worlds.Core.Systems;
 namespace BetaSharp.Blocks.Entities;
 
 /// <summary>
-/// Block entity for the furnace block, allowing it to store inventory and smelt items.
+///     Block entity for the furnace block, allowing it to store inventory and smelt items.
 /// </summary>
 public class BlockEntityFurnace : BlockEntityWithInventory<BlockEntityFurnace>
 {
@@ -24,6 +22,8 @@ public class BlockEntityFurnace : BlockEntityWithInventory<BlockEntityFurnace>
     public int CookTime { get; set; }
 
     public int FuelTime { get; set; }
+
+    public bool IsBurning => BurnTime > 0;
 
     public override void ReadNbt(NBTTagCompound nbt)
     {
@@ -41,10 +41,7 @@ public class BlockEntityFurnace : BlockEntityWithInventory<BlockEntityFurnace>
         nbt.SetShort("CookTime", (short)CookTime);
     }
 
-    public int GetCookTimeDelta(int multiplier)
-    {
-        return CookTime * multiplier / 200;
-    }
+    public int GetCookTimeDelta(int multiplier) => CookTime * multiplier / 200;
 
     public int GetFuelTimeDelta(int multiplier)
     {
@@ -55,8 +52,6 @@ public class BlockEntityFurnace : BlockEntityWithInventory<BlockEntityFurnace>
 
         return BurnTime * multiplier / FuelTime;
     }
-
-    public bool IsBurning => BurnTime > 0;
 
     public override void Tick(EntityManager entities)
     {
@@ -152,11 +147,17 @@ public class BlockEntityFurnace : BlockEntityWithInventory<BlockEntityFurnace>
         {
             ItemStack? inv0 = _inventory[0];
 
-            if (inv0 is null) return;
+            if (inv0 is null)
+            {
+                return;
+            }
 
             ItemStack? outputStack = SmeltingRecipeManager.getInstance().Craft(inv0.getItem().id);
 
-            if (outputStack == null) return;
+            if (outputStack == null)
+            {
+                return;
+            }
 
             if (_inventory[2] == null)
             {
@@ -173,7 +174,10 @@ public class BlockEntityFurnace : BlockEntityWithInventory<BlockEntityFurnace>
 
             inv0 = _inventory[0];
 
-            if (inv0 is null) return;
+            if (inv0 is null)
+            {
+                return;
+            }
 
             inv0.Count--;
             if (inv0.Count <= 0)

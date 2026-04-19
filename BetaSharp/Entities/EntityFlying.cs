@@ -20,9 +20,9 @@ public abstract class EntityFlying : EntityLiving
         {
             moveNonSolid(strafe, forward, 0.02F);
             move(velocityX, velocityY, velocityZ);
-            velocityX *= (double)0.8F;
-            velocityY *= (double)0.8F;
-            velocityZ *= (double)0.8F;
+            velocityX *= 0.8F;
+            velocityY *= 0.8F;
+            velocityZ *= 0.8F;
         }
         else if (isTouchingLava())
         {
@@ -59,9 +59,9 @@ public abstract class EntityFlying : EntityLiving
             }
 
             move(velocityX, velocityY, velocityZ);
-            velocityX *= (double)friction;
-            velocityY *= (double)friction;
-            velocityZ *= (double)friction;
+            velocityX *= friction;
+            velocityY *= friction;
+            velocityZ *= friction;
         }
 
         lastWalkAnimationSpeed = walkAnimationSpeed;
@@ -77,8 +77,5 @@ public abstract class EntityFlying : EntityLiving
         animationPhase += walkAnimationSpeed;
     }
 
-    public override bool isOnLadder()
-    {
-        return false;
-    }
+    public override bool isOnLadder() => false;
 }

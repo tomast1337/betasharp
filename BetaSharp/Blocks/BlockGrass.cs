@@ -48,11 +48,17 @@ public class BlockGrass : Block
 
     public override void OnTick(OnTickEvent ctx)
     {
-        if (ctx.World.IsRemote) return;
+        if (ctx.World.IsRemote)
+        {
+            return;
+        }
 
         if (ctx.World.Lighting.GetLightLevel(ctx.X, ctx.Y + 1, ctx.Z) < 4 && BlockLightOpacity[ctx.World.Reader.GetBlockId(ctx.X, ctx.Y + 1, ctx.Z)] > 2)
         {
-            if (Random.Shared.Next(4) != 0) return;
+            if (Random.Shared.Next(4) != 0)
+            {
+                return;
+            }
 
             ctx.World.Writer.SetBlock(ctx.X, ctx.Y, ctx.Z, Dirt.ID);
         }

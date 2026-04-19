@@ -129,7 +129,10 @@ internal class BlockDoor : Block
 
     public void SetOpen(IWorldContext world, int x, int y, int z, bool open)
     {
-        if (world.IsRemote) return;
+        if (world.IsRemote)
+        {
+            return;
+        }
 
         int meta = world.Reader.GetBlockMeta(x, y, z);
 
@@ -146,7 +149,10 @@ internal class BlockDoor : Block
             }
         }
 
-        if (IsOpen(meta) == open) return;
+        if (IsOpen(meta) == open)
+        {
+            return;
+        }
 
         if (world.Reader.GetBlockId(x, y + 1, z) == ID)
         {

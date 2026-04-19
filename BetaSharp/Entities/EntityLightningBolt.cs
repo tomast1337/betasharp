@@ -7,13 +7,15 @@ namespace BetaSharp.Entities;
 
 public class EntityLightningBolt : EntityWeatherEffect
 {
-    public override EntityType Type => EntityRegistry.LightningBolt;
+    private int flashCount;
 
     private int flashTimer;
     public long renderSeed;
-    private int flashCount;
 
-    public EntityLightningBolt(IWorldContext world) : this(world, 0, 0, 0) { }
+    public EntityLightningBolt(IWorldContext world) : this(world, 0, 0, 0)
+    {
+    }
+
     public EntityLightningBolt(IWorldContext world, double x, double y, double z) : base(world)
     {
         setPositionAndAnglesKeepPrevAngles(x, y, z, 0.0F, 0.0F);
@@ -41,8 +43,9 @@ public class EntityLightningBolt : EntityWeatherEffect
                 }
             }
         }
-
     }
+
+    public override EntityType Type => EntityRegistry.LightningBolt;
 
     public override void tick()
     {
@@ -81,7 +84,7 @@ public class EntityLightningBolt : EntityWeatherEffect
         if (flashTimer >= 0)
         {
             double searchRadius = 3.0D;
-            var entities = world.Entities.GetEntities(this, new Box(x - searchRadius, y - searchRadius, z - searchRadius, x + searchRadius, y + 6.0D + searchRadius, z + searchRadius));
+            List<Entity> entities = world.Entities.GetEntities(this, new Box(x - searchRadius, y - searchRadius, z - searchRadius, x + searchRadius, y + 6.0D + searchRadius, z + searchRadius));
 
             for (int i = 0; i < entities.Count; ++i)
             {
@@ -91,7 +94,6 @@ public class EntityLightningBolt : EntityWeatherEffect
 
             world.Environment.LightningTicksLeft = 2;
         }
-
     }
 
 
@@ -103,8 +105,5 @@ public class EntityLightningBolt : EntityWeatherEffect
     {
     }
 
-    public override bool shouldRender(Vec3D cameraPos)
-    {
-        return flashTimer >= 0;
-    }
+    public override bool shouldRender(Vec3D cameraPos) => flashTimer >= 0;
 }

@@ -8,44 +8,32 @@ namespace BetaSharp.Entities;
 
 public class EntitySnowball : Entity
 {
-    public override EntityType Type => EntityRegistry.Snowball;
+    private readonly EntityLiving thrower;
+    private bool inGround;
+    private int inTile;
+    public int shake;
+    private int ticksInAir;
+    private int ticksInGround;
     private int xTile = -1;
     private int yTile = -1;
     private int zTile = -1;
-    private int inTile;
-    private bool inGround;
-    public int shake;
-    private EntityLiving thrower;
-    private int ticksInGround;
-    private int ticksInAir;
 
-    public EntitySnowball(IWorldContext world) : base(world)
-    {
-        setBoundingBoxSpacing(0.25F, 0.25F);
-    }
-
-
-    public override bool shouldRender(double distanceSquared)
-    {
-        double renderDistance = boundingBox.AverageEdgeLength * 4.0D;
-        renderDistance *= 64.0D;
-        return distanceSquared < renderDistance * renderDistance;
-    }
+    public EntitySnowball(IWorldContext world) : base(world) => setBoundingBoxSpacing(0.25F, 0.25F);
 
     public EntitySnowball(IWorldContext world, EntityLiving owner) : base(world)
     {
         thrower = owner;
         setBoundingBoxSpacing(0.25F, 0.25F);
-        setPositionAndAnglesKeepPrevAngles(owner.x, owner.y + (double)owner.getEyeHeight(), owner.z, owner.yaw, owner.pitch);
-        x -= (double)(MathHelper.Cos(yaw / 180.0F * (float)System.Math.PI) * 0.16F);
-        y -= (double)0.1F;
-        z -= (double)(MathHelper.Sin(yaw / 180.0F * (float)System.Math.PI) * 0.16F);
+        setPositionAndAnglesKeepPrevAngles(owner.x, owner.y + owner.getEyeHeight(), owner.z, owner.yaw, owner.pitch);
+        x -= MathHelper.Cos(yaw / 180.0F * (float)Math.PI) * 0.16F;
+        y -= 0.1F;
+        z -= MathHelper.Sin(yaw / 180.0F * (float)Math.PI) * 0.16F;
         setPosition(x, y, z);
         standingEyeHeight = 0.0F;
         float speed = 0.4F;
-        velocityX = (double)(-MathHelper.Sin(yaw / 180.0F * (float)System.Math.PI) * MathHelper.Cos(pitch / 180.0F * (float)System.Math.PI) * speed);
-        velocityZ = (double)(MathHelper.Cos(yaw / 180.0F * (float)System.Math.PI) * MathHelper.Cos(pitch / 180.0F * (float)System.Math.PI) * speed);
-        velocityY = (double)(-MathHelper.Sin(pitch / 180.0F * (float)System.Math.PI) * speed);
+        velocityX = -MathHelper.Sin(yaw / 180.0F * (float)Math.PI) * MathHelper.Cos(pitch / 180.0F * (float)Math.PI) * speed;
+        velocityZ = MathHelper.Cos(yaw / 180.0F * (float)Math.PI) * MathHelper.Cos(pitch / 180.0F * (float)Math.PI) * speed;
+        velocityY = -MathHelper.Sin(pitch / 180.0F * (float)Math.PI) * speed;
         setHeading(velocityX, velocityY, velocityZ, 1.5F, 1.0F);
     }
 
@@ -57,24 +45,34 @@ public class EntitySnowball : Entity
         standingEyeHeight = 0.0F;
     }
 
+    public override EntityType Type => EntityRegistry.Snowball;
+
+
+    public override bool shouldRender(double distanceSquared)
+    {
+        double renderDistance = boundingBox.AverageEdgeLength * 4.0D;
+        renderDistance *= 64.0D;
+        return distanceSquared < renderDistance * renderDistance;
+    }
+
     public void setHeading(double dirX, double dirY, double dirZ, float speed, float spread)
     {
         float length = MathHelper.Sqrt(dirX * dirX + dirY * dirY + dirZ * dirZ);
-        dirX /= (double)length;
-        dirY /= (double)length;
-        dirZ /= (double)length;
-        dirX += random.NextGaussian() * (double)0.0075F * (double)spread;
-        dirY += random.NextGaussian() * (double)0.0075F * (double)spread;
-        dirZ += random.NextGaussian() * (double)0.0075F * (double)spread;
-        dirX *= (double)speed;
-        dirY *= (double)speed;
-        dirZ *= (double)speed;
+        dirX /= length;
+        dirY /= length;
+        dirZ /= length;
+        dirX += random.NextGaussian() * 0.0075F * spread;
+        dirY += random.NextGaussian() * 0.0075F * spread;
+        dirZ += random.NextGaussian() * 0.0075F * spread;
+        dirX *= speed;
+        dirY *= speed;
+        dirZ *= speed;
         velocityX = dirX;
         velocityY = dirY;
         velocityZ = dirZ;
         float horizontalLength = MathHelper.Sqrt(dirX * dirX + dirZ * dirZ);
-        prevYaw = yaw = (float)(System.Math.Atan2(dirX, dirZ) * 180.0D / (double)((float)System.Math.PI));
-        prevPitch = pitch = (float)(System.Math.Atan2(dirY, (double)horizontalLength) * 180.0D / (double)((float)System.Math.PI));
+        prevYaw = yaw = (float)(Math.Atan2(dirX, dirZ) * 180.0D / (float)Math.PI);
+        prevPitch = pitch = (float)(Math.Atan2(dirY, horizontalLength) * 180.0D / (float)Math.PI);
         ticksInGround = 0;
     }
 
@@ -86,10 +84,9 @@ public class EntitySnowball : Entity
         if (prevPitch == 0.0F && prevYaw == 0.0F)
         {
             float horizontalLength = MathHelper.Sqrt(motionX * motionX + motionZ * motionZ);
-            prevYaw = yaw = (float)(System.Math.Atan2(motionX, motionZ) * 180.0D / (double)((float)System.Math.PI));
-            prevPitch = pitch = (float)(System.Math.Atan2(motionY, (double)horizontalLength) * 180.0D / (double)((float)System.Math.PI));
+            prevYaw = yaw = (float)(Math.Atan2(motionX, motionZ) * 180.0D / (float)Math.PI);
+            prevPitch = pitch = (float)(Math.Atan2(motionY, horizontalLength) * 180.0D / (float)Math.PI);
         }
-
     }
 
     public override void tick()
@@ -118,9 +115,9 @@ public class EntitySnowball : Entity
             }
 
             inGround = false;
-            velocityX *= (double)(random.NextFloat() * 0.2F);
-            velocityY *= (double)(random.NextFloat() * 0.2F);
-            velocityZ *= (double)(random.NextFloat() * 0.2F);
+            velocityX *= random.NextFloat() * 0.2F;
+            velocityY *= random.NextFloat() * 0.2F;
+            velocityZ *= random.NextFloat() * 0.2F;
             ticksInGround = 0;
             ticksInAir = 0;
         }
@@ -129,8 +126,8 @@ public class EntitySnowball : Entity
             ++ticksInAir;
         }
 
-        Vec3D rayStart = new Vec3D(x, y, z);
-        Vec3D rayEnd = new Vec3D(x + velocityX, y + velocityY, z + velocityZ);
+        Vec3D rayStart = new(x, y, z);
+        Vec3D rayEnd = new(x + velocityX, y + velocityY, z + velocityZ);
         HitResult hit = world.Reader.Raycast(rayStart, rayEnd);
         rayStart = new Vec3D(x, y, z);
         rayEnd = new Vec3D(x + velocityX, y + velocityY, z + velocityZ);
@@ -142,7 +139,7 @@ public class EntitySnowball : Entity
         if (!world.IsRemote)
         {
             Entity hitEntity = null;
-            var entities = world.Entities.GetEntities(this, boundingBox.Stretch(velocityX, velocityY, velocityZ).Expand(1.0D, 1.0D, 1.0D));
+            List<Entity> entities = world.Entities.GetEntities(this, boundingBox.Stretch(velocityX, velocityY, velocityZ).Expand(1.0D, 1.0D, 1.0D));
             double minHitDistance = 0.0D;
 
             for (int i = 0; i < entities.Count; ++i)
@@ -151,7 +148,7 @@ public class EntitySnowball : Entity
                 if (entity.isCollidable() && (entity != thrower || ticksInAir >= 5))
                 {
                     float expandAmount = 0.3F;
-                    Box expandedBox = entity.boundingBox.Expand((double)expandAmount, (double)expandAmount, (double)expandAmount);
+                    Box expandedBox = entity.boundingBox.Expand(expandAmount, expandAmount, expandAmount);
                     HitResult entityHit = expandedBox.Raycast(rayStart, rayEnd);
                     if (entityHit.Type != HitResultType.MISS)
                     {
@@ -189,9 +186,9 @@ public class EntitySnowball : Entity
         y += velocityY;
         z += velocityZ;
         float horizontalSpeed = MathHelper.Sqrt(velocityX * velocityX + velocityZ * velocityZ);
-        yaw = (float)(System.Math.Atan2(velocityX, velocityZ) * 180.0D / (double)((float)System.Math.PI));
+        yaw = (float)(Math.Atan2(velocityX, velocityZ) * 180.0D / (float)Math.PI);
 
-        for (pitch = (float)(System.Math.Atan2(velocityY, (double)horizontalSpeed) * 180.0D / (double)((float)System.Math.PI)); pitch - prevPitch < -180.0F; prevPitch -= 360.0F)
+        for (pitch = (float)(Math.Atan2(velocityY, horizontalSpeed) * 180.0D / (float)Math.PI); pitch - prevPitch < -180.0F; prevPitch -= 360.0F)
         {
         }
 
@@ -219,16 +216,16 @@ public class EntitySnowball : Entity
             for (int i = 0; i < 4; ++i)
             {
                 float trailOffset = 0.25F;
-                world.Broadcaster.AddParticle("bubble", x - velocityX * (double)trailOffset, y - velocityY * (double)trailOffset, z - velocityZ * (double)trailOffset, velocityX, velocityY, velocityZ);
+                world.Broadcaster.AddParticle("bubble", x - velocityX * trailOffset, y - velocityY * trailOffset, z - velocityZ * trailOffset, velocityX, velocityY, velocityZ);
             }
 
             drag = 0.8F;
         }
 
-        velocityX *= (double)drag;
-        velocityY *= (double)drag;
-        velocityZ *= (double)drag;
-        velocityY -= (double)gravity;
+        velocityX *= drag;
+        velocityY *= drag;
+        velocityZ *= drag;
+        velocityY -= gravity;
         setPosition(x, y, z);
     }
 
@@ -260,11 +257,7 @@ public class EntitySnowball : Entity
             player.sendPickup(this, 1);
             markDead();
         }
-
     }
 
-    public override float getShadowRadius()
-    {
-        return 0.0F;
-    }
+    public override float getShadowRadius() => 0.0F;
 }

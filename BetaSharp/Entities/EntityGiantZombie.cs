@@ -4,7 +4,6 @@ namespace BetaSharp.Entities;
 
 public class EntityGiantZombie : EntityMonster
 {
-    public override EntityType Type => EntityRegistry.Giant;
     public EntityGiantZombie(IWorldContext world) : base(world)
     {
         texture = "/mob/zombie.png";
@@ -15,8 +14,7 @@ public class EntityGiantZombie : EntityMonster
         setBoundingBoxSpacing(width * 6.0F, height * 6.0F);
     }
 
-    protected override float getBlockPathWeight(int x, int y, int z)
-    {
-        return world.Lighting.GetLuminance(x, y, z) - 0.5F;
-    }
+    public override EntityType Type => EntityRegistry.Giant;
+
+    protected override float getBlockPathWeight(int x, int y, int z) => world.Lighting.GetLuminance(x, y, z) - 0.5F;
 }

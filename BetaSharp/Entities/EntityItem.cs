@@ -9,12 +9,11 @@ namespace BetaSharp.Entities;
 
 public class EntityItem : Entity
 {
-    public override EntityType Type => EntityRegistry.Item;
-    public ItemStack stack;
-    public int itemAge;
+    public float bobPhase = Random.Shared.NextSingle() * (float)Math.PI * 2.0f;
     public int delayBeforeCanPickup;
     private int health = 5;
-    public float bobPhase = Random.Shared.NextSingle() * ((float)Math.PI) * 2.0f;
+    public int itemAge;
+    public ItemStack stack;
 
     public EntityItem(IWorldContext world, double x, double y, double z, ItemStack stack) : base(world)
     {
@@ -28,16 +27,15 @@ public class EntityItem : Entity
         velocityZ = Random.Shared.NextDouble() * 0.2f - 0.1f;
     }
 
-    protected override bool bypassesSteppingEffects()
-    {
-        return false;
-    }
-
     public EntityItem(IWorldContext world) : base(world)
     {
         setBoundingBoxSpacing(0.25F, 0.25F);
         standingEyeHeight = height / 2.0F;
     }
+
+    public override EntityType Type => EntityRegistry.Item;
+
+    protected override bool bypassesSteppingEffects() => false;
 
 
     public override void tick()
@@ -51,12 +49,12 @@ public class EntityItem : Entity
         prevX = x;
         prevY = y;
         prevZ = z;
-        velocityY -= (double)0.04F;
+        velocityY -= 0.04F;
         if (world.Reader.GetMaterial(MathHelper.Floor(x), MathHelper.Floor(y), MathHelper.Floor(z)) == Material.Lava)
         {
-            velocityY = (double)0.2F;
-            velocityX = (double)((random.NextFloat() - random.NextFloat()) * 0.2F);
-            velocityZ = (double)((random.NextFloat() - random.NextFloat()) * 0.2F);
+            velocityY = 0.2F;
+            velocityX = (random.NextFloat() - random.NextFloat()) * 0.2F;
+            velocityZ = (random.NextFloat() - random.NextFloat()) * 0.2F;
             world.Broadcaster.PlaySoundAtEntity(this, "random.fizz", 0.4F, 2.0F + random.NextFloat() * 0.4F);
         }
 
@@ -73,9 +71,9 @@ public class EntityItem : Entity
             }
         }
 
-        velocityX *= (double)friction;
-        velocityY *= (double)0.98F;
-        velocityZ *= (double)friction;
+        velocityX *= friction;
+        velocityY *= 0.98F;
+        velocityZ *= friction;
         if (onGround)
         {
             velocityY *= -0.5D;
@@ -86,18 +84,11 @@ public class EntityItem : Entity
         {
             markDead();
         }
-
     }
 
-    public override bool checkWaterCollisions()
-    {
-        return world.Reader.UpdateMovementInFluid(boundingBox, Material.Water, this);
-    }
+    public override bool checkWaterCollisions() => world.Reader.UpdateMovementInFluid(boundingBox, Material.Water, this);
 
-    protected override void damage(int amount)
-    {
-        damage((Entity)null, amount);
-    }
+    protected override void damage(int amount) => damage(null, amount);
 
     public override bool damage(Entity entity, int amount)
     {
@@ -113,7 +104,7 @@ public class EntityItem : Entity
 
     public override void writeNbt(NBTTagCompound nbt)
     {
-        nbt.SetShort("Health", (short)((byte)health));
+        nbt.SetShort("Health", (byte)health);
         nbt.SetShort("Age", (short)itemAge);
         nbt.SetCompoundTag("Item", stack.writeToNBT(new NBTTagCompound()));
     }
@@ -150,7 +141,6 @@ public class EntityItem : Entity
                     markDead();
                 }
             }
-
         }
     }
 }

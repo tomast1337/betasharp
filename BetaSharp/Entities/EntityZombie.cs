@@ -6,13 +6,14 @@ namespace BetaSharp.Entities;
 
 public class EntityZombie : EntityMonster
 {
-    public override EntityType Type => EntityRegistry.Zombie;
     public EntityZombie(IWorldContext world) : base(world)
     {
         texture = "/mob/zombie.png";
         movementSpeed = 0.5F;
         attackStrength = 5;
     }
+
+    public override EntityType Type => EntityRegistry.Zombie;
 
     public override void tickMovement()
     {
@@ -28,23 +29,11 @@ public class EntityZombie : EntityMonster
         base.tickMovement();
     }
 
-    protected override String getLivingSound()
-    {
-        return "mob.zombie";
-    }
+    protected override string getLivingSound() => "mob.zombie";
 
-    protected override String getHurtSound()
-    {
-        return "mob.zombiehurt";
-    }
+    protected override string getHurtSound() => "mob.zombiehurt";
 
-    protected override String getDeathSound()
-    {
-        return "mob.zombiedeath";
-    }
+    protected override string getDeathSound() => "mob.zombiedeath";
 
-    protected override int getDropItemId()
-    {
-        return Item.Feather.id;
-    }
+    protected override int getDropItemId() => Item.Feather.id;
 }

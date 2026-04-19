@@ -38,7 +38,10 @@ public class BlockPistonMoving : BlockWithEntity
 
     public override bool OnUse(OnUseEvent @event)
     {
-        if (@event.World.IsRemote || @event.World.Entities.GetBlockEntity<BlockEntity>(@event.X, @event.Y, @event.Z) != null) return false;
+        if (@event.World.IsRemote || @event.World.Entities.GetBlockEntity<BlockEntity>(@event.X, @event.Y, @event.Z) != null)
+        {
+            return false;
+        }
 
         @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
         return true;
@@ -48,7 +51,10 @@ public class BlockPistonMoving : BlockWithEntity
 
     public override void DropStacks(OnDropEvent @event)
     {
-        if (@event.World.IsRemote) return;
+        if (@event.World.IsRemote)
+        {
+            return;
+        }
 
         BlockEntityPiston? piston = @event.World.Entities.GetBlockEntity<BlockEntityPiston>(@event.X, @event.Y, @event.Z);
         if (piston != null)
@@ -86,10 +92,16 @@ public class BlockPistonMoving : BlockWithEntity
     public override void UpdateBoundingBox(IBlockReader blockReader, EntityManager? entities, int x, int y, int z)
     {
         BlockEntityPiston? piston = entities?.GetBlockEntity<BlockEntityPiston>(x, y, z);
-        if (piston == null) return;
+        if (piston == null)
+        {
+            return;
+        }
 
         Block block = Blocks[piston.PushedBlockId];
-        if (block == this) return;
+        if (block == this)
+        {
+            return;
+        }
 
         block.UpdateBoundingBox(blockReader, entities, x, y, z);
         float progress = piston.GetProgress(0.0F);
@@ -104,10 +116,16 @@ public class BlockPistonMoving : BlockWithEntity
 
     public Box? GetPushedBlockCollisionShape(IBlockReader world, EntityManager entities, int x, int y, int z, int blockId, float sizeMultiplier, int facing)
     {
-        if (blockId == 0 || blockId == ID) return null;
+        if (blockId == 0 || blockId == ID)
+        {
+            return null;
+        }
 
         Box? shape = Blocks[blockId].GetCollisionShape(world, entities, x, y, z);
-        if (shape == null) return null;
+        if (shape == null)
+        {
+            return null;
+        }
 
         Box res = shape.Value;
         res.MinX -= PistonConstants.HeadOffsetX[facing] * sizeMultiplier;

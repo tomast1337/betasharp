@@ -28,7 +28,10 @@ internal class BlockLog : Block
                 for (int offsetZ = -SearchRadius; offsetZ <= SearchRadius; ++offsetZ)
                 {
                     int neighborBlockId = @event.World.Reader.GetBlockId(@event.X + offsetX, @event.Y + offsetY, @event.Z + offsetZ);
-                    if (neighborBlockId != Leaves.ID) continue;
+                    if (neighborBlockId != Leaves.ID)
+                    {
+                        continue;
+                    }
 
                     int leavesMeta = @event.World.Reader.GetBlockMeta(@event.X + offsetX, @event.Y + offsetY, @event.Z + offsetZ);
                     if ((leavesMeta & 8) == 0)

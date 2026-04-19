@@ -25,7 +25,6 @@ internal class BlockSponge : Block
 
     public override void OnBreak(OnBreakEvent @event)
     {
-
         for (int checkX = @event.X - AbsorbRadius; checkX <= @event.X + AbsorbRadius; ++checkX)
         {
             for (int checkY = @event.Y - AbsorbRadius; checkY <= @event.Y + AbsorbRadius; ++checkY)

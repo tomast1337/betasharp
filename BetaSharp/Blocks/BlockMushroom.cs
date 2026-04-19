@@ -12,7 +12,10 @@ internal class BlockMushroom : BlockPlant
 
     public override void OnTick(OnTickEvent @event)
     {
-        if (Random.Shared.Next(100) != 0) return;
+        if (Random.Shared.Next(100) != 0)
+        {
+            return;
+        }
 
         int tryX = @event.X + Random.Shared.Next(3) - 1;
         int tryY = @event.Y + Random.Shared.Next(2) - Random.Shared.Next(2);

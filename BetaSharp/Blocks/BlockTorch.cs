@@ -127,7 +127,11 @@ internal class BlockTorch : Block
                 shouldDrop = true;
             }
 
-            if (!shouldDrop) return;
+            if (!shouldDrop)
+            {
+                return;
+            }
+
             DropStacks(new OnDropEvent(@event.World, @event.X, @event.Y, @event.Z, @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z)));
             @event.World.Writer.SetBlock(@event.X, @event.Y, @event.Z, 0);
         }
@@ -135,7 +139,10 @@ internal class BlockTorch : Block
 
     private bool BreakIfCannotPlaceAt(OnTickEvent @event, int x, int y, int z)
     {
-        if (CanPlaceAt(new CanPlaceAtContext(@event.World, 0, x, y, z))) return true;
+        if (CanPlaceAt(new CanPlaceAtContext(@event.World, 0, x, y, z)))
+        {
+            return true;
+        }
 
         DropStacks(new OnDropEvent(@event.World, x, y, z, @event.World.Reader.GetBlockMeta(x, y, z)));
         @event.World.Writer.SetBlock(x, y, z, 0);

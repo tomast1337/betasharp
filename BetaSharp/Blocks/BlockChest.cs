@@ -17,7 +17,10 @@ internal class BlockChest : BlockWithEntity
 
     public override int GetTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side)
     {
-        if (side is Side.Up or Side.Down) return TextureId - 1;
+        if (side is Side.Up or Side.Down)
+        {
+            return TextureId - 1;
+        }
 
         int blockNorth = iBlockReader.GetBlockId(x, y, z - 1);
         int blockSouth = iBlockReader.GetBlockId(x, y, z + 1);
@@ -119,15 +122,13 @@ internal class BlockChest : BlockWithEntity
         return (side == facingSide ? TextureId + 16 : TextureId + 32) + textureOffset;
     }
 
-    public override int GetTexture(Side side)
-    {
-        return side switch
+    public override int GetTexture(Side side) =>
+        side switch
         {
             Side.Up or Side.Down => TextureId - 1,
             Side.South => TextureId + 1,
             _ => TextureId
         };
-    }
 
     public override bool CanPlaceAt(CanPlaceAtContext context)
     {
@@ -172,7 +173,10 @@ internal class BlockChest : BlockWithEntity
         for (int slot = 0; slot < chest.Size; ++slot)
         {
             ItemStack? stack = chest.GetStack(slot);
-            if (stack == null) continue;
+            if (stack == null)
+            {
+                continue;
+            }
 
             float offsetX = s_random.NextFloat() * 0.8F + 0.1F;
             float offsetY = s_random.NextFloat() * 0.8F + 0.1F;

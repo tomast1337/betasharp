@@ -16,7 +16,10 @@ internal class BlockPumpkin : Block
 
     public override int GetTexture(Side side, int meta)
     {
-        if (side is Side.Up or Side.Down) return TextureId;
+        if (side is Side.Up or Side.Down)
+        {
+            return TextureId;
+        }
 
         int faceTexture = TextureId + 1 + 16;
         if (_lit)
@@ -45,7 +48,11 @@ internal class BlockPumpkin : Block
 
     public override void OnPlaced(OnPlacedEvent @event)
     {
-        if (@event.Placer == null) return;
+        if (@event.Placer == null)
+        {
+            return;
+        }
+
         int direction = MathHelper.Floor(@event.Placer.yaw * 4.0F / 360.0F + 2.5D) & 3;
         @event.World.Writer.SetBlockMeta(@event.X, @event.Y, @event.Z, direction);
     }

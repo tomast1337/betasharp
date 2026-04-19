@@ -7,18 +7,19 @@ namespace BetaSharp.Entities;
 
 public class EntityCreeper : EntityMonster
 {
-    public override EntityType Type => EntityRegistry.Creeper;
     public readonly SyncedProperty<byte> CreeperState;
     public readonly SyncedProperty<bool> Powered;
-    private int timeSinceIgnited;
     private int lastActiveTime;
+    private int timeSinceIgnited;
 
     public EntityCreeper(IWorldContext world) : base(world)
     {
         texture = "/mob/creeper.png";
         CreeperState = DataSynchronizer.MakeProperty<byte>(16, 255); // -1
-        Powered = DataSynchronizer.MakeProperty<bool>(17, false);
+        Powered = DataSynchronizer.MakeProperty(17, false);
     }
+
+    public override EntityType Type => EntityRegistry.Creeper;
 
     public override void writeNbt(NBTTagCompound nbt)
     {
@@ -84,18 +85,11 @@ public class EntityCreeper : EntityMonster
                 timeSinceIgnited = 0;
             }
         }
-
     }
 
-    protected override string getHurtSound()
-    {
-        return "mob.creeper";
-    }
+    protected override string getHurtSound() => "mob.creeper";
 
-    protected override string getDeathSound()
-    {
-        return "mob.creeperdeath";
-    }
+    protected override string getDeathSound() => "mob.creeperdeath";
 
     public override void onKilledBy(Entity entity)
     {
@@ -104,7 +98,6 @@ public class EntityCreeper : EntityMonster
         {
             dropItem(Item.RecordThirteen.id + random.NextInt(2), 1);
         }
-
     }
 
     protected override void attackEntity(Entity entity, float distance)
@@ -112,7 +105,7 @@ public class EntityCreeper : EntityMonster
         if (!world.IsRemote)
         {
             int state = (sbyte)CreeperState.Value;
-            if (state <= 0 && distance < 3.0F || state > 0 && distance < 7.0F)
+            if ((state <= 0 && distance < 3.0F) || (state > 0 && distance < 7.0F))
             {
                 if (timeSinceIgnited == 0)
                 {
@@ -146,19 +139,12 @@ public class EntityCreeper : EntityMonster
                     timeSinceIgnited = 0;
                 }
             }
-
         }
     }
 
-    public float GetCreeperFlashTime(float partialTick)
-    {
-        return ((float)lastActiveTime + (float)(timeSinceIgnited - lastActiveTime) * partialTick) / 28.0F;
-    }
+    public float GetCreeperFlashTime(float partialTick) => (lastActiveTime + (timeSinceIgnited - lastActiveTime) * partialTick) / 28.0F;
 
-    protected override int getDropItemId()
-    {
-        return Item.Gunpowder.id;
-    }
+    protected override int getDropItemId() => Item.Gunpowder.id;
 
     public override void onStruckByLightning(EntityLightningBolt bolt)
     {

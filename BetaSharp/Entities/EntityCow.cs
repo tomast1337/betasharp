@@ -5,38 +5,23 @@ namespace BetaSharp.Entities;
 
 public class EntityCow : EntityAnimal
 {
-    public override EntityType Type => EntityRegistry.Cow;
-
     public EntityCow(IWorldContext world) : base(world)
     {
-        this.texture = "/mob/cow.png";
-        this.setBoundingBoxSpacing(0.9F, 1.3F);
+        texture = "/mob/cow.png";
+        setBoundingBoxSpacing(0.9F, 1.3F);
     }
 
-    protected override string getLivingSound()
-    {
-        return "mob.cow";
-    }
+    public override EntityType Type => EntityRegistry.Cow;
 
-    protected override string getHurtSound()
-    {
-        return "mob.cowhurt";
-    }
+    protected override string getLivingSound() => "mob.cow";
 
-    protected override string getDeathSound()
-    {
-        return "mob.cowhurt";
-    }
+    protected override string getHurtSound() => "mob.cowhurt";
 
-    protected override float getSoundVolume()
-    {
-        return 0.4F;
-    }
+    protected override string getDeathSound() => "mob.cowhurt";
 
-    protected override int getDropItemId()
-    {
-        return Item.Leather.id;
-    }
+    protected override float getSoundVolume() => 0.4F;
+
+    protected override int getDropItemId() => Item.Leather.id;
 
     public override bool interact(EntityPlayer player)
     {
@@ -46,9 +31,7 @@ public class EntityCow : EntityAnimal
             player.inventory.SetStack(player.inventory.SelectedSlot, new ItemStack(Item.MilkBucket));
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 }

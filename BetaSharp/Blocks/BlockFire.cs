@@ -177,8 +177,11 @@ internal class BlockFire : Block
 
     private int GetBurnChance(IBlockReader world, int x, int y, int z)
     {
+        if (!world.IsAir(x, y, z))
+        {
+            return 0;
+        }
 
-        if (!world.IsAir(x, y, z)) return 0;
         int maxChance = GetBurnChance(world, x + 1, y, z, InitialMax);
         maxChance = GetBurnChance(world, x - 1, y, z, maxChance);
         maxChance = GetBurnChance(world, x, y - 1, z, maxChance);

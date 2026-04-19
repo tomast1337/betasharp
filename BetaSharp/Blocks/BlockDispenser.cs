@@ -47,7 +47,10 @@ internal class BlockDispenser : BlockWithEntity
 
     private static void UpdateDirection(OnPlacedEvent @event)
     {
-        if (@event.World.IsRemote) return;
+        if (@event.World.IsRemote)
+        {
+            return;
+        }
 
         IBlockReader reader = @event.World.Reader;
         int x = @event.X, y = @event.Y, z = @event.Z;
@@ -58,17 +61,34 @@ internal class BlockDispenser : BlockWithEntity
         bool isEastOpaque = BlocksOpaque[reader.GetBlockId(x + 1, y, z)];
 
         byte direction = 3;
-        if (isNorthOpaque && !isSouthOpaque) direction = 3;
-        else if (isSouthOpaque && !isNorthOpaque) direction = 2;
-        if (isWestOpaque && !isEastOpaque) direction = 5;
-        else if (isEastOpaque && !isWestOpaque) direction = 4;
+        if (isNorthOpaque && !isSouthOpaque)
+        {
+            direction = 3;
+        }
+        else if (isSouthOpaque && !isNorthOpaque)
+        {
+            direction = 2;
+        }
+
+        if (isWestOpaque && !isEastOpaque)
+        {
+            direction = 5;
+        }
+        else if (isEastOpaque && !isWestOpaque)
+        {
+            direction = 4;
+        }
 
         @event.World.Writer.SetBlockMeta(x, y, z, direction);
     }
 
     public override int GetTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side)
     {
-        if (side is Side.Up or Side.Down) return TextureId + 17;
+        if (side is Side.Up or Side.Down)
+        {
+            return TextureId + 17;
+        }
+
         Side meta = iBlockReader.GetBlockMeta(x, y, z).ToSide();
         return side != meta ? TextureId : TextureId + 1;
     }
@@ -82,9 +102,17 @@ internal class BlockDispenser : BlockWithEntity
 
     public override bool OnUse(OnUseEvent @event)
     {
-        if (@event.World.IsRemote) return true;
+        if (@event.World.IsRemote)
+        {
+            return true;
+        }
+
         BlockEntityDispenser? dispenser = @event.World.Entities.GetBlockEntity<BlockEntityDispenser>(@event.X, @event.Y, @event.Z);
-        if (dispenser != null) @event.Player.openDispenserScreen(dispenser);
+        if (dispenser != null)
+        {
+            @event.Player.openDispenserScreen(dispenser);
+        }
+
         return true;
     }
 
@@ -111,7 +139,10 @@ internal class BlockDispenser : BlockWithEntity
         }
 
         BlockEntityDispenser? dispenser = @event.World.Entities.GetBlockEntity<BlockEntityDispenser>(@event.X, @event.Y, @event.Z);
-        if (dispenser == null) return;
+        if (dispenser == null)
+        {
+            return;
+        }
 
         ItemStack? itemStack = dispenser.GetItemToDispose();
         double spawnX = @event.X + dirX * 0.6D + 0.5D;
@@ -173,9 +204,15 @@ internal class BlockDispenser : BlockWithEntity
 
         Console.WriteLine($"[Dispenser Check] Triggered By ID: {@event.BlockId} | Emits Power: {emits} | Grid Powered: {isPowered}");
 
-        if (@event.BlockId <= 0 || !Blocks[@event.BlockId].CanEmitRedstonePower()) return;
+        if (@event.BlockId <= 0 || !Blocks[@event.BlockId].CanEmitRedstonePower())
+        {
+            return;
+        }
 
-        if (isPowered) @event.World.TickScheduler.ScheduleBlockUpdate(@event.X, @event.Y, @event.Z, ID, GetTickRate());
+        if (isPowered)
+        {
+            @event.World.TickScheduler.ScheduleBlockUpdate(@event.X, @event.Y, @event.Z, ID, GetTickRate());
+        }
     }
 
     public override void OnTick(OnTickEvent @event)
@@ -199,7 +236,10 @@ internal class BlockDispenser : BlockWithEntity
             for (int slotIndex = 0; slotIndex < dispenser.Size; ++slotIndex)
             {
                 ItemStack? stack = dispenser.GetStack(slotIndex);
-                if (stack == null) continue;
+                if (stack == null)
+                {
+                    continue;
+                }
 
                 float offsetX = random.NextFloat() * 0.8F + 0.1F;
                 float offsetY = random.NextFloat() * 0.8F + 0.1F;

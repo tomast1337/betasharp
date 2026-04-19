@@ -7,39 +7,27 @@ namespace BetaSharp.Entities;
 
 public class EntityFireball : Entity
 {
-    public override EntityType Type => EntityRegistry.Fireball;
+    private int blockId;
     private int blockX = -1;
     private int blockY = -1;
     private int blockZ = -1;
-    private int blockId;
-    private bool inGround;
-    public int shake;
-    public EntityLiving owner;
-    private int removalTimer;
     private int inAirTime;
+    private bool inGround;
+    public EntityLiving owner;
     public double powerX;
     public double powerY;
     public double powerZ;
+    private int removalTimer;
+    public int shake;
 
-    public EntityFireball(IWorldContext world) : base(world)
-    {
-        setBoundingBoxSpacing(1.0F, 1.0F);
-    }
-
-
-    public override bool shouldRender(double var1)
-    {
-        double var3 = boundingBox.AverageEdgeLength * 4.0D;
-        var3 *= 64.0D;
-        return var1 < var3 * var3;
-    }
+    public EntityFireball(IWorldContext world) : base(world) => setBoundingBoxSpacing(1.0F, 1.0F);
 
     public EntityFireball(IWorldContext world, double x, double y, double z, double var8, double var10, double var12) : base(world)
     {
         setBoundingBoxSpacing(1.0F, 1.0F);
         setPositionAndAnglesKeepPrevAngles(x, y, z, yaw, pitch);
         setPosition(x, y, z);
-        double var14 = (double)MathHelper.Sqrt(var8 * var8 + var10 * var10 + var12 * var12);
+        double var14 = MathHelper.Sqrt(var8 * var8 + var10 * var10 + var12 * var12);
         powerX = var8 / var14 * 0.1D;
         powerY = var10 / var14 * 0.1D;
         powerZ = var12 / var14 * 0.1D;
@@ -56,10 +44,20 @@ public class EntityFireball : Entity
         var3 += random.NextGaussian() * 0.4D;
         var5 += random.NextGaussian() * 0.4D;
         var7 += random.NextGaussian() * 0.4D;
-        double var9 = (double)MathHelper.Sqrt(var3 * var3 + var5 * var5 + var7 * var7);
+        double var9 = MathHelper.Sqrt(var3 * var3 + var5 * var5 + var7 * var7);
         powerX = var3 / var9 * 0.1D;
         powerY = var5 / var9 * 0.1D;
         powerZ = var7 / var9 * 0.1D;
+    }
+
+    public override EntityType Type => EntityRegistry.Fireball;
+
+
+    public override bool shouldRender(double var1)
+    {
+        double var3 = boundingBox.AverageEdgeLength * 4.0D;
+        var3 *= 64.0D;
+        return var1 < var3 * var3;
     }
 
     public override void tick()
@@ -86,9 +84,9 @@ public class EntityFireball : Entity
             }
 
             inGround = false;
-            velocityX *= (double)(random.NextFloat() * 0.2F);
-            velocityY *= (double)(random.NextFloat() * 0.2F);
-            velocityZ *= (double)(random.NextFloat() * 0.2F);
+            velocityX *= random.NextFloat() * 0.2F;
+            velocityY *= random.NextFloat() * 0.2F;
+            velocityZ *= random.NextFloat() * 0.2F;
             removalTimer = 0;
             inAirTime = 0;
         }
@@ -97,8 +95,8 @@ public class EntityFireball : Entity
             ++inAirTime;
         }
 
-        Vec3D var15 = new Vec3D(x, y, z);
-        Vec3D var2 = new Vec3D(x + velocityX, y + velocityY, z + velocityZ);
+        Vec3D var15 = new(x, y, z);
+        Vec3D var2 = new(x + velocityX, y + velocityY, z + velocityZ);
         HitResult var3 = world.Reader.Raycast(var15, var2);
         var15 = new Vec3D(x, y, z);
         var2 = new Vec3D(x + velocityX, y + velocityY, z + velocityZ);
@@ -108,7 +106,7 @@ public class EntityFireball : Entity
         }
 
         Entity var4 = null;
-        var var5 = world.Entities.GetEntities(this, boundingBox.Stretch(velocityX, velocityY, velocityZ).Expand(1.0D, 1.0D, 1.0D));
+        List<Entity> var5 = world.Entities.GetEntities(this, boundingBox.Stretch(velocityX, velocityY, velocityZ).Expand(1.0D, 1.0D, 1.0D));
         double var6 = 0.0D;
 
         for (int var8 = 0; var8 < var5.Count; ++var8)
@@ -117,7 +115,7 @@ public class EntityFireball : Entity
             if (var9.isCollidable() && (var9 != owner || inAirTime >= 25))
             {
                 float var10 = 0.3F;
-                Box var11 = var9.boundingBox.Expand((double)var10, (double)var10, (double)var10);
+                Box var11 = var9.boundingBox.Expand(var10, var10, var10);
                 HitResult var12 = var11.Raycast(var15, var2);
                 if (var12.Type != HitResultType.MISS)
                 {
@@ -154,9 +152,9 @@ public class EntityFireball : Entity
         y += velocityY;
         z += velocityZ;
         float var16 = MathHelper.Sqrt(velocityX * velocityX + velocityZ * velocityZ);
-        yaw = (float)(System.Math.Atan2(velocityX, velocityZ) * 180.0D / (double)((float)Math.PI));
+        yaw = (float)(Math.Atan2(velocityX, velocityZ) * 180.0D / (float)Math.PI);
 
-        for (pitch = (float)(System.Math.Atan2(velocityY, (double)var16) * 180.0D / (double)((float)Math.PI)); pitch - prevPitch < -180.0F; prevPitch -= 360.0F)
+        for (pitch = (float)(Math.Atan2(velocityY, var16) * 180.0D / (float)Math.PI); pitch - prevPitch < -180.0F; prevPitch -= 360.0F)
         {
         }
 
@@ -183,7 +181,7 @@ public class EntityFireball : Entity
             for (int var18 = 0; var18 < 4; ++var18)
             {
                 float var19 = 0.25F;
-                world.Broadcaster.AddParticle("bubble", x - velocityX * (double)var19, y - velocityY * (double)var19, z - velocityZ * (double)var19, velocityX, velocityY, velocityZ);
+                world.Broadcaster.AddParticle("bubble", x - velocityX * var19, y - velocityY * var19, z - velocityZ * var19, velocityX, velocityY, velocityZ);
             }
 
             var17 = 0.8F;
@@ -192,9 +190,9 @@ public class EntityFireball : Entity
         velocityX += powerX;
         velocityY += powerY;
         velocityZ += powerZ;
-        velocityX *= (double)var17;
-        velocityY *= (double)var17;
-        velocityZ *= (double)var17;
+        velocityX *= var17;
+        velocityY *= var17;
+        velocityZ *= var17;
         world.Broadcaster.AddParticle("smoke", x, y + 0.5D, z, 0.0D, 0.0D, 0.0D);
         setPosition(x, y, z);
     }
@@ -219,15 +217,9 @@ public class EntityFireball : Entity
         inGround = nbt.GetByte("inGround") == 1;
     }
 
-    public override bool isCollidable()
-    {
-        return true;
-    }
+    public override bool isCollidable() => true;
 
-    public override float getTargetingMargin()
-    {
-        return 1.0F;
-    }
+    public override float getTargetingMargin() => 1.0F;
 
     public override bool damage(Entity entity, int amount)
     {
@@ -247,14 +239,9 @@ public class EntityFireball : Entity
 
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
-    public override float getShadowRadius()
-    {
-        return 0.0F;
-    }
+    public override float getShadowRadius() => 0.0F;
 }

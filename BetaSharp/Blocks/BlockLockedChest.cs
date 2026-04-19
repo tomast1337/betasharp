@@ -9,7 +9,10 @@ internal class BlockLockedChest : Block
 
     public override int GetTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side)
     {
-        if (side is Side.Up or Side.Down) return TextureId - 1;
+        if (side is Side.Up or Side.Down)
+        {
+            return TextureId - 1;
+        }
 
         int blockNorth = iBlockReader.GetBlockId(x, y, z - 1);
         int blockSouth = iBlockReader.GetBlockId(x, y, z + 1);
@@ -17,10 +20,26 @@ internal class BlockLockedChest : Block
         int blockEast = iBlockReader.GetBlockId(x + 1, y, z);
 
         Side facing = Side.South;
-        if (BlocksOpaque[blockNorth] && !BlocksOpaque[blockSouth]) facing = Side.South;
-        if (BlocksOpaque[blockSouth] && !BlocksOpaque[blockNorth]) facing = Side.North;
-        if (BlocksOpaque[blockWest] && !BlocksOpaque[blockEast]) facing = Side.East;
-        if (BlocksOpaque[blockEast] && !BlocksOpaque[blockWest]) facing = Side.West;
+        if (BlocksOpaque[blockNorth] && !BlocksOpaque[blockSouth])
+        {
+            facing = Side.South;
+        }
+
+        if (BlocksOpaque[blockSouth] && !BlocksOpaque[blockNorth])
+        {
+            facing = Side.North;
+        }
+
+        if (BlocksOpaque[blockWest] && !BlocksOpaque[blockEast])
+        {
+            facing = Side.East;
+        }
+
+        if (BlocksOpaque[blockEast] && !BlocksOpaque[blockWest])
+        {
+            facing = Side.West;
+        }
+
         return side == facing ? TextureId + 1 : TextureId;
     }
 

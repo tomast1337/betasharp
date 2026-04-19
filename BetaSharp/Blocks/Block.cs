@@ -11,8 +11,9 @@ using BetaSharp.Worlds.Core.Systems;
 namespace BetaSharp.Blocks;
 
 /// <summary>
-/// Base class for all blocks, containing shared properties and methods.
-/// Each block type is represented by a singleton instance of a subclass of this class, stored in the static fields of this class.
+///     Base class for all blocks, containing shared properties and methods.
+///     Each block type is represented by a singleton instance of a subclass of this class, stored in the static fields of
+///     this class.
 /// </summary>
 public class Block
 {
@@ -153,54 +154,7 @@ public class Block
     public static readonly Block PoweredRepeater = new BlockRedstoneRepeater(94, true).SetHardness(0.0F).SetLuminance(10.0F / 16.0F).SetSoundGroup(SoundWoodFootstep).SetBlockName("diode").DisableStats().IgnoreMetaUpdates();
     public static readonly Block Trapdoor = new BlockTrapDoor(96, Material.Wood).SetHardness(3.0F).SetSoundGroup(SoundWoodFootstep).SetBlockName("trapdoor").DisableStats().IgnoreMetaUpdates();
 
-    public int ID { get; set; }
-    public string Name { get; set; } = "";
-
-    /// <summary>
-    /// Determines how this block behaves, check <see cref="Material"/> for more info.
-    /// </summary>
-    public Material Material { get; }
-
-
-    /// <summary>
-    /// Used for collision and ray tracing.
-    /// By default, this is a full block (0, 0, 0) to (1, 1, 1), but can be changed for blocks with smaller or larger hitboxes.
-    /// </summary>
-    public Box BoundingBox { get; set; }
-
-    /// <summary>
-    /// Determines how long it takes to break the block.
-    /// A hardness of -1 means the block is unbreakable. (as set in <see cref="SetUnbreakable"/>)
-    /// </summary>
-    public float Hardness { get; set; }
-
-    /// <summary>
-    /// Const modifier applied to the speed of particles falling on this block.=
-    /// </summary>
-    public float ParticleFallSpeedModifier { get; set; }
-
-    /// <summary>
-    /// Determines how resistant the block is to explosions.
-    /// </summary>
-    public float Resistance { get; set; }
-
     protected bool ShouldTrackStatistics;
-
-    /// <summary>
-    /// How slippery this block is, which determines how much entities will slide when walking on this block.
-    /// Default is 0.6f, which is the slipperiness of most blocks. A value of 0.98f is the slipperiness of ice, while a value of 0.0f means no slipperiness at all.
-    /// </summary>
-    public float Slipperiness { get; set; }
-
-    /// <summary>
-    /// A <see cref="BlockSoundGroup"/> defining the sounds this block makes when walked on, broken, or placed.
-    /// </summary>
-    public BlockSoundGroup SoundGroup { get; set; }
-
-    /// <summary>
-    /// Texture ID of this block, which determines which texture is used to render this block in the world and in the inventory.
-    /// </summary>
-    public int TextureId { get; set; }
 
     static Block()
     {
@@ -236,9 +190,9 @@ public class Block
             throw new ArgumentException("Slot " + id + " is already occupied by " + Blocks[id] + " when adding " + this, nameof(id));
         }
 
-        this.Material = material;
+        Material = material;
         Blocks[id] = this;
-        this.ID = id;
+        ID = id;
         SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         BlocksOpaque[id] = IsOpaque();
         BlockLightOpacity[id] = IsOpaque() ? 255 : 0;
@@ -246,7 +200,57 @@ public class Block
         BlocksWithEntity[id] = false;
     }
 
-    protected Block(int id, int textureId, Material material) : this(id, material) => this.TextureId = textureId;
+    protected Block(int id, int textureId, Material material) : this(id, material) => TextureId = textureId;
+
+    public int ID { get; set; }
+    public string Name { get; set; } = "";
+
+    /// <summary>
+    ///     Determines how this block behaves, check <see cref="Material" /> for more info.
+    /// </summary>
+    public Material Material { get; }
+
+
+    /// <summary>
+    ///     Used for collision and ray tracing.
+    ///     By default, this is a full block (0, 0, 0) to (1, 1, 1), but can be changed for blocks with smaller or larger
+    ///     hitboxes.
+    /// </summary>
+    public Box BoundingBox { get; set; }
+
+    /// <summary>
+    ///     Determines how long it takes to break the block.
+    ///     A hardness of -1 means the block is unbreakable. (as set in <see cref="SetUnbreakable" />)
+    /// </summary>
+    public float Hardness { get; set; }
+
+    /// <summary>
+    ///     Const modifier applied to the speed of particles falling on this block.=
+    /// </summary>
+    public float ParticleFallSpeedModifier { get; set; }
+
+    /// <summary>
+    ///     Determines how resistant the block is to explosions.
+    /// </summary>
+    public float Resistance { get; set; }
+
+    /// <summary>
+    ///     How slippery this block is, which determines how much entities will slide when walking on this block.
+    ///     Default is 0.6f, which is the slipperiness of most blocks. A value of 0.98f is the slipperiness of ice, while a
+    ///     value of 0.0f means no slipperiness at all.
+    /// </summary>
+    public float Slipperiness { get; set; }
+
+    /// <summary>
+    ///     A <see cref="BlockSoundGroup" /> defining the sounds this block makes when walked on, broken, or placed.
+    /// </summary>
+    public BlockSoundGroup SoundGroup { get; set; }
+
+    /// <summary>
+    ///     Texture ID of this block, which determines which texture is used to render this block in the world and in the
+    ///     inventory.
+    /// </summary>
+    public int TextureId { get; set; }
 
     public TextureVariance TopVariance { get; private set; } = TextureVariance.None;
 
@@ -255,7 +259,7 @@ public class Block
     public TextureVariance SideVariance { get; private set; } = TextureVariance.None;
 
     /// <summary>
-    /// Make this block ignore meta updates.
+    ///     Make this block ignore meta updates.
     /// </summary>
     protected Block IgnoreMetaUpdates()
     {
@@ -268,17 +272,16 @@ public class Block
     }
 
     /// <summary>
-    /// Set the sound group for this block, which determines the sounds this block makes when walked on, broken, or placed.
+    ///     Set the sound group for this block, which determines the sounds this block makes when walked on, broken, or placed.
     /// </summary>
-
     protected Block SetSoundGroup(BlockSoundGroup soundGroup)
     {
-        this.SoundGroup = soundGroup;
+        SoundGroup = soundGroup;
         return this;
     }
 
     /// <summary>
-    /// Set the light opacity of this block, which determines how much light is blocked by this block.
+    ///     Set the light opacity of this block, which determines how much light is blocked by this block.
     /// </summary>
     protected Block SetOpacity(int opacity)
     {
@@ -287,7 +290,7 @@ public class Block
     }
 
     /// <summary>
-    /// Set the light luminance of this block, which determines how much light is emitted by this block.
+    ///     Set the light luminance of this block, which determines how much light is emitted by this block.
     /// </summary>
     protected Block SetLuminance(float fractionalValue)
     {
@@ -296,15 +299,15 @@ public class Block
     }
 
     /// <summary>
-    /// Set the resistance of this block, which determines how resistant the block is to explosions.
-    /// Since resistance is set to hardness * 5.0F on every hardness set, this multiples
-    /// the input value by 3.0F for blocks not coupled to the hardness for resistance.
+    ///     Set the resistance of this block, which determines how resistant the block is to explosions.
+    ///     Since resistance is set to hardness * 5.0F on every hardness set, this multiples
+    ///     the input value by 3.0F for blocks not coupled to the hardness for resistance.
     /// </summary>
     /// <param name="resistance"></param>
     /// <returns></returns>
     protected Block SetResistance(float resistance)
     {
-        this.Resistance = resistance * 3.0F;
+        Resistance = resistance * 3.0F;
         return this;
     }
 
@@ -313,7 +316,7 @@ public class Block
     public virtual BlockRendererType GetRenderType() => BlockRendererType.Standard;
 
     /// <summary>
-    /// Set texture variance for all faces of this block to the same value.
+    ///     Set texture variance for all faces of this block to the same value.
     /// </summary>
     public Block SetVariance(TextureVariance allFaces)
     {
@@ -324,7 +327,8 @@ public class Block
     }
 
     /// <summary>
-    /// Set texture variance for the top and bottom faces of this block to the same value, and the sides to a different value.
+    ///     Set texture variance for the top and bottom faces of this block to the same value, and the sides to a different
+    ///     value.
     /// </summary>
     public Block SetVariance(TextureVariance topBottom, TextureVariance sides)
     {
@@ -335,7 +339,7 @@ public class Block
     }
 
     /// <summary>
-    /// Set texture variance for the top, bottom, and sides of this block to different values.
+    ///     Set texture variance for the top, bottom, and sides of this block to different values.
     /// </summary>
     public Block SetVariance(TextureVariance top, TextureVariance bottom, TextureVariance sides)
     {
@@ -346,16 +350,16 @@ public class Block
     }
 
     /// <summary>
-    /// Set the hardness of this block, which determines how long it takes to break the block.
-    /// A hardness of -1 means the block is unbreakable. (as set in <see cref="SetUnbreakable"/>)
+    ///     Set the hardness of this block, which determines how long it takes to break the block.
+    ///     A hardness of -1 means the block is unbreakable. (as set in <see cref="SetUnbreakable" />)
     /// </summary>
     /// <remarks>
-    /// If the Resistance of this block is less than hardness * 5.0F, then the Resistance will be set to hardness * 5.0F.
-    /// <param name="hardness"></param>
-    /// <returns></returns>
+    ///     If the Resistance of this block is less than hardness * 5.0F, then the Resistance will be set to hardness * 5.0F.
+    ///     <param name="hardness"></param>
+    ///     <returns></returns>
     protected Block SetHardness(float hardness)
     {
-        this.Hardness = hardness;
+        Hardness = hardness;
         if (Resistance < hardness * 5.0F)
         {
             Resistance = hardness * 5.0F;
@@ -365,7 +369,7 @@ public class Block
     }
 
     /// <summary>
-    /// Make this block unbreakable (e.g. bedrock) by setting the hardness to -1.0F.
+    ///     Make this block unbreakable (e.g. bedrock) by setting the hardness to -1.0F.
     /// </summary>
     protected Block SetUnbreakable()
     {
@@ -374,8 +378,8 @@ public class Block
     }
 
     /// <summary>
-    /// Make this block only have the Tick method called randomly, instead of every tick.
-    /// This is used for blocks like crops and fire that only need to update occasionally.
+    ///     Make this block only have the Tick method called randomly, instead of every tick.
+    ///     This is used for blocks like crops and fire that only need to update occasionally.
     /// </summary>
     protected Block SetTickRandomly(bool tickRandomly)
     {
@@ -384,14 +388,15 @@ public class Block
     }
 
     /// <summary>
-    /// Set the bounding box of this block.
-    /// By default, this is a full block from (0, 0, 0) to (1, 1, 1), but can be changed for blocks with smaller or larger hitboxes.
+    ///     Set the bounding box of this block.
+    ///     By default, this is a full block from (0, 0, 0) to (1, 1, 1), but can be changed for blocks with smaller or larger
+    ///     hitboxes.
     /// </summary>
     public void SetBoundingBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) =>
         BoundingBox = new Box(minX, minY, minZ, maxX, maxY, maxZ);
 
     /// <summary>
-    /// Get total luminace of this block.
+    ///     Get total luminace of this block.
     /// </summary>
     public virtual float GetLuminance(ILightProvider lighting, int x, int y, int z)
     {
@@ -413,7 +418,10 @@ public class Block
         double maxY = BoundingBox.MaxY;
         double maxZ = BoundingBox.MaxZ;
 
-        if (!side.IsValidSide()) return !iBlockReader.IsOpaque(x, y, z);
+        if (!side.IsValidSide())
+        {
+            return !iBlockReader.IsOpaque(x, y, z);
+        }
 
         return side switch
         {
