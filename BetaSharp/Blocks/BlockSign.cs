@@ -21,7 +21,7 @@ internal class BlockSign : BlockWithEntity
     public BlockSign(int id, Type blockEntityType, bool standing) : base(id, Material.Wood)
     {
         _standing = standing;
-        TextureId = 4;
+        TextureId = BlockTextures.OakPlanks;
         _blockEntityType = blockEntityType;
         SetBoundingBox(0.5F - Width, 0.0F, 0.5F - Width, 0.5F + Width, Height, 0.5F + Width);
     }

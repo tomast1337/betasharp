@@ -10,7 +10,7 @@ internal class BlockFarmland : Block
 
     public BlockFarmland(int id) : base(id, Material.Soil)
     {
-        TextureId = 87;
+        TextureId = BlockTextures.FarmlandDry;
         SetTickRandomly(true);
         SetBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 15.0F / 16.0F, 1.0F);
         SetOpacity(255);
@@ -24,9 +24,9 @@ internal class BlockFarmland : Block
 
     public override int GetTexture(Side side, int meta) => side switch
     {
-        Side.Up when meta > 0 => TextureId - 1,
-        Side.Up => TextureId,
-        _ => 2
+        Side.Up when meta > 0 => BlockTextures.FarmlandWet - 1,
+        Side.Up => BlockTextures.FarmlandWet,
+        _ => BlockTextures.Dirt
     };
 
 

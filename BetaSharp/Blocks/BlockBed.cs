@@ -233,17 +233,16 @@ public class BlockBed : Block
             {
                 for (int checkZ = searchMinZ; checkZ <= searchMaxZ; ++checkZ)
                 {
-                    if (reader.ShouldSuffocate(checkX, y - 1, checkZ) &&
-                        reader.IsAir(checkX, y, checkZ) &&
-                        reader.IsAir(checkX, y + 1, checkZ))
+                    if (!reader.ShouldSuffocate(checkX, y - 1, checkZ) ||
+                        !reader.IsAir(checkX, y, checkZ) ||
+                        !reader.IsAir(checkX, y + 1, checkZ))
                     {
-                        if (skip <= 0)
-                        {
-                            return new Vec3i(checkX, y, checkZ);
-                        }
-
-                        --skip;
+                        continue;
                     }
+
+                    if (skip <= 0) return new Vec3i(checkX, y, checkZ);
+
+                    --skip;
                 }
             }
         }

@@ -13,12 +13,8 @@ internal class BlockTrapDoor : Block
 
     public BlockTrapDoor(int id, Material material) : base(id, material)
     {
-        TextureId = 84;
-        if (material == Material.Metal)
-        {
-            ++TextureId;
-        }
-
+        TextureId = BlockTextures.TrapdoorWood;
+        if (material == Material.Metal) TextureId = BlockTextures.TrapdoorIron;
         SetBoundingBox(0.5F - HalfWidth, 0.0F, 0.5F - HalfWidth, 0.5F + HalfWidth, FullHeight, 0.5F + HalfWidth);
     }
 

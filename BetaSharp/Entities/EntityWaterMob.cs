@@ -8,9 +8,18 @@ public abstract class EntityWaterMob : EntityCreature, SpawnableEntity
     {
     }
 
-    public override bool canBreatheUnderwater() => true;
+    public override bool canBreatheUnderwater()
+    {
+        return true;
+    }
 
-    public override bool canSpawn() => world.Entities.CanSpawnEntity(boundingBox);
+    public override bool canSpawn()
+    {
+        return World.Entities.CanSpawnEntity(BoundingBox);
+    }
 
-    public override int getTalkInterval() => 120;
+    public override int getTalkInterval()
+    {
+        return 120;
+    }
 }

@@ -7,25 +7,37 @@ namespace BetaSharp.Entities;
 
 public class EntitySkeleton : EntityMonster
 {
-    private static readonly ItemStack defaultHeldItem = new(Item.BOW, 1);
-
-    public EntitySkeleton(IWorldContext world) : base(world) => texture = "/mob/skeleton.png";
     public override EntityType Type => EntityRegistry.Skeleton;
+    private static readonly ItemStack defaultHeldItem = new ItemStack(Item.BOW, 1);
 
-    protected override string getLivingSound() => "mob.skeleton";
+    public EntitySkeleton(IWorldContext world) : base(world)
+    {
+        Texture = "/mob/skeleton.png";
+    }
 
-    protected override string getHurtSound() => "mob.skeletonhurt";
+    protected override String getLivingSound()
+    {
+        return "mob.skeleton";
+    }
 
-    protected override string getDeathSound() => "mob.skeletonhurt";
+    protected override String getHurtSound()
+    {
+        return "mob.skeletonhurt";
+    }
+
+    protected override String getDeathSound()
+    {
+        return "mob.skeletonhurt";
+    }
 
     public override void tickMovement()
     {
-        if (world.Environment.CanMonsterSpawn())
+        if (World.Environment.CanMonsterSpawn())
         {
-            float brightness = getBrightnessAtEyes(1.0F);
-            if (brightness > 0.5F && world.Lighting.HasSkyLight(MathHelper.Floor(x), MathHelper.Floor(y), MathHelper.Floor(z)) && random.NextFloat() * 30.0F < (brightness - 0.4F) * 2.0F)
+            float brightness = GetBrightnessAtEyes(1.0F);
+            if (brightness > 0.5F && World.Lighting.HasSkyLight(MathHelper.Floor(X), MathHelper.Floor(Y), MathHelper.Floor(Z)) && Random.NextFloat() * 30.0F < (brightness - 0.4F) * 2.0F)
             {
-                fireTicks = 300;
+                FireTicks = 300;
             }
         }
 
@@ -36,47 +48,61 @@ public class EntitySkeleton : EntityMonster
     {
         if (distance < 10.0F)
         {
-            double dx = entity.x - x;
-            double dy = entity.z - z;
-            if (attackTime == 0)
+            double dx = entity.X - X;
+            double dy = entity.Z - Z;
+            if (AttackTime == 0)
             {
-                EntityArrow arrow = new(world, this);
-                double targetHeightOffset = entity.y + entity.getEyeHeight() - 0.2F - arrow.y;
+                EntityArrow arrow = new EntityArrow(World, this);
+                double targetHeightOffset = entity.Y + (double)entity.GetEyeHeight() - (double)0.2F - arrow.Y;
                 float distanceFactor = MathHelper.Sqrt(dx * dx + dy * dy) * 0.2F;
-                world.Broadcaster.PlaySoundAtEntity(this, "random.bow", 1.0F, 1.0F / (random.NextFloat() * 0.4F + 0.8F));
-                world.SpawnEntity(arrow);
-                arrow.setArrowHeading(dx, targetHeightOffset + distanceFactor, dy, 0.6F, 12.0F);
-                attackTime = 30;
+                World.Broadcaster.PlaySoundAtEntity(this, "random.bow", 1.0F, 1.0F / (Random.NextFloat() * 0.4F + 0.8F));
+                World.SpawnEntity(arrow);
+                arrow.setArrowHeading(dx, targetHeightOffset + (double)distanceFactor, dy, 0.6F, 12.0F);
+                AttackTime = 30;
             }
 
-            yaw = (float)(Math.Atan2(dy, dx) * 180.0D / (float)Math.PI) - 90.0F;
+            Yaw = (float)(System.Math.Atan2(dy, dx) * 180.0D / (double)((float)Math.PI)) - 90.0F;
             hasAttacked = true;
         }
+
     }
 
-    public override void writeNbt(NBTTagCompound nbt) => base.writeNbt(nbt);
+    public override void WriteNbt(NBTTagCompound nbt)
+    {
+        base.WriteNbt(nbt);
+    }
 
-    public override void readNbt(NBTTagCompound nbt) => base.readNbt(nbt);
+    public override void ReadNbt(NBTTagCompound nbt)
+    {
+        base.ReadNbt(nbt);
+    }
 
-    protected override int getDropItemId() => Item.ARROW.id;
+    protected override int getDropItemId()
+    {
+        return Item.ARROW.id;
+    }
 
     protected override void dropFewItems()
     {
-        int amount = random.NextInt(3);
+        int amount = Random.NextInt(3);
 
         int i;
         for (i = 0; i < amount; ++i)
         {
-            dropItem(Item.ARROW.id, 1);
+            DropItem(Item.ARROW.id, 1);
         }
 
-        amount = random.NextInt(3);
+        amount = Random.NextInt(3);
 
         for (i = 0; i < amount; ++i)
         {
-            dropItem(Item.Bone.id, 1);
+            DropItem(Item.Bone.id, 1);
         }
+
     }
 
-    public override ItemStack getHeldItem() => defaultHeldItem;
+    public override ItemStack getHeldItem()
+    {
+        return defaultHeldItem;
+    }
 }

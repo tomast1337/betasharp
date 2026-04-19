@@ -1,21 +1,24 @@
+using BetaSharp.Entities;
+using BetaSharp.Inventorys;
 using BetaSharp.Items;
+using BetaSharp.NBT;
 using BetaSharp.Util.Maths;
 
 namespace BetaSharp.Blocks.Entities;
 
 /// <summary>
-///     Block entity for a chest, storing the 9 dispener slots and implementing the random item selection.
+/// Block entity for a chest, storing the 9 dispener slots and implementing the random item selection.
 /// </summary>
 public class BlockEntityDispenser : BlockEntityWithInventory<BlockEntityDispenser>
 {
-    private readonly JavaRandom _random = new();
     public override BlockEntityType Type => Dispenser;
     public override int Size => 9; // 3x3
     public override string Name => "Trap";
 
+    private readonly JavaRandom _random = new();
+
     /// <summary>
-    ///     Chooses a random item from the dispenser inventory and removes one item from it, returning the removed item.
-    ///     Returns null if the inventory is empty.
+    /// Chooses a random item from the dispenser inventory and removes one item from it, returning the removed item. Returns null if the inventory is empty.
     /// </summary>
     public ItemStack? GetItemToDispose()
     {

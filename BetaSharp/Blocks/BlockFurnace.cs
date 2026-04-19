@@ -22,7 +22,7 @@ internal class BlockFurnace : BlockWithEntity
     public BlockFurnace(int id, bool lit) : base(id, Material.Stone)
     {
         _lit = lit;
-        TextureId = 45;
+        TextureId = BlockTextures.FurnaceSide;
     }
 
     public override int GetDroppedItemId(int blockMeta) => Furnace.ID;
@@ -33,7 +33,7 @@ internal class BlockFurnace : BlockWithEntity
 
         if (@event.Placer != null)
         {
-            int direction = MathHelper.Floor(@event.Placer.yaw * 4.0F / 360.0F + 0.5D) & 3;
+            int direction = MathHelper.Floor(@event.Placer.Yaw * 4.0F / 360.0F + 0.5D) & 3;
 
             int meta = direction switch
             {
@@ -92,19 +92,15 @@ internal class BlockFurnace : BlockWithEntity
             direction = 4;
         }
 
-
         @event.World.Writer.SetBlockMeta(x, y, z, direction);
     }
 
     public override int GetTextureId(IBlockReader iBlockReader, int x, int y, int z, Side side)
     {
-        if (side is Side.Up or Side.Down)
-        {
-            return TextureId + 17;
-        }
+        if (side is Side.Up or Side.Down) return BlockTextures.FurnaceTop;
 
         Side meta = iBlockReader.GetBlockMeta(x, y, z).ToSide();
-        return side != meta ? TextureId : _lit ? TextureId + 16 : TextureId - 1;
+        return side != meta ? TextureId : _lit ? BlockTextures.FurnaceFrontLit : BlockTextures.FurnaceFrontUnlit;
     }
 
 
@@ -144,9 +140,9 @@ internal class BlockFurnace : BlockWithEntity
 
     public override int GetTexture(Side side) => side switch
     {
-        Side.Up or Side.Down => TextureId + 17,
-        Side.South => TextureId - 1,
-        _ => TextureId
+        Side.Up or Side.Down => BlockTextures.FurnaceTop,
+        Side.South => BlockTextures.FurnaceFrontUnlit,
+        _ => BlockTextures.FurnaceSide
     };
 
     public override bool OnUse(OnUseEvent @event)
@@ -216,9 +212,9 @@ internal class BlockFurnace : BlockWithEntity
                     stack.Count -= stackCount;
                     EntityItem droppedItem = new(@event.World, @event.X + offsetX, @event.Y + offsetY, @event.Z + offsetZ, new ItemStack(stack.ItemId, stackCount, stack.getDamage()))
                     {
-                        velocityX = (float)s_random.NextGaussian() * DropSpread,
-                        velocityY = (float)s_random.NextGaussian() * DropSpread + 0.2F,
-                        velocityZ = (float)s_random.NextGaussian() * DropSpread
+                        VelocityX = (float)s_random.NextGaussian() * DropSpread,
+                        VelocityY = (float)s_random.NextGaussian() * DropSpread + 0.2F,
+                        VelocityZ = (float)s_random.NextGaussian() * DropSpread
                     };
                     @event.World.SpawnEntity(droppedItem);
                 }

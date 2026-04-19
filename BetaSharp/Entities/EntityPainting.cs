@@ -8,19 +8,20 @@ namespace BetaSharp.Entities;
 
 public class EntityPainting : Entity
 {
+    public override EntityType Type => EntityRegistry.Painting;
     private int _tickCounter;
-    public EnumArt Art;
     public int Direction;
     public int XPosition;
     public int YPosition;
     public int ZPosition;
+    public EnumArt Art;
 
     public EntityPainting(IWorldContext world) : base(world)
     {
         _tickCounter = 0;
         Direction = 0;
-        standingEyeHeight = 0.0F;
-        setBoundingBoxSpacing(0.5F, 0.5F);
+        StandingEyeHeight = 0.0F;
+        SetBoundingBoxSpacing(0.5F, 0.5F);
     }
 
     public EntityPainting(IWorldContext world, int xPosition, int yPosition, int zPosition, int direction) : this(world)
@@ -31,7 +32,7 @@ public class EntityPainting : Entity
 
         List<EnumArt> validPaintings = new();
 
-        foreach (EnumArt art in EnumArt.Values)
+        foreach (var art in EnumArt.Values)
         {
             Art = art;
             SetFacing(direction);
@@ -43,13 +44,13 @@ public class EntityPainting : Entity
 
         if (validPaintings.Count > 0)
         {
-            Art = validPaintings[random.NextInt(validPaintings.Count)];
+            Art = validPaintings[Random.NextInt(validPaintings.Count)];
         }
 
         SetFacing(direction);
     }
 
-    public EntityPainting(IWorldContext world, int x, int y, int z, int direction, string title) : this(world)
+    public EntityPainting(IWorldContext world, int x, int y, int z, int direction, String title) : this(world)
     {
         XPosition = x;
         YPosition = y;
@@ -60,26 +61,20 @@ public class EntityPainting : Entity
         SetFacing(direction);
     }
 
-    public override EntityType Type => EntityRegistry.Painting;
-
 
     private void SetFacing(int facing)
     {
         Direction = facing;
-        prevYaw = yaw = facing * 90;
+        PrevYaw = Yaw = (facing * 90);
 
         float halfWidth = Art.SizeX;
         float halfHeight = Art.SizeY;
         float halfDepth = Art.SizeX;
 
         if (facing != 0 && facing != 2)
-        {
             halfWidth = 0.5F;
-        }
         else
-        {
             halfDepth = 0.5F;
-        }
 
         halfWidth /= 32.0F;
         halfHeight /= 32.0F;
@@ -111,10 +106,10 @@ public class EntityPainting : Entity
         }
 
         centerY += GetArtOffset(Art.SizeY);
-        setPosition(centerX, centerY, centerZ);
+        SetPosition(centerX, centerY, centerZ);
 
         float margin = -(0.1F / 16.0F);
-        boundingBox = new Box(
+        BoundingBox = new Box(
             centerX - halfWidth - margin,
             centerY - halfHeight - margin,
             centerZ - halfDepth - margin,
@@ -123,11 +118,14 @@ public class EntityPainting : Entity
             centerZ + halfDepth + margin);
     }
 
-    private static float GetArtOffset(int artSize) => artSize == 32 ? 0.5F : artSize == 64 ? 0.5F : 0.0F;
-
-    public override void tick()
+    private static float GetArtOffset(int artSize)
     {
-        if (_tickCounter++ == 100 && !world.IsRemote)
+        return artSize == 32 ? 0.5F : (artSize == 64 ? 0.5F : 0.0F);
+    }
+
+    public override void Tick()
+    {
+        if (_tickCounter++ == 100 && !World.IsRemote)
         {
             _tickCounter = 0;
             if (!CanHangOnWall())
@@ -139,7 +137,7 @@ public class EntityPainting : Entity
 
     public bool CanHangOnWall()
     {
-        if (world.Entities.GetEntityCollisionsScratch(this, boundingBox).Count > 0)
+        if (World.Entities.GetEntityCollisionsScratch(this, BoundingBox).Count > 0)
         {
             return false;
         }
@@ -153,15 +151,15 @@ public class EntityPainting : Entity
         {
             case 0:
             case 2:
-                startX = MathHelper.Floor(x - Art.SizeX / 32.0F);
+                startX = MathHelper.Floor(X - (Art.SizeX / 32.0F));
                 break;
             case 1:
             case 3:
-                startZ = MathHelper.Floor(z - Art.SizeX / 32.0F);
+                startZ = MathHelper.Floor(Z - (Art.SizeX / 32.0F));
                 break;
         }
 
-        int startY = MathHelper.Floor(y - Art.SizeY / 32.0F);
+        int startY = MathHelper.Floor(Y - (Art.SizeY / 32.0F));
 
         for (int dx = 0; dx < widthInBlocks; ++dx)
         {
@@ -170,11 +168,11 @@ public class EntityPainting : Entity
                 Material material;
                 if (Direction != 0 && Direction != 2)
                 {
-                    material = world.Reader.GetMaterial(XPosition, startY + dy, startZ + dx);
+                    material = World.Reader.GetMaterial(XPosition, startY + dy, startZ + dx);
                 }
                 else
                 {
-                    material = world.Reader.GetMaterial(startX + dx, startY + dy, ZPosition);
+                    material = World.Reader.GetMaterial(startX + dx, startY + dy, ZPosition);
                 }
 
                 if (!material.IsSolid)
@@ -184,9 +182,9 @@ public class EntityPainting : Entity
             }
         }
 
-        List<Entity> entitiesInBox = world.Entities.GetEntities(this, boundingBox);
+        var entitiesInBox = World.Entities.GetEntities(this, BoundingBox);
 
-        foreach (Entity entity in entitiesInBox)
+        foreach (var entity in entitiesInBox)
         {
             if (entity is EntityPainting)
             {
@@ -197,20 +195,19 @@ public class EntityPainting : Entity
         return true;
     }
 
-    public override bool isCollidable() => true;
+    public override bool IsCollidable() => true;
 
-    public override bool damage(Entity entity, int amount)
+    public override bool Damage(Entity entity, int amount)
     {
-        if (!dead && !world.IsRemote)
+        if (!Dead && !World.IsRemote)
         {
-            scheduleVelocityUpdate();
+            ScheduleVelocityUpdate();
             DropAsItem();
         }
-
         return true;
     }
 
-    public override void writeNbt(NBTTagCompound nbt)
+    public override void WriteNbt(NBTTagCompound nbt)
     {
         nbt.SetByte("Dir", (sbyte)Direction);
         nbt.SetString("Motive", Art.Title);
@@ -219,7 +216,7 @@ public class EntityPainting : Entity
         nbt.SetInteger("TileZ", ZPosition);
     }
 
-    public override void readNbt(NBTTagCompound nbt)
+    public override void ReadNbt(NBTTagCompound nbt)
     {
         Direction = nbt.GetByte("Dir");
         XPosition = nbt.GetInteger("TileX");
@@ -232,17 +229,17 @@ public class EntityPainting : Entity
         SetFacing(Direction);
     }
 
-    public override void move(double dx, double dy, double dz)
+    public override void Move(double dx, double dy, double dz)
     {
-        if (!world.IsRemote && dx * dx + dy * dy + dz * dz > 0.0D)
+        if (!World.IsRemote && dx * dx + dy * dy + dz * dz > 0.0D)
         {
             DropAsItem();
         }
     }
 
-    public override void addVelocity(double dx, double dy, double dz)
+    public override void AddVelocity(double dx, double dy, double dz)
     {
-        if (!world.IsRemote && dx * dx + dy * dy + dz * dz > 0.0D)
+        if (!World.IsRemote && dx * dx + dy * dy + dz * dz > 0.0D)
         {
             DropAsItem();
         }
@@ -250,12 +247,9 @@ public class EntityPainting : Entity
 
     private void DropAsItem()
     {
-        if (dead || world.IsRemote)
-        {
-            return;
-        }
+        if (Dead || World.IsRemote) return;
 
-        markDead();
-        world.SpawnEntity(new EntityItem(world, x, y, z, new ItemStack(Item.Painting)));
+        MarkDead();
+        World.SpawnEntity(new EntityItem(World, X, Y, Z, new ItemStack(Item.Painting)));
     }
 }

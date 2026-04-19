@@ -2,6 +2,7 @@ using BetaSharp.Blocks.Entities;
 using BetaSharp.Blocks.Materials;
 using BetaSharp.Entities;
 using BetaSharp.Util.Maths;
+using BetaSharp.Worlds.Chunks;
 using BetaSharp.Worlds.Core.Systems;
 
 namespace BetaSharp.Blocks;
@@ -19,30 +20,26 @@ public class BlockPistonBase : Block
         SetHardness(0.5F);
     }
 
-    public int GetTopTexture() => _sticky ? 106 : 107;
+    public int GetTopTexture() => _sticky ? BlockTextures.PistonTopSticky : BlockTextures.PistonTopNormal;
 
     public override int GetTexture(Side side) =>
         side switch
         {
             Side.Up => GetTopTexture(),
-            Side.Down => 109,
-            _ => 108
+            Side.Down => BlockTextures.PistonBottom,
+            _ => BlockTextures.PistonSide
         };
 
     public override int GetTexture(Side side, int meta)
     {
         Side facing = GetFacing(meta).ToSide();
-        if (facing > Side.East)
-        {
-            return TextureId;
-        }
-
+        if (facing > Side.East) return TextureId;
         if (side == facing)
-        {
-            return !IsExtended(meta) && BoundingBox is { MinX: <= 0.0D, MinY: <= 0.0D, MinZ: <= 0.0D, MaxX: >= 1.0D, MaxY: >= 1.0D, MaxZ: >= 1.0D } ? TextureId : 110;
-        }
-
-        return side == facing.OppositeFace() ? 109 : 108;
+            return !IsExtended(meta) &&
+             BoundingBox is { MinX: <= 0.0D, MinY: <= 0.0D, MinZ: <= 0.0D, MaxX: >= 1.0D, MaxY: >= 1.0D, MaxZ: >= 1.0D } ?
+             TextureId :
+             BlockTextures.PistonExtensionSide;
+        return side == facing.OppositeFace() ? BlockTextures.PistonBottom : BlockTextures.PistonSide;
     }
 
     public override BlockRendererType GetRenderType() => BlockRendererType.PistonBase;
@@ -259,9 +256,9 @@ public class BlockPistonBase : Block
 
     private static int GetFacingForPlacement(int x, int y, int z, EntityPlayer player)
     {
-        if (MathF.Abs((float)player.x - x) < 2.0F && MathF.Abs((float)player.z - z) < 2.0F)
+        if (MathF.Abs((float)player.X - x) < 2.0F && MathF.Abs((float)player.Z - z) < 2.0F)
         {
-            double diffY = player.y + 1.82D - player.standingEyeHeight;
+            double diffY = player.Y + 1.82D - player.StandingEyeHeight;
             if (diffY - y > 2.0D)
             {
                 return 1;
@@ -273,7 +270,7 @@ public class BlockPistonBase : Block
             }
         }
 
-        int playerYaw = MathHelper.Floor(player.yaw * 4.0F / 360.0F + 0.5D) & 3;
+        int playerYaw = MathHelper.Floor(player.Yaw * 4.0F / 360.0F + 0.5D) & 3;
         return playerYaw switch
         {
             0 => 2,
@@ -331,10 +328,7 @@ public class BlockPistonBase : Block
                 return true;
             }
 
-            if (checkY is <= 0 or >= 127)
-            {
-                return false;
-            }
+            if (checkY <= 0 || checkY >= ChuckFormat.WorldHeight - 1) return false;
 
             int blockId = ctx.Reader.GetBlockId(checkX, checkY, checkZ);
             if (blockId == 0)
@@ -375,10 +369,7 @@ public class BlockPistonBase : Block
         {
             if (pushCount < 13)
             {
-                if (nextY is <= 0 or >= 127)
-                {
-                    return false;
-                }
+                if (nextY <= 0 || nextY >= ChuckFormat.WorldHeight - 1) return false;
 
                 int blockId = ctx.Reader.GetBlockId(nextX, nextY, nextZ);
                 if (blockId != 0)

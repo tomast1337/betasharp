@@ -11,19 +11,31 @@ public abstract class EntityAnimal : EntityCreature, SpawnableEntity
     {
     }
 
-    protected override float getBlockPathWeight(int x, int y, int z) => world.Reader.GetBlockId(x, y - 1, z) == Block.GrassBlock.ID ? 10.0F : world.Lighting.GetLuminance(x, y, z) - 0.5F;
+    protected override float getBlockPathWeight(int x, int y, int z)
+    {
+        return World.Reader.GetBlockId(x, y - 1, z) == Block.GrassBlock.ID ? 10.0F : World.Lighting.GetLuminance(x, y, z) - 0.5F;
+    }
 
-    public override void writeNbt(NBTTagCompound nbt) => base.writeNbt(nbt);
+    public override void WriteNbt(NBTTagCompound nbt)
+    {
+        base.WriteNbt(nbt);
+    }
 
-    public override void readNbt(NBTTagCompound nbt) => base.readNbt(nbt);
+    public override void ReadNbt(NBTTagCompound nbt)
+    {
+        base.ReadNbt(nbt);
+    }
 
     public override bool canSpawn()
     {
-        int x = MathHelper.Floor(this.x);
-        int y = MathHelper.Floor(boundingBox.MinY);
-        int z = MathHelper.Floor(this.z);
-        return world.Reader.GetBlockId(x, y - 1, z) == Block.GrassBlock.ID && world.Reader.GetBrightness(x, y, z) > 8 && base.canSpawn();
+        int x = MathHelper.Floor(base.X);
+        int y = MathHelper.Floor(BoundingBox.MinY);
+        int z = MathHelper.Floor(base.Z);
+        return World.Reader.GetBlockId(x, y - 1, z) == Block.GrassBlock.ID && World.Reader.GetBrightness(x, y, z) > 8 && base.canSpawn();
     }
 
-    public override int getTalkInterval() => 120;
+    public override int getTalkInterval()
+    {
+        return 120;
+    }
 }

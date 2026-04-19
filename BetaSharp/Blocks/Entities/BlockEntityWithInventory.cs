@@ -59,7 +59,7 @@ public abstract class BlockEntityWithInventory<T> : BlockEntity, IInventory wher
         MarkDirty();
     }
 
-    public bool CanPlayerUse(EntityPlayer player) => World.Entities.GetBlockEntity<T>(X, Y, Z) == this && player.getSquaredDistance(X + 0.5D, Y + 0.5D, Z + 0.5D) <= 64.0D;
+    public bool CanPlayerUse(EntityPlayer player) => World.Entities.GetBlockEntity<T>(X, Y, Z) == this && player.GetSquaredDistance(X + 0.5D, Y + 0.5D, Z + 0.5D) <= 64.0D;
 
     public override void ReadNbt(NBTTagCompound nbt)
     {

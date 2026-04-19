@@ -6,23 +6,20 @@ namespace BetaSharp.Blocks;
 
 internal class BlockSapling : BlockPlant
 {
+    private static readonly JavaRandom s_random = new ();
     private const float HalfSize = 0.4F;
-    private static readonly JavaRandom s_random = new();
 
-    public BlockSapling(int i, int j) : base(i, j) => SetBoundingBox(0.5F - HalfSize, 0.0F, 0.5F - HalfSize, 0.5F + HalfSize, HalfSize * 2.0F, 0.5F + HalfSize);
+    public BlockSapling(int id) : base(id, BlockTextures.SaplingOak)
+    {
+        SetBoundingBox(0.5F - HalfSize, 0.0F, 0.5F - HalfSize, 0.5F + HalfSize, HalfSize * 2.0F, 0.5F + HalfSize);
+    }
 
     public override void OnTick(OnTickEvent @event)
     {
-        if (@event.World.IsRemote)
-        {
-            return;
-        }
+        if (@event.World.IsRemote) return;
 
         base.OnTick(@event);
-        if (@event.World.Reader.GetBrightness(@event.X, @event.Y + 1, @event.Z) < 9 || Random.Shared.Next(30) != 0)
-        {
-            return;
-        }
+        if (@event.World.Reader.GetBrightness(@event.X, @event.Y + 1, @event.Z) < 9 || Random.Shared.Next(30) != 0) return;
 
         int saplingMeta = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z);
         if ((saplingMeta & 8) == 0)
@@ -40,9 +37,9 @@ internal class BlockSapling : BlockPlant
         meta &= 3;
         return meta switch
         {
-            1 => 63,
-            2 => 79,
-            _ => base.GetTexture(side, meta)
+            1 => BlockTextures.SaplingPine,
+            2 => BlockTextures.SaplingBirch,
+            _ => BlockTextures.SaplingOak
         };
     }
 

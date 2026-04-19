@@ -5,25 +5,40 @@ namespace BetaSharp.Entities;
 
 public class EntityCow : EntityAnimal
 {
-    public EntityCow(IWorldContext world) : base(world)
-    {
-        texture = "/mob/cow.png";
-        setBoundingBoxSpacing(0.9F, 1.3F);
-    }
-
     public override EntityType Type => EntityRegistry.Cow;
 
-    protected override string getLivingSound() => "mob.cow";
+    public EntityCow(IWorldContext world) : base(world)
+    {
+        this.Texture = "/mob/cow.png";
+        this.SetBoundingBoxSpacing(0.9F, 1.3F);
+    }
 
-    protected override string getHurtSound() => "mob.cowhurt";
+    protected override string getLivingSound()
+    {
+        return "mob.cow";
+    }
 
-    protected override string getDeathSound() => "mob.cowhurt";
+    protected override string getHurtSound()
+    {
+        return "mob.cowhurt";
+    }
 
-    protected override float getSoundVolume() => 0.4F;
+    protected override string getDeathSound()
+    {
+        return "mob.cowhurt";
+    }
 
-    protected override int getDropItemId() => Item.Leather.id;
+    protected override float getSoundVolume()
+    {
+        return 0.4F;
+    }
 
-    public override bool interact(EntityPlayer player)
+    protected override int getDropItemId()
+    {
+        return Item.Leather.id;
+    }
+
+    public override bool Interact(EntityPlayer player)
     {
         ItemStack heldBucket = player.inventory.GetItemInHand();
         if (heldBucket != null && heldBucket.ItemId == Item.Bucket.id)
@@ -31,7 +46,9 @@ public class EntityCow : EntityAnimal
             player.inventory.SetStack(player.inventory.SelectedSlot, new ItemStack(Item.MilkBucket));
             return true;
         }
-
-        return false;
+        else
+        {
+            return false;
+        }
     }
 }

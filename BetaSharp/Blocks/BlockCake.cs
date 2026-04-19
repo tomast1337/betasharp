@@ -35,21 +35,9 @@ internal class BlockCake : Block
 
     public override int GetTexture(Side side, int meta)
     {
-        if (side == Side.Up)
-        {
-            return TextureId;
-        }
-
-        if (side == Side.Down)
-        {
-            return TextureId + 3;
-        }
-
-        if (meta > 0 && side == Side.West)
-        {
-            return TextureId + 2;
-        }
-
+        if (side == Side.Up)return BlockTextures.Cake;
+        if (side == Side.Down)return TextureId + 3;
+        if (meta > 0 && side == Side.West)return TextureId + 2;
         return TextureId + 1;
     }
 
@@ -66,10 +54,7 @@ internal class BlockCake : Block
 
     public override bool OnUse(OnUseEvent @event)
     {
-        if (@event.Player.health >= 20)
-        {
-            return true;
-        }
+        if (@event.Player.Health >= 20) return true;
 
         @event.Player.heal(3);
         int slicesEaten = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z) + 1;
@@ -88,10 +73,7 @@ internal class BlockCake : Block
 
     public override void OnBlockBreakStart(OnBlockBreakStartEvent @event)
     {
-        if (@event.Player.health >= 20)
-        {
-            return;
-        }
+        if (@event.Player.Health >= 20) return;
 
         @event.Player.heal(3);
         int slicesEaten = @event.World.Reader.GetBlockMeta(@event.X, @event.Y, @event.Z) + 1;
