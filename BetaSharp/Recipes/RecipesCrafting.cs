@@ -110,17 +110,11 @@ public static class RecipesCrafting
         ShapelessRecipeCount++;
     }
 
-    private static ItemStack ParseIngredient(string name, string recipeName)
-    {
-        if (ItemLookup.TryGetItem(name, out ItemStack? item, 1, -1)) return item;
-        throw new InvalidOperationException($"Recipe '{recipeName}': unknown item/block '{name}'.");
-    }
+    private static ItemStack ParseIngredient(string name, string recipeName) =>
+        RecipeItemRefResolver.TryResolveItemStack(name, 1, -1, out ItemStack? item) ? item : throw new InvalidOperationException($"Recipe '{recipeName}': unknown item/block '{name}'.");
 
-    private static ItemStack ParseResult(ResultRef result, string recipeName)
-    {
-        if (ItemLookup.TryGetItem(result.Id, out ItemStack? item, result.Count)) return item;
-        throw new InvalidOperationException($"Recipe '{recipeName}': unknown item/block result '{result.Id}'.");
-    }
+    private static ItemStack ParseResult(ResultRef result, string recipeName) =>
+        RecipeItemRefResolver.TryResolveItemStack(result.Id, result.Count, 0, out ItemStack? item) ? item : throw new InvalidOperationException($"Recipe '{recipeName}': unknown item/block result '{result.Id}'.");
 
     public static ItemStack? Craft(InventoryCrafting craftingInventory)
     {

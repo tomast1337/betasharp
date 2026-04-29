@@ -20,10 +20,10 @@ public static class RecipesSmelting
         if (string.IsNullOrEmpty(def.Input))
             throw new InvalidOperationException("Smelting recipe has no input.");
 
-        if (!ItemLookup.TryGetItemId(def.Input, out int inputId))
+        if (!RecipeItemRefResolver.TryResolveItemId(def.Input, out int inputId))
             throw new InvalidOperationException($"Unknown input '{def.Input}'.");
 
-        if (!ItemLookup.TryGetItem(def.Result.Id, out ItemStack? output, def.Result.Count))
+        if (!RecipeItemRefResolver.TryResolveItemStack(def.Result.Id, def.Result.Count, 0, out ItemStack? output))
             throw new InvalidOperationException($"Unknown result '{def.Result.Id}'.");
 
         if (!Recipes.TryAdd(inputId, output))
