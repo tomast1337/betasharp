@@ -1,3 +1,4 @@
+using BetaSharp.Blocks;
 using BetaSharp.Blocks.Entities;
 using BetaSharp.Diagnostics;
 using BetaSharp.Entities;
@@ -8,6 +9,9 @@ namespace BetaSharp.Registries;
 
 public static class DefaultRegistries
 {
+    public static readonly IRegistry<Block> Blocks =
+        new IndexedRegistry<Block>(ResourceLocation.Parse("blocks"));
+
     public static readonly IRegistry<EntityType> EntityTypes =
         new IndexedRegistry<EntityType>(ResourceLocation.Parse("entity_types"));
 
@@ -29,6 +33,8 @@ public static class DefaultRegistries
 
         MetricRegistry.Bootstrap(typeof(ServerMetrics));
 
+        BlockRegistryBootstrap.RegisterVanillaBlocks(Blocks);
+        RegistryAccess.AddBuiltIn(RegistryKeys.Blocks, Blocks);
         RegistryAccess.AddBuiltIn(RegistryKeys.EntityTypes, EntityTypes);
         RegistryAccess.AddBuiltIn(RegistryKeys.Biomes, Biomes);
         RegistryAccess.AddBuiltIn(RegistryKeys.BlockEntityTypes, BlockEntityTypes);
@@ -41,6 +47,7 @@ public static class DefaultRegistries
 
     private static void FreezeAll()
     {
+        Blocks.Freeze();
         EntityTypes.Freeze();
         Biomes.Freeze();
         BlockEntityTypes.Freeze();

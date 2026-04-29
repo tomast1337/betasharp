@@ -1,3 +1,4 @@
+using BetaSharp.Blocks;
 using BetaSharp.Blocks.Entities;
 using BetaSharp.Entities;
 using BetaSharp.Recipes;
@@ -12,6 +13,8 @@ namespace BetaSharp.Registries;
 /// </summary>
 public static class RegistryKeys
 {
+    public static readonly RegistryKey<Block> Blocks = new("betasharp:block");
+
     public static readonly RegistryKey<EntityType> EntityTypes = new("betasharp:entity_type");
     public static readonly RegistryKey<Biome> Biomes = new("betasharp:biome");
     public static readonly RegistryKey<BlockEntityType> BlockEntityTypes = new("betasharp:block_entity_type");
