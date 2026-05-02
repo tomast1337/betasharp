@@ -62,26 +62,46 @@ public class FluidsRenderer : IBlockRenderer
                 textureId = block.GetTexture(Side.North, meta);
             }
 
-            int texU = (textureId & 15) << 4;
-            int texV = textureId & 240;
-            float centerU = (texU + 8.0f) / 256.0f;
-            float centerV = (texV + 8.0f) / 256.0f;
-
-            // If completely still, use standard flat UVs
-            if (flowAngle <= -999.0F)
+            bool isStillFluid = flowAngle <= -999.0F;
+            if (isStillFluid)
             {
                 flowAngle = 0.0F;
             }
+
+            int ts = ctx.TerrainAtlasTileSize;
+            float atlasSize = ts * 16.0F;
+            float sinAngle;
+            float cosAngle;
+            float centerU;
+            float centerV;
+
+            if (ctx.UseArrayTextures)
+            {
+                ctx.Tess.setTextureLayer(textureId);
+                const float halfTileUv = 0.5F;
+                sinAngle = MathHelper.Sin(flowAngle) * halfTileUv;
+                cosAngle = MathHelper.Cos(flowAngle) * halfTileUv;
+                centerU = 0.5F;
+                centerV = 0.5F;
+            }
             else
             {
-                // Shift UV center for flowing animation
-                centerU = (texU + 16) / 256.0F;
-                centerV = (texV + 16) / 256.0F;
-            }
+                ctx.Tess.setTextureLayer(0);
+                int texU = (textureId & 15) * ts;
+                int texV = (textureId >> 4) * ts;
+                centerU = (texU + ts * 0.5F) / atlasSize;
+                centerV = (texV + ts * 0.5F) / atlasSize;
+                if (!isStillFluid)
+                {
+                    // Match legacy flowing UV origin (shift by one tile in atlas space)
+                    centerU = (texU + ts) / atlasSize;
+                    centerV = (texV + ts) / atlasSize;
+                }
 
-            // Calculate rotational offsets for the UVs to make the texture flow in the correct direction
-            float sinAngle = MathHelper.Sin(flowAngle) * 8.0F / 256.0F;
-            float cosAngle = MathHelper.Cos(flowAngle) * 8.0F / 256.0F;
+                float halfSpanAtlas = (ts * 0.5F) / atlasSize;
+                sinAngle = MathHelper.Sin(flowAngle) * halfSpanAtlas;
+                cosAngle = MathHelper.Cos(flowAngle) * halfSpanAtlas;
+            }
 
             float luminance = block.getLuminance(ctx.Lighting, pos.x, pos.y, pos.z);
             ctx.Tess.setColorOpaque_F(lightTop * luminance * tintR, lightTop * luminance * tintG,
@@ -125,8 +145,6 @@ public class FluidsRenderer : IBlockRenderer
             if (side == 3) adjX = pos.x + 1; // East
 
             int textureId = block.GetTexture((side + 2).ToSide(), meta);
-            int texU = (textureId & 15) << 4;
-            int texV = textureId & 240;
 
             if (ctx.RenderAllFaces || sideVisible[side])
             {
@@ -173,12 +191,35 @@ public class FluidsRenderer : IBlockRenderer
 
                 hasRendered = true;
 
-                // Crop the UVs vertically so the texture doesn't stretch on short flowing water blocks
-                float minU = (texU + 0) / 256.0F;
-                float maxU = (texU + 16 - 0.01f) / 256.0f;
-                float minV1 = (texV + (1.0F - h1) * 16.0F) / 256.0F; // UV height match for corner 1
-                float minV2 = (texV + (1.0F - h2) * 16.0F) / 256.0F; // UV height match for corner 2
-                float maxV = (texV + 16 - 0.01f) / 256.0f;
+                int ts = ctx.TerrainAtlasTileSize;
+                float atlasSize = ts * 16.0F;
+                float minU;
+                float maxU;
+                float minV1;
+                float minV2;
+                float maxV;
+
+                if (ctx.UseArrayTextures)
+                {
+                    ctx.Tess.setTextureLayer(textureId);
+                    minU = 0.0F;
+                    maxU = 1.0F - 0.0001F;
+                    // Top of side (fluid surface) maps to V=0; bottom (y=0) to V=1 — matches legacy texel mapping
+                    minV1 = 1.0F - h1;
+                    minV2 = 1.0F - h2;
+                    maxV = 1.0F - 0.0001F;
+                }
+                else
+                {
+                    ctx.Tess.setTextureLayer(0);
+                    int texUPix = (textureId & 15) * ts;
+                    int texVPix = (textureId >> 4) * ts;
+                    minU = texUPix / atlasSize;
+                    maxU = (texUPix + ts - 0.01f) / atlasSize;
+                    minV1 = (texVPix + (1.0F - h1) * ts) / atlasSize;
+                    minV2 = (texVPix + (1.0F - h2) * ts) / atlasSize;
+                    maxV = (texVPix + ts - 0.01f) / atlasSize;
+                }
 
                 float luminance = block.getLuminance(ctx.Lighting, adjX, pos.y, adjZ);
                 float shadow = (side < 2) ? lightZ : lightX;
