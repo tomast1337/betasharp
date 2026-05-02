@@ -717,10 +717,11 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
         tessellator.setTranslationD(-renderX, -renderY, -renderZ);
         tessellator.disableColor();
 
-        int terrainAtlasTileSize = _game.FrameContext.Textures.GetAtlasTileSize("/terrain.png");
+        int terrainAtlasTileSize =
+            _game.FrameContext.Textures.GetAtlasTileSize(TextureManager.TerrainLegacy2dTexturePath);
         BlockRenderer.RenderBlockByRenderType(_world.Reader, _world.Lighting, targetBlock,
             new BlockPos(hit.BlockX, hit.BlockY, hit.BlockZ), tessellator, 240 + (int)(DamagePartialTime * 10.0F), true,
-            _game.Options.AlternateBlocksEnabled, terrainAtlasTileSize);
+            _game.Options.AlternateBlocksEnabled, terrainAtlasTileSize, useArrayTextures: false);
         tessellator.draw();
 
         tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
