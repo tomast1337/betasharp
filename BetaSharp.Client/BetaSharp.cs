@@ -12,13 +12,14 @@ using BetaSharp.Client.Network;
 using BetaSharp.Client.Options;
 using BetaSharp.Client.Rendering;
 using BetaSharp.Client.Rendering.Backends;
-using BetaSharp.Client.Rendering.Core;
-using BetaSharp.Client.Rendering.Legacy;
-using BetaSharp.Client.Rendering.Presentation;
-using BetaSharp.Client.Rendering.Core.Textures;
+using BetaSharp.Client.Rendering.Backends.NoOp;
 using BetaSharp.Client.Rendering.Blocks.Entities;
+using BetaSharp.Client.Rendering.Core;
+using BetaSharp.Client.Rendering.Core.Textures;
 using BetaSharp.Client.Rendering.Entities;
 using BetaSharp.Client.Rendering.Items;
+using BetaSharp.Client.Rendering.Legacy;
+using BetaSharp.Client.Rendering.Presentation;
 using BetaSharp.Client.Resource;
 using BetaSharp.Client.Resource.Pack;
 using BetaSharp.Client.Sound;
@@ -151,7 +152,8 @@ public partial class BetaSharp :
     public IWorldRenderer WorldRenderer { get; private set; } = new NoOpWorldRenderer();
     public ILegacyFixedFunctionApi LegacyFixedFunctionApi { get; private set; } = new NoOpLegacyFixedFunctionApi();
 
-    public FrameContext FrameContext { get; private set; } = new(new NoOpLegacyFixedFunctionApi());
+    public FrameContext FrameContext { get; private set; } =
+        new(new NoOpLegacyFixedFunctionApi(), new NoOpTextureManager());
     public int PresentationTargetWidth => _framePresenter.FramebufferWidth;
     public int PresentationTargetHeight => _framePresenter.FramebufferHeight;
     public bool IsPresentationBlitSkipped => _framePresenter.SkipBlit;
@@ -350,7 +352,7 @@ public partial class BetaSharp :
         EntityRenderDispatcher = _rendererServices.EntityRenderDispatcher;
         BlockEntityRenderDispatcher = _rendererServices.BlockEntityRenderDispatcher;
         LegacyFixedFunctionApi = _rendererServices.LegacyFixedFunctionApi;
-        FrameContext = new FrameContext(LegacyFixedFunctionApi);
+        FrameContext = new FrameContext(LegacyFixedFunctionApi, TextureManager);
 
         UIContext = new UIContext(
             Options,

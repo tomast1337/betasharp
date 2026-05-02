@@ -1,4 +1,3 @@
-using BetaSharp.Client.DynamicTexture;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 

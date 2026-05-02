@@ -1,3 +1,4 @@
+using BetaSharp.Client.Rendering;
 using BetaSharp.Client.Rendering.Chunks.Occlusion;
 using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Client.Rendering.Core.OpenGL;
@@ -97,9 +98,9 @@ public class ChunkRenderer : IChunkVisibilityVisitor, IChunkRenderer
     public int ChunksRendered { get; private set; }
     public int TranslucentMeshes { get; private set; }
 
-    public ChunkRenderer(World world, Func<bool> alternateBlocks)
+    public ChunkRenderer(World world, Func<bool> alternateBlocks, FrameContext frameContext)
     {
-        _meshGenerator = new();
+        _meshGenerator = new(frameContext);
         _world = world;
         _alternateBlocks = alternateBlocks;
 

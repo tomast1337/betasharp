@@ -1,3 +1,4 @@
+using BetaSharp.Client.Rendering.Core.Textures;
 using BetaSharp.Client.Rendering.Legacy;
 
 namespace BetaSharp.Client.Rendering;
@@ -8,10 +9,13 @@ namespace BetaSharp.Client.Rendering;
 /// </summary>
 public sealed class FrameContext
 {
-    public FrameContext(ILegacyFixedFunctionApi legacyFixedFunctionApi)
+    public FrameContext(ILegacyFixedFunctionApi legacyFixedFunctionApi, ITextureManager textures)
     {
         LegacyFixedFunctionApi = legacyFixedFunctionApi;
+        Textures = textures;
     }
 
     public ILegacyFixedFunctionApi LegacyFixedFunctionApi { get; }
+
+    public ITextureManager Textures { get; }
 }

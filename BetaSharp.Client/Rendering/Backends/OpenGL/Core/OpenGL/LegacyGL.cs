@@ -357,6 +357,18 @@ public abstract unsafe class LegacyGL : IGL
             type.ToModern(), pixels);
     }
 
+    public void TexImage3D(TextureTarget target, int level, InternalFormat internalformat, uint width, uint height,
+        uint depth, int border, PixelFormat format, PixelType type, void* pixels)
+    {
+        SilkGL.TexImage3D(target, level, internalformat, width, height, depth, border, format, type, pixels);
+    }
+
+    public void TexSubImage3D(TextureTarget target, int level, int xoffset, int yoffset, int zoffset, uint width,
+        uint height, uint depth, PixelFormat format, PixelType type, void* pixels)
+    {
+        SilkGL.TexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
+    }
+
     public abstract void Translate(float x, float y, float z);
 
     public void Uniform1(int location, int v0)

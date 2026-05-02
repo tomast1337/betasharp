@@ -78,7 +78,7 @@ internal sealed class OpenGlRenderBackendBootstrap : IRenderBackendBootstrap
 
     public void UpdateDynamicTextures(ITextureManager textureManager, bool isGamePaused)
     {
-        textureManager.BindTexture(textureManager.GetTextureId("/terrain.png"));
+        textureManager.BindTexture(textureManager.GetTextureId(TextureManager.TerrainLegacy2dTexturePath));
         if (!isGamePaused)
         {
             textureManager.Tick();

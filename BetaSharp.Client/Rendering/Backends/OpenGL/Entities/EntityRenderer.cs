@@ -23,6 +23,11 @@ public abstract class EntityRenderer
     protected void loadTexture(string path)
     {
         ITextureManager? textureManager = Dispatcher.TextureManager;
+        if (string.Equals(path, "/terrain.png", StringComparison.Ordinal))
+        {
+            path = TextureManager.TerrainLegacy2dTexturePath;
+        }
+
         textureManager?.BindTexture(textureManager.GetTextureId(path));
     }
 

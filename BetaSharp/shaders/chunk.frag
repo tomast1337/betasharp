@@ -3,10 +3,11 @@
 in vec4 vertexColor;
 in vec2 texCoord;
 in float fogDistance;
+flat in float texLayer;
 
 out vec4 FragColor;
 
-uniform sampler2D textureSampler;
+uniform sampler2DArray textureSampler;
 uniform vec4 fogColor;
 uniform float fogDensity;
 uniform float fogStart;
@@ -18,7 +19,7 @@ uniform float fadeProgress;
 
 void main() 
 {
-    vec4 texColor = texture(textureSampler, texCoord);
+    vec4 texColor = texture(textureSampler, vec3(texCoord, texLayer));
     vec4 finalColor = texColor * vertexColor;
 
     if (finalColor.a < 0.001)

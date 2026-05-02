@@ -12,6 +12,8 @@ namespace BetaSharp.Client.Rendering.Backends.OpenGL;
 
 internal sealed class OpenGlRendererServices : IRendererServices
 {
+    public TexturePacks TexturePacks { get; }
+
     public ITextureManager TextureManager { get; }
     public ITextRenderer TextRenderer { get; }
     public ISkinManager SkinManager { get; }
@@ -22,12 +24,14 @@ internal sealed class OpenGlRendererServices : IRendererServices
 
     public OpenGlRendererServices(BetaSharp client, TexturePacks texturePacks, GameOptions options)
     {
+        TexturePacks = texturePacks;
         TextureManager = new TextureManager(
             client,
             texturePacks,
             options,
             new OpenGlTextureResourceFactory(),
             new DirectTextureUploadService());
+        ((TextureManager)TextureManager).SetRendererServices(this);
         TextRenderer = new TextRenderer(options, TextureManager);
         SkinManager = new SkinManager(TextureManager);
         EntityRenderDispatcher = global::BetaSharp.Client.Rendering.Entities.EntityRenderDispatcher.Instance;

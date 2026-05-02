@@ -1,4 +1,5 @@
 using BetaSharp.Blocks;
+using BetaSharp.Client.Rendering.Backends;
 
 namespace BetaSharp.Client.DynamicTexture;
 
@@ -12,7 +13,8 @@ internal class WaterSideSprite : Rendering.Core.Textures.DynamicTexture
 
     public WaterSideSprite() : base(Block.FlowingWater.TextureId + 1) => Replicate = 2;
 
-    public override void Setup(BetaSharp game) => TryLoadCustomTexture(game, "custom_water_flowing.png");
+    public override void Setup(IRendererServices services) =>
+        TryLoadCustomTexture(services, "custom_water_flowing.png");
 
     public override void tick()
     {

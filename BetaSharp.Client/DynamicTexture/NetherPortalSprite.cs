@@ -1,4 +1,5 @@
 using BetaSharp.Blocks;
+using BetaSharp.Client.Rendering.Backends;
 using BetaSharp.Util.Maths;
 
 namespace BetaSharp.Client.DynamicTexture;
@@ -8,9 +9,9 @@ internal class NetherPortalSprite() : Rendering.Core.Textures.DynamicTexture(Blo
     private readonly byte[][] _frames = new byte[32][];
     private int _ticks;
 
-    public override void Setup(BetaSharp game)
+    public override void Setup(IRendererServices services)
     {
-        TryLoadCustomTexture(game, "custom_portal.png");
+        TryLoadCustomTexture(services, "custom_portal.png");
         if (CustomFrames != null)
         {
             return;

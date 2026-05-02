@@ -4,10 +4,12 @@ layout(location = 0) in vec3 inPosition;
 layout(location = 1) in uvec2 inUV;
 layout(location = 2) in vec4 inColor;
 layout(location = 3) in uint inLight;
+layout(location = 4) in int inTexLayer;
 
 out vec4 vertexColor;
 out vec2 texCoord;
 out float fogDistance;
+flat out float texLayer;
 
 uniform mat4 modelViewMatrix;
 uniform mat4 projectionMatrix;
@@ -30,15 +32,6 @@ float unpackSkyLight(uint light)
 float unpackBlockLight(uint light)
 {
     return float(light & 0xFu) / 15.0;
-}
-
-int atlasIndexFromUV(vec2 uv)
-{
-    uv = clamp(uv, 0.0, 0.999999);
-
-    ivec2 tile = ivec2(floor(uv * 16.0));
-
-    return tile.x + tile.y * 16;
 }
 
 const float WAVY_STRENGTH = 1.0;
@@ -108,9 +101,11 @@ void main()
     
     uv += bias;
 
+    texLayer = float(inTexLayer);
+
     if (envAnim)
     {
-        int textureIndex = atlasIndexFromUV(uv);
+        int textureIndex = int(texLayer);
         vec3 worldPos = position + vec3(chunkPos.x, 0.0, chunkPos.y);
     
         applyWaving(worldPos, position, textureIndex, 1.0);

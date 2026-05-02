@@ -161,7 +161,7 @@ public class ItemRenderer : EntityRenderer
         float colorBlue;
         if (itemId < 256 && BlockRenderer.IsSideLit(Block.Blocks[itemId].getRenderType()))
         {
-            textureManager.BindTexture(textureManager.GetTextureId("/terrain.png"));
+            textureManager.BindTexture(textureManager.GetTextureId(TextureManager.TerrainLegacy2dTexturePath));
             Block block = Block.Blocks[itemId];
             GLManager.GL.PushMatrix();
             GLManager.GL.Translate(x - 2, y + 3, -3.0F);
@@ -188,7 +188,7 @@ public class ItemRenderer : EntityRenderer
             GLManager.GL.Disable(GLEnum.Lighting);
             if (itemId < 256)
             {
-                textureManager.BindTexture(textureManager.GetTextureId("/terrain.png"));
+                textureManager.BindTexture(textureManager.GetTextureId(TextureManager.TerrainLegacy2dTexturePath));
             }
             else
             {

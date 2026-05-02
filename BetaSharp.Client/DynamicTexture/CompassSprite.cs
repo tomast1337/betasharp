@@ -1,3 +1,4 @@
+using BetaSharp.Client.Rendering.Backends;
 using BetaSharp.Client.Rendering.Core.Textures;
 using BetaSharp.Items;
 using BetaSharp.Util.Maths;
@@ -22,10 +23,9 @@ internal class CompassSprite : Rendering.Core.Textures.DynamicTexture
         Atlas = FxImage.Items;
     }
 
-    public override void Setup(BetaSharp game)
+    public override void Setup(IRendererServices services)
     {
-        _game = game;
-        ITextureManager textureManager = game.TextureManager;
+        ITextureManager textureManager = services.TextureManager;
         string atlasPath = "/gui/items.png";
 
         TextureHandle handle = textureManager.GetTextureId(atlasPath);
@@ -47,7 +47,7 @@ internal class CompassSprite : Rendering.Core.Textures.DynamicTexture
 
         try
         {
-            using Stream? stream = game.TexturePackList.SelectedTexturePack.GetResourceAsStream("gui/items.png");
+            using Stream? stream = services.TexturePacks.SelectedTexturePack.GetResourceAsStream("gui/items.png");
             if (stream != null)
             {
                 using Image<Rgba32> atlasImage = Image.Load<Rgba32>(stream);

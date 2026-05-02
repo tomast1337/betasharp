@@ -459,6 +459,9 @@ public class GameRenderer : ISceneOrchestrator
             worldRenderer.SortAndRender(entity, 0, (double)tickDelta, frustrumCuller);
         }
 
+        _client.TextureManager.BindTexture(
+            _client.TextureManager.GetTextureId(TextureManager.TerrainLegacy2dTexturePath));
+
         _sceneRenderBackend.SetShadeModel(SceneShadeModel.Flat);
         Lighting.turnOn();
 

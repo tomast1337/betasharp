@@ -49,7 +49,8 @@ public class LeverRenderer : IBlockRenderer
             uvWest: ctx.UvRotateWest,
             customFlag: ctx.CustomFlag,
             enableAo: true,
-            aoBlendMode: 0
+            aoBlendMode: 0,
+            terrainAtlasTileSize: ctx.TerrainAtlasTileSize
         );
 
         // Draw the base using the helper
@@ -71,18 +72,21 @@ public class LeverRenderer : IBlockRenderer
             uvWest: ctx.UvRotateWest,
             customFlag: ctx.CustomFlag,
             enableAo: false,
-            aoBlendMode: 1
+            aoBlendMode: 1,
+            terrainAtlasTileSize: ctx.TerrainAtlasTileSize
         );
 
         // Determine texture for the handle itself
         int handleTextureId = handleCtx.OverrideTexture >= 0 ? handleCtx.OverrideTexture : block.GetTexture(0);
 
-        int texU = (handleTextureId & 15) << 4;
-        int texV = handleTextureId & 240;
-        float minU = texU / 256.0F;
-        float maxU = (texU + 15.99F) / 256.0F;
-        float minV = texV / 256.0F;
-        float maxV = (texV + 15.99F) / 256.0F;
+        int t = handleCtx.TerrainAtlasTileSize;
+        int texU = (handleTextureId & 15) * t;
+        int texV = (handleTextureId >> 4) * t;
+        float invW = 1.0F / (t * 16.0F);
+        float minU = texU * invW;
+        float maxU = (texU + t - 0.01F) * invW;
+        float minV = texV * invW;
+        float maxV = (texV + t - 0.01F) * invW;
 
         // --- 3. Handle Vertex Math ---
         Vec3D[] vertices = new Vec3D[8];
@@ -147,22 +151,32 @@ public class LeverRenderer : IBlockRenderer
 
         handleCtx.Tess.setColorOpaque_F(r * luminance, g * luminance, b * luminance);
 
+        handleCtx.Tess.setTextureLayer(handleTextureId);
+        float atlasW = t * 16.0F;
+        float LocU(float atlasU) => (atlasU * atlasW - texU) / t;
+        float LocV(float atlasV) => (atlasV * atlasW - texV) / t;
+
         for (int face = 0; face < 6; ++face)
         {
+            float faceMinU = minU;
+            float faceMaxU = maxU;
+            float faceMinV = minV;
+            float faceMaxV = maxV;
+
             // The handle uses specific tiny snippets of the texture atlas for its detail
             if (face == 0) // Bottom cap
             {
-                minU = (texU + 7) / 256.0F;
-                maxU = (texU + 9 - 0.01F) / 256.0F;
-                minV = (texV + 6) / 256.0F;
-                maxV = (texV + 8 - 0.01F) / 256.0F;
+                faceMinU = (texU + 7f * t / 16f) * invW;
+                faceMaxU = (texU + (9f - 0.01f) * t / 16f) * invW;
+                faceMinV = (texV + 6f * t / 16f) * invW;
+                faceMaxV = (texV + (8f - 0.01f) * t / 16f) * invW;
             }
             else if (face == 2) // Side detail
             {
-                minU = (texU + 7) / 256.0F;
-                maxU = (texU + 9 - 0.01F) / 256.0F;
-                minV = (texV + 6) / 256.0F;
-                maxV = (texV + 16 - 0.01F) / 256.0F;
+                faceMinU = (texU + 7f * t / 16f) * invW;
+                faceMaxU = (texU + (9f - 0.01f) * t / 16f) * invW;
+                faceMinV = (texV + 6f * t / 16f) * invW;
+                faceMaxV = (texV + (16f - 0.01f) * t / 16f) * invW;
             }
 
             Vec3D v1 = default, v2 = default, v3 = default, v4 = default;
@@ -207,10 +221,10 @@ public class LeverRenderer : IBlockRenderer
                     break;
             }
 
-            handleCtx.Tess.addVertexWithUV(v1.x, v1.y, v1.z, minU, maxV);
-            handleCtx.Tess.addVertexWithUV(v2.x, v2.y, v2.z, maxU, maxV);
-            handleCtx.Tess.addVertexWithUV(v3.x, v3.y, v3.z, maxU, minV);
-            handleCtx.Tess.addVertexWithUV(v4.x, v4.y, v4.z, minU, minV);
+            handleCtx.Tess.addVertexWithUV(v1.x, v1.y, v1.z, LocU(faceMinU), LocV(faceMaxV));
+            handleCtx.Tess.addVertexWithUV(v2.x, v2.y, v2.z, LocU(faceMaxU), LocV(faceMaxV));
+            handleCtx.Tess.addVertexWithUV(v3.x, v3.y, v3.z, LocU(faceMaxU), LocV(faceMinV));
+            handleCtx.Tess.addVertexWithUV(v4.x, v4.y, v4.z, LocU(faceMinU), LocV(faceMinV));
         }
 
         return true;

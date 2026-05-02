@@ -1,4 +1,5 @@
 using BetaSharp.Blocks;
+using BetaSharp.Client.Rendering.Backends;
 
 namespace BetaSharp.Client.DynamicTexture;
 
@@ -7,11 +8,11 @@ internal class FireSprite(int index) : Rendering.Core.Textures.DynamicTexture(Bl
     private float[] _current = new float[320];
     private float[] _next = new float[320];
 
-    public override void Setup(BetaSharp game)
+    public override void Setup(IRendererServices services)
     {
         Array.Clear(_current);
         Array.Clear(_next);
-        TryLoadCustomTexture(game, index == 0 ? "custom_fire_e_w.png" : "custom_fire_n_s.png");
+        TryLoadCustomTexture(services, index == 0 ? "custom_fire_e_w.png" : "custom_fire_n_s.png");
     }
 
     public override void tick()

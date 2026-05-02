@@ -22,8 +22,8 @@ public class SubChunkRenderer : IDisposable
     public bool HasFadedIn => Age >= FadeDuration;
     public const float FadeDuration = 1.0f;
 
-    public int SolidMeshSizeBytes => vertexCounts[0] * 16;
-    public int TranslucentMeshSizeBytes => vertexCounts[1] * 16;
+    public int SolidMeshSizeBytes => vertexCounts[0] * 20;
+    public int TranslucentMeshSizeBytes => vertexCounts[1] * 20;
 
     public Occlusion.ChunkVisibilityStore VisibilityData;
     public Occlusion.ChunkDirectionMask IncomingDirections;
@@ -123,7 +123,7 @@ public class SubChunkRenderer : IDisposable
             vertexArrays[bufferIdx].Bind();
             buffers[bufferIdx].Bind();
 
-            const uint stride = 16;
+            const uint stride = 20;
 
             GLManager.GL.EnableVertexAttribArray(0);
             GLManager.GL.VertexAttribPointer(
@@ -161,6 +161,15 @@ public class SubChunkRenderer : IDisposable
                 GLEnum.UnsignedByte,
                 stride,
                 (void*)14
+            );
+
+            GLManager.GL.EnableVertexAttribArray(4);
+            GLManager.GL.VertexAttribIPointer(
+                4,
+                1,
+                GLEnum.UnsignedByte,
+                stride,
+                (void*)15
             );
 
             VertexArray.Unbind();

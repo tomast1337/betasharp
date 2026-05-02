@@ -19,7 +19,7 @@ public struct Vertex(float x, float y, float z, float u, float v, int color, int
     public int Padding; // 32 bytes total
 }
 
-[StructLayout(LayoutKind.Sequential, Size = 16)]
+[StructLayout(LayoutKind.Sequential, Pack = 4, Size = 20)]
 public struct ChunkVertex
 {
     public int Color; // 4 bytes
@@ -29,7 +29,8 @@ public struct ChunkVertex
     public short U; // 2 bytes + 10 bytes = 12 bytes
     public short V; // 2 bytes + 12 bytes = 14 bytes
     public byte Light; // 1 byte + 14 bytes = 15 bytes
-    public byte Padding; // 16 bytes total
+    public byte TextureLayer; // 1 byte + 15 bytes = 16 bytes
+    internal ushort PaddingAlign; // 20 bytes total (reserved)
 }
 
 public static class ChunkVertexHelper
@@ -48,7 +49,8 @@ public static class ChunkVertexHelper
         float centroidU,
         float centroidV,
         byte skyLight,
-        byte blockLight)
+        byte blockLight,
+        byte textureLayer)
     {
         return new ChunkVertex
         {
@@ -59,7 +61,8 @@ public static class ChunkVertexHelper
             U = FloatToShortUVWithInset(u, centroidU),
             V = FloatToShortUVWithInset(v, centroidV),
             Light = PackLight(skyLight, blockLight),
-            Padding = 0
+            TextureLayer = textureLayer,
+            PaddingAlign = 0
         };
     }
 
@@ -147,6 +150,7 @@ public class Tessellator
     private int[] scratchBuffer;
     private int scratchBufferIndex;
     private TesselatorCaptureVertexFormat vertexFormat;
+    private int textureLayer;
 
     private Tessellator(int bufferSize)
     {
@@ -182,7 +186,7 @@ public class Tessellator
             capturedChunkVertices = new();
         }
 
-        scratchBuffer = new int[32];
+        scratchBuffer = new int[40];
         scratchBufferIndex = 0;
         uvCentroidU = 0f;
         uvCentroidV = 0f;
@@ -229,6 +233,12 @@ public class Tessellator
         hasTexture = false;
         hasColor = false;
         hasNormals = false;
+        textureLayer = 0;
+    }
+
+    public void setTextureLayer(int layer)
+    {
+        textureLayer = layer & 0xFF;
     }
 
     public unsafe void draw()
@@ -487,15 +497,22 @@ public class Tessellator
                     ChunkVertexHelper.PackLight(skyLight, blockLight);
             }
 
-            scratchBufferIndex += 8;
+            if (vertexFormat == TesselatorCaptureVertexFormat.Chunk)
+            {
+                scratchBuffer[scratchBufferIndex + 8] = textureLayer;
+            }
 
-            if (drawMode == 7 && convertQuadsToTriangles && scratchBufferIndex == 32)
+            int vertexStride = vertexFormat == TesselatorCaptureVertexFormat.Chunk ? 9 : 8;
+            scratchBufferIndex += vertexStride;
+
+            int quadScratchTotal = vertexStride * 4;
+            if (drawMode == 7 && convertQuadsToTriangles && scratchBufferIndex == quadScratchTotal)
             {
                 uvCentroidU = 0f;
                 uvCentroidV = 0f;
                 for (int i = 0; i < 4; i++)
                 {
-                    int idx = i * 8;
+                    int idx = i * vertexStride;
                     uvCentroidU += BitConverter.Int32BitsToSingle(scratchBuffer[idx + 3]);
                     uvCentroidV += BitConverter.Int32BitsToSingle(scratchBuffer[idx + 4]);
                 }
@@ -504,11 +521,11 @@ public class Tessellator
                 uvCentroidV *= 0.25f;
 
                 EmitVertexFromScratch(0);
-                EmitVertexFromScratch(8);
-                EmitVertexFromScratch(16);
+                EmitVertexFromScratch(vertexStride);
+                EmitVertexFromScratch(vertexStride * 2);
 
-                EmitVertexFromScratch(16);
-                EmitVertexFromScratch(24);
+                EmitVertexFromScratch(vertexStride * 2);
+                EmitVertexFromScratch(vertexStride * 3);
                 EmitVertexFromScratch(0);
 
                 scratchBufferIndex = 0;
@@ -583,6 +600,7 @@ public class Tessellator
         {
             int col = hasColor ? scratchBuffer[baseIndex + 5] : unchecked((int)0xFFFFFFFF);
             byte light = hasLight ? (byte)scratchBuffer[baseIndex + 7] : (byte)0;
+            byte layer = (byte)(scratchBuffer[baseIndex + 8] & 0xFF);
 
             float u = BitConverter.Int32BitsToSingle(scratchBuffer[baseIndex + 3]);
             float v = BitConverter.Int32BitsToSingle(scratchBuffer[baseIndex + 4]);
@@ -594,7 +612,8 @@ public class Tessellator
                     u, v,
                     uvCentroidU, uvCentroidV,
                     ChunkVertexHelper.GetSkyLight(light),
-                    ChunkVertexHelper.GetBlockLight(light)
+                    ChunkVertexHelper.GetBlockLight(light),
+                    layer
                 )
             );
         }

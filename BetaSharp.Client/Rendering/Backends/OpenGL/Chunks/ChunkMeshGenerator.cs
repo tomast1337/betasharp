@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using BetaSharp.Blocks;
+using BetaSharp.Client.Rendering;
 using BetaSharp.Client.Rendering.Blocks;
 using BetaSharp.Client.Rendering.Chunks.Occlusion;
 using BetaSharp.Client.Rendering.Core;
@@ -30,6 +31,7 @@ internal struct MeshBuildResult : IDisposable
 internal class ChunkMeshGenerator : IDisposable
 {
     private readonly ILogger<ChunkMeshGenerator> _logger = Log.Instance.For<ChunkMeshGenerator>();
+    private readonly FrameContext _frameContext;
 
     private readonly ConcurrentQueue<MeshBuildResult> _results = new();
 
@@ -38,8 +40,9 @@ internal class ChunkMeshGenerator : IDisposable
 
     private SemaphoreSlim? _concurrencySemaphore;
 
-    public ChunkMeshGenerator(ushort maxConcurrentTasks = 0)
+    public ChunkMeshGenerator(FrameContext frameContext, ushort maxConcurrentTasks = 0)
     {
+        _frameContext = frameContext;
         MaxConcurrentTasks = maxConcurrentTasks;
     }
 
@@ -99,6 +102,8 @@ internal class ChunkMeshGenerator : IDisposable
     private MeshBuildResult GenerateMesh(Vector3D<int> pos, long version, WorldRegionSnapshot cache,
         bool alternateBlocks)
     {
+        int terrainAtlasTileSize = _frameContext.Textures.GetAtlasTileSize("/terrain.png");
+
         int minX = pos.X;
         int minY = pos.Y;
         int minZ = pos.Z;
@@ -141,7 +146,7 @@ internal class ChunkMeshGenerator : IDisposable
                         else
                         {
                             BlockRenderer.RenderBlockByRenderType(cache, cache, b, new BlockPos(x, y, z), tess,
-                                doVariance: alternateBlocks);
+                                doVariance: alternateBlocks, terrainAtlasTileSize: terrainAtlasTileSize);
                         }
                     }
                 }

@@ -1,9 +1,9 @@
 using BetaSharp.Client.Input;
 using BetaSharp.Client.Options;
-using BetaSharp.Client.Rendering.Blocks.Entities;
-using BetaSharp.Client.Rendering.Entities;
 using BetaSharp.Client.Rendering;
+using BetaSharp.Client.Rendering.Blocks.Entities;
 using BetaSharp.Client.Rendering.Core.Textures;
+using BetaSharp.Client.Rendering.Entities;
 using BetaSharp.Client.UI.Rendering;
 using BetaSharp.Client.UI.Screens;
 using Silk.NET.Maths;

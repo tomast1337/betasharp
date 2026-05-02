@@ -3,6 +3,7 @@ using BetaSharp.Blocks.Materials;
 using BetaSharp.Client.Entities;
 using BetaSharp.Client.Rendering.Blocks;
 using BetaSharp.Client.Rendering.Core;
+using BetaSharp.Client.Rendering.Core.Textures;
 using BetaSharp.Client.Rendering.Entities;
 using BetaSharp.Client.Rendering.Legacy;
 using BetaSharp.Entities;
@@ -36,14 +37,16 @@ public class HeldItemRenderer : IHeldItemRenderer
         _sceneRenderBackend.PushMatrix();
         if (item.ItemId < 256 && BlockRenderer.IsSideLit(Block.Blocks[item.ItemId].getRenderType()))
         {
-            _game.TextureManager.BindTexture(_game.TextureManager.GetTextureId("/terrain.png"));
-            BlockRenderer.RenderBlockOnInventory(Block.Blocks[item.ItemId], item.getDamage(), entity.GetBrightnessAtEyes(1.0F), Tessellator.instance);
+            _game.TextureManager.BindTexture(
+                _game.TextureManager.GetTextureId(TextureManager.TerrainLegacy2dTexturePath));
+            BlockRenderer.RenderBlockOnInventory(Block.Blocks[item.ItemId], item.getDamage(),
+                entity.GetBrightnessAtEyes(1.0F), Tessellator.instance);
         }
         else
         {
-            string texPath = item.ItemId < 256 ? "/terrain.png" : "/gui/items.png";
+            string texPath = item.ItemId < 256 ? TextureManager.TerrainLegacy2dTexturePath : "/gui/items.png";
             _game.TextureManager.BindTexture(_game.TextureManager.GetTextureId(texPath));
-            int tileSize = _game.TextureManager.GetAtlasTileSize(texPath);
+            int tileSize = _game.TextureManager.GetAtlasTileSize(item.ItemId < 256 ? "/terrain.png" : texPath);
 
             Tessellator tessellator = Tessellator.instance;
             int iconIndex = entity.GetItemStackTextureId(item);
@@ -313,7 +316,8 @@ public class HeldItemRenderer : IHeldItemRenderer
         int blockX;
         if (_game.Player.IsOnFire)
         {
-            _game.TextureManager.BindTexture(_game.TextureManager.GetTextureId("/terrain.png"));
+            _game.TextureManager.BindTexture(
+                _game.TextureManager.GetTextureId(TextureManager.TerrainLegacy2dTexturePath));
             renderFireInFirstPerson(tickDelta);
         }
 
@@ -322,7 +326,8 @@ public class HeldItemRenderer : IHeldItemRenderer
             blockX = MathHelper.Floor(_game.Player.X);
             int blockY = MathHelper.Floor(_game.Player.Y);
             int blockZ = MathHelper.Floor(_game.Player.Z);
-            _game.TextureManager.BindTexture(_game.TextureManager.GetTextureId("/terrain.png"));
+            _game.TextureManager.BindTexture(
+                _game.TextureManager.GetTextureId(TextureManager.TerrainLegacy2dTexturePath));
             int blockId = _game.World.Reader.GetBlockId(blockX, blockY, blockZ);
             if (_game.World.Reader.ShouldSuffocate(blockX, blockY, blockZ))
             {

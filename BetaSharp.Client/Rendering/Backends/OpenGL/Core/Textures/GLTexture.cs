@@ -13,42 +13,52 @@ public class GLTexture : ITextureResource
     public string Source { get; }
     public int Width { get; private set; }
     public int Height { get; private set; }
+    public int Depth { get; private set; } = 1;
+    public TextureTarget Target { get; }
+
     public static int ActiveTextureCount => s_activeTextures.Count;
 
-    public GLTexture(string source)
+    public GLTexture(string source, TextureTarget target = TextureTarget.Texture2D)
     {
         Source = source;
+        Target = target;
         Id = GLManager.GL.GenTexture();
         s_activeTextures.Add(Id, (source, DateTime.Now));
     }
+
+    private GLEnum TargetEnum => (GLEnum)(uint)Target;
 
     public void Bind()
     {
         if (Id != 0)
         {
             TextureStats.NotifyBind();
-            GLManager.GL.BindTexture(GLEnum.Texture2D, Id);
+            GLManager.GL.BindTexture(TargetEnum, Id);
         }
     }
 
     public void SetFilter(TextureMinificationFilter min, TextureMagnificationFilter mag)
     {
         Bind();
-        GLManager.GL.TexParameter(GLEnum.Texture2D, GLEnum.TextureMinFilter, (int)MapMinFilter(min));
-        GLManager.GL.TexParameter(GLEnum.Texture2D, GLEnum.TextureMagFilter, (int)MapMagFilter(mag));
+        GLManager.GL.TexParameter(TargetEnum, GLEnum.TextureMinFilter, (int)MapMinFilter(min));
+        GLManager.GL.TexParameter(TargetEnum, GLEnum.TextureMagFilter, (int)MapMagFilter(mag));
     }
 
     public void SetWrap(TextureAddressMode s, TextureAddressMode t)
     {
         Bind();
-        GLManager.GL.TexParameter(GLEnum.Texture2D, GLEnum.TextureWrapS, (int)MapAddressMode(s));
-        GLManager.GL.TexParameter(GLEnum.Texture2D, GLEnum.TextureWrapT, (int)MapAddressMode(t));
+        GLManager.GL.TexParameter(TargetEnum, GLEnum.TextureWrapS, (int)MapAddressMode(s));
+        GLManager.GL.TexParameter(TargetEnum, GLEnum.TextureWrapT, (int)MapAddressMode(t));
+        if (Target == TextureTarget.Texture2DArray)
+        {
+            GLManager.GL.TexParameter(TargetEnum, GLEnum.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
+        }
     }
 
     public void SetMaxLevel(int level)
     {
         Bind();
-        GLManager.GL.TexParameter(GLEnum.Texture2D, GLEnum.TextureMaxLevel, level);
+        GLManager.GL.TexParameter(TargetEnum, GLEnum.TextureMaxLevel, level);
     }
 
     public unsafe void Upload(
@@ -63,11 +73,12 @@ public class GLTexture : ITextureResource
         {
             Width = width;
             Height = height;
+            Depth = 1;
         }
 
         Bind();
         GLManager.GL.TexImage2D(
-            TextureTarget.Texture2D,
+            Target,
             level,
             MapStorageFormat(internalFormat),
             (uint)width,
@@ -89,7 +100,7 @@ public class GLTexture : ITextureResource
     {
         Bind();
         GLManager.GL.TexSubImage2D(
-            GLEnum.Texture2D,
+            TargetEnum,
             level,
             x,
             y,
@@ -100,12 +111,68 @@ public class GLTexture : ITextureResource
             ptr);
     }
 
+    public unsafe void Upload3D(
+        int width,
+        int height,
+        int depth,
+        byte* ptr,
+        int level = 0,
+        TextureDataFormat format = TextureDataFormat.Rgba,
+        TextureStorageFormat internalFormat = TextureStorageFormat.Rgba8)
+    {
+        if (level == 0)
+        {
+            Width = width;
+            Height = height;
+            Depth = depth;
+        }
+
+        Bind();
+        GLManager.GL.TexImage3D(
+            Target,
+            level,
+            MapStorageFormat(internalFormat),
+            (uint)width,
+            (uint)height,
+            (uint)depth,
+            0,
+            MapDataFormat(format),
+            PixelType.UnsignedByte,
+            ptr);
+    }
+
+    public unsafe void UploadSubImage3D(
+        int x,
+        int y,
+        int z,
+        int width,
+        int height,
+        int depth,
+        byte* ptr,
+        int level = 0,
+        TextureDataFormat format = TextureDataFormat.Rgba)
+    {
+        Bind();
+        GLManager.GL.TexSubImage3D(
+            Target,
+            level,
+            x,
+            y,
+            z,
+            (uint)width,
+            (uint)height,
+            (uint)depth,
+            MapDataFormat(format),
+            PixelType.UnsignedByte,
+            ptr);
+    }
+
     public void SetAnisotropicFilter(float level)
     {
         if (GLManager.GL.IsExtensionPresent("GL_EXT_texture_filter_anisotropic"))
         {
             Bind();
-            GLManager.GL.TexParameter(GLEnum.Texture2D, (GLEnum)0x84FE, level); // GL_TEXTURE_MAX_ANISOTROPY_EXT
+            GLManager.GL.TexParameter(TargetEnum, (GLEnum)0x84FE, level); // GL_TEXTURE_MAX_ANISOTROPY_EXT
         }
     }
 

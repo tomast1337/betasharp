@@ -10,7 +10,7 @@ public static class ParticleRenderer
     private static readonly string[] s_layerTextures =
     [
         "/particles.png",
-        "/terrain.png",
+        TextureManager.TerrainLegacy2dTexturePath,
         "/gui/items.png"
     ];
 

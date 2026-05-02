@@ -1,4 +1,5 @@
 using System.Threading;
+using Silk.NET.OpenGL;
 
 namespace BetaSharp.Client.Rendering.Core.Textures;
 
@@ -12,6 +13,8 @@ internal sealed class NoOpTextureResource : ITextureResource
     public string Source { get; }
     public int Width { get; private set; }
     public int Height { get; private set; }
+    public int Depth { get; private set; } = 1;
+    public TextureTarget Target => TextureTarget.Texture2D;
 
     public NoOpTextureResource(string source, Action onDispose)
     {
@@ -65,6 +68,36 @@ internal sealed class NoOpTextureResource : ITextureResource
             Width = width;
             Height = height;
         }
+    }
+
+    public unsafe void Upload3D(
+        int width,
+        int height,
+        int depth,
+        byte* ptr,
+        int level = 0,
+        TextureDataFormat format = TextureDataFormat.Rgba,
+        TextureStorageFormat internalFormat = TextureStorageFormat.Rgba8)
+    {
+        if (level == 0)
+        {
+            Width = width;
+            Height = height;
+            Depth = depth;
+        }
+    }
+
+    public unsafe void UploadSubImage3D(
+        int x,
+        int y,
+        int z,
+        int width,
+        int height,
+        int depth,
+        byte* ptr,
+        int level = 0,
+        TextureDataFormat format = TextureDataFormat.Rgba)
+    {
     }
 
     public void SetAnisotropicFilter(float level)

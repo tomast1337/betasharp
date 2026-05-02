@@ -30,7 +30,8 @@ public class BlockRenderer
 
 
     public static bool RenderBlockByRenderType(IBlockReader world, ILightProvider lighting, Block block, BlockPos pos,
-        Tessellator tess, int overrideTexture = -1, bool renderAllFaces = false, bool doVariance = false)
+        Tessellator tess, int overrideTexture = -1, bool renderAllFaces = false, bool doVariance = false,
+        int terrainAtlasTileSize = 16)
     {
         BlockRendererType type = block.getRenderType();
 
@@ -74,7 +75,8 @@ public class BlockRenderer
             flipEast: flipSide,
             flipWest: flipSide,
             aoBlendMode: 1,
-            customFlag: type == BlockRendererType.PistonExtension
+            customFlag: type == BlockRendererType.PistonExtension,
+            terrainAtlasTileSize: terrainAtlasTileSize
         );
 
         if (type == BlockRendererType.Standard)

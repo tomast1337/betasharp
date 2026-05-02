@@ -101,6 +101,12 @@ public unsafe interface IGL
     void TexSubImage2D(GLEnum target, int level, int xoffset, int yoffset, uint width, uint height, GLEnum format,
         GLEnum type, void* pixels);
 
+    void TexImage3D(TextureTarget target, int level, InternalFormat internalformat, uint width, uint height,
+        uint depth, int border, PixelFormat format, PixelType type, void* pixels);
+
+    void TexSubImage3D(TextureTarget target, int level, int xoffset, int yoffset, int zoffset, uint width,
+        uint height, uint depth, PixelFormat format, PixelType type, void* pixels);
+
     void Translate(float x, float y, float z);
     void Uniform1(int location, int v0);
     void Uniform1(int location, float v0);

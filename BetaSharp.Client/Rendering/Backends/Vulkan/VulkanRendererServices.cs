@@ -1,4 +1,5 @@
 using BetaSharp.Client.Options;
+using BetaSharp.Client.Rendering.Backends;
 using BetaSharp.Client.Rendering.Blocks.Entities;
 using BetaSharp.Client.Rendering.Core.Textures;
 using BetaSharp.Client.Rendering.Entities;
@@ -10,6 +11,8 @@ namespace BetaSharp.Client.Rendering.Backends.Vulkan;
 
 internal sealed class VulkanRendererServices : IRendererServices
 {
+    public TexturePacks TexturePacks { get; }
+
     public ITextureManager TextureManager { get; }
     public ITextRenderer TextRenderer { get; }
     public ISkinManager SkinManager { get; }
@@ -20,12 +23,14 @@ internal sealed class VulkanRendererServices : IRendererServices
 
     public VulkanRendererServices(BetaSharp client, TexturePacks texturePacks, GameOptions options)
     {
+        TexturePacks = texturePacks;
         TextureManager = new TextureManager(
             client,
             texturePacks,
             options,
             new NoOpTextureResourceFactory(),
             new DirectTextureUploadService());
+        ((TextureManager)TextureManager).SetRendererServices(this);
         TextRenderer = new NoOpTextRenderer();
         SkinManager = new NoOpSkinManager();
         EntityRenderDispatcher = new NoOpEntityRenderDispatcher();

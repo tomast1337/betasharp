@@ -2,17 +2,17 @@ using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Client.Rendering.Core.OpenGL;
 using BetaSharp.Client.Rendering.Legacy;
 using Silk.NET.OpenGL;
-using LegacyGLEnum = BetaSharp.Client.Rendering.Core.OpenGL.GLEnum;
-using static BetaSharp.Client.Rendering.Legacy.SceneClearBufferMask;
-using static BetaSharp.Client.Rendering.Legacy.SceneRenderCapability;
-using static BetaSharp.Client.Rendering.Legacy.SceneMatrixMode;
-using static BetaSharp.Client.Rendering.Legacy.SceneBlendFactor;
-using static BetaSharp.Client.Rendering.Legacy.SceneDepthFunction;
-using static BetaSharp.Client.Rendering.Legacy.SceneFogMode;
-using static BetaSharp.Client.Rendering.Legacy.SceneShadeModel;
 using static BetaSharp.Client.Rendering.Legacy.SceneAlphaFunction;
+using static BetaSharp.Client.Rendering.Legacy.SceneBlendFactor;
+using static BetaSharp.Client.Rendering.Legacy.SceneClearBufferMask;
 using static BetaSharp.Client.Rendering.Legacy.SceneColorMaterialFace;
 using static BetaSharp.Client.Rendering.Legacy.SceneColorMaterialParameter;
+using static BetaSharp.Client.Rendering.Legacy.SceneDepthFunction;
+using static BetaSharp.Client.Rendering.Legacy.SceneFogMode;
+using static BetaSharp.Client.Rendering.Legacy.SceneMatrixMode;
+using static BetaSharp.Client.Rendering.Legacy.SceneRenderCapability;
+using static BetaSharp.Client.Rendering.Legacy.SceneShadeModel;
+using LegacyGLEnum = BetaSharp.Client.Rendering.Core.OpenGL.GLEnum;
 
 namespace BetaSharp.Client.Rendering.Backends.OpenGL;
 

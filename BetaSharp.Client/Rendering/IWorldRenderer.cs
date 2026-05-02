@@ -1,10 +1,10 @@
+using BetaSharp.Client.Rendering.Chunks;
 using BetaSharp.Entities;
 using BetaSharp.Items;
 using BetaSharp.Util;
 using BetaSharp.Util.Hit;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core;
-using BetaSharp.Client.Rendering.Chunks;
 
 namespace BetaSharp.Client.Rendering;
 

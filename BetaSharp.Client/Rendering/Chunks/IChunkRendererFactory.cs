@@ -1,3 +1,4 @@
+using BetaSharp.Client.Rendering;
 using BetaSharp.Worlds.Core;
 
 namespace BetaSharp.Client.Rendering.Chunks;
@@ -7,5 +8,5 @@ namespace BetaSharp.Client.Rendering.Chunks;
 /// </summary>
 public interface IChunkRendererFactory
 {
-    IChunkRenderer Create(World world, Func<bool> useAlternateBlockModels);
+    IChunkRenderer Create(World world, Func<bool> useAlternateBlockModels, FrameContext frameContext);
 }

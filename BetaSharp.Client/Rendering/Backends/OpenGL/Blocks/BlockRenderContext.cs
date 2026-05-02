@@ -36,6 +36,8 @@ public ref struct BlockRenderContext
     // Custom flag for Pistons (Expanded/Short arm)
     public bool CustomFlag;
 
+    public readonly int TerrainAtlasTileSize;
+
     public BlockRenderContext(
         IBlockReader blockReader, Tessellator tess,
         ILightProvider lighting,
@@ -48,11 +50,13 @@ public ref struct BlockRenderContext
         int flipNorth = 0, int flipSouth = 0,
         int flipEast = 0, int flipWest = 0,
         bool customFlag = false, bool enableAo = true,
-        int aoBlendMode = 0)
+        int aoBlendMode = 0,
+        int terrainAtlasTileSize = 16)
     {
         BlockReader = blockReader;
         Tess = tess;
         Lighting = lighting;
+        TerrainAtlasTileSize = terrainAtlasTileSize;
 
         OverrideTexture = overrideTexture;
         RenderAllFaces = renderAllFaces;
@@ -105,8 +109,7 @@ public ref struct BlockRenderContext
         bool flipped = false)
     {
         Box bb = OverrideBounds ?? block.BoundingBox;
-        int texU = (textureId & 15) << 4;
-        int texV = textureId & 240;
+        Tess.setTextureLayer(textureId);
 
         float bbMinX = (float)bb.MinX;
         float bbMaxX = (float)bb.MaxX;
@@ -118,10 +121,10 @@ public ref struct BlockRenderContext
         float bMinZ = Clamp(bbMinZ);
         float bMaxZ = Clamp(bbMaxZ);
 
-        CalculateUv(bMinX, bMaxZ, UvRotateBottom, FlipBottom, texU, texV, out float u0, out float v0);
-        CalculateUv(bMinX, bMinZ, UvRotateBottom, FlipBottom, texU, texV, out float u1, out float v1);
-        CalculateUv(bMaxX, bMinZ, UvRotateBottom, FlipBottom, texU, texV, out float u2, out float v2);
-        CalculateUv(bMaxX, bMaxZ, UvRotateBottom, FlipBottom, texU, texV, out float u3, out float v3);
+        CalculateUv(bMinX, bMaxZ, UvRotateBottom, FlipBottom, out float u0, out float v0);
+        CalculateUv(bMinX, bMinZ, UvRotateBottom, FlipBottom, out float u1, out float v1);
+        CalculateUv(bMaxX, bMinZ, UvRotateBottom, FlipBottom, out float u2, out float v2);
+        CalculateUv(bMaxX, bMaxZ, UvRotateBottom, FlipBottom, out float u3, out float v3);
 
         float pX = (float)pos.x;
         float pY = (float)pos.y;
@@ -171,8 +174,7 @@ public ref struct BlockRenderContext
         bool flipped = false)
     {
         Box bb = OverrideBounds ?? block.BoundingBox;
-        int texU = (textureId & 15) << 4;
-        int texV = textureId & 240;
+        Tess.setTextureLayer(textureId);
 
         float bbMinX = (float)bb.MinX;
         float bbMaxX = (float)bb.MaxX;
@@ -184,10 +186,10 @@ public ref struct BlockRenderContext
         float bMinZ = Clamp(bbMinZ);
         float bMaxZ = Clamp(bbMaxZ);
 
-        CalculateUv(bMaxX, bMaxZ, UvRotateTop, FlipTop, texU, texV, out float u0, out float v0);
-        CalculateUv(bMaxX, bMinZ, UvRotateTop, FlipTop, texU, texV, out float u1, out float v1);
-        CalculateUv(bMinX, bMinZ, UvRotateTop, FlipTop, texU, texV, out float u2, out float v2);
-        CalculateUv(bMinX, bMaxZ, UvRotateTop, FlipTop, texU, texV, out float u3, out float v3);
+        CalculateUv(bMaxX, bMaxZ, UvRotateTop, FlipTop, out float u0, out float v0);
+        CalculateUv(bMaxX, bMinZ, UvRotateTop, FlipTop, out float u1, out float v1);
+        CalculateUv(bMinX, bMinZ, UvRotateTop, FlipTop, out float u2, out float v2);
+        CalculateUv(bMinX, bMaxZ, UvRotateTop, FlipTop, out float u3, out float v3);
 
         float pX = (float)pos.x;
         float pY = (float)pos.y;
@@ -237,18 +239,17 @@ public ref struct BlockRenderContext
         bool flipped = false)
     {
         Box bb = OverrideBounds ?? block.BoundingBox;
-        int texU = (textureId & 15) << 4;
-        int texV = textureId & 240;
+        Tess.setTextureLayer(textureId);
 
         float bbMinY = (float)bb.MinY;
         float bbMaxY = (float)bb.MaxY;
         float bbMinZ = (float)bb.MinZ;
         float bbMaxZ = (float)bb.MaxZ;
 
-        CalculateUv(bbMinZ, 1.0f - bbMaxY, UvRotateNorth, FlipNorth, texU, texV, out float uTl, out float vTl);
-        CalculateUv(bbMinZ, 1.0f - bbMinY, UvRotateNorth, FlipNorth, texU, texV, out float uBl, out float vBl);
-        CalculateUv(bbMaxZ, 1.0f - bbMinY, UvRotateNorth, FlipNorth, texU, texV, out float uBr, out float vBr);
-        CalculateUv(bbMaxZ, 1.0f - bbMaxY, UvRotateNorth, FlipNorth, texU, texV, out float uTr, out float vTr);
+        CalculateUv(bbMinZ, 1.0f - bbMaxY, UvRotateNorth, FlipNorth, out float uTl, out float vTl);
+        CalculateUv(bbMinZ, 1.0f - bbMinY, UvRotateNorth, FlipNorth, out float uBl, out float vBl);
+        CalculateUv(bbMaxZ, 1.0f - bbMinY, UvRotateNorth, FlipNorth, out float uBr, out float vBr);
+        CalculateUv(bbMaxZ, 1.0f - bbMaxY, UvRotateNorth, FlipNorth, out float uTr, out float vTr);
 
         float pX = (float)pos.x;
         float pY = (float)pos.y;
@@ -298,8 +299,7 @@ public ref struct BlockRenderContext
         bool flipped = false)
     {
         Box bb = OverrideBounds ?? block.BoundingBox;
-        int texU = (textureId & 15) << 4;
-        int texV = textureId & 240;
+        Tess.setTextureLayer(textureId);
 
         float bbMinY = (float)bb.MinY;
         float bbMaxY = (float)bb.MaxY;
@@ -311,10 +311,10 @@ public ref struct BlockRenderContext
         float bMinZ = Clamp(bbMinZ);
         float bMaxZ = Clamp(bbMaxZ);
 
-        CalculateUv(1.0f - bMaxZ, 1.0f - bMaxY, UvRotateSouth, FlipSouth, texU, texV, out float uTl, out float vTl);
-        CalculateUv(1.0f - bMaxZ, 1.0f - bMinY, UvRotateSouth, FlipSouth, texU, texV, out float uBl, out float vBl);
-        CalculateUv(1.0f - bMinZ, 1.0f - bMinY, UvRotateSouth, FlipSouth, texU, texV, out float uBr, out float vBr);
-        CalculateUv(1.0f - bMinZ, 1.0f - bMaxY, UvRotateSouth, FlipSouth, texU, texV, out float uTr, out float vTr);
+        CalculateUv(1.0f - bMaxZ, 1.0f - bMaxY, UvRotateSouth, FlipSouth, out float uTl, out float vTl);
+        CalculateUv(1.0f - bMaxZ, 1.0f - bMinY, UvRotateSouth, FlipSouth, out float uBl, out float vBl);
+        CalculateUv(1.0f - bMinZ, 1.0f - bMinY, UvRotateSouth, FlipSouth, out float uBr, out float vBr);
+        CalculateUv(1.0f - bMinZ, 1.0f - bMaxY, UvRotateSouth, FlipSouth, out float uTr, out float vTr);
 
         float pX = (float)pos.x;
         float pY = (float)pos.y;
@@ -364,8 +364,7 @@ public ref struct BlockRenderContext
         bool flipped = false)
     {
         Box bb = OverrideBounds ?? block.BoundingBox;
-        int texU = (textureId & 15) << 4;
-        int texV = textureId & 240;
+        Tess.setTextureLayer(textureId);
 
         float bbMinX = (float)bb.MinX;
         float bbMaxX = (float)bb.MaxX;
@@ -377,10 +376,10 @@ public ref struct BlockRenderContext
         float bMinY = Clamp(bbMinY);
         float bMaxY = Clamp(bbMaxY);
 
-        CalculateUv(1.0f - bMaxX, 1.0f - bMaxY, UvRotateEast, FlipEast, texU, texV, out float uTl, out float vTl);
-        CalculateUv(1.0f - bMaxX, 1.0f - bMinY, UvRotateEast, FlipEast, texU, texV, out float uBl, out float vBl);
-        CalculateUv(1.0f - bMinX, 1.0f - bMinY, UvRotateEast, FlipEast, texU, texV, out float uBr, out float vBr);
-        CalculateUv(1.0f - bMinX, 1.0f - bMaxY, UvRotateEast, FlipEast, texU, texV, out float uTr, out float vTr);
+        CalculateUv(1.0f - bMaxX, 1.0f - bMaxY, UvRotateEast, FlipEast, out float uTl, out float vTl);
+        CalculateUv(1.0f - bMaxX, 1.0f - bMinY, UvRotateEast, FlipEast, out float uBl, out float vBl);
+        CalculateUv(1.0f - bMinX, 1.0f - bMinY, UvRotateEast, FlipEast, out float uBr, out float vBr);
+        CalculateUv(1.0f - bMinX, 1.0f - bMaxY, UvRotateEast, FlipEast, out float uTr, out float vTr);
 
         float pX = (float)pos.x;
         float pY = (float)pos.y;
@@ -430,8 +429,7 @@ public ref struct BlockRenderContext
         bool flipped = false)
     {
         Box bb = OverrideBounds ?? block.BoundingBox;
-        int texU = (textureId & 15) << 4;
-        int texV = textureId & 240;
+        Tess.setTextureLayer(textureId);
 
         float bbMinX = (float)bb.MinX;
         float bbMaxX = (float)bb.MaxX;
@@ -443,10 +441,10 @@ public ref struct BlockRenderContext
         float bMinY = Clamp(bbMinY);
         float bMaxY = Clamp(bbMaxY);
 
-        CalculateUv(bMinX, 1.0f - bMaxY, UvRotateWest, FlipWest, texU, texV, out float uTl, out float vTl);
-        CalculateUv(bMinX, 1.0f - bMinY, UvRotateWest, FlipWest, texU, texV, out float uBl, out float vBl);
-        CalculateUv(bMaxX, 1.0f - bMinY, UvRotateWest, FlipWest, texU, texV, out float uBr, out float vBr);
-        CalculateUv(bMaxX, 1.0f - bMaxY, UvRotateWest, FlipWest, texU, texV, out float uTr, out float vTr);
+        CalculateUv(bMinX, 1.0f - bMaxY, UvRotateWest, FlipWest, out float uTl, out float vTl);
+        CalculateUv(bMinX, 1.0f - bMinY, UvRotateWest, FlipWest, out float uBl, out float vBl);
+        CalculateUv(bMaxX, 1.0f - bMinY, UvRotateWest, FlipWest, out float uBr, out float vBr);
+        CalculateUv(bMaxX, 1.0f - bMaxY, UvRotateWest, FlipWest, out float uTr, out float vTr);
 
         float pX = (float)pos.x;
         float pY = (float)pos.y;
@@ -802,25 +800,34 @@ public ref struct BlockRenderContext
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal readonly void DrawTorch(in Block block, in Vec3D pos, float tiltX, float tiltZ)
     {
-        const float texScale = 1.0f / 256.0f;
+        const float tilePxNorm = 1.0f / 256.0f;
         const float radius = 1.0f / 16.0f;
         const float height = 10.0f / 16.0f;
         const float tipOffsetBase = 1.0f - height;
 
-        const float topMinUOffset = 7.0f * texScale;
-        const float topMaxUOffset = 9.0f * texScale;
-        const float topMinVOffset = 6.0f * texScale;
-        const float topMaxVOffset = 8.0f * texScale;
+        float topMinUOffset = 7.0f * tilePxNorm;
+        float topMaxUOffset = 9.0f * tilePxNorm;
+        float topMinVOffset = 6.0f * tilePxNorm;
+        float topMaxVOffset = 8.0f * tilePxNorm;
 
         int textureId = OverrideTexture >= 0 ? OverrideTexture : block.GetTexture(0);
 
-        int texU = (textureId & 15) << 4;
-        int texV = textureId & 240;
+        Tess.setTextureLayer(textureId);
 
-        float minU = texU * texScale;
-        float maxU = (texU + 15.99f) * texScale;
-        float minV = texV * texScale;
-        float maxV = (texV + 15.99f) * texScale;
+        int tileSize = TerrainAtlasTileSize;
+        int texU = (textureId & 15) * tileSize;
+        int texV = (textureId >> 4) * tileSize;
+        float invW = 1.0f / (tileSize * 16f);
+
+        float minU = texU * invW;
+        float maxU = (texU + tileSize - 0.01f) * invW;
+        float minV = texV * invW;
+        float maxV = (texV + tileSize - 0.01f) * invW;
+
+        float atlasW = tileSize * 16f;
+
+        float ToLocalU(float atlasU) => (atlasU * atlasW - texU) / tileSize;
+        float ToLocalV(float atlasV) => (atlasV * atlasW - texV) / tileSize;
 
         float topMinU = minU + topMinUOffset;
         float topMinV = minV + topMinVOffset;
@@ -863,44 +870,44 @@ public ref struct BlockRenderContext
         Tess.setColorOpaque_F(1.0f, 1.0f, 1.0f);
 
         // TOP FACE
-        Tess.addVertexWithUV(tipX - radius, yTip, tipZ - radius, topMinU, topMinV);
-        Tess.addVertexWithUV(tipX - radius, yTip, tipZ + radius, topMinU, topMaxV);
-        Tess.addVertexWithUV(tipX + radius, yTip, tipZ + radius, topMaxU, topMaxV);
-        Tess.addVertexWithUV(tipX + radius, yTip, tipZ - radius, topMaxU, topMinV);
+        Tess.addVertexWithUV(tipX - radius, yTip, tipZ - radius, ToLocalU(topMinU), ToLocalV(topMinV));
+        Tess.addVertexWithUV(tipX - radius, yTip, tipZ + radius, ToLocalU(topMinU), ToLocalV(topMaxV));
+        Tess.addVertexWithUV(tipX + radius, yTip, tipZ + radius, ToLocalU(topMaxU), ToLocalV(topMaxV));
+        Tess.addVertexWithUV(tipX + radius, yTip, tipZ - radius, ToLocalU(topMaxU), ToLocalV(topMinV));
 
         // West Face
-        Tess.addVertexWithUV(cXmin, yTop, frontZ, minU, minV);
-        Tess.addVertexWithUV(cXminT, yBot, tFrontZ, minU, maxV);
-        Tess.addVertexWithUV(cXminT, yBot, tBackZ, maxU, maxV);
-        Tess.addVertexWithUV(cXmin, yTop, backZ, maxU, minV);
+        Tess.addVertexWithUV(cXmin, yTop, frontZ, ToLocalU(minU), ToLocalV(minV));
+        Tess.addVertexWithUV(cXminT, yBot, tFrontZ, ToLocalU(minU), ToLocalV(maxV));
+        Tess.addVertexWithUV(cXminT, yBot, tBackZ, ToLocalU(maxU), ToLocalV(maxV));
+        Tess.addVertexWithUV(cXmin, yTop, backZ, ToLocalU(maxU), ToLocalV(minV));
 
         // East Face
-        Tess.addVertexWithUV(cXmax, yTop, backZ, minU, minV);
-        Tess.addVertexWithUV(cXmaxT, yBot, tBackZ, minU, maxV);
-        Tess.addVertexWithUV(cXmaxT, yBot, tFrontZ, maxU, maxV);
-        Tess.addVertexWithUV(cXmax, yTop, frontZ, maxU, minV);
+        Tess.addVertexWithUV(cXmax, yTop, backZ, ToLocalU(minU), ToLocalV(minV));
+        Tess.addVertexWithUV(cXmaxT, yBot, tBackZ, ToLocalU(minU), ToLocalV(maxV));
+        Tess.addVertexWithUV(cXmaxT, yBot, tFrontZ, ToLocalU(maxU), ToLocalV(maxV));
+        Tess.addVertexWithUV(cXmax, yTop, frontZ, ToLocalU(maxU), ToLocalV(minV));
 
         // North Face
-        Tess.addVertexWithUV(leftX, yTop, cZmax, minU, minV);
-        Tess.addVertexWithUV(tLeftX, yBot, cZmaxT, minU, maxV);
-        Tess.addVertexWithUV(tRightX, yBot, cZmaxT, maxU, maxV);
-        Tess.addVertexWithUV(rightX, yTop, cZmax, maxU, minV);
+        Tess.addVertexWithUV(leftX, yTop, cZmax, ToLocalU(minU), ToLocalV(minV));
+        Tess.addVertexWithUV(tLeftX, yBot, cZmaxT, ToLocalU(minU), ToLocalV(maxV));
+        Tess.addVertexWithUV(tRightX, yBot, cZmaxT, ToLocalU(maxU), ToLocalV(maxV));
+        Tess.addVertexWithUV(rightX, yTop, cZmax, ToLocalU(maxU), ToLocalV(minV));
 
         // South Face
-        Tess.addVertexWithUV(rightX, yTop, cZmin, minU, minV);
-        Tess.addVertexWithUV(tRightX, yBot, cZminT, minU, maxV);
-        Tess.addVertexWithUV(tLeftX, yBot, cZminT, maxU, maxV);
-        Tess.addVertexWithUV(leftX, yTop, cZmin, maxU, minV);
+        Tess.addVertexWithUV(rightX, yTop, cZmin, ToLocalU(minU), ToLocalV(minV));
+        Tess.addVertexWithUV(tRightX, yBot, cZminT, ToLocalU(minU), ToLocalV(maxV));
+        Tess.addVertexWithUV(tLeftX, yBot, cZminT, ToLocalU(maxU), ToLocalV(maxV));
+        Tess.addVertexWithUV(leftX, yTop, cZmin, ToLocalU(maxU), ToLocalV(minV));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private readonly void CalculateUv(float h, float v, int rotation, int flipMask, int texU, int texV, out float u,
+    private readonly void CalculateUv(float h, float v, int rotation, int flipMask, out float u,
         out float outV)
     {
         if (rotation == 0 && !FlipTexture && flipMask == 0)
         {
-            u = texU * 0.00390625f + h * 0.0625f;
-            outV = texV * 0.00390625f + v * 0.0625f;
+            u = h;
+            outV = v;
             return;
         }
 
@@ -947,7 +954,7 @@ public ref struct BlockRenderContext
         if ((flipMask & 1) != 0) fU = 1.0f - fU;
         if ((flipMask & 2) != 0) fV = 1.0f - fV;
 
-        u = texU * 0.00390625f + fU * 0.0625f;
-        outV = texV * 0.00390625f + fV * 0.0625f;
+        u = fU;
+        outV = fV;
     }
 }

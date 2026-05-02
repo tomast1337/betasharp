@@ -25,4 +25,26 @@ public interface ITextureUploadService
         ReadOnlySpan<byte> pixelData,
         int level = 0,
         TextureDataFormat format = TextureDataFormat.Rgba);
+
+    void Upload3D(
+        ITextureResource texture,
+        int width,
+        int height,
+        int depth,
+        ReadOnlySpan<byte> pixelData,
+        int level = 0,
+        TextureDataFormat format = TextureDataFormat.Rgba,
+        TextureStorageFormat internalFormat = TextureStorageFormat.Rgba8);
+
+    void UploadSubImage3D(
+        ITextureResource texture,
+        int x,
+        int y,
+        int z,
+        int width,
+        int height,
+        int depth,
+        ReadOnlySpan<byte> pixelData,
+        int level = 0,
+        TextureDataFormat format = TextureDataFormat.Rgba);
 }

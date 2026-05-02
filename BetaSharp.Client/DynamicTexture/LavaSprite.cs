@@ -1,4 +1,5 @@
 using BetaSharp.Blocks;
+using BetaSharp.Client.Rendering.Backends;
 using BetaSharp.Util.Maths;
 
 namespace BetaSharp.Client.DynamicTexture;
@@ -10,7 +11,8 @@ internal class LavaSprite() : Rendering.Core.Textures.DynamicTexture(Block.Flowi
     private float[] _current = new float[256];
     private float[] _next = new float[256];
 
-    public override void Setup(BetaSharp game) => TryLoadCustomTexture(game, "custom_lava_still.png");
+    public override void Setup(IRendererServices services) =>
+        TryLoadCustomTexture(services, "custom_lava_still.png");
 
     public override void tick()
     {

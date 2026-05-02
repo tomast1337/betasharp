@@ -1,18 +1,27 @@
 using System.Buffers;
 using BetaSharp.Client.Options;
+using BetaSharp.Client.Rendering.Backends;
 using BetaSharp.Client.Resource.Pack;
 using BetaSharp.Registries.Data;
 using Microsoft.Extensions.Logging;
+using Silk.NET.OpenGL;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using static BetaSharp.Client.Rendering.Core.Textures.TextureAtlasMipmapGenerator;
 
 namespace BetaSharp.Client.Rendering.Core.Textures;
 
 public class TextureManager : ITextureManager
 {
+    /// <summary>
+    /// Full 2D terrain atlas for fixed-function and inventory paths; chunk rendering uses <see cref="TerrainTexturePath"/> (2D array).
+    /// </summary>
+    public const string TerrainLegacy2dTexturePath = "/terrain.png##legacy2d";
+
+    private const string TerrainTexturePath = "/terrain.png";
+    private const string ItemsTexturePath = "/gui/items.png";
+
     private readonly ILogger _logger = Log.Instance.For<TextureManager>();
     private readonly Dictionary<string, TextureHandle> _textures = [];
     private readonly Dictionary<string, int[]> _colors = [];
@@ -29,6 +38,7 @@ public class TextureManager : ITextureManager
     private readonly ITextureResourceFactory _textureResourceFactory;
     private readonly ITextureUploadService _textureUploadService;
     private readonly Image<Rgba32> _missingTextureImage = new(256, 256);
+    private IRendererServices? _rendererServices;
 
     public TextureManager(
         BetaSharp game,
@@ -48,6 +58,27 @@ public class TextureManager : ITextureManager
             ctx.Fill(Color.Black, new RectangleF(0, 0, 128, 128));
             ctx.Fill(Color.Black, new RectangleF(128, 128, 128, 128));
         });
+    }
+
+    internal void SetRendererServices(IRendererServices rendererServices) => _rendererServices = rendererServices;
+
+    private void EnsureTerrainLegacy2dCopy(Image<Rgba32> terrainImage)
+    {
+        if (_textures.TryGetValue(TerrainLegacy2dTexturePath, out TextureHandle? existing))
+        {
+            if (existing.Texture != null)
+            {
+                Load(terrainImage, existing.Texture, false);
+            }
+
+            return;
+        }
+
+        ITextureResource tex2d = _textureResourceFactory.CreateTexture(TerrainLegacy2dTexturePath);
+        var handle = new TextureHandle(tex2d);
+        _textures[TerrainLegacy2dTexturePath] = handle;
+        _atlasTileSizes[TerrainLegacy2dTexturePath] = terrainImage.Width / 16;
+        Load(terrainImage, tex2d, false);
     }
 
     public int ActiveTextureCount => _textureResourceFactory.ActiveTextureCount;
@@ -90,17 +121,35 @@ public class TextureManager : ITextureManager
     {
         if (_textures.TryGetValue(path, out TextureHandle? handle)) return handle;
 
-        ITextureResource texture = _textureResourceFactory.CreateTexture(path);
+        bool legacyTerrain2d = string.Equals(path, TerrainLegacy2dTexturePath, StringComparison.Ordinal);
+        bool terrainArray = path.Contains("terrain.png", StringComparison.Ordinal) && !legacyTerrain2d;
+
+        ITextureResource texture = terrainArray
+            ? _textureResourceFactory.CreateTexture(path, TextureTarget.Texture2DArray)
+            : _textureResourceFactory.CreateTexture(path);
         handle = new TextureHandle(texture);
         _textures[path] = handle;
 
         try
         {
-            using Image<Rgba32> img = LoadImageFromResource(path);
+            using Image<Rgba32> img = LoadImageFromResource(legacyTerrain2d ? TerrainTexturePath : path);
 
             _atlasTileSizes[path] = img.Width / 16;
 
-            Load(img, texture, path.Contains("terrain.png"));
+            if (legacyTerrain2d)
+            {
+                Load(img, texture, false);
+            }
+            else if (terrainArray)
+            {
+                Load(img, texture, true);
+                EnsureTerrainLegacy2dCopy(img);
+            }
+            else
+            {
+                Load(img, texture, false);
+            }
+
             return handle;
         }
         catch (Exception ex)
@@ -117,36 +166,25 @@ public class TextureManager : ITextureManager
 
         if (isTerrain)
         {
-            int tileSize = image.Width / 16;
-            Image<Rgba32>[] mips = GenerateMipmaps(image, tileSize);
-            int mipCount = _gameOptions.UseMipmaps ? mips.Length : 1;
+            var builder = new TextureArrayBuilder(image);
+            byte[] contiguous = builder.BuildContiguousBuffer();
+            int tileSize = builder.TileSize;
+            _textureUploadService.Upload3D(
+                texture,
+                tileSize,
+                tileSize,
+                builder.LayerCount,
+                contiguous,
+                0,
+                TextureDataFormat.Rgba,
+                TextureStorageFormat.Rgba8);
 
-            for (int level = 0; level < mipCount; level++)
-            {
-                Image<Rgba32> mip = mips[level];
-                byte[] pixels = new byte[mip.Width * mip.Height * 4];
-                mip.CopyPixelDataTo(pixels);
-                _textureUploadService.Upload(
-                    texture,
-                    mip.Width,
-                    mip.Height,
-                    pixels,
-                    level,
-                    TextureDataFormat.Rgba,
-                    TextureStorageFormat.Rgba8);
-                if (level > 0) mip.Dispose();
-            }
-
-            texture.SetFilter(
-                _gameOptions.UseMipmaps
-                    ? TextureMinificationFilter.NearestMipmapNearest
-                    : TextureMinificationFilter.Nearest,
-                TextureMagnificationFilter.Nearest);
-            texture.SetMaxLevel(mipCount - 1);
+            texture.SetFilter(TextureMinificationFilter.Nearest, TextureMagnificationFilter.Nearest);
+            texture.SetMaxLevel(0);
+            texture.SetWrap(TextureAddressMode.ClampToEdge, TextureAddressMode.ClampToEdge);
 
             float aniso = _gameOptions.AnisotropicLevel == 0 ? 1.0f : (float)Math.Pow(2, _gameOptions.AnisotropicLevel);
             aniso = Math.Clamp(aniso, 1.0f, GameOptions.MaxAnisotropy);
-
             texture.SetAnisotropicFilter(aniso);
 
             return;
@@ -288,8 +326,14 @@ public class TextureManager : ITextureManager
 
     public void Delete(ITextureResource texture)
     {
-        KeyValuePair<string, TextureHandle> textureEntry = _textures.FirstOrDefault(x => x.Value.Texture == texture);
-        if (textureEntry.Key != null) _textures.Remove(textureEntry.Key);
+        foreach (KeyValuePair<string, TextureHandle> entry in _textures)
+        {
+            if (entry.Value.Texture == texture)
+            {
+                _textures.Remove(entry.Key);
+                break;
+            }
+        }
 
         _images.Remove(texture.Id);
         texture.Dispose();
@@ -322,7 +366,11 @@ public class TextureManager : ITextureManager
     public void AddDynamicTexture(DynamicTexture t)
     {
         _dynamicTextures.Add(t);
-        t.Setup(_game);
+        if (_rendererServices != null)
+        {
+            t.Setup(_rendererServices);
+        }
+
         t.tick();
 
         _terrainHandle = null;
@@ -336,14 +384,30 @@ public class TextureManager : ITextureManager
         {
             entry.Value.Texture?.Dispose();
 
-            ITextureResource newTexture = _textureResourceFactory.CreateTexture(entry.Key);
+            bool legacy2d = string.Equals(entry.Key, TerrainLegacy2dTexturePath, StringComparison.Ordinal);
+            bool reloadTerrain = entry.Key.Contains("terrain.png", StringComparison.Ordinal) && !legacy2d;
+            ITextureResource newTexture = reloadTerrain
+                ? _textureResourceFactory.CreateTexture(entry.Key, TextureTarget.Texture2DArray)
+                : _textureResourceFactory.CreateTexture(entry.Key);
             entry.Value.Texture = newTexture;
 
             try
             {
-                using Image<Rgba32> img = LoadImageFromResource(entry.Key);
+                using Image<Rgba32> img = LoadImageFromResource(legacy2d ? TerrainTexturePath : entry.Key);
                 _atlasTileSizes[entry.Key] = img.Width / 16;
-                Load(img, newTexture, entry.Key.Contains("terrain.png"));
+                if (legacy2d)
+                {
+                    Load(img, newTexture, false);
+                }
+                else if (reloadTerrain)
+                {
+                    Load(img, newTexture, true);
+                    EnsureTerrainLegacy2dCopy(img);
+                }
+                else
+                {
+                    Load(img, newTexture, false);
+                }
             }
             catch (Exception ex)
             {
@@ -367,9 +431,12 @@ public class TextureManager : ITextureManager
 
         foreach (string key in new List<string>(_colors.Keys)) GetColors(key);
 
-        foreach (DynamicTexture dynamicTexture in _dynamicTextures)
+        if (_rendererServices != null)
         {
-            dynamicTexture.Setup(_game);
+            foreach (DynamicTexture dynamicTexture in _dynamicTextures)
+            {
+                dynamicTexture.Setup(_rendererServices);
+            }
         }
 
         _terrainHandle = null;
@@ -378,10 +445,8 @@ public class TextureManager : ITextureManager
 
     public void Tick()
     {
-        _terrainHandle ??= _textures.FirstOrDefault(x => x.Key.EndsWith("/terrain.png")).Value
-                           ?? GetTextureId("/terrain.png");
-        _itemsHandle ??= _textures.FirstOrDefault(x => x.Key.EndsWith("/gui/items.png")).Value
-                         ?? GetTextureId("/gui/items.png");
+        _terrainHandle ??= GetTextureHandleOrLoad(TerrainTexturePath);
+        _itemsHandle ??= GetTextureHandleOrLoad(ItemsTexturePath);
 
         foreach (DynamicTexture texture in _dynamicTextures)
         {
@@ -394,10 +459,8 @@ public class TextureManager : ITextureManager
             ITextureResource? atlasTexture = atlasHandle?.Texture;
             if (atlasTexture == null) continue;
 
-            int targetTileSize = atlasTexture.Width / 16;
-
-            int tileX = (texture.Sprite % 16) * targetTileSize;
-            int tileY = (texture.Sprite / 16) * targetTileSize;
+            bool terrainArray = atlasTexture.Depth > 1;
+            int targetTileSize = terrainArray ? atlasTexture.Width : atlasTexture.Width / 16;
 
             int fxSize = (int)Math.Sqrt(texture.Pixels.Length / 4);
             int scale = targetTileSize / fxSize;
@@ -420,35 +483,74 @@ public class TextureManager : ITextureManager
                 int finalReplicate = texture.Replicate;
                 ReadOnlySpan<byte> uploadPixelSpan = uploadPixels.AsSpan(0, uploadSize * uploadSize * 4);
 
-                for (int x = 0; x < finalReplicate; x++)
+                if (terrainArray && texture.Atlas == DynamicTexture.FxImage.Terrain)
                 {
-                    for (int y = 0; y < finalReplicate; y++)
-                    {
-                        _textureUploadService.UploadSubImage(
-                            atlasTexture,
-                            tileX + (x * uploadSize),
-                            tileY + (y * uploadSize),
-                            uploadSize,
-                            uploadSize,
-                            uploadPixelSpan,
-                            0,
-                            TextureDataFormat.Rgba);
-                    }
-                }
-
-                if (texture.Atlas == DynamicTexture.FxImage.Terrain && _gameOptions.UseMipmaps)
-                {
+                    int tileX = (texture.Sprite % 16) * targetTileSize;
+                    int tileY = (texture.Sprite / 16) * targetTileSize;
                     for (int x = 0; x < finalReplicate; x++)
                     {
                         for (int y = 0; y < finalReplicate; y++)
                         {
-                            UpdateTileMipmaps(
+                            int offX = tileX + x * uploadSize;
+                            int offY = tileY + y * uploadSize;
+                            int layerCol = offX / targetTileSize;
+                            int layerRow = offY / targetTileSize;
+                            if (layerCol is < 0 or > 15 || layerRow is < 0 or > 15)
+                            {
+                                continue;
+                            }
+
+                            int layer = layerCol + layerRow * 16;
+                            _textureUploadService.UploadSubImage3D(
+                                atlasTexture,
+                                0,
+                                0,
+                                layer,
+                                uploadSize,
+                                uploadSize,
+                                1,
+                                uploadPixelSpan,
+                                0,
+                                TextureDataFormat.Rgba);
+                        }
+                    }
+                }
+                else
+                {
+                    int tileX = (texture.Sprite % 16) * targetTileSize;
+                    int tileY = (texture.Sprite / 16) * targetTileSize;
+
+                    for (int x = 0; x < finalReplicate; x++)
+                    {
+                        for (int y = 0; y < finalReplicate; y++)
+                        {
+                            _textureUploadService.UploadSubImage(
+                                atlasTexture,
                                 tileX + (x * uploadSize),
                                 tileY + (y * uploadSize),
                                 uploadSize,
-                                targetTileSize,
-                                uploadPixels,
-                                atlasTexture);
+                                uploadSize,
+                                uploadPixelSpan,
+                                0,
+                                TextureDataFormat.Rgba);
+                        }
+                    }
+
+                    if (texture.Atlas == DynamicTexture.FxImage.Terrain &&
+                        _gameOptions.UseMipmaps)
+                    {
+                        for (int x = 0; x < finalReplicate; x++)
+                        {
+                            for (int y = 0; y < finalReplicate; y++)
+                            {
+                                UpdateTileMipmaps(
+                                    tileX + (x * uploadSize),
+                                    tileY + (y * uploadSize),
+                                    uploadSize,
+                                    targetTileSize,
+                                    uploadPixels,
+                                    atlasTexture);
+                            }
                         }
                     }
                 }
@@ -461,6 +563,19 @@ public class TextureManager : ITextureManager
                 }
             }
         }
+    }
+
+    private TextureHandle GetTextureHandleOrLoad(string path)
+    {
+        foreach (KeyValuePair<string, TextureHandle> entry in _textures)
+        {
+            if (entry.Key.EndsWith(path, StringComparison.Ordinal))
+            {
+                return entry.Value;
+            }
+        }
+
+        return GetTextureId(path);
     }
 
     private static void UpscaleNearestNeighbor(byte[] src, byte[] dst, int srcSize, int dstSize, int scale)

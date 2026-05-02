@@ -1,3 +1,5 @@
+using Silk.NET.OpenGL;
+
 namespace BetaSharp.Client.Rendering.Core.Textures;
 
 public interface ITextureResource : IDisposable
@@ -6,6 +8,11 @@ public interface ITextureResource : IDisposable
     string Source { get; }
     int Width { get; }
     int Height { get; }
+
+    /// <summary>Layer count for <see cref="TextureTarget.Texture2DArray"/>; otherwise 1.</summary>
+    int Depth { get; }
+
+    TextureTarget Target { get; }
 
     void Bind();
     void SetFilter(TextureMinificationFilter min, TextureMagnificationFilter mag);
@@ -25,6 +32,26 @@ public interface ITextureResource : IDisposable
         int y,
         int width,
         int height,
+        byte* ptr,
+        int level = 0,
+        TextureDataFormat format = TextureDataFormat.Rgba);
+
+    unsafe void Upload3D(
+        int width,
+        int height,
+        int depth,
+        byte* ptr,
+        int level = 0,
+        TextureDataFormat format = TextureDataFormat.Rgba,
+        TextureStorageFormat internalFormat = TextureStorageFormat.Rgba8);
+
+    unsafe void UploadSubImage3D(
+        int x,
+        int y,
+        int z,
+        int width,
+        int height,
+        int depth,
         byte* ptr,
         int level = 0,
         TextureDataFormat format = TextureDataFormat.Rgba);

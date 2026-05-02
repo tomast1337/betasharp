@@ -4,6 +4,7 @@ using BetaSharp.Client.Rendering.Blocks.Entities;
 using BetaSharp.Client.Rendering.Core.Textures;
 using BetaSharp.Client.Rendering.Entities;
 using BetaSharp.Client.Rendering.Legacy;
+using BetaSharp.Client.Resource.Pack;
 using BetaSharp.Client.UI.Rendering;
 
 namespace BetaSharp.Client.Rendering.Backends;
@@ -15,6 +16,8 @@ namespace BetaSharp.Client.Rendering.Backends;
 /// </summary>
 internal interface ILegacyRendererServices
 {
+    TexturePacks TexturePacks { get; }
+
     ITextureManager TextureManager { get; }
     ITextRenderer TextRenderer { get; }
     ISkinManager SkinManager { get; }

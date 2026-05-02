@@ -188,7 +188,8 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
         _renderDistance = _game.Options.renderDistance;
 
         _chunkRenderer?.Dispose();
-        _chunkRenderer = _chunkRendererFactory.Create(_world!, () => _game.Options.AlternateBlocksEnabled);
+        _chunkRenderer = _chunkRendererFactory.Create(_world!, () => _game.Options.AlternateBlocksEnabled,
+            _game.FrameContext);
 
         _renderEntitiesStartupCounter = 2;
     }
@@ -695,7 +696,7 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
         _sceneRenderBackend.SetColor(1.0F, 1.0F, 1.0F, 0.5F);
         _sceneRenderBackend.SetPolygonOffset(-3.0F, -50.0F);
 
-        _textureManager.BindTexture(_textureManager.GetTextureId("/terrain.png"));
+        _textureManager.BindTexture(_textureManager.GetTextureId(TextureManager.TerrainLegacy2dTexturePath));
 
         int targetBlockId = _world.Reader.GetBlockId(hit.BlockX, hit.BlockY, hit.BlockZ);
         Block targetBlock = targetBlockId > 0 ? Block.Blocks[targetBlockId] : Block.Stone;
@@ -708,9 +709,10 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
         tessellator.setTranslationD(-renderX, -renderY, -renderZ);
         tessellator.disableColor();
 
+        int terrainAtlasTileSize = _game.FrameContext.Textures.GetAtlasTileSize("/terrain.png");
         BlockRenderer.RenderBlockByRenderType(_world.Reader, _world.Lighting, targetBlock,
             new BlockPos(hit.BlockX, hit.BlockY, hit.BlockZ), tessellator, 240 + (int)(DamagePartialTime * 10.0F), true,
-            _game.Options.AlternateBlocksEnabled);
+            _game.Options.AlternateBlocksEnabled, terrainAtlasTileSize);
         tessellator.draw();
 
         tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
