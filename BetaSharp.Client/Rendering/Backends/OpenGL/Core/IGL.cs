@@ -107,6 +107,9 @@ public unsafe interface IGL
     void TexSubImage3D(TextureTarget target, int level, int xoffset, int yoffset, int zoffset, uint width,
         uint height, uint depth, PixelFormat format, PixelType type, void* pixels);
 
+    void TexStorage3D(TextureTarget target, int levels, InternalFormat internalformat, uint width, uint height,
+        uint depth);
+
     void Translate(float x, float y, float z);
     void Uniform1(int location, int v0);
     void Uniform1(int location, float v0);

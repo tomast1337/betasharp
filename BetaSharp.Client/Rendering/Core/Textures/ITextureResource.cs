@@ -19,6 +19,12 @@ public interface ITextureResource : IDisposable
     void SetWrap(TextureAddressMode s, TextureAddressMode t);
     void SetMaxLevel(int level);
 
+    /// <summary>
+    /// Immutable storage for <see cref="TextureTarget.Texture2DArray"/> (GL TexStorage3D). Must be called before uploads.
+    /// </summary>
+    void AllocateTexture2DArrayStorage(int width, int height, int depth, TextureStorageFormat internalFormat,
+        int mipLevels = 1);
+
     unsafe void Upload(
         int width,
         int height,

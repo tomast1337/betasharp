@@ -167,9 +167,9 @@ public class SubChunkRenderer : IDisposable
             GLManager.GL.VertexAttribIPointer(
                 4,
                 1,
-                GLEnum.UnsignedByte,
+                GLEnum.UnsignedShort,
                 stride,
-                (void*)15
+                (void*)16
             );
 
             VertexArray.Unbind();

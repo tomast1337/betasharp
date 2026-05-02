@@ -61,6 +61,41 @@ public class GLTexture : ITextureResource
         GLManager.GL.TexParameter(TargetEnum, GLEnum.TextureMaxLevel, level);
     }
 
+    public void AllocateTexture2DArrayStorage(int width, int height, int depth, TextureStorageFormat internalFormat,
+        int mipLevels = 1)
+    {
+        if (Target != TextureTarget.Texture2DArray)
+        {
+            throw new InvalidOperationException(
+                $"{nameof(AllocateTexture2DArrayStorage)} is only valid for {TextureTarget.Texture2DArray}.");
+        }
+
+        if (mipLevels < 1)
+        {
+            mipLevels = 1;
+        }
+
+        Bind();
+        InternalFormat ifmt = MapStorageFormat(internalFormat);
+        GLManager.GL.TexStorage3D(Target, mipLevels, ifmt, (uint)width, (uint)height, (uint)depth);
+        Width = width;
+        Height = height;
+        Depth = depth;
+    }
+
+    /// <summary>Uploads one Z slice of a 2D array texture (replaces tile content for that layer).</summary>
+    public unsafe void UploadTexture2DArrayLayer(int layer, byte* ptr,
+        TextureDataFormat format = TextureDataFormat.Rgba, int level = 0)
+    {
+        if (Target != TextureTarget.Texture2DArray)
+        {
+            throw new InvalidOperationException(
+                $"{nameof(UploadTexture2DArrayLayer)} is only valid for {TextureTarget.Texture2DArray}.");
+        }
+
+        UploadSubImage3D(0, 0, layer, Width, Height, 1, ptr, level, format);
+    }
+
     public unsafe void Upload(
         int width,
         int height,

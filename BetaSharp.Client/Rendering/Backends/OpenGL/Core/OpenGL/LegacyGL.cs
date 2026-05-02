@@ -1,4 +1,5 @@
 using Silk.NET.OpenGL;
+using SilkGLEnum = Silk.NET.OpenGL.GLEnum;
 
 namespace BetaSharp.Client.Rendering.Core.OpenGL;
 
@@ -367,6 +368,14 @@ public abstract unsafe class LegacyGL : IGL
         uint height, uint depth, PixelFormat format, PixelType type, void* pixels)
     {
         SilkGL.TexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
+    }
+
+    public void TexStorage3D(TextureTarget target, int levels, InternalFormat internalformat, uint width,
+        uint height, uint depth)
+    {
+        var silkTarget = (SilkGLEnum)(uint)target;
+        var silkInternal = (SilkGLEnum)(uint)internalformat;
+        SilkGL.TexStorage3D(silkTarget, (uint)levels, silkInternal, width, height, depth);
     }
 
     public abstract void Translate(float x, float y, float z);

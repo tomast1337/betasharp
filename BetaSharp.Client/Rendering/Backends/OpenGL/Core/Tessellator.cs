@@ -19,6 +19,7 @@ public struct Vertex(float x, float y, float z, float u, float v, int color, int
     public int Padding; // 32 bytes total
 }
 
+/// <summary>Chunk mesh vertex; <see cref="TextureLayer"/> supports terrain array slices 0–1023.</summary>
 [StructLayout(LayoutKind.Sequential, Pack = 4, Size = 20)]
 public struct ChunkVertex
 {
@@ -28,9 +29,10 @@ public struct ChunkVertex
     public short Z; // 2 bytes + 8 bytes = 10 bytes
     public short U; // 2 bytes + 10 bytes = 12 bytes
     public short V; // 2 bytes + 12 bytes = 14 bytes
-    public byte Light; // 1 byte + 14 bytes = 15 bytes
-    public byte TextureLayer; // 1 byte + 15 bytes = 16 bytes
-    internal ushort PaddingAlign; // 20 bytes total (reserved)
+    public byte Light; // offset 14
+    public byte PadBeforeTextureLayer; // offset 15 — keeps <see cref="TextureLayer"/> 2-byte aligned
+    public ushort TextureLayer; // offset 16 — GPU slice index for <c>sampler2DArray</c>
+    internal ushort Reserved; // offset 18
 }
 
 public static class ChunkVertexHelper
@@ -50,7 +52,7 @@ public static class ChunkVertexHelper
         float centroidV,
         byte skyLight,
         byte blockLight,
-        byte textureLayer)
+        int textureLayer)
     {
         return new ChunkVertex
         {
@@ -61,8 +63,9 @@ public static class ChunkVertexHelper
             U = FloatToShortUVWithInset(u, centroidU),
             V = FloatToShortUVWithInset(v, centroidV),
             Light = PackLight(skyLight, blockLight),
-            TextureLayer = textureLayer,
-            PaddingAlign = 0
+            PadBeforeTextureLayer = 0,
+            TextureLayer = (ushort)Math.Clamp(textureLayer, 0, 1023),
+            Reserved = 0
         };
     }
 
@@ -151,6 +154,7 @@ public class Tessellator
     private int scratchBufferIndex;
     private TesselatorCaptureVertexFormat vertexFormat;
     private int textureLayer;
+    private const int MaxTextureArrayLayer = 1023;
 
     private Tessellator(int bufferSize)
     {
@@ -238,7 +242,7 @@ public class Tessellator
 
     public void setTextureLayer(int layer)
     {
-        textureLayer = layer & 0xFF;
+        textureLayer = Math.Clamp(layer, 0, MaxTextureArrayLayer);
     }
 
     public unsafe void draw()
@@ -600,7 +604,7 @@ public class Tessellator
         {
             int col = hasColor ? scratchBuffer[baseIndex + 5] : unchecked((int)0xFFFFFFFF);
             byte light = hasLight ? (byte)scratchBuffer[baseIndex + 7] : (byte)0;
-            byte layer = (byte)(scratchBuffer[baseIndex + 8] & 0xFF);
+            int layer = scratchBuffer[baseIndex + 8];
 
             float u = BitConverter.Int32BitsToSingle(scratchBuffer[baseIndex + 3]);
             float v = BitConverter.Int32BitsToSingle(scratchBuffer[baseIndex + 4]);

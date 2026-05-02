@@ -30,6 +30,7 @@ public class TextureManager : ITextureManager
     private readonly Dictionary<string, int> _atlasTileSizes = [];
     private TextureHandle? _terrainHandle;
     private TextureHandle? _itemsHandle;
+    private TextureArrayRegistry? _terrainArrayRegistry;
     private readonly GameOptions _gameOptions;
     private bool _clamp;
     private bool _blur;
@@ -61,6 +62,9 @@ public class TextureManager : ITextureManager
     }
 
     internal void SetRendererServices(IRendererServices rendererServices) => _rendererServices = rendererServices;
+
+    /// <summary>Layer aliases for the terrain <c>TEXTURE_2D_ARRAY</c>; non-null after the first terrain array upload.</summary>
+    public TextureArrayRegistry? TerrainTextureArrayRegistry => _terrainArrayRegistry;
 
     private void EnsureTerrainLegacy2dCopy(Image<Rgba32> terrainImage)
     {
@@ -166,18 +170,21 @@ public class TextureManager : ITextureManager
 
         if (isTerrain)
         {
-            var builder = new TextureArrayBuilder(image);
-            byte[] contiguous = builder.BuildContiguousBuffer();
-            int tileSize = builder.TileSize;
-            _textureUploadService.Upload3D(
+            byte[] contiguous = BuildLegacyTerrainArrayBuffer(image, out int tileSize);
+            texture.AllocateTexture2DArrayStorage(tileSize, tileSize, TextureArrayRegistry.MaxTerrainLayers,
+                TextureStorageFormat.Rgba8, 1);
+            _textureUploadService.UploadSubImage3D(
                 texture,
+                0,
+                0,
+                0,
                 tileSize,
                 tileSize,
-                builder.LayerCount,
+                256,
                 contiguous,
                 0,
-                TextureDataFormat.Rgba,
-                TextureStorageFormat.Rgba8);
+                TextureDataFormat.Rgba);
+            _terrainArrayRegistry ??= new TextureArrayRegistry();
 
             texture.SetFilter(TextureMinificationFilter.Nearest, TextureMagnificationFilter.Nearest);
             texture.SetMaxLevel(0);
@@ -380,6 +387,7 @@ public class TextureManager : ITextureManager
     public void Reload()
     {
         _atlasTileSizes.Clear();
+        _terrainArrayRegistry = null;
         foreach (KeyValuePair<string, TextureHandle> entry in _textures)
         {
             entry.Value.Texture?.Dispose();
@@ -704,5 +712,70 @@ public class TextureManager : ITextureManager
         _missingTextureImage.Dispose();
         _colors.Clear();
         _dynamicTextures.Clear();
+        _terrainArrayRegistry = null;
+    }
+
+    /// <summary>Copies the 16×16 legacy terrain atlas into 256 contiguous RGBA8 tiles (layer-major) for array upload.</summary>
+    private static byte[] BuildLegacyTerrainArrayBuffer(Image<Rgba32> atlas, out int tileSize)
+    {
+        if (atlas.Width != atlas.Height)
+        {
+            throw new ArgumentException("Terrain atlas must be square.", nameof(atlas));
+        }
+
+        if (atlas.Width % 16 != 0)
+        {
+            throw new ArgumentException("Terrain atlas width must be divisible by 16.", nameof(atlas));
+        }
+
+        int ts = atlas.Width / 16;
+        tileSize = ts;
+        const int layerCount = 256;
+        int bytesPerTile = ts * ts * 4;
+        var layers = new byte[layerCount][];
+
+        for (int i = 0; i < layerCount; i++)
+        {
+            layers[i] = new byte[bytesPerTile];
+        }
+
+        atlas.ProcessPixelRows(accessor =>
+        {
+            for (int row = 0; row < 16; row++)
+            {
+                for (int col = 0; col < 16; col++)
+                {
+                    int layer = col + row * 16;
+                    byte[] dst = layers[layer];
+                    int baseX = col * ts;
+                    int baseY = row * ts;
+
+                    for (int ty = 0; ty < ts; ty++)
+                    {
+                        Span<Rgba32> srcRow = accessor.GetRowSpan(baseY + ty);
+                        int dstOfs = ty * ts * 4;
+
+                        for (int tx = 0; tx < ts; tx++)
+                        {
+                            Rgba32 p = srcRow[baseX + tx];
+                            int o = dstOfs + tx * 4;
+                            dst[o] = p.R;
+                            dst[o + 1] = p.G;
+                            dst[o + 2] = p.B;
+                            dst[o + 3] = p.A;
+                        }
+                    }
+                }
+            }
+        });
+
+        byte[] result = new byte[checked(layerCount * bytesPerTile)];
+
+        for (int layer = 0; layer < layerCount; layer++)
+        {
+            System.Buffer.BlockCopy(layers[layer], 0, result, layer * bytesPerTile, bytesPerTile);
+        }
+
+        return result;
     }
 }

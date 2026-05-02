@@ -39,6 +39,14 @@ internal sealed class NoOpTextureResource : ITextureResource
     {
     }
 
+    public void AllocateTexture2DArrayStorage(int width, int height, int depth, TextureStorageFormat internalFormat,
+        int mipLevels = 1)
+    {
+        Width = width;
+        Height = height;
+        Depth = depth;
+    }
+
     public unsafe void Upload(
         int width,
         int height,
