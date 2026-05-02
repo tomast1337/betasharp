@@ -1,4 +1,5 @@
 using BetaSharp.Client.Rendering.Core;
+using BetaSharp.Client.Rendering.Core.Textures;
 using BetaSharp.Client.Rendering.Legacy;
 using BetaSharp.Entities;
 using BetaSharp.Util.Maths;
@@ -38,6 +39,10 @@ public class PaintingEntityRenderer : EntityRenderer
         float frontZ = -0.5F;
         float backZ = 0.5F;
 
+        TextureHandle artHandle = Dispatcher.TextureManager.GetTextureId("/art/kz.png");
+        float artW = artHandle.Texture?.Width > 0 ? artHandle.Texture.Width : 256.0F;
+        float artH = artHandle.Texture?.Height > 0 ? artHandle.Texture.Height : 256.0F;
+
         for (int tileX = 0; tileX < width / 16; ++tileX)
         {
             for (int tileY = 0; tileY < height / 16; ++tileY)
@@ -49,10 +54,10 @@ public class PaintingEntityRenderer : EntityRenderer
 
                 UpdateLighting(paintingEntity, (xMax + xMin) / 2.0F, (yMax + yMin) / 2.0F);
 
-                float uMax = (textureX + width - tileX * 16) / 256.0F;
-                float uMin = (textureX + width - (tileX + 1) * 16) / 256.0F;
-                float vMax = (textureY + height - tileY * 16) / 256.0F;
-                float vMin = (textureY + height - (tileY + 1) * 16) / 256.0F;
+                float uMax = (textureX + width - tileX * 16) / artW;
+                float uMin = (textureX + width - (tileX + 1) * 16) / artW;
+                float vMax = (textureY + height - tileY * 16) / artH;
+                float vMin = (textureY + height - (tileY + 1) * 16) / artH;
 
                 float edgeUMin = 12.0F / 16.0F;
                 float edgeUMax = 13.0F / 16.0F;

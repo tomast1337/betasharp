@@ -46,14 +46,18 @@ public class HeldItemRenderer : IHeldItemRenderer
         {
             string texPath = item.ItemId < 256 ? TextureManager.TerrainLegacy2dTexturePath : "/gui/items.png";
             _game.TextureManager.BindTexture(_game.TextureManager.GetTextureId(texPath));
-            int tileSize = _game.TextureManager.GetAtlasTileSize(item.ItemId < 256 ? TextureManager.TerrainLegacy2dTexturePath : texPath);
+            string atlasKey = item.ItemId < 256 ? "/terrain.png" : "/gui/items.png";
+            int tileSize = _game.TextureManager.GetAtlasTileSize(atlasKey);
+            float atlasSize = tileSize * 16.0F;
 
             Tessellator tessellator = Tessellator.instance;
             int iconIndex = entity.GetItemStackTextureId(item);
-            float minU = (iconIndex % 16 * 16 + 0.0F) / 256.0F;
-            float maxU = (iconIndex % 16 * 16 + 15.99F) / 256.0F;
-            float minV = (iconIndex / 16 * 16 + 0.0F) / 256.0F;
-            float maxV = (iconIndex / 16 * 16 + 15.99F) / 256.0F;
+            int texU = (iconIndex & 15) * tileSize;
+            int texV = (iconIndex >> 4) * tileSize;
+            float minU = texU / atlasSize;
+            float maxU = (texU + tileSize - 0.01F) / atlasSize;
+            float minV = texV / atlasSize;
+            float maxV = (texV + tileSize - 0.01F) / atlasSize;
             float quadWidth = 1.0F;
             float xOffset = 0.0F;
             float yOffset = 0.3F;
@@ -377,11 +381,17 @@ public class HeldItemRenderer : IHeldItemRenderer
         float minY = -1.0F;
         float maxY = 1.0F;
         float z = -0.5F;
-        float uvInset = (1 / 128f);
-        float minU = textureId % 16 / 256.0F - uvInset;
-        float maxU = (textureId % 16 + 15.99F) / 256.0F + uvInset;
-        float minV = textureId / 16 / 256.0F - uvInset;
-        float maxV = (textureId / 16 + 15.99F) / 256.0F + uvInset;
+        int terrainTile = _game.TextureManager.GetAtlasTileSize("/terrain.png");
+        float atlasSize = terrainTile * 16.0F;
+        int col = textureId & 15;
+        int row = textureId >> 4;
+        int texU = col * terrainTile;
+        int texV = row * terrainTile;
+        float uvInset = 0.5F / atlasSize;
+        float minU = texU / atlasSize - uvInset;
+        float maxU = (texU + terrainTile - 0.01F) / atlasSize + uvInset;
+        float minV = texV / atlasSize - uvInset;
+        float maxV = (texV + terrainTile - 0.01F) / atlasSize + uvInset;
         tessellator.startDrawingQuads();
         tessellator.addVertexWithUV((double)minX, (double)minY, (double)z, (double)maxU, (double)maxV);
         tessellator.addVertexWithUV((double)maxX, (double)minY, (double)z, (double)minU, (double)maxV);
@@ -426,17 +436,19 @@ public class HeldItemRenderer : IHeldItemRenderer
         _sceneRenderBackend.Enable(SceneRenderCapability.Blend);
         _sceneRenderBackend.SetBlendFunction(SceneBlendFactor.SrcAlpha, SceneBlendFactor.OneMinusSrcAlpha);
         float quadSize = 1.0F;
+        int terrainTileFire = _game.TextureManager.GetAtlasTileSize("/terrain.png");
+        float atlasSizeFire = terrainTileFire * 16.0F;
 
         for (int layerIndex = 0; layerIndex < 2; ++layerIndex)
         {
             _sceneRenderBackend.PushMatrix();
             int fireTexture = Block.Fire.TextureId + layerIndex * 16;
-            int textureU = (fireTexture & 15) << 4;
-            int textureV = fireTexture & 240;
-            float minU = textureU / 256.0F;
-            float maxU = (textureU + 15.99F) / 256.0F;
-            float minV = textureV / 256.0F;
-            float maxV = (textureV + 15.99F) / 256.0F;
+            int textureU = (fireTexture & 15) * terrainTileFire;
+            int textureV = (fireTexture >> 4) * terrainTileFire;
+            float minU = textureU / atlasSizeFire;
+            float maxU = (textureU + terrainTileFire - 0.01F) / atlasSizeFire;
+            float minV = textureV / atlasSizeFire;
+            float maxV = (textureV + terrainTileFire - 0.01F) / atlasSizeFire;
             float minX = (0.0F - quadSize) / 2.0F;
             float maxX = minX + quadSize;
             float minY = 0.0F - quadSize / 2.0F;

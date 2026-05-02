@@ -1,4 +1,5 @@
 using BetaSharp.Client.Rendering.Core;
+using BetaSharp.Client.Rendering.Core.Textures;
 using BetaSharp.Client.Rendering.Legacy;
 using BetaSharp.Entities;
 using BetaSharp.Items;
@@ -18,10 +19,14 @@ public class FireballEntityRenderer : EntityRenderer
         int textureIndex = Item.Snowball.getTextureId(0);
         loadTexture("/gui/items.png");
         Tessellator tessellator = Tessellator.instance;
-        float minU = (textureIndex % 16 * 16 + 0) / 256.0F;
-        float maxU = (textureIndex % 16 * 16 + 16) / 256.0F;
-        float minV = (textureIndex / 16 * 16 + 0) / 256.0F;
-        float maxV = (textureIndex / 16 * 16 + 16) / 256.0F;
+        int tileSize = Dispatcher.TextureManager?.GetAtlasTileSize("/gui/items.png") ?? 16;
+        float atlasSize = tileSize * 16.0F;
+        int texU = (textureIndex & 15) * tileSize;
+        int texV = (textureIndex >> 4) * tileSize;
+        float minU = texU / atlasSize;
+        float maxU = (texU + tileSize) / atlasSize;
+        float minV = texV / atlasSize;
+        float maxV = (texV + tileSize) / atlasSize;
         float quadWidth = 1.0F;
         float xOffset = 0.5F;
         float yOffset = 0.25F;

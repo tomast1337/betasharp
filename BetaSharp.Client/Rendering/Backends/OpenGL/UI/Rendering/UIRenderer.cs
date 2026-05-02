@@ -278,7 +278,14 @@ public class UIRenderer(
         float height, float uvWidth, float uvHeight, float z)
     {
         TextureManager.BindTexture(texture);
-        float f = 0.00390625F;
+        float invTexW = 1f / 256f;
+        float invTexH = 1f / 256f;
+        if (texture.Texture is { Width: > 0, Height: > 0 } boundTex)
+        {
+            invTexW = 1f / boundTex.Width;
+            invTexH = 1f / boundTex.Height;
+        }
+
         float finalX = MathF.Floor(x + _translateX);
         float finalY = MathF.Floor(y + _translateY);
         _uiRenderBackend.DrawTexturedQuad(
@@ -287,10 +294,10 @@ public class UIRenderer(
             finalX + width,
             finalY + height,
             z,
-            (u + 0) * f,
-            (v + 0) * f,
-            (u + uvWidth) * f,
-            (v + uvHeight) * f);
+            (u + 0) * invTexW,
+            (v + 0) * invTexH,
+            (u + uvWidth) * invTexW,
+            (v + uvHeight) * invTexH);
     }
 
     public void DrawRepeatingTexture(TextureHandle texture, float x, float y, float width, float height, float tileSize,

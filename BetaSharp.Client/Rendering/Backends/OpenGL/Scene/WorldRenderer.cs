@@ -506,13 +506,19 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
     {
         _glCloudsList = _sceneRenderBackend.GenerateDisplayLists(4);
         Tessellator tessellator = Tessellator.instance;
+        int cloudAtlasPixels = 256;
+        TextureHandle cloudHandle = _textureManager.GetTextureId("/environment/clouds.png");
+        if (cloudHandle.Texture is { Width: > 0 })
+        {
+            cloudAtlasPixels = cloudHandle.Texture.Width;
+        }
 
         for (int i = 0; i < 4; ++i)
         {
             _sceneRenderBackend.BeginDisplayList(_glCloudsList + i);
             tessellator.startDrawingQuads();
             float cloudHeight = 4.0F;
-            float uvScale = 1.0F / 256.0F;
+            float uvScale = 1.0F / cloudAtlasPixels;
             float edgeInset = 1.0F / 1024.0F;
             byte tileSize = 8;
             byte cloudRadius = 3;
@@ -616,7 +622,8 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
         int cloudChunkZ = MathHelper.Floor(cloudOffsetZ / 2048.0D);
         cloudOffsetX -= cloudChunkX * 2048;
         cloudOffsetZ -= cloudChunkZ * 2048;
-        _textureManager.BindTexture(_textureManager.GetTextureId("/environment/clouds.png"));
+        TextureHandle cloudTex = _textureManager.GetTextureId("/environment/clouds.png");
+        _textureManager.BindTexture(cloudTex);
         _sceneRenderBackend.Enable(SceneRenderCapability.Blend);
         _sceneRenderBackend.SetBlendFunction(SceneBlendFactor.SrcAlpha, SceneBlendFactor.OneMinusSrcAlpha);
         Vector3D<double> cloudColor = _world.Environment.GetCloudColor(tickDelta);
@@ -624,7 +631,8 @@ public class WorldRenderer : IWorldEventListener, IWorldRenderer
         float cloudGreen = (float)cloudColor.Y;
         float cloudBlue = (float)cloudColor.Z;
 
-        float textureScale = 1 / 256f;
+        int cloudAtlasPixels = cloudTex.Texture is { Width: > 0 } t ? t.Width : 256;
+        float textureScale = 1f / cloudAtlasPixels;
         float textureOffsetU = MathHelper.Floor(cloudOffsetX) * textureScale;
         float textureOffsetV = MathHelper.Floor(cloudOffsetZ) * textureScale;
         float subCloudOffsetX = (float)(cloudOffsetX - MathHelper.Floor(cloudOffsetX));

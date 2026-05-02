@@ -54,8 +54,10 @@ public abstract class EntityRenderer
         Scene.Disable(SceneRenderCapability.Lighting);
 
         int textureId = Block.Fire.TextureId;
-        int texX = (textureId & 15) << 4;
-        int texY = textureId & 240;
+        int tileSize = Dispatcher.TextureManager?.GetAtlasTileSize(TextureManager.TerrainLegacy2dTexturePath) ?? 16;
+        float atlasSize = tileSize * 16.0F;
+        int texU = (textureId & 15) * tileSize;
+        int texV = (textureId >> 4) * tileSize;
 
         float minU;
         float maxU;
@@ -89,17 +91,18 @@ public abstract class EntityRenderer
         {
             if (pass % 2 == 0)
             {
-                minU = texX / 256.0F;
-                maxU = (texX + 15.99F) / 256.0F;
-                minV = texY / 256.0F;
-                maxV = (texY + 15.99F) / 256.0F;
+                minU = texU / atlasSize;
+                maxU = (texU + tileSize - 0.01F) / atlasSize;
+                minV = texV / atlasSize;
+                maxV = (texV + tileSize - 0.01F) / atlasSize;
             }
             else
             {
-                minU = texX / 256.0F;
-                maxU = (texX + 15.99F) / 256.0F;
-                minV = (texY + 16) / 256.0F;
-                maxV = (texY + 16 + 15.99F) / 256.0F;
+                int texV2 = texV + tileSize;
+                minU = texU / atlasSize;
+                maxU = (texU + tileSize - 0.01F) / atlasSize;
+                minV = texV2 / atlasSize;
+                maxV = (texV2 + tileSize - 0.01F) / atlasSize;
             }
 
             if (pass / 2 % 2 == 0)

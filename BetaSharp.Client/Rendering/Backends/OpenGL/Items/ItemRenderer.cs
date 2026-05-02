@@ -97,10 +97,15 @@ public class ItemRenderer : EntityRenderer
             }
 
             Tessellator tessellator = Tessellator.instance;
-            float minU = (textureIndex % 16 * 16 + 0) / 256.0F;
-            float maxU = (textureIndex % 16 * 16 + 16) / 256.0F;
-            float minV = (textureIndex / 16 * 16 + 0) / 256.0F;
-            float maxV = (textureIndex / 16 * 16 + 16) / 256.0F;
+            string atlasKey = itemStack.ItemId < 256 ? "/terrain.png" : "/gui/items.png";
+            int tileSize = Dispatcher.TextureManager?.GetAtlasTileSize(atlasKey) ?? 16;
+            float atlasSize = tileSize * 16.0F;
+            int texU = (textureIndex & 15) * tileSize;
+            int texV = (textureIndex >> 4) * tileSize;
+            float minU = texU / atlasSize;
+            float maxU = (texU + tileSize) / atlasSize;
+            float minV = texV / atlasSize;
+            float maxV = (texV + tileSize) / atlasSize;
             float quadWidth = 1.0F;
             float quadHalfWidth = 0.5F;
             float quadHalfHeight = 0.25F;
@@ -204,7 +209,11 @@ public class ItemRenderer : EntityRenderer
                 GLManager.GL.Color4(colorRed, colorGreen, colorBlue, 1.0F);
             }
 
-            renderTexturedQuad(x, y, textureIndex % 16 * 16, textureIndex / 16 * 16, 16, 16);
+            string atlasKeyGui = itemId < 256 ? "/terrain.png" : "/gui/items.png";
+            int tileSizeGui = textureManager.GetAtlasTileSize(atlasKeyGui);
+            int texUGui = (textureIndex & 15) * tileSizeGui;
+            int texVGui = (textureIndex >> 4) * tileSizeGui;
+            renderTexturedQuad(x, y, texUGui, texVGui, tileSizeGui, tileSizeGui, textureManager, atlasKeyGui);
         }
     }
 
@@ -267,11 +276,15 @@ public class ItemRenderer : EntityRenderer
         tessellator.draw();
     }
 
-    public void renderTexturedQuad(int x, int y, int u, int v, int width, int height)
+    public void renderTexturedQuad(int x, int y, int u, int v, int width, int height, ITextureManager textureManager,
+        string atlasKey)
     {
+        int tileSize = textureManager.GetAtlasTileSize(atlasKey);
+        int atlasPixelW = tileSize * 16;
+        int atlasPixelH = tileSize * 16;
         float depth = 0.0F;
-        float uScale = 1 / 256f;
-        float vScale = 1 / 256f;
+        float uScale = 1f / atlasPixelW;
+        float vScale = 1f / atlasPixelH;
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
         tessellator.addVertexWithUV(x + 0, y + height, (double)depth, (double)((u + 0) * uScale),
